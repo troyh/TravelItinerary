@@ -41,6 +41,221 @@
         "category": "accommodation",
         "notes": "",
         "addedAt": "2026-04-28T21:39:07.759Z"
+      },
+      {
+        "id": "2fa3f4df-08e3-4e2f-8cd9-5a185822c652",
+        "name": "Le Pigeon",
+        "address": "738 E Burnside St, Portland, OR 97214, USA",
+        "phone": "(503) 546-8796",
+        "website": "https://www.lepigeon.com/",
+        "placeId": "ChIJn_5mjKWglVQR94bKSpAYe4s",
+        "category": "restaurant",
+        "notes": "",
+        "addedAt": "2026-04-28T21:50:45.530Z"
+      }
+    ]
+  },
+  "directions": {
+    "1": [
+      {
+        "id": "ad8c7560-243c-4b8b-8e57-bc942a322860",
+        "origin": {
+          "name": "1107 21st Avenue East",
+          "placeId": "ChIJky3RvdYUkFQR2VOlzypd3bc"
+        },
+        "destination": {
+          "name": "Hotel Benson",
+          "placeId": "ChIJ57TiBwQKlVQRg7zsX28-9_A"
+        },
+        "travelMode": "DRIVING",
+        "distance": "178 mi",
+        "duration": "2 hours 53 mins",
+        "summary": "I-5 S",
+        "steps": [
+          {
+            "instruction": "Head north on 21st Ave E toward E Highland Dr",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right at the 1st cross street onto E Highland Dr",
+            "distance": "299 ft",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto 22nd Ave E",
+            "distance": "0.2 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the traffic circle, take the 1st exit onto E Crescent Dr",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto 24th Ave E",
+            "distance": "0.7 mi",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Slight left onto E Montlake Pl E",
+            "distance": "0.2 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left to merge onto WA-520 W",
+            "distance": "0.7 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Merge onto I-5 S via the ramp to Portland",
+            "distance": "26.6 mi",
+            "duration": "26 mins"
+          },
+          {
+            "instruction": "Keep right to stay on I-5 S",
+            "distance": "1.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Keep right to stay on I-5 S",
+            "distance": "132 mi",
+            "duration": "2 hours 0 mins"
+          },
+          {
+            "instruction": "Keep left to stay on I-5 S, follow signs for Vancouver/PortlandEntering Oregon",
+            "distance": "13.0 mi",
+            "duration": "13 mins"
+          },
+          {
+            "instruction": "Take exit 302B for I-405/US-30 W toward Beaverton/St. Helens",
+            "distance": "0.6 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto I-405 S/US-30 W",
+            "distance": "0.5 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Keep left to continue on I-405 S, follow signs for US-26 W/City Ctr/Beaverton/Glisan St/Everett St",
+            "distance": "0.6 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Take exit 2A for Couch St toward Burnside St",
+            "distance": "0.2 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto NW 15th Ave",
+            "distance": "253 ft",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto W Burnside St",
+            "distance": "0.4 mi",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Turn right onto SW BroadwayDestination will be on the right",
+            "distance": "482 ft",
+            "duration": "1 min"
+          }
+        ],
+        "notes": "",
+        "addedAt": "2026-04-28T22:16:27.553Z"
+      }
+    ],
+    "2": [
+      {
+        "id": "aaead5f2-c0db-4ffa-b032-82e246bdd054",
+        "origin": {
+          "name": "Hotel Benson",
+          "placeId": "ChIJ57TiBwQKlVQRg7zsX28-9_A"
+        },
+        "destination": {
+          "name": "1107 21st Ave E",
+          "placeId": "ChIJky3RvdYUkFQR2VOlzypd3bc"
+        },
+        "travelMode": "DRIVING",
+        "distance": "176 mi",
+        "duration": "2 hours 51 mins",
+        "summary": "I-5 N",
+        "steps": [
+          {
+            "instruction": "Head west on SW Oak St toward SW Park Ave",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto SW 10th Ave",
+            "distance": "75 ft",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left at the 1st cross street onto W Burnside St",
+            "distance": "0.2 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right (signs for I-405 N/US-30 N)",
+            "distance": "292 ft",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Merge onto I-405 N via the ramp to US-30 W/I-5 N",
+            "distance": "1.3 mi",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Take the exit onto I-5 NEntering Washington",
+            "distance": "145 mi",
+            "duration": "2 hours 12 mins"
+          },
+          {
+            "instruction": "Keep right to stay on I-5 N",
+            "distance": "27.6 mi",
+            "duration": "27 mins"
+          },
+          {
+            "instruction": "Take exit 168A for Lakeview Blvd",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Lakeview Blvd E",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Harvard Ave E",
+            "distance": "0.2 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto E Boston St",
+            "distance": "0.4 mi",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "E Boston St turns slightly right and becomes 15th Ave E",
+            "distance": "0.4 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto E Galer St",
+            "distance": "0.4 mi",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Turn right onto 21st Ave EDestination will be on the right",
+            "distance": "0.2 mi",
+            "duration": "2 mins"
+          }
+        ],
+        "notes": "",
+        "addedAt": "2026-04-28T22:15:48.244Z"
       }
     ]
   },
@@ -48,11 +263,15 @@
     "1": [
       "Check into hotel",
       "Dinner at a nice restaurant"
+    ],
+    "2": [
+      "Meet breeder to get puppy",
+      "Brunch?"
     ]
   },
   "notes": {},
   "startDate": "2026-05-15",
-  "openDay": 2,
+  "openDay": 1,
   "title": "Portland Puppy Pickup",
   "subtitle": "",
   "itineraryNotes": "Our new puppy is in Eugene and the breeder can meet us in Portland and maybe we can make a mini-visit to Portland out of it."
