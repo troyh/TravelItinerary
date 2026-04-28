@@ -76,6 +76,7 @@ export default function Itinerary() {
   const [editingNotes,     setEditingNotes]     = useState(false);
   const [currentFile,      setCurrentFile]      = useState(() => localStorage.getItem("travelCurrentFile"));
   const [saveAsName,       setSaveAsName]       = useState("");
+  const [copiedICS,        setCopiedICS]        = useState(false);
   const inputRef    = useRef(null);
   const syncTimerRef = useRef(null);
   const dirtyRef    = useRef(false); // false after load/create, true after first user change
@@ -102,6 +103,12 @@ export default function Itinerary() {
         setSyncStatus("saving");
         try {
           await saveToGitHub(data, { ...settings, githubFile: currentFile });
+          // Also save .ics alongside the JSON when a start date is set
+          const icsContent = buildICSContent(days, startDate, title, customHighlights, customNotes);
+          if (icsContent) {
+            const icsFile = currentFile.replace(/\.json$/i, ".ics");
+            await saveToGitHub(icsContent, { ...settings, githubFile: icsFile });
+          }
           setSyncStatus("saved");
           setSyncError("");
         } catch (err) {
@@ -314,6 +321,57 @@ export default function Itinerary() {
     dirtyRef.current = true; // force immediate GitHub push
     setSyncStatus("pending");
     setSaveAsName("");
+  }
+
+  function buildICSContent(daysArr, sd, ttl, highlights, notes) {
+    if (!sd || !daysArr.length) return null;
+    const [sy, sm, sday] = sd.split("-").map(Number);
+    const toICSDate = n => {
+      const d = new Date(sy, sm - 1, sday + n - 1);
+      return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}`;
+    };
+    const esc = s => (s ?? "").replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\n/g, "\\n");
+
+    const cal = [
+      "BEGIN:VCALENDAR", "VERSION:2.0",
+      `PRODID:-//${esc(ttl || "Travel Itinerary")}//EN`,
+      "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
+      `X-WR-CALNAME:${esc(ttl || "Travel Itinerary")}`,
+    ];
+
+    daysArr.forEach(d => {
+      const parts = [];
+      if (d.nm > 0) parts.push(`${d.nm} NM · ~${d.hrs.toFixed(1)} hrs`);
+      if (d.overnight) parts.push(`Overnight: ${d.overnight}`);
+      const hl = [...(d.highlights ?? []), ...(highlights[d.day] ?? [])];
+      if (hl.length) parts.push("\nHighlights:\n" + hl.map(h => `• ${h}`).join("\n"));
+      const note = notes[d.day] !== undefined ? notes[d.day] : d.note;
+      if (note) parts.push(`\nNote: ${note}`);
+      cal.push("BEGIN:VEVENT");
+      cal.push(`DTSTART;VALUE=DATE:${toICSDate(d.day)}`);
+      cal.push(`DTEND;VALUE=DATE:${toICSDate(d.day + 1)}`);
+      cal.push(`SUMMARY:${esc(`Day ${d.day}: ${d.leg}`)}`);
+      if (d.overnight) cal.push(`LOCATION:${esc(d.overnight)}`);
+      if (parts.length) cal.push(`DESCRIPTION:${esc(parts.join("\n"))}`);
+      cal.push(`UID:day-${d.day}-${toICSDate(d.day)}@travelitinerary`);
+      cal.push("END:VEVENT");
+    });
+    cal.push("END:VCALENDAR");
+    return cal.join("\r\n");
+  }
+
+  function generateICS() {
+    const content = buildICSContent(days, startDate, title, customHighlights, customNotes);
+    if (!content) return;
+    const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${sanitizeFilename(title || "itinerary")}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
   function reloadFromGitHub() {
@@ -553,11 +611,38 @@ export default function Itinerary() {
                 padding:"3px 8px", borderRadius:4, fontSize:".78rem", fontFamily:"sans-serif", cursor:"pointer" }}
             />
             {startDate && (
-              <button onClick={() => setStartDate("")}
-                style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
-                  fontSize:".7rem", fontFamily:"sans-serif", padding:0 }}>
-                clear
-              </button>
+              <>
+                <button onClick={() => setStartDate("")}
+                  style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
+                    fontSize:".7rem", fontFamily:"sans-serif", padding:0 }}>
+                  clear
+                </button>
+                {days.length > 0 && (
+                  <>
+                    <button onClick={generateICS}
+                      style={{ background:"none", border:"1px solid #2e5070", color:"#6b8fa8",
+                        cursor:"pointer", fontSize:".7rem", fontFamily:"sans-serif",
+                        padding:"2px 8px", borderRadius:4 }}>
+                      Export .ics
+                    </button>
+                    {settings.githubToken && settings.githubRepo && currentFile && currentFile !== "__local__" && (
+                      <button onClick={() => {
+                          const icsFile = currentFile.replace(/\.json$/i, ".ics");
+                          const url = `https://raw.githubusercontent.com/${settings.githubRepo}/main/${icsFile}`;
+                          navigator.clipboard.writeText(url);
+                          setCopiedICS(true);
+                          setTimeout(() => setCopiedICS(false), 2000);
+                        }}
+                        title="Copy subscription URL — paste into Apple Calendar or Google Calendar"
+                        style={{ background:"none", border:"1px solid #2e5070", color: copiedICS ? "#5cb85c" : "#6b8fa8",
+                          cursor:"pointer", fontSize:".7rem", fontFamily:"sans-serif",
+                          padding:"2px 8px", borderRadius:4 }}>
+                        {copiedICS ? "Copied!" : "Subscribe URL"}
+                      </button>
+                    )}
+                  </>
+                )}
+              </>
             )}
           </div>
 

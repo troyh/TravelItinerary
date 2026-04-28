@@ -62,7 +62,9 @@ export async function loadFromGitHub({ githubToken, githubRepo, githubFile }) {
 }
 
 export async function saveToGitHub(data, { githubToken, githubRepo, githubFile }) {
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+  // Accept either a plain object (serialised as JSON) or a pre-built string (e.g. ICS)
+  const text = typeof data === "string" ? data : JSON.stringify(data, null, 2);
+  const content = btoa(unescape(encodeURIComponent(text)));
   const res = await fetch(repoUrl(githubRepo, githubFile), {
     method: "PUT",
     headers: { ...authHeaders(githubToken), "Content-Type": "application/json" },
