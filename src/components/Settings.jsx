@@ -20,6 +20,7 @@ export default function Settings({ settings, onSave, onClose }) {
     googleMapsKey: settings.googleMapsKey ?? "",
     githubToken:   settings.githubToken   ?? "",
     githubRepo:    settings.githubRepo    ?? "",
+    githubBranch:  settings.githubBranch  ?? "main",
   });
   const [showToken,  setShowToken]  = useState(false);
   const [testStatus, setTestStatus] = useState(""); // "" | "testing" | "ok" | error message
@@ -82,6 +83,13 @@ export default function Settings({ settings, onSave, onClose }) {
           <div style={S.label}>GitHub Repository</div>
           <input value={draft.githubRepo} onChange={e => set("githubRepo", e.target.value)}
             placeholder="owner/repo" style={S.input} />
+        </div>
+
+        {/* Branch */}
+        <div>
+          <div style={S.label}>Branch</div>
+          <input value={draft.githubBranch} onChange={e => set("githubBranch", e.target.value)}
+            placeholder="main" style={S.input} />
         </div>
 
       </div>

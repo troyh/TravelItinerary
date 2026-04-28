@@ -628,7 +628,7 @@ export default function Itinerary() {
                     {settings.githubToken && settings.githubRepo && currentFile && currentFile !== "__local__" && (
                       <button onClick={() => {
                           const icsFile = currentFile.replace(/\.json$/i, ".ics");
-                          const url = `https://raw.githubusercontent.com/${settings.githubRepo}/main/${icsFile}`;
+                          const url = `https://raw.githubusercontent.com/${settings.githubRepo}/${settings.githubBranch || "main"}/${icsFile}`;
                           navigator.clipboard.writeText(url);
                           setCopiedICS(true);
                           setTimeout(() => setCopiedICS(false), 2000);
