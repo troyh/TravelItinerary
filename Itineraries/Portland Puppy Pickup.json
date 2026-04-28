@@ -41,6 +41,17 @@
         "category": "accommodation",
         "notes": "",
         "addedAt": "2026-04-28T21:39:07.759Z"
+      },
+      {
+        "id": "2fa3f4df-08e3-4e2f-8cd9-5a185822c652",
+        "name": "Le Pigeon",
+        "address": "738 E Burnside St, Portland, OR 97214, USA",
+        "phone": "(503) 546-8796",
+        "website": "https://www.lepigeon.com/",
+        "placeId": "ChIJn_5mjKWglVQR94bKSpAYe4s",
+        "category": "restaurant",
+        "notes": "",
+        "addedAt": "2026-04-28T21:50:45.530Z"
       }
     ]
   },
