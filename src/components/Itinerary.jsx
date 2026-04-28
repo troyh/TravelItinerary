@@ -60,6 +60,12 @@ export default function Itinerary() {
   const [settings,         setSettings]         = useState(() => { try { const s = localStorage.getItem("travelSettings"); return s ? JSON.parse(s) : {}; } catch { return {}; } });
   const [showSettings,     setShowSettings]     = useState(false);
   const [syncStatus,       setSyncStatus]       = useState("idle");
+  const [title,            setTitle]            = useState(() => _db?.title    ?? "Seattle to the Broughton Islands");
+  const [subtitle,         setSubtitle]         = useState(() => _db?.subtitle ?? "Princess Louisa Inlet · Vancouver · Salt Spring · Desolation Sound · Johnstone Strait · Broughtons · Gulf Islands");
+  const [itineraryNotes,   setItineraryNotes]   = useState(() => _db?.itineraryNotes ?? "");
+  const [editingHeader,    setEditingHeader]    = useState(false);
+  const [headerDraft,      setHeaderDraft]      = useState({});
+  const [editingNotes,     setEditingNotes]     = useState(false);
   const inputRef    = useRef(null);
   const syncTimerRef = useRef(null);
 
@@ -71,7 +77,8 @@ export default function Itinerary() {
   // Single combined save: localStorage immediately + debounced GitHub push
   useEffect(() => {
     const data = { days, places: savedPlaces, highlights: customHighlights,
-                   notes: customNotes, startDate, openDay };
+                   notes: customNotes, startDate, openDay,
+                   title, subtitle, itineraryNotes };
     localStorage.setItem("travelItinerary", JSON.stringify(data));
     if (settings.githubToken && settings.githubRepo) {
       clearTimeout(syncTimerRef.current);
@@ -86,7 +93,7 @@ export default function Itinerary() {
         }
       }, 2000);
     }
-  }, [days, savedPlaces, customHighlights, customNotes, startDate, openDay]);
+  }, [days, savedPlaces, customHighlights, customNotes, startDate, openDay, title, subtitle, itineraryNotes]);
 
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
 
@@ -101,8 +108,11 @@ export default function Itinerary() {
         if (data.places)                    setSavedPlaces(data.places);
         if (data.highlights)                setCustomHighlights(data.highlights);
         if (data.notes)                     setCustomNotes(data.notes);
-        if (data.startDate !== undefined)   setStartDate(data.startDate);
-        if (data.openDay != null)           setOpenDay(data.openDay);
+        if (data.startDate !== undefined)          setStartDate(data.startDate);
+        if (data.openDay != null)                  setOpenDay(data.openDay);
+        if (data.title !== undefined)              setTitle(data.title);
+        if (data.subtitle !== undefined)           setSubtitle(data.subtitle);
+        if (data.itineraryNotes !== undefined)     setItineraryNotes(data.itineraryNotes);
         setSyncStatus("synced");
       })
       .catch(() => setSyncStatus("offline"));
@@ -223,8 +233,11 @@ export default function Itinerary() {
         if (data.places)                  setSavedPlaces(data.places);
         if (data.highlights)              setCustomHighlights(data.highlights);
         if (data.notes)                   setCustomNotes(data.notes);
-        if (data.startDate !== undefined) setStartDate(data.startDate);
-        if (data.openDay != null)         setOpenDay(data.openDay);
+        if (data.startDate !== undefined)      setStartDate(data.startDate);
+        if (data.openDay != null)              setOpenDay(data.openDay);
+        if (data.title !== undefined)          setTitle(data.title);
+        if (data.subtitle !== undefined)       setSubtitle(data.subtitle);
+        if (data.itineraryNotes !== undefined) setItineraryNotes(data.itineraryNotes);
         setSyncStatus("synced");
       })
       .catch(() => setSyncStatus("error"));
@@ -286,12 +299,70 @@ export default function Itinerary() {
               onClose={() => setShowSettings(false)}
             />
           )}
-          <h1 style={{ fontSize: "clamp(1.6rem,4vw,2.4rem)", fontWeight: 400, color: "#f5edd8", margin: "0 0 .4rem", letterSpacing: "-.02em", lineHeight: 1.15 }}>
-            Seattle to the Broughton Islands
-          </h1>
-          <p style={{ color: "#9ab8d4", margin: "0 0 1.5rem", fontSize: ".95rem", fontStyle: "italic" }}>
-            Princess Louisa Inlet · Vancouver · Salt Spring · Desolation Sound · Johnstone Strait · Broughtons · Gulf Islands
-          </p>
+          {editingHeader ? (
+            <div style={{ marginBottom: "1.5rem" }}>
+              <input autoFocus value={headerDraft.title}
+                onChange={e => setHeaderDraft(p => ({ ...p, title: e.target.value }))}
+                onKeyDown={e => {
+                  if (e.key === "Escape") setEditingHeader(false);
+                  if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                    setTitle(headerDraft.title.trim() || title);
+                    setSubtitle(headerDraft.subtitle);
+                    setEditingHeader(false);
+                  }
+                }}
+                style={{ width:"100%", background:"#112a44", border:"1px solid #2e5070", color:"#f5edd8",
+                  borderRadius:4, padding:".45rem .75rem", fontSize:"clamp(1.2rem,3vw,1.8rem)",
+                  fontFamily:"Georgia,serif", fontWeight:400, letterSpacing:"-.02em",
+                  outline:"none", boxSizing:"border-box", marginBottom:".5rem" }} />
+              <input value={headerDraft.subtitle}
+                onChange={e => setHeaderDraft(p => ({ ...p, subtitle: e.target.value }))}
+                onKeyDown={e => {
+                  if (e.key === "Escape") setEditingHeader(false);
+                  if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                    setTitle(headerDraft.title.trim() || title);
+                    setSubtitle(headerDraft.subtitle);
+                    setEditingHeader(false);
+                  }
+                }}
+                placeholder="Subtitle / tagline (optional)"
+                style={{ width:"100%", background:"#112a44", border:"1px solid #2e5070", color:"#9ab8d4",
+                  borderRadius:4, padding:".4rem .75rem", fontSize:".9rem",
+                  fontFamily:"Georgia,serif", fontStyle:"italic",
+                  outline:"none", boxSizing:"border-box", marginBottom:".6rem" }} />
+              <div style={{ display:"flex", gap:".5rem" }}>
+                <button onClick={() => { setTitle(headerDraft.title.trim() || title); setSubtitle(headerDraft.subtitle); setEditingHeader(false); }}
+                  style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
+                    borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                  Save
+                </button>
+                <button onClick={() => setEditingHeader(false)}
+                  style={{ background:"none", border:"1px solid #2e3a4a", color:"#4e7a9e",
+                    borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div style={{ display:"flex", alignItems:"flex-start", gap:".5rem", marginBottom:".4rem" }}>
+                <h1 style={{ fontSize:"clamp(1.6rem,4vw,2.4rem)", fontWeight:400, color:"#f5edd8",
+                  margin:0, letterSpacing:"-.02em", lineHeight:1.15, flex:1 }}>
+                  {title}
+                </h1>
+                <button onClick={() => { setEditingHeader(true); setHeaderDraft({ title, subtitle }); }}
+                  style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
+                    fontSize:".7rem", fontFamily:"sans-serif", padding:0, flexShrink:0, marginTop:".35rem" }}>
+                  Edit
+                </button>
+              </div>
+              {subtitle && (
+                <p style={{ color:"#9ab8d4", margin:"0 0 1.5rem", fontSize:".95rem", fontStyle:"italic" }}>
+                  {subtitle}
+                </p>
+              )}
+            </>
+          )}
 
           {/* Stats */}
           <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", marginBottom: "1.25rem" }}>
@@ -323,6 +394,50 @@ export default function Itinerary() {
                 style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
                   fontSize:".7rem", fontFamily:"sans-serif", padding:0 }}>
                 clear
+              </button>
+            )}
+          </div>
+
+          {/* Itinerary notes */}
+          <div style={{ marginBottom:"1.25rem" }}>
+            {editingNotes ? (
+              <div>
+                <textarea
+                  autoFocus
+                  value={itineraryNotes}
+                  onChange={e => setItineraryNotes(e.target.value)}
+                  onKeyDown={e => { if (e.key === "Escape") setEditingNotes(false); }}
+                  placeholder="Notes about this trip — crew, budget, packing list, pre-departure checklist…"
+                  rows={4}
+                  style={{ width:"100%", background:"#112a44", border:"1px solid #2e5070", color:"#e8dcc8",
+                    borderRadius:4, padding:".5rem .75rem", fontSize:".82rem", fontFamily:"sans-serif",
+                    lineHeight:1.6, resize:"vertical", boxSizing:"border-box", outline:"none",
+                    marginBottom:".5rem" }}
+                />
+                <button onClick={() => setEditingNotes(false)}
+                  style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
+                    borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"sans-serif",
+                    cursor:"pointer" }}>
+                  Done
+                </button>
+              </div>
+            ) : itineraryNotes ? (
+              <div style={{ display:"flex", gap:".75rem", alignItems:"flex-start" }}>
+                <div style={{ flex:1, fontSize:".82rem", color:"#8fb0cc", fontFamily:"sans-serif",
+                  lineHeight:1.6, whiteSpace:"pre-wrap" }}>
+                  {itineraryNotes}
+                </div>
+                <button onClick={() => setEditingNotes(true)}
+                  style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
+                    fontSize:".7rem", fontFamily:"sans-serif", padding:0, flexShrink:0 }}>
+                  Edit
+                </button>
+              </div>
+            ) : (
+              <button onClick={() => setEditingNotes(true)}
+                style={{ background:"none", border:"none", color:"#3d5060", cursor:"pointer",
+                  fontSize:".75rem", fontFamily:"sans-serif", fontStyle:"italic", padding:0 }}>
+                + Add itinerary notes
               </button>
             )}
           </div>
