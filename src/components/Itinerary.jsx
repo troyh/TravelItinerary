@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { days, tagConfig, fuelStops, fuelSummary, tideWarnings } from "../data/itinerary.js";
+import DayPlaces from "./DayPlaces.jsx";
 
 export default function Itinerary() {
   const [openDay, setOpenDay] = useState(1);
@@ -10,9 +11,21 @@ export default function Itinerary() {
   const [customNotes, setCustomNotes] = useState({});
   const [editingNoteDay, setEditingNoteDay] = useState(null);
   const [noteDraft, setNoteDraft] = useState("");
+  const [savedPlaces, setSavedPlaces] = useState({});
   const inputRef = useRef(null);
 
   useEffect(() => { setNewHighlight(""); setEditingNoteDay(null); }, [openDay]);
+
+  useEffect(() => {
+    try {
+      const p = localStorage.getItem("travelPlaces");    if (p) setSavedPlaces(JSON.parse(p));
+      const h = localStorage.getItem("travelHighlights"); if (h) setCustomHighlights(JSON.parse(h));
+      const n = localStorage.getItem("travelNotes");      if (n) setCustomNotes(JSON.parse(n));
+    } catch {} // corrupted storage — start fresh
+  }, []);
+  useEffect(() => { localStorage.setItem("travelPlaces",     JSON.stringify(savedPlaces));      }, [savedPlaces]);
+  useEffect(() => { localStorage.setItem("travelHighlights", JSON.stringify(customHighlights)); }, [customHighlights]);
+  useEffect(() => { localStorage.setItem("travelNotes",      JSON.stringify(customNotes));       }, [customNotes]);
 
   function startEditNote(dayNum, current) {
     setEditingNoteDay(dayNum);
@@ -43,6 +56,24 @@ export default function Itinerary() {
     setCustomHighlights(prev => ({
       ...prev,
       [dayNum]: prev[dayNum].filter((_, i) => i !== index),
+    }));
+  }
+
+  function addPlace(dayNum, place) {
+    setSavedPlaces(prev => ({ ...prev, [dayNum]: [...(prev[dayNum] ?? []), place] }));
+  }
+
+  function updatePlace(dayNum, id, updates) {
+    setSavedPlaces(prev => ({
+      ...prev,
+      [dayNum]: (prev[dayNum] ?? []).map(p => p.id === id ? { ...p, ...updates } : p),
+    }));
+  }
+
+  function deletePlace(dayNum, id) {
+    setSavedPlaces(prev => ({
+      ...prev,
+      [dayNum]: (prev[dayNum] ?? []).filter(p => p.id !== id),
     }));
   }
 
@@ -312,6 +343,15 @@ export default function Itinerary() {
                       </div>
                     );
                   })()}
+                  {/* Places */}
+                  <DayPlaces
+                    dayNum={d.day}
+                    places={savedPlaces[d.day] ?? []}
+                    onAdd={place => addPlace(d.day, place)}
+                    onUpdate={(id, updates) => updatePlace(d.day, id, updates)}
+                    onDelete={id => deletePlace(d.day, id)}
+                  />
+
                   {/* Tide warning */}
                   {d.tideWarning && d.tideNote && (
                     <div style={{ marginTop:".75rem", padding:".75rem 1rem", background:"#1a0a0a",
