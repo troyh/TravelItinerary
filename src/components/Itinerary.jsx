@@ -1,9 +1,60 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { days, tagConfig, fuelStops, fuelSummary, tideWarnings } from "../data/itinerary.js";
 
 export default function Itinerary() {
   const [openDay, setOpenDay] = useState(1);
   const [activeTab, setActiveTab] = useState("itinerary");
+  const [startDate, setStartDate] = useState("");
+  const [customHighlights, setCustomHighlights] = useState({});
+  const [newHighlight, setNewHighlight] = useState("");
+  const [customNotes, setCustomNotes] = useState({});
+  const [editingNoteDay, setEditingNoteDay] = useState(null);
+  const [noteDraft, setNoteDraft] = useState("");
+  const inputRef = useRef(null);
+
+  useEffect(() => { setNewHighlight(""); setEditingNoteDay(null); }, [openDay]);
+
+  function startEditNote(dayNum, current) {
+    setEditingNoteDay(dayNum);
+    setNoteDraft(current);
+  }
+
+  function saveNote(dayNum) {
+    setCustomNotes(prev => ({ ...prev, [dayNum]: noteDraft }));
+    setEditingNoteDay(null);
+  }
+
+  function cancelEditNote() {
+    setEditingNoteDay(null);
+  }
+
+  function addHighlight(dayNum) {
+    const text = newHighlight.trim();
+    if (!text) return;
+    setCustomHighlights(prev => ({
+      ...prev,
+      [dayNum]: [...(prev[dayNum] ?? []), text],
+    }));
+    setNewHighlight("");
+    inputRef.current?.focus();
+  }
+
+  function removeHighlight(dayNum, index) {
+    setCustomHighlights(prev => ({
+      ...prev,
+      [dayNum]: prev[dayNum].filter((_, i) => i !== index),
+    }));
+  }
+
+  function getDayDate(dayNum) {
+    if (!startDate) return null;
+    const [y, m, d] = startDate.split("-").map(Number);
+    const date = new Date(y, m - 1, d + dayNum - 1);
+    return {
+      dow:  date.toLocaleDateString("en-US", { weekday: "short" }),
+      date: date.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+    };
+  }
 
   const totalNM  = days.reduce((s, d) => s + d.nm, 0);
   const underway = days.filter(d => d.nm > 0).length;
@@ -40,6 +91,25 @@ export default function Itinerary() {
             ))}
           </div>
 
+          {/* Departure date */}
+          <div style={{ display:"flex", alignItems:"center", gap:".65rem", marginBottom:"1.25rem", fontFamily:"sans-serif" }}>
+            <span style={{ fontSize:".7rem", color:"#6b8fa8", letterSpacing:".1em", textTransform:"uppercase" }}>Departure</span>
+            <input
+              type="date"
+              value={startDate}
+              onChange={e => setStartDate(e.target.value)}
+              style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
+                padding:"3px 8px", borderRadius:4, fontSize:".78rem", fontFamily:"sans-serif", cursor:"pointer" }}
+            />
+            {startDate && (
+              <button onClick={() => setStartDate("")}
+                style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
+                  fontSize:".7rem", fontFamily:"sans-serif", padding:0 }}>
+                clear
+              </button>
+            )}
+          </div>
+
           {/* Day-strip */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
             {days.map(d => {
@@ -48,14 +118,19 @@ export default function Itinerary() {
               const tide = d.tideWarning;
               const bg   = tide ? "#5c1a1a" : fuel ? "#5c3010" : lay ? "#1a3d1a" : "#1e3a52";
               const col  = tide ? "#e87878" : fuel ? "#e8a838" : lay ? "#5cb85c" : "#6b8fa8";
+              const info = getDayDate(d.day);
               return (
                 <div key={d.day}
                   onClick={() => { setOpenDay(d.day); setActiveTab("itinerary"); }}
-                  title={d.leg}
-                  style={{ width:32, height:32, borderRadius:4, background:bg, display:"flex", alignItems:"center", justifyContent:"center",
+                  title={info ? `${d.leg} · ${info.dow}, ${info.date}` : d.leg}
+                  style={{ width:32, minHeight:32, borderRadius:4, background:bg,
+                    display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
                     fontSize:".6rem", color:col, cursor:"pointer", fontFamily:"sans-serif",
+                    padding: info ? "4px 0" : 0, gap:1,
                     border: openDay === d.day ? "1px solid #c9a84c" : "1px solid transparent" }}>
-                  D{d.day}
+                  <span>D{d.day}</span>
+                  {info && <span style={{ fontSize:".5rem", opacity:.9, lineHeight:1 }}>{info.dow}</span>}
+                  {info && <span style={{ fontSize:".5rem", opacity:.7, lineHeight:1 }}>{info.date}</span>}
                 </div>
               );
             })}
@@ -93,6 +168,7 @@ export default function Itinerary() {
         {activeTab === "itinerary" && days.map(d => {
           const isOpen    = openDay === d.day;
           const isLayover = d.nm === 0;
+          const dayInfo   = getDayDate(d.day);
           return (
             <div key={d.day} style={{
               marginBottom:".5rem",
@@ -104,12 +180,15 @@ export default function Itinerary() {
                 width:"100%", background:"none", border:"none", padding:"1rem 1.25rem",
                 cursor:"pointer", display:"flex", alignItems:"center", gap:"1rem", textAlign:"left" }}>
                 <div style={{
-                  minWidth:38, height:38, borderRadius:"50%",
+                  minWidth:38, height: dayInfo ? 56 : 38,
+                  borderRadius: dayInfo ? 7 : "50%",
                   background: isOpen ? "#c9a84c" : "#1a3352",
                   color: isOpen ? "#0b1929" : "#c9a84c",
-                  display:"flex", alignItems:"center", justifyContent:"center",
-                  fontSize:".75rem", fontWeight:700, flexShrink:0 }}>
-                  {d.day}
+                  display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+                  fontSize:".75rem", fontWeight:700, flexShrink:0, gap:1 }}>
+                  <span>{d.day}</span>
+                  {dayInfo && <span style={{ fontSize:".6rem", fontWeight:600, opacity: isOpen ? .85 : .75, lineHeight:1 }}>{dayInfo.dow}</span>}
+                  {dayInfo && <span style={{ fontSize:".58rem", fontWeight:400, opacity: isOpen ? .65 : .55, lineHeight:1 }}>{dayInfo.date}</span>}
                 </div>
                 <div style={{ flex:1 }}>
                   <div style={{ color: isOpen ? "#f5edd8" : "#c8daea", fontSize:".95rem", lineHeight:1.3 }}>
@@ -148,15 +227,91 @@ export default function Itinerary() {
                         <span>{h}</span>
                       </li>
                     ))}
+                    {(customHighlights[d.day] ?? []).map((h,i) => (
+                      <li key={`c${i}`} style={{ display:"flex", gap:".75rem", marginBottom:".55rem",
+                        fontSize:".875rem", lineHeight:1.5, color:"#c8e0c8", fontFamily:"sans-serif" }}>
+                        <span style={{ color:"#5cb85c", flexShrink:0, marginTop:2 }}>◆</span>
+                        <span style={{ flex:1 }}>{h}</span>
+                        <button onClick={() => removeHighlight(d.day, i)}
+                          style={{ background:"none", border:"none", color:"#3d6050", cursor:"pointer",
+                            fontSize:".85rem", lineHeight:1, padding:"0 0 0 .25rem", flexShrink:0, marginTop:2 }}>
+                          ×
+                        </button>
+                      </li>
+                    ))}
                   </ul>
+                  {/* Add highlight */}
+                  <div style={{ display:"flex", gap:".5rem", marginTop:".75rem", marginBottom:".25rem" }}>
+                    <input
+                      ref={inputRef}
+                      value={newHighlight}
+                      onChange={e => setNewHighlight(e.target.value)}
+                      onKeyDown={e => e.key === "Enter" && addHighlight(d.day)}
+                      placeholder="Add a highlight…"
+                      style={{ flex:1, background:"#0a1a2a", border:"1px solid #2e5070", color:"#e8dcc8",
+                        borderRadius:4, padding:".4rem .65rem", fontSize:".82rem", fontFamily:"sans-serif",
+                        outline:"none" }}
+                    />
+                    <button onClick={() => addHighlight(d.day)}
+                      style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
+                        borderRadius:4, padding:".4rem .85rem", fontSize:".78rem", fontFamily:"sans-serif",
+                        cursor:"pointer", whiteSpace:"nowrap" }}>
+                      Add
+                    </button>
+                  </div>
                   {/* Captain's note */}
-                  {d.note && (
-                    <div style={{ marginTop:"1rem", padding:".75rem 1rem", background:"#0a1a2a",
-                      borderLeft:"3px solid #c9a84c66", borderRadius:"0 4px 4px 0" }}>
-                      <div style={{ fontSize:".62rem", color:"#c9a84c", letterSpacing:".1em", textTransform:"uppercase", marginBottom:4, fontFamily:"sans-serif" }}>Captain's Note</div>
-                      <div style={{ fontSize:".82rem", color:"#8fb0cc", fontFamily:"sans-serif", lineHeight:1.55 }}>{d.note}</div>
-                    </div>
-                  )}
+                  {(() => {
+                    const note = customNotes[d.day] !== undefined ? customNotes[d.day] : d.note;
+                    const isEditing = editingNoteDay === d.day;
+                    return (
+                      <div style={{ marginTop:"1rem", padding:".75rem 1rem", background:"#0a1a2a",
+                        borderLeft:"3px solid #c9a84c66", borderRadius:"0 4px 4px 0" }}>
+                        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:4 }}>
+                          <div style={{ fontSize:".62rem", color:"#c9a84c", letterSpacing:".1em", textTransform:"uppercase", fontFamily:"sans-serif" }}>Captain's Note</div>
+                          {!isEditing && (
+                            <button onClick={() => startEditNote(d.day, note)}
+                              style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
+                                fontSize:".7rem", fontFamily:"sans-serif", padding:0 }}>
+                              Edit
+                            </button>
+                          )}
+                        </div>
+                        {isEditing ? (
+                          <>
+                            <textarea
+                              autoFocus
+                              value={noteDraft}
+                              onChange={e => setNoteDraft(e.target.value)}
+                              onKeyDown={e => {
+                                if (e.key === "Escape") cancelEditNote();
+                                if ((e.metaKey || e.ctrlKey) && e.key === "Enter") saveNote(d.day);
+                              }}
+                              style={{ width:"100%", background:"#0d1f33", border:"1px solid #2e5070",
+                                color:"#e8dcc8", borderRadius:4, padding:".4rem .65rem",
+                                fontSize:".82rem", fontFamily:"sans-serif", lineHeight:1.55,
+                                resize:"vertical", minHeight:80, boxSizing:"border-box", outline:"none" }}
+                            />
+                            <div style={{ display:"flex", gap:".5rem", marginTop:".5rem" }}>
+                              <button onClick={() => saveNote(d.day)}
+                                style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
+                                  borderRadius:4, padding:".3rem .75rem", fontSize:".75rem",
+                                  fontFamily:"sans-serif", cursor:"pointer" }}>
+                                Save
+                              </button>
+                              <button onClick={cancelEditNote}
+                                style={{ background:"none", border:"1px solid #2e3a4a", color:"#4e7a9e",
+                                  borderRadius:4, padding:".3rem .75rem", fontSize:".75rem",
+                                  fontFamily:"sans-serif", cursor:"pointer" }}>
+                                Cancel
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <div style={{ fontSize:".82rem", color:"#8fb0cc", fontFamily:"sans-serif", lineHeight:1.55 }}>{note}</div>
+                        )}
+                      </div>
+                    );
+                  })()}
                   {/* Tide warning */}
                   {d.tideWarning && d.tideNote && (
                     <div style={{ marginTop:".75rem", padding:".75rem 1rem", background:"#1a0a0a",
