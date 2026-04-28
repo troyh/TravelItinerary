@@ -1,0 +1,59 @@
+{
+  "days": [
+    {
+      "leg": "Drive to Portland",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 1
+    },
+    {
+      "leg": "Drive to Seattle",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 2
+    }
+  ],
+  "places": {
+    "1": [
+      {
+        "id": "d735dc26-eabf-4a15-a77c-6ff3d961743d",
+        "name": "The Benson Portland, Curio Collection by Hilton",
+        "address": "309 SW Broadway, Portland, OR 97205, USA",
+        "phone": "(503) 228-2000",
+        "website": "https://www.hilton.com/en/hotels/pdxbeqq-the-benson-portland/?SEO_id=GMB-AMER-QQ-PDXBEQQ&y_source=1_MjczODkyODItNzE1LWxvY2F0aW9uLndlYnNpdGU%3D",
+        "placeId": "ChIJ57TiBwQKlVQRg7zsX28-9_A",
+        "category": "accommodation",
+        "notes": "",
+        "addedAt": "2026-04-28T21:39:07.759Z"
+      }
+    ]
+  },
+  "highlights": {
+    "1": [
+      "Check into hotel",
+      "Dinner at a nice restaurant"
+    ]
+  },
+  "notes": {},
+  "startDate": "2026-05-15",
+  "openDay": 2,
+  "title": "Portland Puppy Pickup",
+  "subtitle": "",
+  "itineraryNotes": "Our new puppy is in Eugene and the breeder can meet us in Portland and maybe we can make a mini-visit to Portland out of it."
+}
