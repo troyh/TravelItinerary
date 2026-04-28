@@ -64,6 +64,19 @@ export async function saveToGitHub(data, { githubToken, githubRepo, githubFile, 
   const text = typeof data === "string" ? data : JSON.stringify(data, null, 2);
   const content = btoa(unescape(encodeURIComponent(text)));
   const shaKey = `${githubBranch}:${githubFile}`;
+
+  // If SHA isn't cached the file may already exist (e.g. placed externally after the app loaded).
+  // Fetch it now so the PUT includes the required sha field.
+  if (!shaByPath.has(shaKey)) {
+    try {
+      const r = await fetch(
+        repoUrl(githubRepo, githubFile) + `?ref=${encodeURIComponent(githubBranch)}`,
+        { headers: authHeaders(githubToken) }
+      );
+      if (r.ok) shaByPath.set(shaKey, (await r.json()).sha);
+    } catch {}
+  }
+
   const res = await fetch(repoUrl(githubRepo, githubFile), {
     method: "PUT",
     headers: { ...authHeaders(githubToken), "Content-Type": "application/json" },
