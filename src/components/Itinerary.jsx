@@ -1,35 +1,62 @@
 import { useState, useEffect, useRef } from "react";
-import { days, tagConfig, fuelStops, fuelSummary, tideWarnings } from "../data/itinerary.js";
+import { days as initialDays, tagConfig, fuelStops, fuelSummary, tideWarnings } from "../data/itinerary.js";
 import DayPlaces from "./DayPlaces.jsx";
 
+function remapKeys(obj, pivot, delta) {
+  const result = {};
+  for (const [k, v] of Object.entries(obj)) {
+    const n = Number(k);
+    if (delta === -1 && n === pivot) continue;
+    const shifted = (delta === +1 && n >= pivot) || (delta === -1 && n > pivot);
+    result[shifted ? n + delta : n] = v;
+  }
+  return result;
+}
+
+const BLANK_DAY = {
+  leg: "New Day", nm: 0, hrs: 0, overnight: "",
+  tags: ["layover"], fuelStop: false, tideWarning: false,
+  highlights: [], note: "",
+};
+
 export default function Itinerary() {
-  const [openDay, setOpenDay] = useState(1);
+  const [openDay, setOpenDay] = useState(() => { try { const s = localStorage.getItem("travelOpenDay"); return s ? Number(s) : 1; } catch { return 1; } });
   const [activeTab, setActiveTab] = useState("itinerary");
-  const [startDate, setStartDate] = useState("");
-  const [customHighlights, setCustomHighlights] = useState({});
+  const [startDate, setStartDate] = useState(() => { try { return localStorage.getItem("travelStartDate") ?? ""; } catch { return ""; } });
+  const [customHighlights, setCustomHighlights] = useState(() => { try { const s = localStorage.getItem("travelHighlights"); return s ? JSON.parse(s) : {}; } catch { return {}; } });
   const [newHighlight, setNewHighlight] = useState("");
-  const [customNotes, setCustomNotes] = useState({});
+  const [customNotes, setCustomNotes] = useState(() => { try { const s = localStorage.getItem("travelNotes"); return s ? JSON.parse(s) : {}; } catch { return {}; } });
   const [editingNoteDay, setEditingNoteDay] = useState(null);
   const [noteDraft, setNoteDraft] = useState("");
-  const [savedPlaces, setSavedPlaces] = useState({});
+  const [savedPlaces, setSavedPlaces] = useState(() => { try { const s = localStorage.getItem("travelPlaces"); return s ? JSON.parse(s) : {}; } catch { return {}; } });
+  const [days, setDays] = useState(() => {
+    try {
+      const s = localStorage.getItem("travelDays");
+      if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0 && typeof p[0].day === "number") return p; }
+    } catch {}
+    return initialDays;
+  });
+  const [editingCoreDay, setEditingCoreDay]     = useState(null);
+  const [coreDraft, setCoreDraft]               = useState({});
+  const [confirmDeleteDay, setConfirmDeleteDay] = useState(null);
   const inputRef = useRef(null);
 
-  useEffect(() => { setNewHighlight(""); setEditingNoteDay(null); }, [openDay]);
-
   useEffect(() => {
-    try {
-      const p = localStorage.getItem("travelPlaces");    if (p) setSavedPlaces(JSON.parse(p));
-      const h = localStorage.getItem("travelHighlights"); if (h) setCustomHighlights(JSON.parse(h));
-      const n = localStorage.getItem("travelNotes");      if (n) setCustomNotes(JSON.parse(n));
-    } catch {} // corrupted storage — start fresh
-  }, []);
-  useEffect(() => { localStorage.setItem("travelPlaces",     JSON.stringify(savedPlaces));      }, [savedPlaces]);
-  useEffect(() => { localStorage.setItem("travelHighlights", JSON.stringify(customHighlights)); }, [customHighlights]);
-  useEffect(() => { localStorage.setItem("travelNotes",      JSON.stringify(customNotes));       }, [customNotes]);
+    setNewHighlight(""); setEditingNoteDay(null);
+    setEditingCoreDay(null); setConfirmDeleteDay(null);
+  }, [openDay]);
+
+  useEffect(() => { localStorage.setItem("travelStartDate",   startDate);                       }, [startDate]);
+  useEffect(() => { localStorage.setItem("travelDays",        JSON.stringify(days));             }, [days]);
+  useEffect(() => { if (openDay != null) localStorage.setItem("travelOpenDay", String(openDay)); }, [openDay]);
+  useEffect(() => { localStorage.setItem("travelPlaces",      JSON.stringify(savedPlaces));      }, [savedPlaces]);
+  useEffect(() => { localStorage.setItem("travelHighlights",  JSON.stringify(customHighlights)); }, [customHighlights]);
+  useEffect(() => { localStorage.setItem("travelNotes",       JSON.stringify(customNotes));       }, [customNotes]);
 
   function startEditNote(dayNum, current) {
     setEditingNoteDay(dayNum);
     setNoteDraft(current);
+    setEditingCoreDay(null);
   }
 
   function saveNote(dayNum) {
@@ -77,6 +104,61 @@ export default function Itinerary() {
     }));
   }
 
+  function duplicateDay(dayNum) {
+    const newNum = dayNum + 1;
+    setDays(prev => {
+      const idx = prev.findIndex(d => d.day === dayNum);
+      const orig = prev[idx];
+      const copy = { ...orig, day: newNum, highlights: [...orig.highlights], tags: [...orig.tags] };
+      return [...prev.slice(0, idx + 1), copy, ...prev.slice(idx + 1).map(d => ({ ...d, day: d.day + 1 }))];
+    });
+    setCustomHighlights(prev => { const s = remapKeys(prev, newNum, +1); if (prev[dayNum]) s[newNum] = [...prev[dayNum]]; return s; });
+    setCustomNotes(prev => { const s = remapKeys(prev, newNum, +1); if (prev[dayNum] !== undefined) s[newNum] = prev[dayNum]; return s; });
+    setSavedPlaces(prev => { const s = remapKeys(prev, newNum, +1); if (prev[dayNum]) s[newNum] = prev[dayNum].map(p => ({ ...p, id: crypto.randomUUID() })); return s; });
+    setOpenDay(newNum);
+  }
+
+  function addBlankDay(afterDayNum) {
+    const newNum = afterDayNum + 1;
+    setDays(prev => {
+      const idx = prev.findIndex(d => d.day === afterDayNum);
+      return [...prev.slice(0, idx + 1), { ...BLANK_DAY, day: newNum }, ...prev.slice(idx + 1).map(d => ({ ...d, day: d.day + 1 }))];
+    });
+    setCustomHighlights(prev => remapKeys(prev, newNum, +1));
+    setCustomNotes(prev => remapKeys(prev, newNum, +1));
+    setSavedPlaces(prev => remapKeys(prev, newNum, +1));
+    setOpenDay(newNum);
+    setEditingCoreDay(newNum);
+    setCoreDraft({ leg: "New Day", overnight: "", nm: 0, hrs: 0 });
+  }
+
+  function removeDay(dayNum) {
+    if (days.length <= 1) return;
+    setDays(prev => prev.filter(d => d.day !== dayNum).map((d, i) => ({ ...d, day: i + 1 })));
+    setCustomHighlights(prev => remapKeys(prev, dayNum, -1));
+    setCustomNotes(prev => remapKeys(prev, dayNum, -1));
+    setSavedPlaces(prev => remapKeys(prev, dayNum, -1));
+    setOpenDay(prev => prev === dayNum ? Math.max(1, dayNum - 1) : prev > dayNum ? prev - 1 : prev);
+    setConfirmDeleteDay(null);
+    setEditingCoreDay(null);
+  }
+
+  function startEditCore(dayNum, d) {
+    setEditingCoreDay(dayNum);
+    setCoreDraft({ leg: d.leg, overnight: d.overnight, nm: d.nm, hrs: d.hrs });
+    setEditingNoteDay(null);
+  }
+
+  function saveCore(dayNum) {
+    setDays(prev => prev.map(d =>
+      d.day === dayNum
+        ? { ...d, leg: coreDraft.leg.trim() || d.leg, overnight: coreDraft.overnight,
+               nm: Number(coreDraft.nm) || 0, hrs: Number(coreDraft.hrs) || 0 }
+        : d
+    ));
+    setEditingCoreDay(null);
+  }
+
   function getDayDate(dayNum) {
     if (!startDate) return null;
     const [y, m, d] = startDate.split("-").map(Number);
@@ -98,7 +180,7 @@ export default function Itinerary() {
       <div style={{ background: "linear-gradient(135deg,#0b1929 0%,#112a44 50%,#0b1929 100%)", borderBottom: "1px solid #c9a84c33", padding: "2.5rem 2rem 2rem" }}>
         <div style={{ maxWidth: 820, margin: "0 auto" }}>
           <div style={{ fontSize: ".7rem", letterSpacing: ".25em", color: "#c9a84c", textTransform: "uppercase", marginBottom: ".5rem" }}>
-            Pacific Northwest Cruise · July · 17 Days
+            Pacific Northwest Cruise · July · {days.length} Days
           </div>
           <h1 style={{ fontSize: "clamp(1.6rem,4vw,2.4rem)", fontWeight: 400, color: "#f5edd8", margin: "0 0 .4rem", letterSpacing: "-.02em", lineHeight: 1.15 }}>
             Seattle to the Broughton Islands
@@ -113,7 +195,7 @@ export default function Itinerary() {
               { label: "Total Distance", val: `${totalNM} NM` },
               { label: "Underway Days",  val: String(underway)  },
               { label: "Layover Days",   val: String(layovers)  },
-              { label: "Fuel Stops",     val: "4"               },
+              { label: "Fuel Stops",     val: String(days.filter(d => d.fuelStop).length) },
             ].map(s => (
               <div key={s.label}>
                 <div style={{ fontSize: "1.3rem", color: "#c9a84c" }}>{s.val}</div>
@@ -196,7 +278,8 @@ export default function Itinerary() {
       <div style={{ maxWidth:820, margin:"0 auto", padding:"1.5rem 1rem 3rem" }}>
 
         {/* ── ITINERARY TAB ── */}
-        {activeTab === "itinerary" && days.map(d => {
+        {activeTab === "itinerary" && (<>
+        {days.map(d => {
           const isOpen    = openDay === d.day;
           const isLayover = d.nm === 0;
           const dayInfo   = getDayDate(d.day);
@@ -249,6 +332,77 @@ export default function Itinerary() {
                         letterSpacing:".07em", fontFamily:"sans-serif", textTransform:"uppercase" }}>{c.label}</span>;
                     })}
                   </div>
+                  {/* Core fields edit */}
+                  {editingCoreDay === d.day ? (
+                    <div style={{ marginBottom:"1rem", padding:".75rem 1rem", background:"#0a1a2a",
+                      borderLeft:"3px solid #6b8fa866", borderRadius:"0 4px 4px 0" }}>
+                      <div style={{ fontSize:".62rem", color:"#6b8fa8", letterSpacing:".1em",
+                        textTransform:"uppercase", fontFamily:"sans-serif", marginBottom:".65rem" }}>
+                        Edit Day
+                      </div>
+                      <div style={{ display:"flex", flexDirection:"column", gap:".5rem" }}>
+                        <div>
+                          <div style={{ fontSize:".62rem", color:"#6b8fa8", letterSpacing:".08em", textTransform:"uppercase", fontFamily:"sans-serif", marginBottom:3 }}>Route / Leg</div>
+                          <input autoFocus value={coreDraft.leg}
+                            onChange={e => setCoreDraft(p => ({ ...p, leg: e.target.value }))}
+                            onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if ((e.metaKey||e.ctrlKey) && e.key === "Enter") saveCore(d.day); }}
+                            style={{ width:"100%", background:"#0d1f33", border:"1px solid #2e5070", color:"#e8dcc8",
+                              borderRadius:4, padding:".4rem .65rem", fontSize:".85rem", fontFamily:"Georgia,serif",
+                              outline:"none", boxSizing:"border-box" }} />
+                        </div>
+                        <div>
+                          <div style={{ fontSize:".62rem", color:"#6b8fa8", letterSpacing:".08em", textTransform:"uppercase", fontFamily:"sans-serif", marginBottom:3 }}>Overnight / Anchorage</div>
+                          <input value={coreDraft.overnight}
+                            onChange={e => setCoreDraft(p => ({ ...p, overnight: e.target.value }))}
+                            onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if ((e.metaKey||e.ctrlKey) && e.key === "Enter") saveCore(d.day); }}
+                            style={{ width:"100%", background:"#0d1f33", border:"1px solid #2e5070", color:"#e8dcc8",
+                              borderRadius:4, padding:".4rem .65rem", fontSize:".82rem", fontFamily:"sans-serif",
+                              outline:"none", boxSizing:"border-box" }} />
+                        </div>
+                        <div style={{ display:"flex", gap:".75rem" }}>
+                          <div style={{ flex:1 }}>
+                            <div style={{ fontSize:".62rem", color:"#6b8fa8", letterSpacing:".08em", textTransform:"uppercase", fontFamily:"sans-serif", marginBottom:3 }}>Distance (NM)</div>
+                            <input type="number" min="0" step="1" value={coreDraft.nm}
+                              onChange={e => setCoreDraft(p => ({ ...p, nm: e.target.value }))}
+                              onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if ((e.metaKey||e.ctrlKey) && e.key === "Enter") saveCore(d.day); }}
+                              style={{ width:"100%", background:"#0d1f33", border:"1px solid #2e5070", color:"#e8dcc8",
+                                borderRadius:4, padding:".4rem .65rem", fontSize:".82rem", fontFamily:"sans-serif",
+                                outline:"none", boxSizing:"border-box" }} />
+                          </div>
+                          <div style={{ flex:1 }}>
+                            <div style={{ fontSize:".62rem", color:"#6b8fa8", letterSpacing:".08em", textTransform:"uppercase", fontFamily:"sans-serif", marginBottom:3 }}>Hours @ 15 kts</div>
+                            <input type="number" min="0" step="0.1" value={coreDraft.hrs}
+                              onChange={e => setCoreDraft(p => ({ ...p, hrs: e.target.value }))}
+                              onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if ((e.metaKey||e.ctrlKey) && e.key === "Enter") saveCore(d.day); }}
+                              style={{ width:"100%", background:"#0d1f33", border:"1px solid #2e5070", color:"#e8dcc8",
+                                borderRadius:4, padding:".4rem .65rem", fontSize:".82rem", fontFamily:"sans-serif",
+                                outline:"none", boxSizing:"border-box" }} />
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{ display:"flex", gap:".5rem", marginTop:".65rem" }}>
+                        <button onClick={() => saveCore(d.day)}
+                          style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
+                            borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                          Save
+                        </button>
+                        <button onClick={() => setEditingCoreDay(null)}
+                          style={{ background:"none", border:"1px solid #2e3a4a", color:"#4e7a9e",
+                            borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{ display:"flex", justifyContent:"flex-end", marginBottom:".75rem", marginTop:"-.25rem" }}>
+                      <button onClick={() => startEditCore(d.day, d)}
+                        style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
+                          fontSize:".7rem", fontFamily:"sans-serif", padding:0 }}>
+                        Edit leg / overnight / distance
+                      </button>
+                    </div>
+                  )}
+
                   {/* Highlights */}
                   <ul style={{ margin:0, padding:0, listStyle:"none" }}>
                     {d.highlights.map((h,i) => (
@@ -360,11 +514,60 @@ export default function Itinerary() {
                       <div style={{ fontSize:".82rem", color:"#cc8888", fontFamily:"sans-serif", lineHeight:1.55 }}>{d.tideNote}</div>
                     </div>
                   )}
+
+                  {/* Day actions */}
+                  <div style={{ marginTop:"1.25rem", paddingTop:".85rem", borderTop:"1px solid #1e3a5240",
+                    display:"flex", alignItems:"center", gap:".5rem", flexWrap:"wrap" }}>
+                    <button onClick={() => duplicateDay(d.day)}
+                      style={{ background:"#0d2035", border:"1px solid #2e5070", color:"#6b8fa8",
+                        borderRadius:4, padding:".3rem .75rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                      Duplicate day
+                    </button>
+                    <button onClick={() => addBlankDay(d.day)}
+                      style={{ background:"#0d2035", border:"1px solid #2e5070", color:"#6b8fa8",
+                        borderRadius:4, padding:".3rem .75rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                      Insert day after
+                    </button>
+                    <div style={{ marginLeft:"auto", display:"flex", alignItems:"center", gap:".5rem" }}>
+                      {confirmDeleteDay === d.day ? (
+                        <>
+                          <span style={{ fontSize:".72rem", color:"#e87878", fontFamily:"sans-serif" }}>Delete Day {d.day}?</span>
+                          <button onClick={() => removeDay(d.day)}
+                            style={{ background:"#3a0a0a", border:"1px solid #dc354566", color:"#e87878",
+                              borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                            Yes, delete
+                          </button>
+                          <button onClick={() => setConfirmDeleteDay(null)}
+                            style={{ background:"none", border:"1px solid #2e3a4a", color:"#4e7a9e",
+                              borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <button onClick={() => setConfirmDeleteDay(d.day)} disabled={days.length <= 1}
+                          style={{ background:"none", border:"1px solid #3a1a1a",
+                            color: days.length <= 1 ? "#3d2020" : "#7a3838",
+                            borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"sans-serif",
+                            cursor: days.length <= 1 ? "not-allowed" : "pointer" }}>
+                          Delete day
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
           );
         })}
+        <div style={{ display:"flex", justifyContent:"center", marginTop:"1rem" }}>
+          <button onClick={() => addBlankDay(days[days.length - 1].day)}
+            style={{ background:"none", border:"1px dashed #2e5070", color:"#4e7a9e",
+              borderRadius:6, padding:".55rem 1.5rem", fontSize:".78rem",
+              fontFamily:"sans-serif", cursor:"pointer", letterSpacing:".05em" }}>
+            + Add day at end
+          </button>
+        </div>
+        </>)}
 
         {/* ── FUEL TAB ── */}
         {activeTab === "fuel" && (
