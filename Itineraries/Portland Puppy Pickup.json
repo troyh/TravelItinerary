@@ -16,7 +16,11 @@
     }
   ],
   "places": {},
-  "highlights": {},
+  "highlights": {
+    "1": [
+      "Check into hotel"
+    ]
+  },
   "notes": {},
   "startDate": "2026-05-15",
   "openDay": 1,
