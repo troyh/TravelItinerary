@@ -1,0 +1,21 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Portland Puppy Pickup//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Portland Puppy Pickup
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260515
+DTEND;VALUE=DATE:20260516
+SUMMARY:Day 1: Drive to Portland
+DESCRIPTION:\nHighlights:\n• Check into hotel\n• Dinner at a nice restaurant
+UID:day-1-20260515@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260516
+DTEND;VALUE=DATE:20260517
+SUMMARY:Day 2: Drive to Seattle
+DESCRIPTION:\nHighlights:\n• Meet breeder to get puppy\n• Brunch?
+UID:day-2-20260516@travelitinerary
+END:VEVENT
+END:VCALENDAR
