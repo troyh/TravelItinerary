@@ -1,10 +1,25 @@
 {
-  "days": [],
+  "days": [
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 1
+    }
+  ],
   "places": {},
   "highlights": {},
   "notes": {},
   "startDate": "2026-05-15",
-  "openDay": null,
+  "openDay": 1,
   "title": "Portland Puppy Pickup",
   "subtitle": "",
   "itineraryNotes": "Our new puppy is in Eugene and the breeder can meet us in Portland and maybe we can make a mini-visit to Portland out of it."
