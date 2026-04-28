@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { testConnection } from "../lib/github.js";
 
 const S = {
   label: { fontSize: ".62rem", color: "#6b8fa8", letterSpacing: ".08em",
@@ -19,11 +20,21 @@ export default function Settings({ settings, onSave, onClose }) {
     googleMapsKey: settings.googleMapsKey ?? "",
     githubToken:   settings.githubToken   ?? "",
     githubRepo:    settings.githubRepo    ?? "",
-    githubFile:    settings.githubFile    ?? "itinerary-data.json",
   });
-  const [showToken, setShowToken] = useState(false);
+  const [showToken,  setShowToken]  = useState(false);
+  const [testStatus, setTestStatus] = useState(""); // "" | "testing" | "ok" | error message
 
   const set = (k, v) => setDraft(p => ({ ...p, [k]: v }));
+
+  async function handleTest() {
+    setTestStatus("testing");
+    try {
+      await testConnection({ githubToken: draft.githubToken, githubRepo: draft.githubRepo });
+      setTestStatus("ok");
+    } catch (e) {
+      setTestStatus(e.message);
+    }
+  }
 
   return (
     <div style={{ margin: "1rem 0", padding: "1rem 1.25rem", background: "#0a1a2a",
@@ -73,13 +84,6 @@ export default function Settings({ settings, onSave, onClose }) {
             placeholder="owner/repo" style={S.input} />
         </div>
 
-        {/* GitHub File */}
-        <div>
-          <div style={S.label}>Data File Path</div>
-          <input value={draft.githubFile} onChange={e => set("githubFile", e.target.value)}
-            placeholder="itinerary-data.json" style={S.input} />
-        </div>
-
       </div>
 
       <div style={{ marginTop: "1rem", display: "flex", justifyContent: "space-between",
@@ -88,7 +92,18 @@ export default function Settings({ settings, onSave, onClose }) {
           fontStyle: "italic" }}>
           Stored in your browser only — never in the repo or build.
         </div>
-        <div style={{ display: "flex", gap: ".5rem", flexShrink: 0 }}>
+        <div style={{ display: "flex", gap: ".5rem", flexShrink: 0, alignItems: "center" }}>
+          {testStatus && testStatus !== "testing" && (
+            <span style={{ fontSize: ".7rem", fontFamily: "sans-serif",
+              color: testStatus === "ok" ? "#5cb85c" : "#e87878" }}>
+              {testStatus === "ok" ? "✓ Connected" : testStatus}
+            </span>
+          )}
+          <button onClick={handleTest}
+            disabled={!draft.githubToken || !draft.githubRepo || testStatus === "testing"}
+            style={{ ...S.btnGhost, opacity: (!draft.githubToken || !draft.githubRepo) ? 0.45 : 1 }}>
+            {testStatus === "testing" ? "Testing…" : "Test"}
+          </button>
           <button onClick={() => onSave(draft)} style={S.btnPrimary}>Save</button>
           <button onClick={onClose} style={S.btnGhost}>Cancel</button>
         </div>

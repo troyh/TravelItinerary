@@ -2,7 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import { days as initialDays, tagConfig, fuelStops, fuelSummary, tideWarnings } from "../data/itinerary.js";
 import DayPlaces from "./DayPlaces.jsx";
 import Settings from "./Settings.jsx";
-import { loadFromGitHub, saveToGitHub } from "../lib/github.js";
+import { loadFromGitHub, saveToGitHub, ITINERARIES_FOLDER } from "../lib/github.js";
+import ItineraryPicker from "./ItineraryPicker.jsx";
+
+function sanitizeFilename(name) {
+  return name.trim().replace(/[^\w\s-]/g, "").replace(/\s+/g, " ").trim().slice(0, 80);
+}
 
 // Migrate old scattered keys → single travelItinerary key, or return null for fresh start
 const _db = (() => {
@@ -60,14 +65,18 @@ export default function Itinerary() {
   const [settings,         setSettings]         = useState(() => { try { const s = localStorage.getItem("travelSettings"); return s ? JSON.parse(s) : {}; } catch { return {}; } });
   const [showSettings,     setShowSettings]     = useState(false);
   const [syncStatus,       setSyncStatus]       = useState("idle");
+  const [syncError,        setSyncError]        = useState("");
   const [title,            setTitle]            = useState(() => _db?.title    ?? "Seattle to the Broughton Islands");
   const [subtitle,         setSubtitle]         = useState(() => _db?.subtitle ?? "Princess Louisa Inlet · Vancouver · Salt Spring · Desolation Sound · Johnstone Strait · Broughtons · Gulf Islands");
   const [itineraryNotes,   setItineraryNotes]   = useState(() => _db?.itineraryNotes ?? "");
   const [editingHeader,    setEditingHeader]    = useState(false);
   const [headerDraft,      setHeaderDraft]      = useState({});
   const [editingNotes,     setEditingNotes]     = useState(false);
+  const [currentFile,      setCurrentFile]      = useState(() => localStorage.getItem("travelCurrentFile"));
+  const [saveAsName,       setSaveAsName]       = useState("");
   const inputRef    = useRef(null);
   const syncTimerRef = useRef(null);
+  const dirtyRef    = useRef(false); // false after load/create, true after first user change
 
   useEffect(() => {
     setNewHighlight(""); setEditingNoteDay(null);
@@ -76,32 +85,38 @@ export default function Itinerary() {
 
   // Single combined save: localStorage immediately + debounced GitHub push
   useEffect(() => {
+    if (!currentFile) return;
     const data = { days, places: savedPlaces, highlights: customHighlights,
                    notes: customNotes, startDate, openDay,
                    title, subtitle, itineraryNotes };
     localStorage.setItem("travelItinerary", JSON.stringify(data));
-    if (settings.githubToken && settings.githubRepo) {
+    const canSync = settings.githubToken && settings.githubRepo &&
+                    currentFile !== "__local__" && dirtyRef.current;
+    dirtyRef.current = true; // any render after first is a user change
+    if (canSync) {
       clearTimeout(syncTimerRef.current);
       setSyncStatus("pending");
       syncTimerRef.current = setTimeout(async () => {
         setSyncStatus("saving");
         try {
-          await saveToGitHub(data, settings);
+          await saveToGitHub(data, { ...settings, githubFile: currentFile });
           setSyncStatus("saved");
+          setSyncError("");
         } catch (err) {
           setSyncStatus(err.message === "conflict" ? "conflict" : "error");
+          setSyncError(err.message);
         }
       }, 2000);
     }
-  }, [days, savedPlaces, customHighlights, customNotes, startDate, openDay, title, subtitle, itineraryNotes]);
+  }, [currentFile, days, savedPlaces, customHighlights, customNotes, startDate, openDay, title, subtitle, itineraryNotes]);
 
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
 
   // Load from GitHub on mount (localStorage already loaded synchronously above)
   useEffect(() => {
-    if (!settings.githubToken || !settings.githubRepo) return;
+    if (!settings.githubToken || !settings.githubRepo || !currentFile || currentFile === "__local__") return;
     setSyncStatus("loading");
-    loadFromGitHub(settings)
+    loadFromGitHub({ ...settings, githubFile: currentFile })
       .then(data => {
         if (!data) { setSyncStatus("idle"); return; }
         if (data.days?.length)              setDays(data.days);
@@ -224,9 +239,65 @@ export default function Itinerary() {
     setEditingCoreDay(null);
   }
 
+  function applyData(data) {
+    setDays(data.days?.length ? data.days : []);
+    setSavedPlaces(data.places ?? {});
+    setCustomHighlights(data.highlights ?? {});
+    setCustomNotes(data.notes ?? {});
+    setStartDate(data.startDate ?? "");
+    setOpenDay(data.openDay ?? null);
+    setTitle(data.title ?? "New Itinerary");
+    setSubtitle(data.subtitle ?? "");
+    setItineraryNotes(data.itineraryNotes ?? "");
+  }
+
+  function handleLoad(path, data) {
+    dirtyRef.current = false;
+    if (data) {
+      applyData(data);
+      localStorage.setItem("travelItinerary", JSON.stringify(data));
+    }
+    setCurrentFile(path);
+    if (path === "__local__") localStorage.removeItem("travelCurrentFile");
+    else localStorage.setItem("travelCurrentFile", path);
+    setSyncStatus(path === "__local__" ? "idle" : "synced");
+  }
+
+  function handleCreate(name) {
+    const filename = sanitizeFilename(name);
+    const path = `${ITINERARIES_FOLDER}/${filename}.json`;
+    dirtyRef.current = false;
+    setDays([]); setSavedPlaces({}); setCustomHighlights({}); setCustomNotes({});
+    setStartDate(""); setOpenDay(null);
+    setTitle(name); setSubtitle(""); setItineraryNotes("");
+    localStorage.removeItem("travelItinerary");
+    setCurrentFile(path);
+    localStorage.setItem("travelCurrentFile", path);
+    setSyncStatus("idle");
+  }
+
+  function handleClose() {
+    clearTimeout(syncTimerRef.current);
+    setCurrentFile(null);
+    localStorage.removeItem("travelCurrentFile");
+    setSyncStatus("idle");
+  }
+
+  function handleSaveAs() {
+    const name = sanitizeFilename(saveAsName.trim() || title);
+    if (!name) return;
+    const path = `${ITINERARIES_FOLDER}/${name}.json`;
+    setCurrentFile(path);
+    localStorage.setItem("travelCurrentFile", path);
+    dirtyRef.current = true; // force immediate GitHub push
+    setSyncStatus("pending");
+    setSaveAsName("");
+  }
+
   function reloadFromGitHub() {
+    if (!currentFile || currentFile === "__local__") return;
     setSyncStatus("loading");
-    loadFromGitHub(settings)
+    loadFromGitHub({ ...settings, githubFile: currentFile })
       .then(data => {
         if (!data) { setSyncStatus("idle"); return; }
         if (data.days?.length)            setDays(data.days);
@@ -257,16 +328,49 @@ export default function Itinerary() {
   const underway = days.filter(d => d.nm > 0).length;
   const layovers = days.filter(d => d.nm === 0).length;
 
+  // Compute local cache for picker (only meaningful data)
+  const localCache = (() => {
+    if (currentFile) return null; // already have a file open
+    try {
+      const s = localStorage.getItem("travelItinerary");
+      const d = s ? JSON.parse(s) : null;
+      if (!d || (!d.days?.length && !d.title)) return null;
+      return d;
+    } catch { return null; }
+  })();
+
+  if (!currentFile) {
+    return (
+      <ItineraryPicker
+        settings={settings}
+        onSettingsChange={setSettings}
+        onLoad={handleLoad}
+        onCreate={handleCreate}
+        localCache={localCache}
+      />
+    );
+  }
+
   return (
     <div style={{ fontFamily: "Georgia, 'Times New Roman', serif", background: "#0b1929", minHeight: "100vh", color: "#e8dcc8" }}>
 
       {/* ── HEADER ── */}
       <div style={{ background: "linear-gradient(135deg,#0b1929 0%,#112a44 50%,#0b1929 100%)", borderBottom: "1px solid #c9a84c33", padding: "2.5rem 2rem 2rem" }}>
         <div style={{ maxWidth: 820, margin: "0 auto" }}>
-          {/* Subtitle row + sync status + settings gear */}
+          {/* Subtitle row: back button + file name + sync status + settings gear */}
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:".5rem" }}>
-            <div style={{ fontSize:".7rem", letterSpacing:".25em", color:"#c9a84c", textTransform:"uppercase" }}>
-              Pacific Northwest Cruise · July · {days.length} Days
+            <div style={{ display:"flex", alignItems:"center", gap:".75rem" }}>
+              <button onClick={handleClose}
+                style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
+                  fontSize:".7rem", fontFamily:"sans-serif", padding:0 }}>
+                ← All Itineraries
+              </button>
+              <span style={{ color:"#2e4a5e", fontSize:".7rem", fontFamily:"sans-serif" }}>·</span>
+              <div style={{ fontSize:".7rem", letterSpacing:".15em", color:"#c9a84c", textTransform:"uppercase" }}>
+                {days.length} Days
+                {currentFile === "__local__" &&
+                  <span style={{ color:"#e8a838", marginLeft:".5rem" }}>· Local only</span>}
+              </div>
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:".75rem" }}>
               {syncStatus !== "idle" && (() => {
@@ -281,7 +385,12 @@ export default function Itinerary() {
                   conflict:["⚠ Conflict","#e87878"],
                 };
                 const [label, color] = map[syncStatus] ?? ["", "#6b8fa8"];
-                return <span style={{ fontSize:".62rem", color, fontFamily:"sans-serif" }}>{label}</span>;
+                return (
+                  <span style={{ fontSize:".62rem", color, fontFamily:"sans-serif" }}
+                    title={syncError || undefined}>
+                    {label}{syncError && syncStatus === "error" ? ` — ${syncError}` : ""}
+                  </span>
+                );
               })()}
               <button onClick={() => setShowSettings(p => !p)} title="Settings"
                 style={{ background:"none", border:"none", color: showSettings ? "#c9a84c" : "#6b8fa8",
@@ -299,6 +408,37 @@ export default function Itinerary() {
               onClose={() => setShowSettings(false)}
             />
           )}
+
+          {/* Save-to-GitHub banner (local session only) */}
+          {currentFile === "__local__" && (
+            <div style={{ margin: ".75rem 0 1rem", padding: ".75rem 1rem",
+              background: "#1a1800", border: "1px solid #e8a83844", borderRadius: 6,
+              display: "flex", alignItems: "center", gap: ".75rem", flexWrap: "wrap" }}>
+              <span style={{ fontSize: ".78rem", color: "#e8a838", fontFamily: "sans-serif",
+                flexShrink: 0 }}>
+                Not saved to GitHub yet.
+              </span>
+              <input
+                value={saveAsName || title}
+                onChange={e => setSaveAsName(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && handleSaveAs()}
+                placeholder="Itinerary name…"
+                style={{ flex: 1, minWidth: 160, background: "#0d1f33", border: "1px solid #2e5070",
+                  color: "#e8dcc8", borderRadius: 4, padding: ".35rem .65rem",
+                  fontSize: ".82rem", fontFamily: "sans-serif", outline: "none" }}
+              />
+              <button onClick={handleSaveAs}
+                disabled={!settings.githubToken || !settings.githubRepo}
+                title={(!settings.githubToken || !settings.githubRepo) ? "Configure GitHub in Settings ⚙ first" : ""}
+                style={{ background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
+                  borderRadius: 4, padding: ".35rem .85rem", fontSize: ".75rem",
+                  fontFamily: "sans-serif", cursor: "pointer", whiteSpace: "nowrap",
+                  opacity: (!settings.githubToken || !settings.githubRepo) ? 0.45 : 1 }}>
+                Save to GitHub
+              </button>
+            </div>
+          )}
+
           {editingHeader ? (
             <div style={{ marginBottom: "1.5rem" }}>
               <input autoFocus value={headerDraft.title}
@@ -806,7 +946,7 @@ export default function Itinerary() {
           );
         })}
         <div style={{ display:"flex", justifyContent:"center", marginTop:"1rem" }}>
-          <button onClick={() => addBlankDay(days[days.length - 1].day)}
+          <button onClick={() => addBlankDay(days.length > 0 ? days[days.length - 1].day : 0)}
             style={{ background:"none", border:"1px dashed #2e5070", color:"#4e7a9e",
               borderRadius:6, padding:".55rem 1.5rem", fontSize:".78rem",
               fontFamily:"sans-serif", cursor:"pointer", letterSpacing:".05em" }}>
