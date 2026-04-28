@@ -7,10 +7,16 @@ import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 // components (and StrictMode's double-mount) never trigger a second load.
 let placesPromise = null;
 
+function getStoredMapsKey() {
+  try { const s = localStorage.getItem("travelSettings"); return (s ? JSON.parse(s) : {}).googleMapsKey ?? ""; }
+  catch { return ""; }
+}
+
 function loadPlaces() {
   if (!placesPromise) {
-    setOptions({ key: import.meta.env.VITE_GOOGLE_MAPS_API_KEY ?? "", version: "weekly" });
-    placesPromise = importLibrary("places");
+    const key = getStoredMapsKey();
+    setOptions({ key, version: "weekly" });
+    placesPromise = key ? importLibrary("places") : Promise.reject(new Error("no-key"));
   }
   return placesPromise;
 }
@@ -69,7 +75,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete })
 
   // ── Load Maps Places library once ─────────────────────────────────────────
   useEffect(() => {
-    const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    const key = getStoredMapsKey();
     if (!key) { setApiError("missing-key"); return; }
     loadPlaces()
       .then(lib => {
@@ -212,8 +218,8 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete })
         <div style={{ padding: ".6rem 1rem", background: "#0a1a2a", borderLeft: borderAccent,
           fontSize: ".75rem", color: "#4e7a9e", fontFamily: "sans-serif" }}>
           {apiError === "missing-key"
-            ? "Add VITE_GOOGLE_MAPS_API_KEY to .env to enable place search."
-            : "Google Maps failed to load — check your API key or network."}
+            ? "Configure your Google Maps API key in Settings (⚙) to enable place search."
+            : "Google Maps failed to load — check your API key in Settings (⚙)."}
         </div>
       )}
 

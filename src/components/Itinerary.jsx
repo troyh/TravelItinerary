@@ -1,6 +1,30 @@
 import { useState, useEffect, useRef } from "react";
 import { days as initialDays, tagConfig, fuelStops, fuelSummary, tideWarnings } from "../data/itinerary.js";
 import DayPlaces from "./DayPlaces.jsx";
+import Settings from "./Settings.jsx";
+import { loadFromGitHub, saveToGitHub } from "../lib/github.js";
+
+// Migrate old scattered keys → single travelItinerary key, or return null for fresh start
+const _db = (() => {
+  try {
+    const s = localStorage.getItem("travelItinerary");
+    if (s) return JSON.parse(s);
+    const oldKeys = ["travelDays","travelPlaces","travelHighlights","travelNotes","travelStartDate","travelOpenDay"];
+    if (!oldKeys.some(k => localStorage.getItem(k) !== null)) return null;
+    const dy = localStorage.getItem("travelDays");
+    const migrated = {
+      days:       (() => { try { const p = JSON.parse(dy); return Array.isArray(p) && p.length > 0 && typeof p[0].day === "number" ? p : null; } catch { return null; } })(),
+      places:     (() => { try { return JSON.parse(localStorage.getItem("travelPlaces"))     ?? {}; } catch { return {}; } })(),
+      highlights: (() => { try { return JSON.parse(localStorage.getItem("travelHighlights")) ?? {}; } catch { return {}; } })(),
+      notes:      (() => { try { return JSON.parse(localStorage.getItem("travelNotes"))      ?? {}; } catch { return {}; } })(),
+      startDate:  localStorage.getItem("travelStartDate") ?? "",
+      openDay:    (() => { const s = localStorage.getItem("travelOpenDay"); return s ? Number(s) : null; })(),
+    };
+    localStorage.setItem("travelItinerary", JSON.stringify(migrated));
+    oldKeys.forEach(k => localStorage.removeItem(k));
+    return migrated;
+  } catch { return null; }
+})();
 
 function remapKeys(obj, pivot, delta) {
   const result = {};
@@ -20,38 +44,69 @@ const BLANK_DAY = {
 };
 
 export default function Itinerary() {
-  const [openDay, setOpenDay] = useState(() => { try { const s = localStorage.getItem("travelOpenDay"); return s ? Number(s) : 1; } catch { return 1; } });
-  const [activeTab, setActiveTab] = useState("itinerary");
-  const [startDate, setStartDate] = useState(() => { try { return localStorage.getItem("travelStartDate") ?? ""; } catch { return ""; } });
-  const [customHighlights, setCustomHighlights] = useState(() => { try { const s = localStorage.getItem("travelHighlights"); return s ? JSON.parse(s) : {}; } catch { return {}; } });
-  const [newHighlight, setNewHighlight] = useState("");
-  const [customNotes, setCustomNotes] = useState(() => { try { const s = localStorage.getItem("travelNotes"); return s ? JSON.parse(s) : {}; } catch { return {}; } });
-  const [editingNoteDay, setEditingNoteDay] = useState(null);
-  const [noteDraft, setNoteDraft] = useState("");
-  const [savedPlaces, setSavedPlaces] = useState(() => { try { const s = localStorage.getItem("travelPlaces"); return s ? JSON.parse(s) : {}; } catch { return {}; } });
-  const [days, setDays] = useState(() => {
-    try {
-      const s = localStorage.getItem("travelDays");
-      if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0 && typeof p[0].day === "number") return p; }
-    } catch {}
-    return initialDays;
-  });
-  const [editingCoreDay, setEditingCoreDay]     = useState(null);
-  const [coreDraft, setCoreDraft]               = useState({});
+  const [openDay,          setOpenDay]          = useState(() => _db?.openDay ?? null);
+  const [activeTab,        setActiveTab]        = useState("itinerary");
+  const [startDate,        setStartDate]        = useState(() => _db?.startDate ?? "");
+  const [customHighlights, setCustomHighlights] = useState(() => _db?.highlights ?? {});
+  const [newHighlight,     setNewHighlight]     = useState("");
+  const [customNotes,      setCustomNotes]      = useState(() => _db?.notes ?? {});
+  const [editingNoteDay,   setEditingNoteDay]   = useState(null);
+  const [noteDraft,        setNoteDraft]        = useState("");
+  const [savedPlaces,      setSavedPlaces]      = useState(() => _db?.places ?? {});
+  const [days,             setDays]             = useState(() => _db?.days ?? []);
+  const [editingCoreDay,   setEditingCoreDay]   = useState(null);
+  const [coreDraft,        setCoreDraft]        = useState({});
   const [confirmDeleteDay, setConfirmDeleteDay] = useState(null);
-  const inputRef = useRef(null);
+  const [settings,         setSettings]         = useState(() => { try { const s = localStorage.getItem("travelSettings"); return s ? JSON.parse(s) : {}; } catch { return {}; } });
+  const [showSettings,     setShowSettings]     = useState(false);
+  const [syncStatus,       setSyncStatus]       = useState("idle");
+  const inputRef    = useRef(null);
+  const syncTimerRef = useRef(null);
 
   useEffect(() => {
     setNewHighlight(""); setEditingNoteDay(null);
     setEditingCoreDay(null); setConfirmDeleteDay(null);
   }, [openDay]);
 
-  useEffect(() => { localStorage.setItem("travelStartDate",   startDate);                       }, [startDate]);
-  useEffect(() => { localStorage.setItem("travelDays",        JSON.stringify(days));             }, [days]);
-  useEffect(() => { if (openDay != null) localStorage.setItem("travelOpenDay", String(openDay)); }, [openDay]);
-  useEffect(() => { localStorage.setItem("travelPlaces",      JSON.stringify(savedPlaces));      }, [savedPlaces]);
-  useEffect(() => { localStorage.setItem("travelHighlights",  JSON.stringify(customHighlights)); }, [customHighlights]);
-  useEffect(() => { localStorage.setItem("travelNotes",       JSON.stringify(customNotes));       }, [customNotes]);
+  // Single combined save: localStorage immediately + debounced GitHub push
+  useEffect(() => {
+    const data = { days, places: savedPlaces, highlights: customHighlights,
+                   notes: customNotes, startDate, openDay };
+    localStorage.setItem("travelItinerary", JSON.stringify(data));
+    if (settings.githubToken && settings.githubRepo) {
+      clearTimeout(syncTimerRef.current);
+      setSyncStatus("pending");
+      syncTimerRef.current = setTimeout(async () => {
+        setSyncStatus("saving");
+        try {
+          await saveToGitHub(data, settings);
+          setSyncStatus("saved");
+        } catch (err) {
+          setSyncStatus(err.message === "conflict" ? "conflict" : "error");
+        }
+      }, 2000);
+    }
+  }, [days, savedPlaces, customHighlights, customNotes, startDate, openDay]);
+
+  useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
+
+  // Load from GitHub on mount (localStorage already loaded synchronously above)
+  useEffect(() => {
+    if (!settings.githubToken || !settings.githubRepo) return;
+    setSyncStatus("loading");
+    loadFromGitHub(settings)
+      .then(data => {
+        if (!data) { setSyncStatus("idle"); return; }
+        if (data.days?.length)              setDays(data.days);
+        if (data.places)                    setSavedPlaces(data.places);
+        if (data.highlights)                setCustomHighlights(data.highlights);
+        if (data.notes)                     setCustomNotes(data.notes);
+        if (data.startDate !== undefined)   setStartDate(data.startDate);
+        if (data.openDay != null)           setOpenDay(data.openDay);
+        setSyncStatus("synced");
+      })
+      .catch(() => setSyncStatus("offline"));
+  }, []);
 
   function startEditNote(dayNum, current) {
     setEditingNoteDay(dayNum);
@@ -159,6 +214,22 @@ export default function Itinerary() {
     setEditingCoreDay(null);
   }
 
+  function reloadFromGitHub() {
+    setSyncStatus("loading");
+    loadFromGitHub(settings)
+      .then(data => {
+        if (!data) { setSyncStatus("idle"); return; }
+        if (data.days?.length)            setDays(data.days);
+        if (data.places)                  setSavedPlaces(data.places);
+        if (data.highlights)              setCustomHighlights(data.highlights);
+        if (data.notes)                   setCustomNotes(data.notes);
+        if (data.startDate !== undefined) setStartDate(data.startDate);
+        if (data.openDay != null)         setOpenDay(data.openDay);
+        setSyncStatus("synced");
+      })
+      .catch(() => setSyncStatus("error"));
+  }
+
   function getDayDate(dayNum) {
     if (!startDate) return null;
     const [y, m, d] = startDate.split("-").map(Number);
@@ -179,9 +250,42 @@ export default function Itinerary() {
       {/* ── HEADER ── */}
       <div style={{ background: "linear-gradient(135deg,#0b1929 0%,#112a44 50%,#0b1929 100%)", borderBottom: "1px solid #c9a84c33", padding: "2.5rem 2rem 2rem" }}>
         <div style={{ maxWidth: 820, margin: "0 auto" }}>
-          <div style={{ fontSize: ".7rem", letterSpacing: ".25em", color: "#c9a84c", textTransform: "uppercase", marginBottom: ".5rem" }}>
-            Pacific Northwest Cruise · July · {days.length} Days
+          {/* Subtitle row + sync status + settings gear */}
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:".5rem" }}>
+            <div style={{ fontSize:".7rem", letterSpacing:".25em", color:"#c9a84c", textTransform:"uppercase" }}>
+              Pacific Northwest Cruise · July · {days.length} Days
+            </div>
+            <div style={{ display:"flex", alignItems:"center", gap:".75rem" }}>
+              {syncStatus !== "idle" && (() => {
+                const map = {
+                  loading: ["Loading…",  "#6b8fa8"],
+                  pending: ["Pending",   "#e8a838"],
+                  saving:  ["Saving…",   "#e8a838"],
+                  saved:   ["● Synced",  "#5cb85c"],
+                  synced:  ["● Synced",  "#5cb85c"],
+                  offline: ["Offline",   "#4e7a9e"],
+                  error:   ["⚠ Error",   "#e87878"],
+                  conflict:["⚠ Conflict","#e87878"],
+                };
+                const [label, color] = map[syncStatus] ?? ["", "#6b8fa8"];
+                return <span style={{ fontSize:".62rem", color, fontFamily:"sans-serif" }}>{label}</span>;
+              })()}
+              <button onClick={() => setShowSettings(p => !p)} title="Settings"
+                style={{ background:"none", border:"none", color: showSettings ? "#c9a84c" : "#6b8fa8",
+                  cursor:"pointer", fontSize:"1rem", padding:0, lineHeight:1 }}>
+                ⚙
+              </button>
+            </div>
           </div>
+
+          {/* Settings panel */}
+          {showSettings && (
+            <Settings
+              settings={settings}
+              onSave={draft => { setSettings(draft); setShowSettings(false); }}
+              onClose={() => setShowSettings(false)}
+            />
+          )}
           <h1 style={{ fontSize: "clamp(1.6rem,4vw,2.4rem)", fontWeight: 400, color: "#f5edd8", margin: "0 0 .4rem", letterSpacing: "-.02em", lineHeight: 1.15 }}>
             Seattle to the Broughton Islands
           </h1>
@@ -259,6 +363,22 @@ export default function Itinerary() {
         </div>
       </div>
 
+      {/* ── CONFLICT BANNER ── */}
+      {syncStatus === "conflict" && (
+        <div style={{ background:"#3a0a0a", borderBottom:"1px solid #dc354566", padding:".6rem 1rem",
+          display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+          <span style={{ fontSize:".78rem", color:"#e87878", fontFamily:"sans-serif" }}>
+            ⚠ Conflict — GitHub has a newer version.
+          </span>
+          <button onClick={reloadFromGitHub}
+            style={{ background:"none", border:"1px solid #dc354566", color:"#e87878",
+              borderRadius:4, padding:".25rem .65rem", fontSize:".72rem",
+              fontFamily:"sans-serif", cursor:"pointer" }}>
+            Reload from GitHub
+          </button>
+        </div>
+      )}
+
       {/* ── TABS ── */}
       <div style={{ borderBottom:"1px solid #1e3a5240", background:"#0d1f33" }}>
         <div style={{ maxWidth:820, margin:"0 auto", display:"flex" }}>
@@ -278,6 +398,17 @@ export default function Itinerary() {
       <div style={{ maxWidth:820, margin:"0 auto", padding:"1.5rem 1rem 3rem" }}>
 
         {/* ── ITINERARY TAB ── */}
+        {activeTab === "itinerary" && days.length === 0 && (
+          <div style={{ textAlign:"center", padding:"3rem 1rem", fontFamily:"sans-serif" }}>
+            <div style={{ color:"#4e7a9e", marginBottom:"1.25rem", fontSize:".9rem" }}>No itinerary yet.</div>
+            <button onClick={() => { setDays(initialDays); setOpenDay(1); }}
+              style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
+                borderRadius:6, padding:".55rem 1.5rem", fontSize:".82rem",
+                fontFamily:"sans-serif", cursor:"pointer" }}>
+              Load sample itinerary
+            </button>
+          </div>
+        )}
         {activeTab === "itinerary" && (<>
         {days.map(d => {
           const isOpen    = openDay === d.day;
