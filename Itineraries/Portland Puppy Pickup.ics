@@ -8,7 +8,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260515
 DTEND;VALUE=DATE:20260516
 SUMMARY:Day 1: Drive to Portland
-DESCRIPTION:\nHighlights:\n• Check into hotel\n• Dinner at a nice restaurant
+DESCRIPTION:\nHighlights:\n• Check into hotel\n• Dinner at a nice restaurant\n\nNote: I couldn't get a reservation for this night at Le Pigeon. I'm on the "notify me" list\, but doubtful I'll get one.
 UID:day-1-20260515@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
