@@ -3,6 +3,7 @@ import NoteMarkdown from "./NoteMarkdown.jsx";
 import { days as initialDays, tagConfig, fuelStops, fuelSummary, tideWarnings } from "../data/itinerary.js";
 import DayPlaces from "./DayPlaces.jsx";
 import DayDirections from "./DayDirections.jsx";
+import DayRoute from "./DayRoute.jsx";
 import Settings from "./Settings.jsx";
 import { loadFromGitHub, saveToGitHub, ITINERARIES_FOLDER } from "../lib/github.js";
 import ItineraryPicker from "./ItineraryPicker.jsx";
@@ -63,6 +64,7 @@ export default function Itinerary() {
   const [noteDraft,        setNoteDraft]        = useState("");
   const [savedPlaces,      setSavedPlaces]      = useState(() => _db?.places ?? {});
   const [savedDirections,  setSavedDirections]  = useState(() => _db?.directions ?? {});
+  const [savedRoutes,      setSavedRoutes]      = useState(() => _db?.routes ?? {});
   const [days,             setDays]             = useState(() => _db?.days ?? []);
   const [editingCoreDay,   setEditingCoreDay]   = useState(null);
   const [coreDraft,        setCoreDraft]        = useState({});
@@ -93,7 +95,7 @@ export default function Itinerary() {
   // Single combined save: localStorage immediately + debounced GitHub push
   useEffect(() => {
     if (!currentFile) return;
-    const data = { days, places: savedPlaces, directions: savedDirections,
+    const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
                    highlights: customHighlights, notes: customNotes, startDate, openDay,
                    title, subtitle, itineraryNotes };
     localStorage.setItem("travelItinerary", JSON.stringify(data));
@@ -121,7 +123,7 @@ export default function Itinerary() {
         }
       }, 2000);
     }
-  }, [currentFile, days, savedPlaces, savedDirections, customHighlights, customNotes, startDate, openDay, title, subtitle, itineraryNotes]);
+  }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, customHighlights, customNotes, startDate, openDay, title, subtitle, itineraryNotes]);
 
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
 
@@ -135,6 +137,7 @@ export default function Itinerary() {
         if (data.days?.length)              setDays(data.days);
         if (data.places)                    setSavedPlaces(data.places);
         if (data.directions)                setSavedDirections(data.directions);
+        if (data.routes)                    setSavedRoutes(data.routes);
         if (data.highlights)                setCustomHighlights(data.highlights);
         if (data.notes)                     setCustomNotes(data.notes);
         if (data.startDate !== undefined)          setStartDate(data.startDate);
@@ -198,6 +201,26 @@ export default function Itinerary() {
     }));
   }
 
+  function updateDayFields(dayNum, updates) {
+    setDays(prev => prev.map(d => d.day === dayNum ? { ...d, ...updates } : d));
+  }
+
+  function addRoute(dayNum, route) {
+    setSavedRoutes(prev => ({ ...prev, [dayNum]: [...(prev[dayNum] ?? []), route] }));
+  }
+  function updateRoute(dayNum, id, updates) {
+    setSavedRoutes(prev => ({
+      ...prev,
+      [dayNum]: (prev[dayNum] ?? []).map(r => r.id === id ? { ...r, ...updates } : r),
+    }));
+  }
+  function deleteRoute(dayNum, id) {
+    setSavedRoutes(prev => ({
+      ...prev,
+      [dayNum]: (prev[dayNum] ?? []).filter(r => r.id !== id),
+    }));
+  }
+
   function addDirection(dayNum, dir) {
     setSavedDirections(prev => ({ ...prev, [dayNum]: [...(prev[dayNum] ?? []), dir] }));
   }
@@ -226,6 +249,7 @@ export default function Itinerary() {
     setCustomNotes(prev => { const s = remapKeys(prev, newNum, +1); if (prev[dayNum] !== undefined) s[newNum] = prev[dayNum]; return s; });
     setSavedPlaces(prev => { const s = remapKeys(prev, newNum, +1); if (prev[dayNum]) s[newNum] = prev[dayNum].map(p => ({ ...p, id: crypto.randomUUID() })); return s; });
     setSavedDirections(prev => remapKeys(prev, newNum, +1));
+    setSavedRoutes(prev => remapKeys(prev, newNum, +1));
     setOpenDay(newNum);
   }
 
@@ -239,6 +263,7 @@ export default function Itinerary() {
     setCustomNotes(prev => remapKeys(prev, newNum, +1));
     setSavedPlaces(prev => remapKeys(prev, newNum, +1));
     setSavedDirections(prev => remapKeys(prev, newNum, +1));
+    setSavedRoutes(prev => remapKeys(prev, newNum, +1));
     setOpenDay(newNum);
     setEditingCoreDay(newNum);
     setCoreDraft({ leg: "New Day", overnight: "", nm: 0, hrs: 0 });
@@ -251,6 +276,7 @@ export default function Itinerary() {
     setCustomNotes(prev => remapKeys(prev, dayNum, -1));
     setSavedPlaces(prev => remapKeys(prev, dayNum, -1));
     setSavedDirections(prev => remapKeys(prev, dayNum, -1));
+    setSavedRoutes(prev => remapKeys(prev, dayNum, -1));
     setOpenDay(prev => prev === dayNum ? Math.max(1, dayNum - 1) : prev > dayNum ? prev - 1 : prev);
     setConfirmDeleteDay(null);
     setEditingCoreDay(null);
@@ -275,6 +301,8 @@ export default function Itinerary() {
   function applyData(data) {
     setDays(data.days?.length ? data.days : []);
     setSavedPlaces(data.places ?? {});
+    setSavedDirections(data.directions ?? {});
+    setSavedRoutes(data.routes ?? {});
     setCustomHighlights(data.highlights ?? {});
     setCustomNotes(data.notes ?? {});
     setStartDate(data.startDate ?? "");
@@ -300,7 +328,8 @@ export default function Itinerary() {
     const filename = sanitizeFilename(name);
     const path = `${ITINERARIES_FOLDER}/${filename}.json`;
     dirtyRef.current = false;
-    setDays([]); setSavedPlaces({}); setCustomHighlights({}); setCustomNotes({});
+    setDays([]); setSavedPlaces({}); setSavedDirections({}); setSavedRoutes({});
+    setCustomHighlights({}); setCustomNotes({});
     setStartDate(""); setOpenDay(null);
     setTitle(name); setSubtitle(""); setItineraryNotes("");
     localStorage.removeItem("travelItinerary");
@@ -1075,6 +1104,15 @@ export default function Itinerary() {
                     onAdd={dir => addDirection(d.day, dir)}
                     onUpdate={(id, updates) => updateDirection(d.day, id, updates)}
                     onDelete={id => deleteDirection(d.day, id)}
+                  />
+
+                  {/* Boating Routes */}
+                  <DayRoute
+                    routes={savedRoutes[d.day] ?? []}
+                    onAdd={route => addRoute(d.day, route)}
+                    onUpdate={(id, updates) => updateRoute(d.day, id, updates)}
+                    onDelete={id => deleteRoute(d.day, id)}
+                    onApplyToDay={updates => updateDayFields(d.day, updates)}
                   />
 
                   {/* Tide warning */}
