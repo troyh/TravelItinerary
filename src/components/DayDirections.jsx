@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import NoteMarkdown from "./NoteMarkdown.jsx";
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 
 // ── Module-level singleton ─────────────────────────────────────────────────
@@ -389,11 +390,10 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete })
                 </div>
               ) : (
                 <div onClick={() => { setEditingId(dir.id); setNoteDraft(dir.notes); }}
-                  style={{ marginTop: ".35rem", fontSize: ".78rem",
-                    color: dir.notes ? "#8fb0cc" : "#2e4a5e", fontFamily: "sans-serif",
-                    lineHeight: 1.5, cursor: "pointer",
-                    fontStyle: dir.notes ? "normal" : "italic" }}>
-                  {dir.notes || "Add notes…"}
+                  style={{ marginTop: ".35rem", cursor: "pointer" }}>
+                  {dir.notes
+                    ? <NoteMarkdown>{dir.notes}</NoteMarkdown>
+                    : <span style={{ fontSize:".78rem", color:"#2e4a5e", fontFamily:"sans-serif", fontStyle:"italic" }}>Add notes…</span>}
                 </div>
               )}
             </div>
