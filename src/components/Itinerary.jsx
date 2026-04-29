@@ -6,6 +6,7 @@ import DayDirections from "./DayDirections.jsx";
 import Settings from "./Settings.jsx";
 import { loadFromGitHub, saveToGitHub, ITINERARIES_FOLDER } from "../lib/github.js";
 import ItineraryPicker from "./ItineraryPicker.jsx";
+import HistoryPanel from "./HistoryPanel.jsx";
 
 function sanitizeFilename(name) {
   return name.trim().replace(/[^\w\s-]/g, "").replace(/\s+/g, " ").trim().slice(0, 80);
@@ -68,6 +69,7 @@ export default function Itinerary() {
   const [confirmDeleteDay, setConfirmDeleteDay] = useState(null);
   const [settings,         setSettings]         = useState(() => { try { const s = localStorage.getItem("travelSettings"); return s ? JSON.parse(s) : {}; } catch { return {}; } });
   const [showSettings,     setShowSettings]     = useState(false);
+  const [showHistory,      setShowHistory]      = useState(false);
   const [syncStatus,       setSyncStatus]       = useState("idle");
   const [syncError,        setSyncError]        = useState("");
   const [title,            setTitle]            = useState(() => _db?.title    ?? "Seattle to the Broughton Islands");
@@ -377,6 +379,15 @@ export default function Itinerary() {
     URL.revokeObjectURL(url);
   }
 
+  async function handleRestore(sha) {
+    const data = await loadFromGitHub({ ...settings, githubFile: currentFile, githubBranch: sha });
+    if (data) {
+      applyData(data);
+      dirtyRef.current = true;
+    }
+    setShowHistory(false);
+  }
+
   function reloadFromGitHub() {
     if (!currentFile || currentFile === "__local__") return;
     setSyncStatus("loading");
@@ -488,7 +499,16 @@ export default function Itinerary() {
                   </span>
                 );
               })()}
-              <button onClick={() => setShowSettings(p => !p)} title="Settings"
+              {currentFile && currentFile !== "__local__" && settings.githubToken && (
+                <button onClick={() => { setShowHistory(p => !p); setShowSettings(false); }}
+                  title="Version history"
+                  style={{ background:"none", border:"none",
+                    color: showHistory ? "#c9a84c" : "#6b8fa8",
+                    cursor:"pointer", fontSize:".9rem", padding:0, lineHeight:1 }}>
+                  ⏱
+                </button>
+              )}
+              <button onClick={() => { setShowSettings(p => !p); setShowHistory(false); }} title="Settings"
                 style={{ background:"none", border:"none", color: showSettings ? "#c9a84c" : "#6b8fa8",
                   cursor:"pointer", fontSize:"1rem", padding:0, lineHeight:1 }}>
                 ⚙
@@ -502,6 +522,16 @@ export default function Itinerary() {
               settings={settings}
               onSave={draft => { setSettings(draft); setShowSettings(false); }}
               onClose={() => setShowSettings(false)}
+            />
+          )}
+
+          {/* History panel */}
+          {showHistory && (
+            <HistoryPanel
+              settings={settings}
+              currentFile={currentFile}
+              onRestore={handleRestore}
+              onClose={() => setShowHistory(false)}
             />
           )}
 

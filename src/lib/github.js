@@ -37,6 +37,21 @@ export async function testConnection({ githubToken, githubRepo }) {
   await throwIfNotOk(res, "testConnection");
 }
 
+export async function listCommits({ githubToken, githubRepo, githubFile, githubBranch = "main" }, page = 1) {
+  const res = await fetch(
+    `https://api.github.com/repos/${normalizeRepo(githubRepo)}/commits` +
+    `?path=${encodePath(githubFile)}&sha=${encodeURIComponent(githubBranch)}&per_page=30&page=${page}`,
+    { headers: authHeaders(githubToken) }
+  );
+  if (!res.ok) return [];
+  const commits = await res.json();
+  return commits.map(c => ({
+    sha:     c.sha,
+    message: c.commit.message,
+    date:    c.commit.author.date,
+  }));
+}
+
 export async function listItineraries({ githubToken, githubRepo, githubBranch = "main" }) {
   const res = await fetch(
     `https://api.github.com/repos/${normalizeRepo(githubRepo)}/contents/${ITINERARIES_FOLDER}?ref=${encodeURIComponent(githubBranch)}`,
