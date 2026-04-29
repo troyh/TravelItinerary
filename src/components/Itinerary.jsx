@@ -1,4 +1,7 @@
 import { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm    from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 import { days as initialDays, tagConfig, fuelStops, fuelSummary, tideWarnings } from "../data/itinerary.js";
 import DayPlaces from "./DayPlaces.jsx";
 import DayDirections from "./DayDirections.jsx";
@@ -48,6 +51,27 @@ const BLANK_DAY = {
   tags: ["layover"], fuelStop: false, tideWarning: false,
   highlights: [], note: "",
 };
+
+const NOTE_PLUGINS = [remarkGfm, remarkBreaks];
+const NOTE_COMPONENTS = {
+  p:          ({ children }) => <p style={{ margin:"0 0 .45rem", fontSize:".82rem", color:"#8fb0cc", fontFamily:"sans-serif", lineHeight:1.55 }}>{children}</p>,
+  a:          ({ href, children }) => <a href={href} target="_blank" rel="noopener noreferrer" style={{ color:"#4a9eff" }}>{children}</a>,
+  ul:         ({ children }) => <ul style={{ margin:"0 0 .45rem", paddingLeft:"1.25rem", fontSize:".82rem", color:"#8fb0cc", fontFamily:"sans-serif", lineHeight:1.55 }}>{children}</ul>,
+  ol:         ({ children }) => <ol style={{ margin:"0 0 .45rem", paddingLeft:"1.25rem", fontSize:".82rem", color:"#8fb0cc", fontFamily:"sans-serif", lineHeight:1.55 }}>{children}</ol>,
+  li:         ({ children }) => <li style={{ marginBottom:".15rem" }}>{children}</li>,
+  h1:         ({ children }) => <h1 style={{ fontSize:"1rem",   fontWeight:600, color:"#f5edd8", margin:"0 0 .3rem", fontFamily:"sans-serif" }}>{children}</h1>,
+  h2:         ({ children }) => <h2 style={{ fontSize:".9rem",  fontWeight:600, color:"#f5edd8", margin:"0 0 .3rem", fontFamily:"sans-serif" }}>{children}</h2>,
+  h3:         ({ children }) => <h3 style={{ fontSize:".82rem", fontWeight:600, color:"#c9a84c", margin:"0 0 .3rem", fontFamily:"sans-serif" }}>{children}</h3>,
+  strong:     ({ children }) => <strong style={{ color:"#e8dcc8", fontWeight:600 }}>{children}</strong>,
+  em:         ({ children }) => <em style={{ color:"#9ab8d4" }}>{children}</em>,
+  code:       ({ children }) => <code style={{ background:"#0a1a2a", color:"#c9a84c", padding:"1px 5px", borderRadius:3, fontSize:".78rem", fontFamily:"monospace" }}>{children}</code>,
+  blockquote: ({ children }) => <blockquote style={{ margin:"0 0 .45rem", paddingLeft:".75rem", borderLeft:"3px solid #2e5070", color:"#6b8fa8", fontStyle:"italic" }}>{children}</blockquote>,
+  hr:         () => <hr style={{ border:"none", borderTop:"1px solid #1e3a52", margin:".6rem 0" }} />,
+};
+function NoteMarkdown({ children }) {
+  if (!children) return null;
+  return <ReactMarkdown remarkPlugins={NOTE_PLUGINS} components={NOTE_COMPONENTS}>{children}</ReactMarkdown>;
+}
 
 export default function Itinerary() {
   const [openDay,          setOpenDay]          = useState(() => _db?.openDay ?? null);
@@ -309,6 +333,7 @@ export default function Itinerary() {
     clearTimeout(syncTimerRef.current);
     setCurrentFile(null);
     localStorage.removeItem("travelCurrentFile");
+    localStorage.removeItem("travelItinerary");
     setSyncStatus("idle");
   }
 
@@ -408,6 +433,13 @@ export default function Itinerary() {
   const totalNM  = days.reduce((s, d) => s + d.nm, 0);
   const underway = days.filter(d => d.nm > 0).length;
   const layovers = days.filter(d => d.nm === 0).length;
+  const todos = days.flatMap(d => {
+    const note = customNotes[d.day] !== undefined ? customNotes[d.day] : d.note;
+    if (!note) return [];
+    return note.split("\n")
+      .filter(line => /^TODO:/i.test(line.trim()))
+      .map(line => ({ day: d.day, text: line.trim().replace(/^TODO:\s*/i, "") }));
+  });
 
   // Compute local cache for picker (only meaningful data)
   const localCache = (() => {
@@ -671,9 +703,8 @@ export default function Itinerary() {
               </div>
             ) : itineraryNotes ? (
               <div style={{ display:"flex", gap:".75rem", alignItems:"flex-start" }}>
-                <div style={{ flex:1, fontSize:".82rem", color:"#8fb0cc", fontFamily:"sans-serif",
-                  lineHeight:1.6, whiteSpace:"pre-wrap" }}>
-                  {itineraryNotes}
+                <div style={{ flex:1 }}>
+                  <NoteMarkdown>{itineraryNotes}</NoteMarkdown>
                 </div>
                 <button onClick={() => setEditingNotes(true)}
                   style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
@@ -689,6 +720,28 @@ export default function Itinerary() {
               </button>
             )}
           </div>
+
+          {/* TODOs */}
+          {todos.length > 0 && (
+            <div style={{ marginBottom:"1.25rem", padding:".65rem .85rem",
+              background:"#1a1400", border:"1px solid #e8a83844", borderRadius:5 }}>
+              <div style={{ fontSize:".62rem", color:"#e8a838", letterSpacing:".12em",
+                textTransform:"uppercase", fontFamily:"sans-serif", marginBottom:".5rem" }}>
+                {todos.length} TODO{todos.length !== 1 ? "s" : ""}
+              </div>
+              {todos.map((t, i) => (
+                <div key={i}
+                  onClick={() => { setOpenDay(t.day); setActiveTab("itinerary"); }}
+                  style={{ display:"flex", gap:".65rem", marginBottom: i < todos.length - 1 ? ".3rem" : 0,
+                    cursor:"pointer", alignItems:"baseline" }}>
+                  <span style={{ fontSize:".65rem", color:"#e8a838", fontFamily:"sans-serif",
+                    flexShrink:0, opacity:.8 }}>Day {t.day}</span>
+                  <span style={{ fontSize:".78rem", color:"#e8dcc8", fontFamily:"sans-serif",
+                    lineHeight:1.4 }}>{t.text}</span>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Day-strip */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
@@ -986,7 +1039,7 @@ export default function Itinerary() {
                             </div>
                           </>
                         ) : (
-                          <div style={{ fontSize:".82rem", color:"#8fb0cc", fontFamily:"sans-serif", lineHeight:1.55 }}>{note}</div>
+                          <div><NoteMarkdown>{note}</NoteMarkdown></div>
                         )}
                       </div>
                     );
