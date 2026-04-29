@@ -448,6 +448,16 @@ export default function Itinerary() {
     };
   }
 
+  const dateRange = (() => {
+    if (!startDate || !days.length) return null;
+    const [y, m, d] = startDate.split("-").map(Number);
+    const start = new Date(y, m - 1, d);
+    const end   = new Date(y, m - 1, d + days.length - 1);
+    const fmtShort = dt => dt.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    const fmtFull  = dt => dt.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    return `${fmtShort(start)} – ${fmtFull(end)}`;
+  })();
+
   const totalNM  = days.reduce((s, d) => s + d.nm, 0);
   const underway = days.filter(d => d.nm > 0).length;
   const layovers = days.filter(d => d.nm === 0).length;
@@ -502,8 +512,12 @@ export default function Itinerary() {
                 ← All Itineraries
               </button>
               <span style={{ color:"#2e4a5e", fontSize:".7rem", fontFamily:"sans-serif" }}>·</span>
-              <div style={{ fontSize:".7rem", letterSpacing:".15em", color:"#c9a84c", textTransform:"uppercase" }}>
-                {days.length} Days
+              <div style={{ fontSize:".7rem", color:"#c9a84c", fontFamily:"sans-serif",
+                letterSpacing: dateRange ? ".03em" : ".15em",
+                textTransform: dateRange ? "none" : "uppercase" }}>
+                {dateRange
+                  ? <>{dateRange} <span style={{ opacity:.6 }}>· {days.length} days</span></>
+                  : <>{days.length} Days</>}
                 {currentFile === "__local__" &&
                   <span style={{ color:"#e8a838", marginLeft:".5rem" }}>· Local only</span>}
               </div>
