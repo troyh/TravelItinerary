@@ -131,6 +131,8 @@ export default function Itinerary() {
 
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
 
+  useEffect(() => { document.title = title || "Travel Itinerary"; }, [title]);
+
   // Load from GitHub on mount (localStorage already loaded synchronously above)
   useEffect(() => {
     if (!settings.githubToken || !effectiveRepo || !currentFile || currentFile === "__local__") return;

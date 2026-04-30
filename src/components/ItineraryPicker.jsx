@@ -27,6 +27,8 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
   const [loadError,    setLoadError]    = useState(null);
   const [showSettings, setShowSettings] = useState(false);
 
+  useEffect(() => { document.title = "Travel Itinerary"; }, []);
+
   const effectiveRepo = settings.githubRepo || inferRepo() || "";
   const ghSettings = { ...settings, githubRepo: effectiveRepo, githubBranch: settings.githubBranch || "data" };
   const canRead  = !!effectiveRepo;
