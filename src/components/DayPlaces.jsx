@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import NoteMarkdown from "./NoteMarkdown.jsx";
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
+import { loadMapKit, appleAutocomplete, appleFetchPlaceDetails,
+         applePlaceMapsUrl, getStoredProviderSettings } from "../lib/mapkit.js";
 
-// ── Module-level singleton ───────────────────────────────────────────────────
-// v2 API: setOptions() + importLibrary() instead of deprecated Loader class.
-// The promise is cached at module scope so multiple mounted DayPlaces
-// components (and StrictMode's double-mount) never trigger a second load.
+// ── Module-level singletons ──────────────────────────────────────────────────
 let placesPromise = null;
+let applePromise  = null;
 
 function getStoredMapsKey() {
   try { const s = localStorage.getItem("travelSettings"); return (s ? JSON.parse(s) : {}).googleMapsKey ?? ""; }
@@ -20,6 +20,14 @@ function loadPlaces() {
     placesPromise = key ? importLibrary("places") : Promise.reject(new Error("no-key"));
   }
   return placesPromise;
+}
+
+function loadAppleMaps() {
+  if (!applePromise) {
+    const { appleMapKitToken } = getStoredProviderSettings();
+    applePromise = loadMapKit(appleMapKitToken);
+  }
+  return applePromise;
 }
 
 // ── Constants ────────────────────────────────────────────────────────────────
@@ -53,6 +61,7 @@ function detectCategory(types = []) {
 
 // ── Component ────────────────────────────────────────────────────────────────
 export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete }) {
+  const { provider } = getStoredProviderSettings();
   // Maps API lifecycle
   const [apiReady, setApiReady] = useState(false);
   const [apiError, setApiError] = useState(null); // null | "missing-key" | "load-failed"
@@ -74,23 +83,33 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete })
   // Display filter
   const [activeFilter, setActiveFilter] = useState("all");
 
-  // ── Load Maps Places library once ─────────────────────────────────────────
+  // ── Load Maps library once ────────────────────────────────────────────────
   useEffect(() => {
-    const key = getStoredMapsKey();
-    if (!key) { setApiError("missing-key"); return; }
-    loadPlaces()
-      .then(lib => {
-        placesLibRef.current = lib;
-        window.gm_authFailure = () => setApiError("load-failed");
-        setApiReady(true);
-      })
-      .catch(() => setApiError("load-failed"));
+    if (provider === "apple") {
+      const { appleMapKitToken } = getStoredProviderSettings();
+      if (!appleMapKitToken) { setApiError("missing-key"); return; }
+      loadAppleMaps()
+        .then(mk => { placesLibRef.current = mk; setApiReady(true); })
+        .catch(() => setApiError("load-failed"));
+    } else {
+      const key = getStoredMapsKey();
+      if (!key) { setApiError("missing-key"); return; }
+      loadPlaces()
+        .then(lib => {
+          placesLibRef.current = lib;
+          window.gm_authFailure = () => setApiError("load-failed");
+          setApiReady(true);
+        })
+        .catch(() => setApiError("load-failed"));
+    }
   }, []);
 
   // ── Search helpers ────────────────────────────────────────────────────────
   function openSearch() {
-    const { AutocompleteSessionToken } = placesLibRef.current;
-    sessionTokenRef.current = new AutocompleteSessionToken();
+    if (provider === "google") {
+      const { AutocompleteSessionToken } = placesLibRef.current;
+      sessionTokenRef.current = new AutocompleteSessionToken();
+    }
     setIsSearching(true);
   }
 
@@ -112,42 +131,75 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete })
     setLoadingPredictions(true);
     debounceRef.current = setTimeout(async () => {
       try {
-        const { AutocompleteSuggestion } = placesLibRef.current;
-        const { suggestions } = await AutocompleteSuggestion.fetchAutocompleteSuggestions({
-          input: value,
-          sessionToken: sessionTokenRef.current,
-          locationBias: { lat: LOCATION_LAT, lng: LOCATION_LNG },
-        });
-        setLoadingPredictions(false);
-        setPredictions(suggestions.filter(s => s.placePrediction).slice(0, 5));
+        if (provider === "apple") {
+          const results = await appleAutocomplete(
+            placesLibRef.current, value, { lat: LOCATION_LAT, lng: LOCATION_LNG }
+          );
+          setLoadingPredictions(false);
+          setPredictions(results);
+        } else {
+          const { AutocompleteSuggestion } = placesLibRef.current;
+          const { suggestions } = await AutocompleteSuggestion.fetchAutocompleteSuggestions({
+            input: value,
+            sessionToken: sessionTokenRef.current,
+            locationBias: { lat: LOCATION_LAT, lng: LOCATION_LNG },
+          });
+          setLoadingPredictions(false);
+          setPredictions(
+            suggestions.filter(s => s.placePrediction).slice(0, 5).map(s => ({
+              name:     s.placePrediction.mainText.text,
+              subtitle: s.placePrediction.secondaryText?.text ?? "",
+              _data:    s,
+            }))
+          );
+        }
       } catch {
         setLoadingPredictions(false);
       }
     }, 350);
   }
 
-  async function selectPrediction(suggestion) {
+  async function selectPrediction(pred) {
     setPredictions([]);
-    setSearchQuery(suggestion.placePrediction.mainText.text);
+    setSearchQuery(pred.name);
     setLoadingPredictions(true);
     try {
-      const place = suggestion.placePrediction.toPlace();
-      await place.fetchFields({
-        fields: ["displayName", "formattedAddress", "nationalPhoneNumber", "websiteURI", "id", "types"],
-      });
-      sessionTokenRef.current = null;
-      setLoadingPredictions(false);
-      setPendingPlace({
-        id: crypto.randomUUID(),
-        name: place.displayName ?? "",
-        address: place.formattedAddress ?? "",
-        phone: place.nationalPhoneNumber ?? "",
-        website: place.websiteURI ?? "",
-        placeId: place.id ?? "",
-        category: detectCategory(place.types ?? []),
-        notes: "",
-        addedAt: new Date().toISOString(),
-      });
+      if (provider === "apple") {
+        const details = await appleFetchPlaceDetails(placesLibRef.current, pred._data);
+        sessionTokenRef.current = null;
+        setLoadingPredictions(false);
+        setPendingPlace({
+          id: crypto.randomUUID(),
+          name: details.name,
+          address: details.address,
+          phone: "",
+          website: "",
+          placeId: details.placeId,
+          category: details.category,
+          notes: "",
+          addedAt: new Date().toISOString(),
+          mapsProvider: "apple",
+        });
+      } else {
+        const place = pred._data.placePrediction.toPlace();
+        await place.fetchFields({
+          fields: ["displayName", "formattedAddress", "nationalPhoneNumber", "websiteURI", "id", "types"],
+        });
+        sessionTokenRef.current = null;
+        setLoadingPredictions(false);
+        setPendingPlace({
+          id: crypto.randomUUID(),
+          name: place.displayName ?? "",
+          address: place.formattedAddress ?? "",
+          phone: place.nationalPhoneNumber ?? "",
+          website: place.websiteURI ?? "",
+          placeId: place.id ?? "",
+          category: detectCategory(place.types ?? []),
+          notes: "",
+          addedAt: new Date().toISOString(),
+          mapsProvider: "google",
+        });
+      }
     } catch {
       setLoadingPredictions(false);
     }
@@ -219,8 +271,12 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete })
         <div style={{ padding: ".6rem 1rem", background: "#0a1a2a", borderLeft: borderAccent,
           fontSize: ".75rem", color: "#4e7a9e", fontFamily: "sans-serif" }}>
           {apiError === "missing-key"
-            ? "Configure your Google Maps API key in Settings (⚙) to enable place search."
-            : "Google Maps failed to load — check your API key in Settings (⚙)."}
+            ? provider === "apple"
+              ? "Configure your Apple MapKit JS token in Settings (⚙) to enable place search."
+              : "Configure your Google Maps API key in Settings (⚙) to enable place search."
+            : provider === "apple"
+              ? "Apple Maps failed to load — check your MapKit JS token in Settings (⚙)."
+              : "Google Maps failed to load — check your API key in Settings (⚙)."}
         </div>
       )}
 
@@ -244,18 +300,14 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete })
                 <div style={{ padding: ".5rem .75rem", fontSize: ".78rem", color: "#4e7a9e",
                   fontFamily: "sans-serif" }}>Searching…</div>
               )}
-              {predictions.map((s, i) => (
-                <div key={i} onClick={() => selectPrediction(s)}
+              {predictions.map((pred, i) => (
+                <div key={i} onClick={() => selectPrediction(pred)}
                   style={{ padding: ".5rem .75rem", cursor: "pointer",
                     borderBottom: "1px solid #1e3a5230", fontFamily: "sans-serif" }}
                   onMouseEnter={e => e.currentTarget.style.background = "#1a3352"}
                   onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-                  <div style={{ fontSize: ".83rem", color: "#e8dcc8" }}>
-                    {s.placePrediction.mainText.text}
-                  </div>
-                  <div style={{ fontSize: ".72rem", color: "#4e7a9e", marginTop: 1 }}>
-                    {s.placePrediction.secondaryText?.text ?? ""}
-                  </div>
+                  <div style={{ fontSize: ".83rem", color: "#e8dcc8" }}>{pred.name}</div>
+                  <div style={{ fontSize: ".72rem", color: "#4e7a9e", marginTop: 1 }}>{pred.subtitle}</div>
                 </div>
               ))}
             </div>
@@ -288,6 +340,12 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete })
                   border: "1px solid #1e3040" }}>
                   {pendingPlace.address || "—"}
                 </div>
+                {provider === "apple" && (
+                  <div style={{ fontSize: ".68rem", color: "#3d5060", fontFamily: "sans-serif",
+                    fontStyle: "italic", marginTop: 4 }}>
+                    Phone and website not available from Apple Maps — add manually in notes.
+                  </div>
+                )}
               </div>
 
               <div>
@@ -351,7 +409,11 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete })
                 </span>
                 <div style={{ display: "flex", gap: ".5rem", flexShrink: 0, alignItems: "center" }}>
                   {place.placeId && (
-                    <a href={`https://www.google.com/maps/place/?q=place_id:${place.placeId}`}
+                    <a href={
+                        (place.mapsProvider ?? "google") === "apple"
+                          ? applePlaceMapsUrl(place)
+                          : `https://www.google.com/maps/place/?q=place_id:${place.placeId}`
+                      }
                       target="_blank" rel="noopener noreferrer"
                       style={{ fontSize: ".7rem", color: "#4a9eff", fontFamily: "sans-serif",
                         textDecoration: "none" }}>

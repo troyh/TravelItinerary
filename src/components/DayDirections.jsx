@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import NoteMarkdown from "./NoteMarkdown.jsx";
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
+import { loadMapKit, appleAutocomplete, appleFetchDirections,
+         appleDirectionsMapsUrl, getStoredProviderSettings } from "../lib/mapkit.js";
 
-// ── Module-level singleton ─────────────────────────────────────────────────
-let routesPromise = null;
+// ── Module-level singletons ────────────────────────────────────────────────
+let routesPromise      = null;
+let appleRoutesPromise = null;
 
 function getStoredMapsKey() {
   try { const s = localStorage.getItem("travelSettings"); return (s ? JSON.parse(s) : {}).googleMapsKey ?? ""; }
@@ -13,7 +16,6 @@ function getStoredMapsKey() {
 function loadRoutes() {
   if (!routesPromise) {
     const key = getStoredMapsKey();
-    // setOptions is idempotent if already called by DayPlaces
     try { setOptions({ key, version: "weekly" }); } catch {}
     routesPromise = key
       ? Promise.all([importLibrary("places"), importLibrary("routes")])
@@ -21,6 +23,14 @@ function loadRoutes() {
       : Promise.reject(new Error("no-key"));
   }
   return routesPromise;
+}
+
+function loadAppleRoutes() {
+  if (!appleRoutesPromise) {
+    const { appleMapKitToken } = getStoredProviderSettings();
+    appleRoutesPromise = loadMapKit(appleMapKitToken);
+  }
+  return appleRoutesPromise;
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────
@@ -32,6 +42,7 @@ const MODES = [
 ];
 
 const TRAVELMODE_PARAM = { DRIVING: "driving", WALKING: "walking", BICYCLING: "bicycling", TRANSIT: "transit" };
+const APPLE_MODES = MODES.filter(m => m.key === "DRIVING" || m.key === "WALKING");
 
 function stripHtml(html) { return html.replace(/<[^>]+>/g, ""); }
 
@@ -53,6 +64,7 @@ const borderAccent = "3px solid #5cb85c66";
 
 // ── Component ─────────────────────────────────────────────────────────────
 export default function DayDirections({ directions, onAdd, onUpdate, onDelete }) {
+  const { provider } = getStoredProviderSettings();
   const [apiReady,  setApiReady]  = useState(false);
   const [apiError,  setApiError]  = useState(null);
   const [isAdding,  setIsAdding]  = useState(false);
@@ -81,18 +93,35 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete })
 
   // ── Load API ─────────────────────────────────────────────────────────
   useEffect(() => {
-    if (!getStoredMapsKey()) { setApiError("missing-key"); return; }
-    loadRoutes()
-      .then(lib => { libRef.current = lib; setApiReady(true); })
-      .catch(() => setApiError("load-failed"));
+    if (provider === "apple") {
+      const { appleMapKitToken } = getStoredProviderSettings();
+      if (!appleMapKitToken) { setApiError("missing-key"); return; }
+      loadAppleRoutes()
+        .then(mk => { libRef.current = mk; setApiReady(true); })
+        .catch(() => setApiError("load-failed"));
+    } else {
+      if (!getStoredMapsKey()) { setApiError("missing-key"); return; }
+      loadRoutes()
+        .then(lib => { libRef.current = lib; setApiReady(true); })
+        .catch(() => setApiError("load-failed"));
+    }
+  }, []);
+
+  // Reset travel mode if Apple is active and an unsupported mode is selected
+  useEffect(() => {
+    if (provider === "apple" && (travelMode === "BICYCLING" || travelMode === "TRANSIT")) {
+      setTravelMode("DRIVING");
+    }
   }, []);
 
   // ── Autocomplete ─────────────────────────────────────────────────────
   function openForm() {
     if (!apiReady) return;
-    const { AutocompleteSessionToken } = libRef.current;
-    originTokenRef.current = new AutocompleteSessionToken();
-    destTokenRef.current   = new AutocompleteSessionToken();
+    if (provider === "google") {
+      const { AutocompleteSessionToken } = libRef.current;
+      originTokenRef.current = new AutocompleteSessionToken();
+      destTokenRef.current   = new AutocompleteSessionToken();
+    }
     setIsAdding(true);
   }
 
@@ -117,12 +146,23 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete })
       clearTimeout(debounceRef.current);
       debounceRef.current = setTimeout(async () => {
         try {
-          const { AutocompleteSuggestion } = libRef.current;
-          const { suggestions } = await AutocompleteSuggestion.fetchAutocompleteSuggestions({
-            input: value,
-            sessionToken: tokenRef.current,
-          });
-          setPreds(suggestions.filter(s => s.placePrediction).slice(0, 5));
+          if (provider === "apple") {
+            const results = await appleAutocomplete(libRef.current, value, null);
+            setPreds(results);
+          } else {
+            const { AutocompleteSuggestion } = libRef.current;
+            const { suggestions } = await AutocompleteSuggestion.fetchAutocompleteSuggestions({
+              input: value,
+              sessionToken: tokenRef.current,
+            });
+            setPreds(
+              suggestions.filter(s => s.placePrediction).slice(0, 5).map(s => ({
+                name:     s.placePrediction.mainText.text,
+                subtitle: s.placePrediction.secondaryText?.text ?? "",
+                _data:    s,
+              }))
+            );
+          }
         } catch { setPreds([]); }
       }, 350);
     };
@@ -131,15 +171,15 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete })
   const handleOriginInput = makeSuggestHandler(setOriginQuery, setOriginPreds, originTokenRef);
   const handleDestInput   = makeSuggestHandler(setDestQuery,   setDestPreds,   destTokenRef);
 
-  function selectOrigin(s) {
-    setOrigin({ name: s.placePrediction.mainText.text, placeId: s.placePrediction.placeId });
-    setOriginQuery(s.placePrediction.mainText.text);
+  function selectOrigin(pred) {
+    setOrigin({ name: pred.name, _data: pred._data });
+    setOriginQuery(pred.name);
     setOriginPreds([]);
   }
 
-  function selectDest(s) {
-    setDestination({ name: s.placePrediction.mainText.text, placeId: s.placePrediction.placeId });
-    setDestQuery(s.placePrediction.mainText.text);
+  function selectDest(pred) {
+    setDestination({ name: pred.name, _data: pred._data });
+    setDestQuery(pred.name);
     setDestPreds([]);
   }
 
@@ -149,29 +189,48 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete })
     setFetching(true);
     setRouteError(null);
     try {
-      const { DirectionsService, TravelMode } = libRef.current;
-      const result = await new DirectionsService().route({
-        origin:      { placeId: origin.placeId },
-        destination: { placeId: destination.placeId },
-        travelMode:  TravelMode[travelMode],
-      });
-      const leg = result.routes[0].legs[0];
-      onAdd({
-        id:          crypto.randomUUID(),
-        origin, destination, travelMode,
-        distance:    leg.distance.text,
-        duration:    leg.duration.text,
-        summary:     result.routes[0].summary || "",
-        steps:       leg.steps.map(s => ({
-                       instruction: stripHtml(s.instructions),
-                       distance:    s.distance?.text ?? "",
-                       duration:    s.duration?.text ?? "",
-                     })),
-        notes:   "",
-        addedAt: new Date().toISOString(),
-      });
+      if (provider === "apple") {
+        const result = await appleFetchDirections(
+          libRef.current, origin._data, destination._data, travelMode
+        );
+        onAdd({
+          id:          crypto.randomUUID(),
+          origin:      { name: origin.name },
+          destination: { name: destination.name },
+          travelMode,
+          ...result,
+          notes:        "",
+          addedAt:      new Date().toISOString(),
+          mapsProvider: "apple",
+        });
+      } else {
+        const { DirectionsService, TravelMode } = libRef.current;
+        const result = await new DirectionsService().route({
+          origin:      { placeId: origin._data?.placePrediction?.placeId },
+          destination: { placeId: destination._data?.placePrediction?.placeId },
+          travelMode:  TravelMode[travelMode],
+        });
+        const leg = result.routes[0].legs[0];
+        onAdd({
+          id:          crypto.randomUUID(),
+          origin:      { name: origin.name, placeId: origin._data?.placePrediction?.placeId },
+          destination: { name: destination.name, placeId: destination._data?.placePrediction?.placeId },
+          travelMode,
+          distance:    leg.distance.text,
+          duration:    leg.duration.text,
+          summary:     result.routes[0].summary || "",
+          steps:       leg.steps.map(s => ({
+                         instruction: stripHtml(s.instructions),
+                         distance:    s.distance?.text ?? "",
+                         duration:    s.duration?.text ?? "",
+                       })),
+          notes:        "",
+          addedAt:      new Date().toISOString(),
+          mapsProvider: "google",
+        });
+      }
       resetForm();
-    } catch (e) {
+    } catch {
       setRouteError("Could not get directions — check that both locations are valid.");
     } finally {
       setFetching(false);
@@ -187,15 +246,15 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete })
     return (
       <div style={{ marginTop: ".3rem", border: "1px solid #2e5070", borderRadius: 4,
         background: "#0d1f33", overflow: "hidden" }}>
-        {preds.map((s, i) => (
-          <div key={i} onClick={() => onSelect(s)}
+        {preds.map((pred, i) => (
+          <div key={i} onClick={() => onSelect(pred)}
             style={{ padding: ".45rem .65rem", cursor: "pointer",
               borderBottom: i < preds.length - 1 ? "1px solid #1e3a5230" : "none",
               fontFamily: "sans-serif" }}
             onMouseEnter={e => e.currentTarget.style.background = "#1a3352"}
             onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-            <div style={{ fontSize: ".82rem", color: "#e8dcc8" }}>{s.placePrediction.mainText.text}</div>
-            <div style={{ fontSize: ".72rem", color: "#4e7a9e", marginTop: 1 }}>{s.placePrediction.secondaryText?.text ?? ""}</div>
+            <div style={{ fontSize: ".82rem", color: "#e8dcc8" }}>{pred.name}</div>
+            <div style={{ fontSize: ".72rem", color: "#4e7a9e", marginTop: 1 }}>{pred.subtitle}</div>
           </div>
         ))}
       </div>
@@ -239,8 +298,12 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete })
         <div style={{ padding: ".6rem 1rem", background: "#0a1a2a", borderLeft: borderAccent,
           fontSize: ".75rem", color: "#4e7a9e", fontFamily: "sans-serif" }}>
           {apiError === "missing-key"
-            ? "Configure your Google Maps API key in Settings (⚙) to add directions."
-            : "Google Maps failed to load — check your API key in Settings (⚙)."}
+            ? provider === "apple"
+              ? "Configure your Apple MapKit JS token in Settings (⚙) to add directions."
+              : "Configure your Google Maps API key in Settings (⚙) to add directions."
+            : provider === "apple"
+              ? "Apple Maps failed to load — check your MapKit JS token in Settings (⚙)."
+              : "Google Maps failed to load — check your API key in Settings (⚙)."}
         </div>
       )}
 
@@ -272,7 +335,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete })
 
           {/* Travel mode */}
           <div style={{ display: "flex", gap: ".35rem", marginBottom: ".75rem", flexWrap: "wrap" }}>
-            {MODES.map(m => (
+            {(provider === "apple" ? APPLE_MODES : MODES).map(m => (
               <button key={m.key} onClick={() => setTravelMode(m.key)}
                 style={{ background: travelMode === m.key ? "#1a3352" : "none",
                   border: `1px solid ${travelMode === m.key ? "#5cb85c66" : "#2e3a4a"}`,
@@ -301,10 +364,12 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete })
       {/* Direction cards */}
       {directions.map(dir => {
         const modeLabel = MODES.find(m => m.key === dir.travelMode)?.label ?? dir.travelMode;
-        const mapsUrl = `https://www.google.com/maps/dir/?api=1` +
-          `&origin=${encodeURIComponent(dir.origin.name)}` +
-          `&destination=${encodeURIComponent(dir.destination.name)}` +
-          `&travelmode=${TRAVELMODE_PARAM[dir.travelMode] ?? "driving"}`;
+        const mapsUrl = (dir.mapsProvider ?? "google") === "apple"
+          ? appleDirectionsMapsUrl(dir)
+          : `https://www.google.com/maps/dir/?api=1` +
+            `&origin=${encodeURIComponent(dir.origin.name)}` +
+            `&destination=${encodeURIComponent(dir.destination.name)}` +
+            `&travelmode=${TRAVELMODE_PARAM[dir.travelMode] ?? "driving"}`;
         const isExpanded = expandedId === dir.id;
 
         return (

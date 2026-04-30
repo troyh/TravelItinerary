@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { testConnection, inferRepo } from "../lib/github.js";
+import { getStoredProviderSettings } from "../lib/mapkit.js";
 
 const S = {
   label: { fontSize: ".62rem", color: "#6b8fa8", letterSpacing: ".08em",
@@ -18,10 +19,12 @@ const S = {
 export default function Settings({ settings, onSave, onClose }) {
   const inferredRepo = inferRepo();
   const [draft, setDraft] = useState({
-    googleMapsKey: settings.googleMapsKey ?? "",
-    githubToken:   settings.githubToken   ?? "",
-    githubRepo:    settings.githubRepo    ?? "",
-    githubBranch:  settings.githubBranch  ?? "",
+    mapsProvider:     settings.mapsProvider     ?? "google",
+    googleMapsKey:    settings.googleMapsKey    ?? "",
+    appleMapKitToken: settings.appleMapKitToken ?? "",
+    githubToken:      settings.githubToken      ?? "",
+    githubRepo:       settings.githubRepo       ?? "",
+    githubBranch:     settings.githubBranch     ?? "",
   });
   const [showToken,  setShowToken]  = useState(false);
   const [testStatus, setTestStatus] = useState(""); // "" | "testing" | "ok" | error message
@@ -58,12 +61,40 @@ export default function Settings({ settings, onSave, onClose }) {
 
       <div style={{ display: "flex", flexDirection: "column", gap: ".85rem" }}>
 
-        {/* Google Maps */}
+        {/* Maps provider */}
         <div>
-          <div style={S.label}>Google Maps API Key</div>
-          <input value={draft.googleMapsKey} onChange={e => set("googleMapsKey", e.target.value)}
-            placeholder="AIzaSy…" style={S.input} />
+          <div style={S.label}>Maps Provider</div>
+          <div style={{ display: "flex", gap: ".4rem", marginTop: 3 }}>
+            {[{ key: "google", label: "Google Maps" }, { key: "apple", label: "Apple Maps" }].map(p => (
+              <button key={p.key} onClick={() => set("mapsProvider", p.key)}
+                style={draft.mapsProvider === p.key ? S.btnPrimary : S.btnGhost}>
+                {p.label}
+              </button>
+            ))}
+          </div>
         </div>
+
+        {/* Google Maps API Key */}
+        {draft.mapsProvider === "google" && (
+          <div>
+            <div style={S.label}>Google Maps API Key</div>
+            <input value={draft.googleMapsKey} onChange={e => set("googleMapsKey", e.target.value)}
+              placeholder="AIzaSy…" style={S.input} />
+          </div>
+        )}
+
+        {/* Apple MapKit JS Token */}
+        {draft.mapsProvider === "apple" && (
+          <div>
+            <div style={S.label}>Apple MapKit JS Token</div>
+            <input value={draft.appleMapKitToken} onChange={e => set("appleMapKitToken", e.target.value)}
+              placeholder="eyJ…" style={S.input} />
+            <div style={{ fontSize: ".68rem", color: "#3d5060", fontFamily: "sans-serif",
+              fontStyle: "italic", marginTop: 4 }}>
+              Generate in Apple Developer → Maps IDs &amp; Keys. Set the allowed origin to your app URL.
+            </div>
+          </div>
+        )}
 
         {/* GitHub Token */}
         <div>
@@ -101,7 +132,7 @@ export default function Settings({ settings, onSave, onClose }) {
         alignItems: "center", gap: ".5rem" }}>
         <div style={{ fontSize: ".68rem", color: "#3d5060", fontFamily: "sans-serif",
           fontStyle: "italic" }}>
-          Stored in your browser only — never in the repo or build.
+          Stored in your browser only — never in the repo or build. Changing providers takes effect after reload.
         </div>
         <div style={{ display: "flex", gap: ".5rem", flexShrink: 0, alignItems: "center" }}>
           {testStatus && testStatus !== "testing" && (
