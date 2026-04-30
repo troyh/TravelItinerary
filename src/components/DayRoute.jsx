@@ -9,10 +9,10 @@ const S = {
     outline: "none", boxSizing: "border-box" },
   btnPrimary: { background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
     borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
-    cursor: "pointer", whiteSpace: "nowrap" },
+    cursor: "pointer", whiteSpace: "nowrap", touchAction: "manipulation" },
   btnGhost: { background: "none", border: "1px solid #2e3a4a", color: "#4e7a9e",
     borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
-    cursor: "pointer", whiteSpace: "nowrap" },
+    cursor: "pointer", whiteSpace: "nowrap", touchAction: "manipulation" },
   label: { fontSize: ".62rem", letterSpacing: ".1em", textTransform: "uppercase",
     fontFamily: "sans-serif" },
 };
@@ -31,12 +31,17 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
     ? Math.round((parseFloat(draft.nm) / parseFloat(draft.speedKts)) * 10) / 10
     : null;
 
+  const genId = () =>
+    typeof crypto.randomUUID === "function"
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
   function handleAdd() {
     const nm = parseFloat(draft.nm);
     if (!nm || nm <= 0) return;
     const speedKts = parseFloat(draft.speedKts) || 15;
     onAdd({
-      id:       crypto.randomUUID(),
+      id:       genId(),
       name:     draft.name.trim(),
       nm:       Math.round(nm * 10) / 10,
       speedKts,
@@ -70,13 +75,17 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
           )}
         </div>
         {!isAdding && (
-          <button onClick={() => setIsAdding(true)}
+          <button type="button"
+            onClick={() => setIsAdding(true)}
+            onTouchEnd={e => { e.preventDefault(); setIsAdding(true); }}
             style={{ ...S.btnGhost, fontSize: ".7rem", padding: ".25rem .65rem" }}>
             + Add Route
           </button>
         )}
         {isAdding && (
-          <button onClick={handleCancel}
+          <button type="button"
+            onClick={handleCancel}
+            onTouchEnd={e => { e.preventDefault(); handleCancel(); }}
             style={{ ...S.btnGhost, fontSize: ".7rem", padding: ".25rem .65rem" }}>
             Cancel
           </button>
@@ -89,7 +98,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
           <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap", marginBottom: ".5rem" }}>
             <div style={{ flex: 2, minWidth: 160 }}>
               <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Route Name (optional)</div>
-              <input autoFocus value={draft.name}
+              <input value={draft.name}
                 onChange={e => set("name", e.target.value)}
                 onKeyDown={e => e.key === "Enter" && handleAdd()}
                 placeholder="e.g. Anacortes → Friday Harbor"
@@ -97,7 +106,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
             </div>
             <div style={{ width: 90 }}>
               <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Distance</div>
-              <input type="number" value={draft.nm} min="0" step="0.1"
+              <input type="text" inputMode="decimal" value={draft.nm}
                 onChange={e => set("nm", e.target.value)}
                 onKeyDown={e => e.key === "Enter" && handleAdd()}
                 placeholder="NM"
@@ -105,7 +114,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
             </div>
             <div style={{ width: 80 }}>
               <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Speed</div>
-              <input type="number" value={draft.speedKts} min="1" step="0.5"
+              <input type="text" inputMode="decimal" value={draft.speedKts}
                 onChange={e => set("speedKts", e.target.value)}
                 onKeyDown={e => e.key === "Enter" && handleAdd()}
                 placeholder="kts"
@@ -113,7 +122,9 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: ".75rem" }}>
-            <button onClick={handleAdd} disabled={!draft.nm || parseFloat(draft.nm) <= 0}
+            <button type="button"
+              onClick={handleAdd}
+              onTouchEnd={e => { e.preventDefault(); handleAdd(); }}
               style={{ ...S.btnPrimary,
                 opacity: (!draft.nm || parseFloat(draft.nm) <= 0) ? 0.45 : 1 }}>
               Add
@@ -139,7 +150,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
                 fontWeight: 600, lineHeight: 1.3, flex: 1 }}>
                 🚢 {route.name || "Unnamed Route"}
               </span>
-              <button onClick={() => onDelete(route.id)}
+              <button type="button" onClick={() => onDelete(route.id)}
                 style={{ background: "none", border: "none", color: "#5a4a20",
                   cursor: "pointer", fontSize: ".85rem", lineHeight: 1, padding: 0,
                   flexShrink: 0 }}>
@@ -154,7 +165,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
             </div>
 
             {/* Use these values */}
-            <button onClick={() => onApplyToDay({ nm: route.nm, hrs: route.hrs })}
+            <button type="button" onClick={() => onApplyToDay({ nm: route.nm, hrs: route.hrs })}
               style={{ ...S.btnGhost, fontSize: ".68rem", padding: ".2rem .55rem",
                 marginBottom: ".45rem" }}>
               Use these values
@@ -173,9 +184,9 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
                   }}
                   style={{ ...S.input, width: "100%", resize: "vertical", minHeight: 48 }} />
                 <div style={{ display: "flex", gap: ".4rem", marginTop: ".35rem" }}>
-                  <button onClick={() => { onUpdate(route.id, { notes: noteDraft }); setEditingId(null); }}
+                  <button type="button" onClick={() => { onUpdate(route.id, { notes: noteDraft }); setEditingId(null); }}
                     style={S.btnPrimary}>Save</button>
-                  <button onClick={() => setEditingId(null)} style={S.btnGhost}>Cancel</button>
+                  <button type="button" onClick={() => setEditingId(null)} style={S.btnGhost}>Cancel</button>
                 </div>
               </div>
             ) : (
