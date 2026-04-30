@@ -1,6 +1,15 @@
 // SHA is tracked per branch+path so switching branches doesn't cause conflicts
 const shaByPath = new Map();
 
+export function inferRepo() {
+  const { hostname, pathname } = window.location;
+  const m = hostname.match(/^([^.]+)\.github\.io$/i);
+  if (!m) return null;
+  const user = m[1];
+  const repo = pathname.split("/").filter(Boolean)[0];
+  return repo ? `${user}/${repo}` : `${user}/${user}.github.io`;
+}
+
 export const ITINERARIES_FOLDER = "Itineraries";
 
 function normalizeRepo(repo) {

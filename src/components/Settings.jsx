@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { testConnection } from "../lib/github.js";
+import { testConnection, inferRepo } from "../lib/github.js";
 
 const S = {
   label: { fontSize: ".62rem", color: "#6b8fa8", letterSpacing: ".08em",
@@ -16,21 +16,24 @@ const S = {
 };
 
 export default function Settings({ settings, onSave, onClose }) {
+  const inferredRepo = inferRepo();
   const [draft, setDraft] = useState({
     googleMapsKey: settings.googleMapsKey ?? "",
     githubToken:   settings.githubToken   ?? "",
     githubRepo:    settings.githubRepo    ?? "",
-    githubBranch:  settings.githubBranch  ?? "main",
+    githubBranch:  settings.githubBranch  ?? "",
   });
   const [showToken,  setShowToken]  = useState(false);
   const [testStatus, setTestStatus] = useState(""); // "" | "testing" | "ok" | error message
 
   const set = (k, v) => setDraft(p => ({ ...p, [k]: v }));
 
+  const effectiveRepo = draft.githubRepo || inferredRepo || "";
+
   async function handleTest() {
     setTestStatus("testing");
     try {
-      await testConnection({ githubToken: draft.githubToken, githubRepo: draft.githubRepo });
+      await testConnection({ githubToken: draft.githubToken, githubRepo: effectiveRepo });
       setTestStatus("ok");
     } catch (e) {
       setTestStatus(e.message);
@@ -80,16 +83,16 @@ export default function Settings({ settings, onSave, onClose }) {
 
         {/* GitHub Repo */}
         <div>
-          <div style={S.label}>GitHub Repository</div>
+          <div style={S.label}>GitHub Repository <span style={{ color: "#3d5060", fontStyle: "italic" }}>(optional)</span></div>
           <input value={draft.githubRepo} onChange={e => set("githubRepo", e.target.value)}
-            placeholder="owner/repo" style={S.input} />
+            placeholder={inferredRepo || "owner/repo"} style={S.input} />
         </div>
 
         {/* Branch */}
         <div>
-          <div style={S.label}>Branch</div>
+          <div style={S.label}>Branch <span style={{ color: "#3d5060", fontStyle: "italic" }}>(optional)</span></div>
           <input value={draft.githubBranch} onChange={e => set("githubBranch", e.target.value)}
-            placeholder="main" style={S.input} />
+            placeholder="data" style={S.input} />
         </div>
 
       </div>
@@ -108,8 +111,8 @@ export default function Settings({ settings, onSave, onClose }) {
             </span>
           )}
           <button onClick={handleTest}
-            disabled={!draft.githubToken || !draft.githubRepo || testStatus === "testing"}
-            style={{ ...S.btnGhost, opacity: (!draft.githubToken || !draft.githubRepo) ? 0.45 : 1 }}>
+            disabled={!draft.githubToken || !effectiveRepo || testStatus === "testing"}
+            style={{ ...S.btnGhost, opacity: (!draft.githubToken || !effectiveRepo) ? 0.45 : 1 }}>
             {testStatus === "testing" ? "Testing…" : "Test"}
           </button>
           <button onClick={() => onSave(draft)} style={S.btnPrimary}>Save</button>

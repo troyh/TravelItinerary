@@ -5,7 +5,7 @@ import DayPlaces from "./DayPlaces.jsx";
 import DayDirections from "./DayDirections.jsx";
 import DayRoute from "./DayRoute.jsx";
 import Settings from "./Settings.jsx";
-import { loadFromGitHub, saveToGitHub, ITINERARIES_FOLDER } from "../lib/github.js";
+import { loadFromGitHub, saveToGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import ItineraryPicker from "./ItineraryPicker.jsx";
 import HistoryPanel from "./HistoryPanel.jsx";
 
@@ -87,6 +87,10 @@ export default function Itinerary() {
   const syncTimerRef = useRef(null);
   const dirtyRef    = useRef(false); // false after load/create, true after first user change
 
+  const effectiveRepo   = settings.githubRepo   || inferRepo() || "";
+  const effectiveBranch = settings.githubBranch || "data";
+  const ghSettings = { ...settings, githubRepo: effectiveRepo, githubBranch: effectiveBranch };
+
   useEffect(() => {
     setNewHighlight(""); setEditingNoteDay(null);
     setEditingCoreDay(null); setConfirmDeleteDay(null);
@@ -99,7 +103,7 @@ export default function Itinerary() {
                    highlights: customHighlights, notes: customNotes, startDate, openDay,
                    title, subtitle, itineraryNotes };
     localStorage.setItem("travelItinerary", JSON.stringify(data));
-    const canSync = settings.githubToken && settings.githubRepo &&
+    const canSync = settings.githubToken && effectiveRepo &&
                     currentFile !== "__local__" && dirtyRef.current;
     dirtyRef.current = true; // any render after first is a user change
     if (canSync) {
@@ -108,12 +112,12 @@ export default function Itinerary() {
       syncTimerRef.current = setTimeout(async () => {
         setSyncStatus("saving");
         try {
-          await saveToGitHub(data, { ...settings, githubFile: currentFile });
+          await saveToGitHub(data, { ...ghSettings, githubFile: currentFile });
           // Also save .ics alongside the JSON when a start date is set
           const icsContent = buildICSContent(days, startDate, title, customHighlights, customNotes);
           if (icsContent) {
             const icsFile = currentFile.replace(/\.json$/i, ".ics");
-            await saveToGitHub(icsContent, { ...settings, githubFile: icsFile });
+            await saveToGitHub(icsContent, { ...ghSettings, githubFile: icsFile });
           }
           setSyncStatus("saved");
           setSyncError("");
@@ -129,9 +133,9 @@ export default function Itinerary() {
 
   // Load from GitHub on mount (localStorage already loaded synchronously above)
   useEffect(() => {
-    if (!settings.githubToken || !settings.githubRepo || !currentFile || currentFile === "__local__") return;
+    if (!settings.githubToken || !effectiveRepo || !currentFile || currentFile === "__local__") return;
     setSyncStatus("loading");
-    loadFromGitHub({ ...settings, githubFile: currentFile })
+    loadFromGitHub({ ...ghSettings, githubFile: currentFile })
       .then(data => {
         if (!data) { setSyncStatus("idle"); return; }
         if (data.days?.length)              setDays(data.days);
@@ -409,7 +413,7 @@ export default function Itinerary() {
   }
 
   async function handleRestore(sha) {
-    const data = await loadFromGitHub({ ...settings, githubFile: currentFile, githubBranch: sha });
+    const data = await loadFromGitHub({ ...ghSettings, githubFile: currentFile, githubBranch: sha });
     if (data) {
       applyData(data);
       dirtyRef.current = true;
@@ -571,7 +575,7 @@ export default function Itinerary() {
           {/* History panel */}
           {showHistory && (
             <HistoryPanel
-              settings={settings}
+              settings={ghSettings}
               currentFile={currentFile}
               onRestore={handleRestore}
               onClose={() => setShowHistory(false)}
@@ -597,12 +601,12 @@ export default function Itinerary() {
                   fontSize: ".82rem", fontFamily: "sans-serif", outline: "none" }}
               />
               <button onClick={handleSaveAs}
-                disabled={!settings.githubToken || !settings.githubRepo}
-                title={(!settings.githubToken || !settings.githubRepo) ? "Configure GitHub in Settings ⚙ first" : ""}
+                disabled={!settings.githubToken || !effectiveRepo}
+                title={(!settings.githubToken || !effectiveRepo) ? "Configure GitHub in Settings ⚙ first" : ""}
                 style={{ background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
                   borderRadius: 4, padding: ".35rem .85rem", fontSize: ".75rem",
                   fontFamily: "sans-serif", cursor: "pointer", whiteSpace: "nowrap",
-                  opacity: (!settings.githubToken || !settings.githubRepo) ? 0.45 : 1 }}>
+                  opacity: (!settings.githubToken || !effectiveRepo) ? 0.45 : 1 }}>
                 Save to GitHub
               </button>
             </div>
@@ -713,10 +717,10 @@ export default function Itinerary() {
                         padding:"2px 8px", borderRadius:4 }}>
                       Export .ics
                     </button>
-                    {settings.githubToken && settings.githubRepo && currentFile && currentFile !== "__local__" && (
+                    {settings.githubToken && effectiveRepo && currentFile && currentFile !== "__local__" && (
                       <button onClick={() => {
                           const icsFile = currentFile.replace(/\.json$/i, ".ics");
-                          const url = `https://raw.githubusercontent.com/${settings.githubRepo}/${settings.githubBranch || "main"}/${icsFile}`;
+                          const url = `https://raw.githubusercontent.com/${effectiveRepo}/${effectiveBranch}/${icsFile}`;
                           navigator.clipboard.writeText(url);
                           setCopiedICS(true);
                           setTimeout(() => setCopiedICS(false), 2000);

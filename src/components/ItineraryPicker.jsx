@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { listItineraries, loadFromGitHub, ITINERARIES_FOLDER } from "../lib/github.js";
+import { listItineraries, loadFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import Settings from "./Settings.jsx";
 
 function sanitizeFilename(name) {
@@ -27,12 +27,14 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
   const [loadError,    setLoadError]    = useState(null);
   const [showSettings, setShowSettings] = useState(false);
 
-  const hasGitHub = !!(settings.githubToken && settings.githubRepo);
+  const effectiveRepo = settings.githubRepo || inferRepo() || "";
+  const ghSettings = { ...settings, githubRepo: effectiveRepo, githubBranch: settings.githubBranch || "data" };
+  const hasGitHub = !!(settings.githubToken && effectiveRepo);
 
   useEffect(() => {
     if (!hasGitHub) return;
     setListStatus("loading");
-    listItineraries(settings)
+    listItineraries(ghSettings)
       .then(f => { setFiles(f); setListStatus("idle"); })
       .catch(() => setListStatus("error"));
   }, []);
@@ -41,7 +43,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
     setLoadingPath(path);
     setLoadError(null);
     try {
-      const data = await loadFromGitHub({ ...settings, githubFile: path });
+      const data = await loadFromGitHub({ ...ghSettings, githubFile: path });
       onLoad(path, data);
     } catch {
       setLoadError(`Failed to load — check your connection and token.`);
@@ -85,7 +87,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
           </h1>
           <p style={{ color: "#6b8fa8", margin: 0, fontSize: ".85rem", fontFamily: "sans-serif" }}>
             {hasGitHub
-              ? `${settings.githubRepo} · ${ITINERARIES_FOLDER}/`
+              ? `${effectiveRepo} · ${ITINERARIES_FOLDER}/`
               : "Configure GitHub in Settings to sync across devices"}
           </p>
 
