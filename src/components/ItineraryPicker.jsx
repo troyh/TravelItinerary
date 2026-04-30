@@ -29,7 +29,9 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
 
   const effectiveRepo = settings.githubRepo || inferRepo() || "";
   const ghSettings = { ...settings, githubRepo: effectiveRepo, githubBranch: settings.githubBranch || "data" };
-  const hasGitHub = !!(settings.githubToken && effectiveRepo);
+  const canRead  = !!effectiveRepo;
+  const canWrite = !!(settings.githubToken && effectiveRepo);
+  const hasGitHub = canRead;
 
   useEffect(() => {
     if (!hasGitHub) return;
@@ -86,7 +88,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
             Your Itineraries
           </h1>
           <p style={{ color: "#6b8fa8", margin: 0, fontSize: ".85rem", fontFamily: "sans-serif" }}>
-            {hasGitHub
+            {canRead
               ? `${effectiveRepo} · ${ITINERARIES_FOLDER}/`
               : "Configure GitHub in Settings to sync across devices"}
           </p>
@@ -195,10 +197,10 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
               An itinerary with this name already exists — open it from the list above.
             </div>
           )}
-          {!hasGitHub && newName.trim() && (
+          {!canWrite && newName.trim() && (
             <div style={{ fontSize: ".72rem", color: "#4e7a9e", fontFamily: "sans-serif",
               marginTop: ".4rem" }}>
-              Configure GitHub in Settings ⚙ to save this to your repo.
+              Add a GitHub token in Settings ⚙ to save this to your repo.
             </div>
           )}
         </div>

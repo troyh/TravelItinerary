@@ -25,7 +25,9 @@ function repoUrl(githubRepo, githubFile) {
 }
 
 function authHeaders(githubToken) {
-  return { Authorization: `Bearer ${githubToken}`, Accept: "application/vnd.github+json" };
+  const h = { Accept: "application/vnd.github+json" };
+  if (githubToken) h.Authorization = `Bearer ${githubToken}`;
+  return h;
 }
 
 async function throwIfNotOk(res, label) {
