@@ -125,7 +125,9 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
             {listStatus === "idle" && files.length === 0 && (
               <div style={{ color: "#4e7a9e", fontFamily: "sans-serif", fontSize: ".85rem",
                 padding: ".75rem 0", fontStyle: "italic" }}>
-                No itineraries yet — create one below.
+                {canWrite
+                  ? "No itineraries yet — create one below."
+                  : "Add a GitHub token in Settings ⚙ to load your itineraries."}
               </div>
             )}
             {files.map(f => (
