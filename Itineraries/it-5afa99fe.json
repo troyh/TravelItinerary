@@ -1,0 +1,28 @@
+{
+  "days": [
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 1
+    }
+  ],
+  "places": {},
+  "directions": {},
+  "routes": {},
+  "highlights": {},
+  "notes": {},
+  "startDate": "",
+  "openDay": 1,
+  "title": "Take Hudson to College",
+  "subtitle": "",
+  "itineraryNotes": ""
+}
