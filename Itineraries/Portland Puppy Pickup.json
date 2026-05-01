@@ -340,7 +340,91 @@
         "mapsProvider": "apple"
       }
     ],
-    "2": []
+    "2": [
+      {
+        "id": "19c3fa82-8ce9-411d-83f6-4311df8daaeb",
+        "origin": {
+          "name": "The Nines Hotel, Portland"
+        },
+        "destination": {
+          "name": "1107 21st Ave E"
+        },
+        "travelMode": "DRIVING",
+        "distance": "284.2 km",
+        "duration": "2h 49m",
+        "summary": "",
+        "steps": [
+          {
+            "instruction": "",
+            "distance": "",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn right onto SW 14th Ave",
+            "distance": "679 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Keep left to merge onto I-405 North toward US-30",
+            "distance": "213 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Merge onto I-405 North toward I-5, US-30",
+            "distance": "91 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Take exit 168A onto Lakeview Blvd.",
+            "distance": "280.3 km",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn left onto Lakeview Blvd E",
+            "distance": "225 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Keep right onto Harvard Ave E",
+            "distance": "166 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn right onto E Boston St",
+            "distance": "272 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn left onto E Galer St",
+            "distance": "1.3 km",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn right onto 19th Ave E",
+            "distance": "399 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn left onto E Prospect St",
+            "distance": "405 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn left",
+            "distance": "140 m",
+            "duration": ""
+          },
+          {
+            "instruction": "The destination is on your right",
+            "distance": "30 m",
+            "duration": ""
+          }
+        ],
+        "notes": "",
+        "addedAt": "2026-05-01T06:36:17.991Z",
+        "mapsProvider": "apple"
+      }
+    ]
   },
   "routes": {},
   "highlights": {
