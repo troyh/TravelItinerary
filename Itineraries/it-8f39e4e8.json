@@ -55,6 +55,20 @@
       "highlights": [],
       "note": "",
       "day": 4
+    },
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 5
     }
   ],
   "places": {},
@@ -63,7 +77,7 @@
   "highlights": {},
   "notes": {},
   "startDate": "2026-05-04",
-  "openDay": 4,
+  "openDay": 5,
   "title": "Spring Cruise 2026",
   "subtitle": "",
   "itineraryNotes": ""
