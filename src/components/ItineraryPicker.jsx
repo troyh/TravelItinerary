@@ -35,7 +35,9 @@ function getLocations(days) {
 
 export default function ItineraryPicker({ settings, onSettingsChange, onLoad, onCreate, localCache }) {
   const [files,        setFiles]        = useState([]);
-  const [details,      setDetails]      = useState({});  // path → { title, dateRange, dayCount, locations }
+  const [details,      setDetails]      = useState(() => {
+    try { return JSON.parse(localStorage.getItem("itineraryMetadata") || "{}"); } catch { return {}; }
+  });
   const [listStatus,   setListStatus]   = useState("idle");
   const [newName,      setNewName]      = useState("");
   const [creating,     setCreating]     = useState(false);
@@ -60,28 +62,41 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
       .catch(() => setListStatus("error"));
   }, []);
 
-  // Load details for all files in parallel once the list is available
+  // Load details for files missing from local cache
   useEffect(() => {
     if (!files.length) return;
+    const cached = details;
+    const missing = files.filter(f => !cached[f.path]);
+    if (!missing.length) return;
     Promise.all(
-      files.map(f =>
+      missing.map(f =>
         loadFromGitHub({ ...ghSettings, githubFile: f.path })
           .then(data => data ? [f.path, data] : null)
           .catch(() => null)
       )
     ).then(results => {
-      const map = {};
+      const updates = {};
       for (const r of results) {
         if (!r) continue;
         const [path, data] = r;
-        map[path] = {
-          title:     data.title || null,
-          dateRange: formatDateRange(data.startDate, data.days?.length),
-          dayCount:  data.days?.length ?? 0,
-          locations: getLocations(data.days),
+        const overnights = data.days?.map(d => d.overnight).filter(Boolean) ?? [];
+        const legs       = data.days?.map(d => d.leg).filter(Boolean) ?? [];
+        const locations  = overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
+                         : overnights[0] ?? legs[0] ?? null;
+        updates[path] = {
+          title:    data.title || null,
+          startDate: data.startDate,
+          dayCount: data.days?.length ?? 0,
+          locations,
         };
       }
-      setDetails(map);
+      if (Object.keys(updates).length) {
+        setDetails(prev => ({ ...prev, ...updates }));
+        try {
+          const meta = JSON.parse(localStorage.getItem("itineraryMetadata") || "{}");
+          localStorage.setItem("itineraryMetadata", JSON.stringify({ ...meta, ...updates }));
+        } catch {}
+      }
     });
   }, [files]);
 
@@ -198,10 +213,10 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
                     </div>
                     {d && (
                       <div style={{ fontFamily: "sans-serif", marginTop: 3 }}>
-                        {(d.dateRange || d.dayCount > 0) && (
+                        {(d.startDate || d.dayCount > 0) && (
                           <span style={{ fontSize: ".72rem", color: "#6b8fa8" }}>
-                            {d.dateRange
-                              ? `${d.dateRange} · ${d.dayCount} day${d.dayCount !== 1 ? "s" : ""}`
+                            {d.startDate && d.dayCount
+                              ? `${formatDateRange(d.startDate, d.dayCount)} · ${d.dayCount} day${d.dayCount !== 1 ? "s" : ""}`
                               : `${d.dayCount} day${d.dayCount !== 1 ? "s" : ""}`}
                           </span>
                         )}

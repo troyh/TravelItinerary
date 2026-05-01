@@ -91,6 +91,7 @@ export default function Itinerary() {
   });
   const [saveAsName,       setSaveAsName]       = useState("");
   const [copiedICS,        setCopiedICS]        = useState(false);
+  const [pickerKey,        setPickerKey]        = useState(0);
   const inputRef          = useRef(null);
   const syncTimerRef      = useRef(null);
   const dirtyRef          = useRef(false);
@@ -114,6 +115,17 @@ export default function Itinerary() {
                    highlights: customHighlights, notes: customNotes, startDate, openDay,
                    title, subtitle, itineraryNotes };
     localStorage.setItem("travelItinerary", JSON.stringify(data));
+    if (currentFile !== "__local__") {
+      try {
+        const meta = JSON.parse(localStorage.getItem("itineraryMetadata") || "{}");
+        const overnights = days.map(d => d.overnight).filter(Boolean);
+        const legs       = days.map(d => d.leg).filter(Boolean);
+        const locations  = overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
+                         : overnights[0] ?? legs[0] ?? null;
+        meta[currentFile] = { title, startDate, dayCount: days.length, locations };
+        localStorage.setItem("itineraryMetadata", JSON.stringify(meta));
+      } catch {}
+    }
     const canSync = settings.githubToken && effectiveRepo &&
                     currentFile !== "__local__" && dirtyRef.current;
     dirtyRef.current = true;
@@ -143,6 +155,8 @@ export default function Itinerary() {
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
 
   useEffect(() => { document.title = title || "Travel Itinerary"; }, [title]);
+
+  useEffect(() => { if (!currentFile) setPickerKey(k => k + 1); }, [currentFile]);
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -591,6 +605,7 @@ export default function Itinerary() {
   if (!currentFile) {
     return (
       <ItineraryPicker
+        key={pickerKey}
         settings={settings}
         onSettingsChange={setSettings}
         onLoad={handleLoad}
