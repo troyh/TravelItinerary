@@ -11,4 +11,10 @@ SUMMARY:Day 1: Fly to Santa Barbara
 DESCRIPTION:\nNote: TODO: get airfare (round trip for 2\, one-way for Hudson!)
 UID:day-1-20260918@travelitinerary
 END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260919
+DTEND;VALUE=DATE:20260920
+SUMMARY:Day 2: New Day
+UID:day-2-20260919@travelitinerary
+END:VEVENT
 END:VCALENDAR
