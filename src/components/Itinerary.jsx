@@ -80,16 +80,17 @@ export default function Itinerary() {
   const [editingHeader,    setEditingHeader]    = useState(false);
   const [headerDraft,      setHeaderDraft]      = useState({});
   const [editingNotes,     setEditingNotes]     = useState(false);
-  const [currentFile,      setCurrentFile]      = useState(() => {
+  const [currentFile,      setCurrentFile]      = useState(() => localStorage.getItem("travelCurrentFile"));
+  const [urlLoad,          setUrlLoad]          = useState(() => {
     const name = new URLSearchParams(window.location.search).get("i");
-    if (name) return `${ITINERARIES_FOLDER}/${name}.json`;
-    return localStorage.getItem("travelCurrentFile");
+    return name ? { file: `${ITINERARIES_FOLDER}/${name}.json`, status: "loading" } : null;
   });
   const [saveAsName,       setSaveAsName]       = useState("");
   const [copiedICS,        setCopiedICS]        = useState(false);
-  const inputRef    = useRef(null);
-  const syncTimerRef = useRef(null);
-  const dirtyRef    = useRef(false); // false after load/create, true after first user change
+  const inputRef          = useRef(null);
+  const syncTimerRef      = useRef(null);
+  const dirtyRef          = useRef(false);
+  const skipNextLoadRef   = useRef(false);
 
   const effectiveRepo   = settings.githubRepo   || inferRepo() || "";
   const effectiveBranch = settings.githubBranch || "data";
@@ -149,13 +150,45 @@ export default function Itinerary() {
     history.replaceState(null, "", url);
   }, [currentFile]);
 
+  // Verify and load a file that arrived via ?i= URL param
+  useEffect(() => {
+    if (!urlLoad || urlLoad.status !== "loading") return;
+    if (!effectiveRepo) { setUrlLoad(s => ({ ...s, status: "notfound" })); return; }
+    loadFromGitHub({ ...ghSettings, githubFile: urlLoad.file })
+      .then(data => {
+        if (!data) { setUrlLoad(s => ({ ...s, status: "notfound" })); return; }
+        if (data.days?.length)              setDays(data.days);
+        if (data.places)                    setSavedPlaces(data.places);
+        if (data.directions)                setSavedDirections(data.directions);
+        if (data.routes)                    setSavedRoutes(data.routes);
+        if (data.highlights)                setCustomHighlights(data.highlights);
+        if (data.notes)                     setCustomNotes(data.notes);
+        if (data.startDate !== undefined)   setStartDate(data.startDate);
+        if (data.openDay != null)           setOpenDay(data.openDay);
+        if (data.title !== undefined)       setTitle(data.title);
+        if (data.subtitle !== undefined)    setSubtitle(data.subtitle);
+        if (data.itineraryNotes !== undefined) setItineraryNotes(data.itineraryNotes);
+        localStorage.setItem("travelCurrentFile", urlLoad.file);
+        skipNextLoadRef.current = true;
+        setCurrentFile(urlLoad.file);
+        setUrlLoad(null);
+        setSyncStatus("synced");
+      })
+      .catch(() => setUrlLoad(s => ({ ...s, status: "notfound" })));
+  }, [urlLoad?.status, effectiveRepo]);
+
   // Load from GitHub on mount (localStorage already loaded synchronously above)
   useEffect(() => {
-    if (!settings.githubToken || !effectiveRepo || !currentFile || currentFile === "__local__") return;
+    if (!effectiveRepo || !currentFile || currentFile === "__local__") return;
+    if (skipNextLoadRef.current) { skipNextLoadRef.current = false; return; }
     setSyncStatus("loading");
     loadFromGitHub({ ...ghSettings, githubFile: currentFile })
       .then(data => {
-        if (!data) { setSyncStatus("idle"); return; }
+        if (!data) {
+          setCurrentFile(null);
+          localStorage.removeItem("travelCurrentFile");
+          return;
+        }
         if (data.days?.length)              setDays(data.days);
         if (data.places)                    setSavedPlaces(data.places);
         if (data.directions)                setSavedDirections(data.directions);
@@ -506,6 +539,42 @@ export default function Itinerary() {
       return d;
     } catch { return null; }
   })();
+
+  if (urlLoad?.status === "loading") {
+    return (
+      <div style={{ display:"flex", justifyContent:"center", alignItems:"center",
+        minHeight:"100vh", background:"#0b1929", color:"#6b8fa8",
+        fontFamily:"sans-serif", fontSize:".9rem" }}>
+        Loading…
+      </div>
+    );
+  }
+
+  if (urlLoad?.status === "notfound") {
+    const name = urlLoad.file.replace(/^.*\//, "").replace(/\.json$/i, "");
+    return (
+      <div style={{ display:"flex", flexDirection:"column", justifyContent:"center",
+        alignItems:"center", minHeight:"100vh", background:"#0b1929",
+        fontFamily:"sans-serif", gap:"1rem", padding:"2rem" }}>
+        <div style={{ fontSize:".62rem", color:"#c9a84c", letterSpacing:".2em",
+          textTransform:"uppercase" }}>Not Found</div>
+        <div style={{ fontSize:"1.1rem", color:"#8fb0cc", textAlign:"center" }}>
+          "{name}" doesn't exist.
+        </div>
+        <button onClick={() => {
+            const url = new URL(window.location.href);
+            url.searchParams.delete("i");
+            history.replaceState(null, "", url);
+            setUrlLoad(null);
+          }}
+          style={{ background:"none", border:"1px solid #2e5070", color:"#4e7a9e",
+            borderRadius:4, padding:".5rem 1.25rem", fontSize:".82rem",
+            fontFamily:"sans-serif", cursor:"pointer" }}>
+          ← All Itineraries
+        </button>
+      </div>
+    );
+  }
 
   if (!currentFile) {
     return (
