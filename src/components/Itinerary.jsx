@@ -463,6 +463,13 @@ export default function Itinerary() {
     URL.revokeObjectURL(url);
   }
 
+  async function handleMilestone(milestoneLabel) {
+    const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
+                   highlights: customHighlights, notes: customNotes, startDate, openDay,
+                   title, subtitle, itineraryNotes };
+    await saveToGitHub(data, { ...ghSettings, githubFile: currentFile, message: milestoneLabel });
+  }
+
   async function handleRestore(sha) {
     const data = await loadFromGitHub({ ...ghSettings, githubFile: currentFile, githubBranch: sha });
     if (data) {
@@ -662,9 +669,11 @@ export default function Itinerary() {
           {/* History panel */}
           {showHistory && (
             <HistoryPanel
+              key={currentFile}
               settings={ghSettings}
               currentFile={currentFile}
               onRestore={handleRestore}
+              onMilestone={handleMilestone}
               onClose={() => setShowHistory(false)}
             />
           )}

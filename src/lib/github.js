@@ -86,7 +86,7 @@ export async function loadFromGitHub({ githubToken, githubRepo, githubFile, gith
   return JSON.parse(decodeURIComponent(escape(atob(json.content.replace(/\s/g, "")))));
 }
 
-export async function saveToGitHub(data, { githubToken, githubRepo, githubFile, githubBranch = "main" }) {
+export async function saveToGitHub(data, { githubToken, githubRepo, githubFile, githubBranch = "main", message }) {
   const text = typeof data === "string" ? data : JSON.stringify(data, null, 2);
   const content = btoa(unescape(encodeURIComponent(text)));
   const shaKey = `${githubBranch}:${githubFile}`;
@@ -107,7 +107,7 @@ export async function saveToGitHub(data, { githubToken, githubRepo, githubFile, 
     method: "PUT",
     headers: { ...authHeaders(githubToken), "Content-Type": "application/json" },
     body: JSON.stringify({
-      message: `Update itinerary - ${new Date().toISOString().slice(0, 16).replace("T", " ")}`,
+      message: message || `Update itinerary - ${new Date().toISOString().slice(0, 16).replace("T", " ")}`,
       content,
       branch: githubBranch,
       ...(shaByPath.has(shaKey) ? { sha: shaByPath.get(shaKey) } : {}),
