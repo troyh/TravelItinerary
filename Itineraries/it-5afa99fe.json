@@ -32,7 +32,11 @@
   "places": {},
   "directions": {},
   "routes": {},
-  "highlights": {},
+  "highlights": {
+    "1": [
+      "Get rental car"
+    ]
+  },
   "notes": {
     "1": "TODO: get airfare (round trip for 2, one-way for Hudson!)"
   },
