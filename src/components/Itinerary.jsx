@@ -80,7 +80,11 @@ export default function Itinerary() {
   const [editingHeader,    setEditingHeader]    = useState(false);
   const [headerDraft,      setHeaderDraft]      = useState({});
   const [editingNotes,     setEditingNotes]     = useState(false);
-  const [currentFile,      setCurrentFile]      = useState(() => localStorage.getItem("travelCurrentFile"));
+  const [currentFile,      setCurrentFile]      = useState(() => {
+    const name = new URLSearchParams(window.location.search).get("i");
+    if (name) return `${ITINERARIES_FOLDER}/${name}.json`;
+    return localStorage.getItem("travelCurrentFile");
+  });
   const [saveAsName,       setSaveAsName]       = useState("");
   const [copiedICS,        setCopiedICS]        = useState(false);
   const inputRef    = useRef(null);
@@ -132,6 +136,17 @@ export default function Itinerary() {
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
 
   useEffect(() => { document.title = title || "Travel Itinerary"; }, [title]);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (currentFile && currentFile !== "__local__") {
+      const name = currentFile.replace(/^.*\//, "").replace(/\.json$/i, "");
+      url.searchParams.set("i", name);
+    } else {
+      url.searchParams.delete("i");
+    }
+    history.replaceState(null, "", url);
+  }, [currentFile]);
 
   // Load from GitHub on mount (localStorage already loaded synchronously above)
   useEffect(() => {
