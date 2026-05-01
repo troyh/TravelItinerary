@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { listItineraries, loadFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
+import { listItineraries, loadFromGitHub, saveToGitHub, deleteFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import Settings from "./Settings.jsx";
 
 const S = {
@@ -40,10 +40,12 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
   });
   const [listStatus,   setListStatus]   = useState("idle");
   const [newName,      setNewName]      = useState("");
-  const [creating,     setCreating]     = useState(false);
   const [loadingPath,  setLoadingPath]  = useState(null);
   const [loadError,    setLoadError]    = useState(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [confirmDelete,setConfirmDelete]= useState(null);
+  const [deleting,     setDeleting]     = useState(null);
+  const [duplicating,  setDuplicating]  = useState(null);
 
   useEffect(() => { document.title = "Travel Itinerary"; }, []);
 
@@ -118,6 +120,56 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
     onCreate(newName.trim());
   }
 
+  async function handleDuplicate(f) {
+    setDuplicating(f.path);
+    try {
+      const data = await loadFromGitHub({ ...ghSettings, githubFile: f.path });
+      if (!data) return;
+      const newPath = `${ITINERARIES_FOLDER}/it-${crypto.randomUUID().slice(0, 8)}.json`;
+      const copy = { ...data, title: `Copy of ${data.title || f.name}` };
+      await saveToGitHub(copy, { ...ghSettings, githubFile: newPath });
+      const newFile = { name: newPath.replace(/^.*\//, "").replace(/\.json$/i, ""), path: newPath };
+      const overnights = data.days?.map(d => d.overnight).filter(Boolean) ?? [];
+      const legs       = data.days?.map(d => d.leg).filter(Boolean) ?? [];
+      const locations  = overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
+                       : overnights[0] ?? legs[0] ?? null;
+      const newMeta = { title: copy.title, startDate: data.startDate,
+                        dayCount: data.days?.length ?? 0, locations };
+      setFiles(prev => [newFile, ...prev]);
+      setDetails(prev => ({ ...prev, [newPath]: newMeta }));
+      try {
+        const meta = JSON.parse(localStorage.getItem("itineraryMetadata") || "{}");
+        localStorage.setItem("itineraryMetadata", JSON.stringify({ ...meta, [newPath]: newMeta }));
+      } catch {}
+    } catch {
+      setLoadError("Duplicate failed — check your connection.");
+    } finally {
+      setDuplicating(null);
+    }
+  }
+
+  async function handleDelete(path) {
+    setDeleting(path);
+    try {
+      await deleteFromGitHub({ ...ghSettings, githubFile: path });
+      try { await deleteFromGitHub({ ...ghSettings, githubFile: path.replace(/\.json$/i, ".ics") }); } catch {}
+      // Remove from local state immediately — don't re-fetch (GitHub CDN caches the directory listing)
+      setFiles(prev => prev.filter(f => f.path !== path));
+      setDetails(prev => { const n = { ...prev }; delete n[path]; return n; });
+      setConfirmDelete(null);
+      try {
+        const meta = JSON.parse(localStorage.getItem("itineraryMetadata") || "{}");
+        delete meta[path];
+        localStorage.setItem("itineraryMetadata", JSON.stringify(meta));
+      } catch {}
+    } catch (e) {
+      setLoadError(`Delete failed: ${e.message}`);
+      setConfirmDelete(null);
+    } finally {
+      setDeleting(null);
+    }
+  }
+
   // Sort files by most recently modified (details loaded) — fall back to alphabetical
   const sortedFiles = [...files].sort((a, b) => {
     const da = details[a.path];
@@ -129,7 +181,6 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
     return na.localeCompare(nb);
   });
 
-  const allDetailsLoaded = files.length > 0 && files.every(f => details[f.path] !== undefined);
 
   return (
     <div style={{ fontFamily: "Georgia, 'Times New Roman', serif", background: "#0b1929",
@@ -199,48 +250,89 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
             {sortedFiles.map(f => {
               const d = details[f.path];
               const displayTitle = d?.title || f.name;
+              const isDeleting   = deleting === f.path;
+              const isDuplicating = duplicating === f.path;
+              const busy         = !!loadingPath || isDeleting || isDuplicating;
               return (
-                <div key={f.path} onClick={() => loadingPath === null && handleLoad(f.path)}
-                  style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
-                    padding: ".85rem 1.1rem", marginBottom: ".4rem",
+                <div key={f.path}
+                  style={{ padding: ".85rem 1.1rem", marginBottom: ".4rem",
                     background: "#0d2035", border: "1px solid #1e3a52", borderRadius: 6,
-                    cursor: loadingPath ? "default" : "pointer",
-                    opacity: loadingPath && loadingPath !== f.path ? 0.5 : 1 }}>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: ".95rem", color: "#e8dcc8", fontWeight: 500,
-                      lineHeight: 1.3 }}>
-                      {displayTitle}
+                    opacity: busy && loadingPath !== f.path && !isDeleting && !isDuplicating ? 0.5 : 1 }}>
+
+                  {/* Main row — click to open */}
+                  <div onClick={() => !busy && handleLoad(f.path)}
+                    style={{ display: "flex", justifyContent: "space-between",
+                      alignItems: "flex-start", cursor: busy ? "default" : "pointer" }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: ".95rem", color: "#e8dcc8", fontWeight: 500,
+                        lineHeight: 1.3 }}>
+                        {displayTitle}
+                      </div>
+                      {d && (
+                        <div style={{ fontFamily: "sans-serif", marginTop: 3 }}>
+                          {(d.startDate || d.dayCount > 0) && (
+                            <span style={{ fontSize: ".72rem", color: "#6b8fa8" }}>
+                              {d.startDate && d.dayCount
+                                ? `${formatDateRange(d.startDate, d.dayCount)} · ${d.dayCount} day${d.dayCount !== 1 ? "s" : ""}`
+                                : `${d.dayCount} day${d.dayCount !== 1 ? "s" : ""}`}
+                            </span>
+                          )}
+                          {d.locations && (
+                            <span style={{ fontSize: ".72rem", color: "#4e7a9e",
+                              display: "block", marginTop: 1,
+                              overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                              {d.locations}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
-                    {d && (
-                      <div style={{ fontFamily: "sans-serif", marginTop: 3 }}>
-                        {(d.startDate || d.dayCount > 0) && (
-                          <span style={{ fontSize: ".72rem", color: "#6b8fa8" }}>
-                            {d.startDate && d.dayCount
-                              ? `${formatDateRange(d.startDate, d.dayCount)} · ${d.dayCount} day${d.dayCount !== 1 ? "s" : ""}`
-                              : `${d.dayCount} day${d.dayCount !== 1 ? "s" : ""}`}
-                          </span>
-                        )}
-                        {d.locations && (
-                          <span style={{ fontSize: ".72rem", color: "#4e7a9e",
-                            display: "block", marginTop: 1,
-                            overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                            {d.locations}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                    {!d && files.length > 0 && !allDetailsLoaded && (
-                      <div style={{ fontSize: ".68rem", color: "#2e4a5e", fontFamily: "sans-serif",
-                        marginTop: 2 }}>
-                        Loading…
-                      </div>
-                    )}
+                    <span style={{ fontSize: ".78rem", fontFamily: "sans-serif", flexShrink: 0,
+                      marginLeft: ".75rem", color: loadingPath === f.path ? "#e8dcc8" : "#4e7a9e" }}>
+                      {loadingPath === f.path ? "Loading…" : "Open →"}
+                    </span>
                   </div>
-                  <span style={{ fontSize: ".78rem", fontFamily: "sans-serif", flexShrink: 0,
-                    marginLeft: ".75rem",
-                    color: loadingPath === f.path ? "#e8dcc8" : "#4e7a9e" }}>
-                    {loadingPath === f.path ? "Loading…" : "Open →"}
-                  </span>
+
+                  {/* Action row — write-only */}
+                  {canWrite && !confirmDelete && (
+                    <div onClick={e => e.stopPropagation()}
+                      style={{ display: "flex", gap: ".4rem", marginTop: ".6rem" }}>
+                      <button onClick={() => !busy && handleDuplicate(f)}
+                        disabled={busy}
+                        style={{ ...S.btnGhost, fontSize: ".68rem", padding: ".2rem .55rem",
+                          opacity: busy ? 0.45 : 1 }}>
+                        {isDuplicating ? "Duplicating…" : "Duplicate"}
+                      </button>
+                      <button onClick={() => !busy && setConfirmDelete(f.path)}
+                        disabled={busy}
+                        style={{ ...S.btnGhost, fontSize: ".68rem", padding: ".2rem .55rem",
+                          color: "#7a3838", borderColor: "#3a1a1a", opacity: busy ? 0.45 : 1 }}>
+                        Delete
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Delete confirmation */}
+                  {confirmDelete === f.path && (
+                    <div onClick={e => e.stopPropagation()}
+                      style={{ display: "flex", alignItems: "center", gap: ".5rem",
+                        marginTop: ".6rem", flexWrap: "wrap" }}>
+                      <span style={{ fontSize: ".72rem", color: "#e8a838",
+                        fontFamily: "sans-serif" }}>
+                        Delete "{displayTitle}"?
+                      </span>
+                      <button onClick={() => handleDelete(f.path)} disabled={isDeleting}
+                        style={{ ...S.btnGhost, fontSize: ".68rem", padding: ".2rem .55rem",
+                          color: "#e87878", borderColor: "#5a1a1a",
+                          opacity: isDeleting ? 0.5 : 1 }}>
+                        {isDeleting ? "Deleting…" : "Yes, delete"}
+                      </button>
+                      <button onClick={() => setConfirmDelete(null)} disabled={isDeleting}
+                        style={{ ...S.btnGhost, fontSize: ".68rem", padding: ".2rem .55rem" }}>
+                        Cancel
+                      </button>
+                    </div>
+                  )}
                 </div>
               );
             })}

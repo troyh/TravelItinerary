@@ -90,14 +90,13 @@ export async function deleteFromGitHub({ githubToken, githubRepo, githubFile, gi
   const shaKey = `${githubBranch}:${githubFile}`;
   let sha = shaByPath.get(shaKey);
   if (!sha) {
-    try {
-      const r = await fetch(
-        repoUrl(githubRepo, githubFile) + `?ref=${encodeURIComponent(githubBranch)}`,
-        { headers: authHeaders(githubToken) }
-      );
-      if (!r.ok) return;
-      sha = (await r.json()).sha;
-    } catch { return; }
+    const r = await fetch(
+      repoUrl(githubRepo, githubFile) + `?ref=${encodeURIComponent(githubBranch)}`,
+      { headers: authHeaders(githubToken) }
+    );
+    if (r.status === 404) return; // file already gone — treat as success
+    await throwIfNotOk(r, "deleteFromGitHub (fetch sha)");
+    sha = (await r.json()).sha;
   }
   const res = await fetch(repoUrl(githubRepo, githubFile), {
     method: "DELETE",
@@ -108,7 +107,8 @@ export async function deleteFromGitHub({ githubToken, githubRepo, githubFile, gi
       branch: githubBranch,
     }),
   });
-  if (res.ok) shaByPath.delete(shaKey);
+  await throwIfNotOk(res, "deleteFromGitHub");
+  shaByPath.delete(shaKey);
 }
 
 export async function saveToGitHub(data, { githubToken, githubRepo, githubFile, githubBranch = "main", message }) {
