@@ -1,0 +1,21 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Copy of Copy of Copy of Copy of Portland Puppy Pickup 🐶//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Copy of Copy of Copy of Copy of Portland Puppy Pickup 🐶
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260515
+DTEND;VALUE=DATE:20260516
+SUMMARY:Day 1: Drive to Portland
+DESCRIPTION:\nHighlights:\n• Check into hotel\n• Dinner at a nice restaurant\n• Leave early to avoid Portland traffic!!\n\nNote: TODO: Get a dinner reservation\n\nI couldn't get a reservation for this night at Le Pigeon. I'm on the **notify me** list\, but doubtful I'll get one. Several other restaurant options below.... Claude likes Coquine as the best "not-Le Pigeon" option but it's a bit out of town.
+UID:day-1-20260515@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260516
+DTEND;VALUE=DATE:20260517
+SUMMARY:Day 2: Get Puppy\, Go Home
+DESCRIPTION:\nHighlights:\n• Meet breeder to get puppy\n• Brunch?\n\nNote: TODO: Find a meeting place
+UID:day-2-20260516@travelitinerary
+END:VEVENT
+END:VCALENDAR
