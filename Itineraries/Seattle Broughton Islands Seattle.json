@@ -1,0 +1,459 @@
+{
+  "days": [
+    {
+      "day": 1,
+      "leg": "Seattle → Victoria, BC",
+      "nm": 67.2,
+      "hrs": 4.5,
+      "overnight": "Oak Bay anchorage or Victoria Harbour",
+      "tags": [
+        "customs",
+        "fuel-optional",
+        "town"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [
+        "Clear Canadian customs via CBSA — call 1-888-226-7277 on arrival or pre-clear with ArriveCAN app",
+        "Top off fuel at Westbay Marina or Coast Victoria Harbourside if desired",
+        "Walk the Inner Harbour: Empress Hotel, Parliament Buildings lit at dusk",
+        "Dinner in downtown Victoria — Fishhook or The Tapa Bar are standouts",
+        "Anchor in Oak Bay for a quiet night away from Inner Harbour ferry traffic"
+      ],
+      "note": "Depart early — US/Canada customs by water can involve a wait. Passports for everyone aboard."
+    },
+    {
+      "day": 2,
+      "leg": "Victoria → Salt Spring Island → Vancouver",
+      "nm": 73.4,
+      "hrs": 4.9,
+      "overnight": "False Creek Fisherman's Wharf or Granville Island Marina",
+      "tags": [
+        "combined-leg",
+        "market",
+        "fuel",
+        "provision",
+        "town"
+      ],
+      "fuelStop": true,
+      "fuelLabel": "Fuel Stop #1",
+      "tideWarning": false,
+      "highlights": [
+        "Short 28 NM run from Victoria to Ganges Harbour, Salt Spring Island",
+        "Ganges Saturday Market (April–October): 2–3 hrs ashore, local produce, artisan food and crafts",
+        "Quick dinghy or paddleboard of Ganges Harbour before the afternoon push north",
+        "55 NM to False Creek — arrive Vancouver mid/late afternoon",
+        "Fuel at False Creek Fuel Dock; major provisioning at Granville Island Public Market"
+      ],
+      "note": "Depart Salt Spring by 1:30–2pm to arrive Vancouver before evening. If you time it for a Saturday, the Ganges market is not to be missed."
+    },
+    {
+      "day": 3,
+      "leg": "Vancouver — Layover",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "False Creek (same marina)",
+      "tags": [
+        "layover",
+        "provision",
+        "city",
+        "town"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [
+        "Full day: Science World, Stanley Park Aquarium, English Bay beach for the kids",
+        "Top up provisions for 3–4 days — next reliable stop is Refuge Cove or Powell River",
+        "West Marine and chandleries nearby for any gear",
+        "Check Environment Canada weather for the Howe Sound / Jervis Inlet run north",
+        "Dinner: Hawksworth, Ancora Waterfront Dining, or water taxi to Lonsdale Quay",
+        "Confirm Malibu Rapids slack window for Day 4 arrival"
+      ],
+      "note": "Use today to nail down Malibu Rapids timing. Plan your Day 4 departure from Vancouver to arrive exactly at the slack window — not the other way around."
+    },
+    {
+      "day": 4,
+      "leg": "Vancouver → Princess Louisa Inlet",
+      "nm": 95,
+      "hrs": 6.3,
+      "overnight": "Princess Louisa Marine Provincial Park (anchor / stern-tie)",
+      "tags": [
+        "tide-critical",
+        "anchor",
+        "fjord",
+        "waterfall"
+      ],
+      "fuelStop": false,
+      "tideWarning": true,
+      "tideNote": "Malibu Rapids: passable ONLY within ±30 min of slack water. Plan your Vancouver departure to arrive at the exact slack window.",
+      "highlights": [
+        "Depart Vancouver early — Howe Sound is glassy in the morning before sea breeze fills in",
+        "North up the Strait of Georgia via Malaspina Strait into Jervis Inlet",
+        "Jervis Inlet is one of the great fjords of BC — 800m deep, walls rising to snow, waterfalls everywhere",
+        "Time your arrival at Malibu Rapids to the exact slack using XTide, Navionics, or the CHS app",
+        "Anchor inside Princess Louisa Marine Provincial Park — stern-tie rings at the park dock near Chatterbox Falls"
+      ],
+      "note": "Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window."
+    },
+    {
+      "day": 5,
+      "leg": "Princess Louisa Inlet — Layover",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "Princess Louisa Marine Provincial Park",
+      "tags": [
+        "layover",
+        "hike",
+        "waterfall",
+        "kayak",
+        "fishing"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [
+        "Hike to Chatterbox Falls — short trail, spectacular in July with snowmelt still running",
+        "Kayak or paddleboard the full 8km inlet — crystal-clear water, walls rising straight to snow",
+        "Fish for cutthroat trout near the river head (BC freshwater regulations apply)",
+        "Wildlife: black bears on the shoreline, bald eagles overhead, seals common",
+        "Sundowners in the cockpit watching waterfalls — this is the highlight of the whole trip"
+      ],
+      "note": "One of the most spectacular anchorages in the world. Fully protected from swell. Don't rush it."
+    },
+    {
+      "day": 6,
+      "leg": "Princess Louisa → Prideaux Haven (Desolation Sound)",
+      "nm": 75.7,
+      "hrs": 5,
+      "overnight": "Prideaux Haven, Desolation Sound Marine Park",
+      "tags": [
+        "tide-critical",
+        "anchor",
+        "marine-park",
+        "swim",
+        "kayak"
+      ],
+      "fuelStop": false,
+      "tideWarning": true,
+      "tideNote": "Exit Malibu Rapids at slack — same timing discipline as entry. No exceptions.",
+      "highlights": [
+        "Exit Malibu at slack tide, then north through Agamemnon Channel",
+        "Optional Powell River stopover: bakery, fuel top-off, provisions if needed",
+        "Desolation Sound has the warmest sea water north of Mexico — July temps hit 24°C (75°F)",
+        "Prideaux Haven: a maze of islets and coves with stern-tie rings throughout the marine park",
+        "Kayak the labyrinth in the evening light — among BC's finest anchorages"
+      ],
+      "note": "Prideaux fills fast in July — arrive by early afternoon. Tenedos Bay (adjacent) is an excellent overflow anchorage."
+    },
+    {
+      "day": 7,
+      "leg": "Desolation Sound — Layover",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "Prideaux Haven or Tenedos Bay",
+      "tags": [
+        "layover",
+        "swim",
+        "kayak",
+        "fishing",
+        "marine-park"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [
+        "Swim directly from the boat — 24°C water in July is genuinely warm, not just tolerable",
+        "Kayak the inner maze of Prideaux Haven at high tide — accessible islets and hidden coves",
+        "Fish for coho or bottom fish from the dinghy — Desolation Sound holds good stocks",
+        "Day trip to Laura Cove or Grace Harbour by dinghy",
+        "Best stargazing of the trip — minimal light pollution, long July twilight gives way to a spectacular sky"
+      ],
+      "note": "This layover is well earned. Desolation Sound gets its name from a gloomy 1792 survey — ignore that. In July it's the warmest, most beautiful anchorage on the BC coast."
+    },
+    {
+      "day": 8,
+      "leg": "Desolation Sound → Campbell River (fuel) → Port Neville",
+      "nm": 98,
+      "hrs": 7.5,
+      "overnight": "Port Neville anchorage or Thurston Bay Marine Park",
+      "tags": [
+        "fuel",
+        "tide-critical",
+        "anchor"
+      ],
+      "fuelStop": true,
+      "fuelLabel": "Fuel Stop #2",
+      "tideWarning": true,
+      "tideNote": "Seymour Narrows is 5 NM north of Campbell River — 16-knot peak currents. Coordinate your fuel stop timing so you hit the Narrows at slack. Plan the whole day around this window.",
+      "highlights": [
+        "Depart Desolation early (7am) — arrive Campbell River ~10:30am at 15 kts for fuel and a quick stretch",
+        "Fuel at Discovery Harbour Marina and grab provisions — no overnight here",
+        "Time departure from Campbell River to hit Seymour Narrows at slack (5 NM north)",
+        "Once through the Narrows, the worst is behind you — beautiful Johnstone Strait opens up",
+        "Port Neville: remote, peaceful anchorage at the mouth of a long inlet — excellent crabbing and prawning"
+      ],
+      "note": "This is a coordinated day: depart Desolation early, fuel Campbell River at ~10:30am, Seymour Narrows at slack midday, anchor Port Neville by mid-afternoon. At 15 kts this is ~7.5 hrs total but the Narrows wait may be built in. Brief lunch at Campbell River fuel dock."
+    },
+    {
+      "day": 9,
+      "leg": "Port Neville → Telegraph Cove",
+      "nm": 57,
+      "hrs": 3.8,
+      "overnight": "Telegraph Cove Marina or nearby anchorage",
+      "tags": [
+        "orcas",
+        "anchor",
+        "town"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [
+        "Easy run through Johnstone Strait — one of the world's premier orca corridors",
+        "July is peak resident orca season — scan constantly, pods are frequently sighted",
+        "Humpbacks, minkes, Steller sea lions, and Dall's porpoises common throughout Johnstone Strait",
+        "Telegraph Cove: charming historic boardwalk fishing village, great for a walk and lunch ashore",
+        "Stubbs Island Whale Watching runs expert-guided orca tours from the dock if you want a guaranteed experience"
+      ],
+      "note": "Relaxed day after yesterday's long push. Take your time through Johnstone Strait — the orca viewing here is as good as it gets on the BC coast."
+    },
+    {
+      "day": 10,
+      "leg": "Telegraph Cove → Broughtons / Lagoon Cove",
+      "nm": 38,
+      "hrs": 2.5,
+      "overnight": "Lagoon Cove Marina, East Cracroft Island",
+      "tags": [
+        "fuel",
+        "grizzlies",
+        "orcas",
+        "kayak",
+        "fishing"
+      ],
+      "fuelStop": true,
+      "fuelLabel": "Fuel Stop #3",
+      "tideWarning": false,
+      "highlights": [
+        "Short run — arrive Lagoon Cove by late morning, get settled before the afternoon action",
+        "Fuel at Lagoon Cove Marina — one of the most beloved stops in the Pacific Northwest",
+        "Explore the Broughton Archipelago by kayak or dinghy from the marina — countless channels to explore",
+        "Orca sightings are frequent in this area in July — ask Kelly & Dan for current reports",
+        "Book Knight Inlet grizzly tour for tomorrow if you haven't already"
+      ],
+      "note": "Arriving early gives you the afternoon to explore and get oriented. Tonight: Kelly & Dan's famous prawn potluck — they supply the prawns, you bring an appetizer. Unmissable."
+    },
+    {
+      "day": 11,
+      "leg": "Broughton Islands — Layover",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "Lagoon Cove or Echo Bay",
+      "tags": [
+        "layover",
+        "grizzlies",
+        "orcas",
+        "kayak",
+        "fishing"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [
+        "Knight Inlet / Glendale Cove grizzly bear watching — July is peak season, multiple bears near shore feeding on vegetation and fish",
+        "Orca hotspot: Johnstone Strait and the Broughton channels are among the best orca corridors in the world",
+        "Kayak the archipelago — some of the most intricate island maze paddling in BC",
+        "Fish for lingcod, rockfish, and salmon in the channels around East Cracroft Island",
+        "Explore Echo Bay — Pierre's floating post office, a slice of remote BC character"
+      ],
+      "note": "Book Knight Inlet Lodge or Tide Rip Grizzly Tours in advance — this is a genuine bucket-list experience. Seeing a grizzly from the water in its natural habitat with the kids is unforgettable."
+    },
+    {
+      "day": 12,
+      "leg": "Lagoon Cove → Blind Channel Resort",
+      "nm": 55,
+      "hrs": 3.7,
+      "overnight": "Blind Channel Resort, West Thurlow Island",
+      "tags": [
+        "marina",
+        "restaurant",
+        "hike",
+        "remote"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [
+        "Blind Channel Resort: one of BC's most charming remote marina destinations",
+        "Their cinnamon rolls are legendary — get in line early at the bakery or they sell out",
+        "Excellent restaurant for dinner: fresh local seafood, full bar, family-friendly atmosphere",
+        "Hiking trails directly from the dock: old-growth forest, panoramic viewpoints",
+        "Well-stocked general store — last good provisioning point before the south run"
+      ],
+      "note": "Call ahead on VHF 66A to reserve a slip — Blind Channel fills up in summer. Easy run today; enjoy the slow pace."
+    },
+    {
+      "day": 13,
+      "leg": "Blind Channel → Squirrel Cove (Cortes Island)",
+      "nm": 65,
+      "hrs": 4.3,
+      "overnight": "Squirrel Cove, Cortes Island",
+      "tags": [
+        "anchor",
+        "swim",
+        "kayak"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [
+        "Squirrel Cove: a classic, well-sheltered anchorage with a beautiful enclosed tidal lagoon",
+        "Walk to the Squirrel Cove General Store — ice cream, basic provisions, friendly island atmosphere",
+        "Warm swimming — you're back in Desolation Sound warmth territory here",
+        "Kayak the inner lagoon at high tide — a gorgeous hidden basin accessible through a narrow passage",
+        "Fish for coho salmon returning through this corridor in July"
+      ],
+      "note": "Gentle re-entry to the southern waters. The lagoon inside Squirrel Cove is one of those hidden BC gems — explore it by kayak or dinghy at high tide."
+    },
+    {
+      "day": 14,
+      "leg": "Squirrel Cove → Montague Harbour (Galiano Island)",
+      "nm": 90,
+      "hrs": 6,
+      "overnight": "Montague Harbour Marine Provincial Park, Galiano Island",
+      "tags": [
+        "anchor",
+        "gulf-islands",
+        "beach",
+        "hike"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [
+        "South through the Discovery Islands and upper Gulf Islands",
+        "Transit Active Pass carefully — BC Ferries run constantly and have right of way",
+        "Montague Harbour: one of BC's most beautiful marine park anchorages, famous for its shell beach",
+        "Walk the Montague Harbour trails to the shell middens and headland views",
+        "Hummingbird Pub on Galiano Island for a relaxed family dinner ashore"
+      ],
+      "note": "Active Pass: narrow channel between Galiano and Mayne Islands with heavy BC Ferries traffic. Reduce speed, hug the correct side, and give ferries wide berth."
+    },
+    {
+      "day": 15,
+      "leg": "Gulf Islands — Layover",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "Montague Harbour or Dionisio Point, Galiano Island",
+      "tags": [
+        "layover",
+        "gulf-islands",
+        "hike",
+        "kayak",
+        "beach",
+        "fishing"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [
+        "Hike Dionisio Point Provincial Park — dramatic sandstone bluffs, arbutus forest, sweeping views of the Gulf Islands",
+        "Kayak or paddleboard the calm harbour — excellent for all ages",
+        "Fishing: chinook and coho salmon returning through this corridor in July",
+        "Dinghy to the Montague Harbour village: small café, general store, easy island pace",
+        "Afternoon swim off the shell beach — warm, shallow, ideal for kids"
+      ],
+      "note": "First full Gulf Islands decompression day. No agenda required."
+    },
+    {
+      "day": 16,
+      "leg": "Gulf Islands — Layover",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "Prevost Island, Wallace Island, or Ganges Harbour (Salt Spring)",
+      "tags": [
+        "layover",
+        "gulf-islands",
+        "hike",
+        "kayak",
+        "town"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [
+        "Day cruise by dinghy or kayak to Wallace Island Marine Park — one of BC's most beautiful uninhabited islands",
+        "Or motor back to Salt Spring (Ganges) for town time — shops, restaurants, evening on the dock",
+        "Prevost Island anchorage: secluded, no crowds, exceptional dinghy exploration of the coves",
+        "Beachcomb, fish from the swim step, paddle at sunset — full unstructured family day",
+        "Move anchorages mid-day if the mood strikes"
+      ],
+      "note": "Second Gulf Islands layover. No agenda — use it however the family wants. Salt Spring Ganges is excellent if anyone wants shops or a proper meal ashore."
+    },
+    {
+      "day": 17,
+      "leg": "Gulf Islands → Victoria (fuel) → Seattle",
+      "nm": 108,
+      "hrs": 7.2,
+      "overnight": "Home Marina, Seattle",
+      "tags": [
+        "fuel",
+        "customs",
+        "final-leg",
+        "town"
+      ],
+      "fuelStop": true,
+      "fuelLabel": "Fuel Stop #4",
+      "tideWarning": false,
+      "highlights": [
+        "Depart Gulf Islands in the morning — easy run south to Victoria via Haro Strait",
+        "Fuel top-off at Victoria Harbour before the crossing (optional but recommended)",
+        "Victoria Fisherman's Wharf: final Canadian lunch — outdoor fish & chips, harbour seals at the dock",
+        "Clear US Customs via CBP ROAM app before entering US waters — passports ready for all aboard",
+        "Haro Strait crossing: aim to cross before 2pm to stay ahead of afternoon northwest wind",
+        "Optional: brief stop at Roche Harbor (San Juan Islands) to break the final leg"
+      ],
+      "note": "Slightly over the usual 100 NM preference, but Victoria breaks it naturally into two segments. Register everyone on the CBP ROAM app before leaving Victoria. Shilshole or Lake Union via the locks for Seattle landfall."
+    }
+  ],
+  "places": {},
+  "directions": {
+    "1": [],
+    "2": []
+  },
+  "routes": {
+    "1": [
+      {
+        "id": "8ced442b-3122-4c12-a8b0-051ce0d9dd9a",
+        "name": "EBM-Victoria",
+        "nm": 67.2,
+        "speedKts": 15,
+        "hrs": 4.5,
+        "notes": "",
+        "addedAt": "2026-04-29T04:09:44.010Z"
+      }
+    ],
+    "2": [
+      {
+        "id": "1777583344138-s1l2aapj7u",
+        "name": "",
+        "nm": 73.4,
+        "speedKts": 15,
+        "hrs": 4.9,
+        "notes": "",
+        "addedAt": "2026-04-30T21:09:04.138Z"
+      }
+    ],
+    "3": [],
+    "6": [
+      {
+        "id": "3a14e247-1d21-4e7e-a735-b7f013a04890",
+        "name": "Princess Louisa Inlet—Desolation Sound",
+        "nm": 75.7,
+        "speedKts": 15,
+        "hrs": 5,
+        "notes": "",
+        "addedAt": "2026-04-29T04:23:44.738Z"
+      }
+    ]
+  },
+  "highlights": {},
+  "notes": {
+    "4": "Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window.\n\nTODO: figure out if I’m okay for stern-tying\nTODO: is the dock there still under construction?"
+  },
+  "startDate": "2026-06-30",
+  "openDay": 3,
+  "title": "Seattle → Broughton Islands → Seattle",
+  "subtitle": "Our Summer 2026 Cruise!",
+  "itineraryNotes": "TODO: Get Canada pass sticker thing for back door \n"
+}
