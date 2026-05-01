@@ -13,6 +13,20 @@
       "highlights": [],
       "note": "",
       "day": 1
+    },
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 2
     }
   ],
   "places": {},
@@ -23,7 +37,7 @@
     "1": "TODO: get airfare (round trip for 2, one-way for Hudson!)"
   },
   "startDate": "2026-09-18",
-  "openDay": 1,
+  "openDay": 2,
   "title": "Take Hudson to College",
   "subtitle": "",
   "itineraryNotes": ""
