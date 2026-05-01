@@ -74,7 +74,7 @@ export default function Itinerary() {
   const [showHistory,      setShowHistory]      = useState(false);
   const [syncStatus,       setSyncStatus]       = useState("idle");
   const [syncError,        setSyncError]        = useState("");
-  const [title,            setTitle]            = useState(() => _db?.title    ?? "Seattle to the Broughton Islands");
+  const [title,            setTitle]            = useState(() => _db?.title    ?? "");
   const [subtitle,         setSubtitle]         = useState(() => _db?.subtitle ?? "Princess Louisa Inlet · Vancouver · Salt Spring · Desolation Sound · Johnstone Strait · Broughtons · Gulf Islands");
   const [itineraryNotes,   setItineraryNotes]   = useState(() => _db?.itineraryNotes ?? "");
   const [editingHeader,    setEditingHeader]    = useState(false);
