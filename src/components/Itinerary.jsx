@@ -669,6 +669,15 @@ export default function Itinerary() {
                   ⏱
                 </button>
               )}
+              {currentFile && currentFile !== "__local__" && typeof navigator.share === "function" && (
+                <button
+                  onClick={() => navigator.share({ title, url: window.location.href })}
+                  title="Share itinerary"
+                  style={{ background:"none", border:"none", color:"#6b8fa8",
+                    cursor:"pointer", fontSize:".95rem", padding:0, lineHeight:1 }}>
+                  ⬆
+                </button>
+              )}
               <button onClick={() => { setShowSettings(p => !p); setShowHistory(false); }} title="Settings"
                 style={{ background:"none", border:"none", color: showSettings ? "#c9a84c" : "#6b8fa8",
                   cursor:"pointer", fontSize:"1rem", padding:0, lineHeight:1 }}>
