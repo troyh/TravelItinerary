@@ -8,7 +8,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260918
 DTEND;VALUE=DATE:20260919
 SUMMARY:Day 1: Fly to Santa Barbara
-DESCRIPTION:\nHighlights:\n• Get rental car\n• Check into hotel\n\nNote: TODO: get airfare (round trip for 2\, one-way for Hudson!)
+DESCRIPTION:\nHighlights:\n• Get rental car\n• Check into hotel\n• Shopping for dorm room?\n\nNote: TODO: get airfare (round trip for 2\, one-way for Hudson!)
 UID:day-1-20260918@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
