@@ -38,6 +38,9 @@
       "Check into hotel",
       "Shopping for dorm room?",
       "Dinner"
+    ],
+    "2": [
+      "Drive to campus"
     ]
   },
   "notes": {
