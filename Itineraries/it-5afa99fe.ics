@@ -22,7 +22,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260920
 DTEND;VALUE=DATE:20260921
 SUMMARY:Day 3: Fly home
-DESCRIPTION:\nHighlights:\n• Check out of hotel\n• Return rental car
+DESCRIPTION:\nHighlights:\n• Check out of hotel\n• Return rental car\n• Go to airport
 UID:day-3-20260920@travelitinerary
 END:VEVENT
 END:VCALENDAR
