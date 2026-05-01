@@ -58,6 +58,9 @@
       "Check-in",
       "Unload car",
       "Move-in and set up room"
+    ],
+    "3": [
+      "Check out of hotel"
     ]
   },
   "notes": {
