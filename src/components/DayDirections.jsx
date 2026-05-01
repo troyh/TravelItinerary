@@ -63,7 +63,7 @@ const S = {
 const borderAccent = "3px solid #5cb85c66";
 
 // ── Component ─────────────────────────────────────────────────────────────
-export default function DayDirections({ directions, onAdd, onUpdate, onDelete }) {
+export default function DayDirections({ directions, onAdd, onUpdate, onDelete, readOnly = false }) {
   const { provider } = getStoredProviderSettings();
   const [apiReady,  setApiReady]  = useState(false);
   const [apiError,  setApiError]  = useState(null);
@@ -237,6 +237,8 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete })
     }
   }
 
+  if (readOnly && directions.length === 0) return null;
+
   // ── Derived ──────────────────────────────────────────────────────────
   const canFetch = origin && destination && !fetching;
 
@@ -278,7 +280,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete })
             </span>
           )}
         </div>
-        {!isAdding && !apiError && (
+        {!isAdding && !apiError && !readOnly && (
           <button onClick={openForm} disabled={!apiReady}
             style={{ ...S.btnGhost, opacity: apiReady ? 1 : 0.45,
               fontSize: ".7rem", padding: ".25rem .65rem" }}>
@@ -392,11 +394,13 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete })
                       textDecoration: "none" }}>
                     Maps ↗
                   </a>
-                  <button onClick={() => onDelete(dir.id)}
-                    style={{ background: "none", border: "none", color: "#3d6050",
-                      cursor: "pointer", fontSize: ".85rem", lineHeight: 1, padding: 0 }}>
-                    ×
-                  </button>
+                  {!readOnly && (
+                    <button onClick={() => onDelete(dir.id)}
+                      style={{ background: "none", border: "none", color: "#3d6050",
+                        cursor: "pointer", fontSize: ".85rem", lineHeight: 1, padding: 0 }}>
+                      ×
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -436,7 +440,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete })
               )}
 
               {/* Notes */}
-              {editingId === dir.id ? (
+              {editingId === dir.id && !readOnly ? (
                 <div style={{ marginTop: ".4rem" }}>
                   <textarea value={noteDraft} rows={2} autoFocus
                     onChange={e => setNoteDraft(e.target.value)}
@@ -454,11 +458,11 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete })
                   </div>
                 </div>
               ) : (
-                <div onClick={() => { setEditingId(dir.id); setNoteDraft(dir.notes); }}
-                  style={{ marginTop: ".35rem", cursor: "pointer" }}>
+                <div onClick={() => !readOnly && (setEditingId(dir.id), setNoteDraft(dir.notes))}
+                  style={{ marginTop: ".35rem", cursor: readOnly ? "default" : "pointer" }}>
                   {dir.notes
                     ? <NoteMarkdown>{dir.notes}</NoteMarkdown>
-                    : <span style={{ fontSize:".78rem", color:"#2e4a5e", fontFamily:"sans-serif", fontStyle:"italic" }}>Add notes…</span>}
+                    : !readOnly && <span style={{ fontSize:".78rem", color:"#2e4a5e", fontFamily:"sans-serif", fontStyle:"italic" }}>Add notes…</span>}
                 </div>
               )}
             </div>

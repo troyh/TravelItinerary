@@ -60,7 +60,7 @@ function detectCategory(types = []) {
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
-export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete }) {
+export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, readOnly = false }) {
   const { provider } = getStoredProviderSettings();
   // Maps API lifecycle
   const [apiReady, setApiReady] = useState(false);
@@ -235,6 +235,8 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete })
 
   const borderAccent = "3px solid #4a9eff66";
 
+  if (readOnly && places.length === 0) return null;
+
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div style={{ marginTop: "1rem" }}>
@@ -251,7 +253,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete })
             </span>
           )}
         </div>
-        {!isSearching && !apiError && (
+        {!isSearching && !apiError && !readOnly && (
           <button onClick={openSearch} disabled={!apiReady}
             style={{ ...S.btnGhost, opacity: apiReady ? 1 : 0.45, fontSize: ".7rem",
               padding: ".25rem .65rem" }}>
@@ -420,11 +422,13 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete })
                       Maps ↗
                     </a>
                   )}
-                  <button onClick={() => onDelete(place.id)}
-                    style={{ background: "none", border: "none", color: "#3d5060",
-                      cursor: "pointer", fontSize: ".85rem", lineHeight: 1, padding: 0 }}>
-                    ×
-                  </button>
+                  {!readOnly && (
+                    <button onClick={() => onDelete(place.id)}
+                      style={{ background: "none", border: "none", color: "#3d5060",
+                        cursor: "pointer", fontSize: ".85rem", lineHeight: 1, padding: 0 }}>
+                      ×
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -455,7 +459,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete })
               </div>
 
               {/* Notes — click to edit inline */}
-              {editingId === place.id ? (
+              {editingId === place.id && !readOnly ? (
                 <div style={{ marginTop: ".5rem" }}>
                   <textarea value={noteDraft} rows={3} autoFocus
                     onChange={e => setNoteDraft(e.target.value)}
@@ -474,11 +478,11 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete })
                   </div>
                 </div>
               ) : (
-                <div onClick={() => { setEditingId(place.id); setNoteDraft(place.notes); }}
-                  style={{ marginTop: ".45rem", cursor: "pointer" }}>
+                <div onClick={() => !readOnly && (setEditingId(place.id), setNoteDraft(place.notes))}
+                  style={{ marginTop: ".45rem", cursor: readOnly ? "default" : "pointer" }}>
                   {place.notes
                     ? <NoteMarkdown>{place.notes}</NoteMarkdown>
-                    : <span style={{ fontSize:".8rem", color:"#2e4a5e", fontFamily:"sans-serif", fontStyle:"italic" }}>Add notes…</span>}
+                    : !readOnly && <span style={{ fontSize:".8rem", color:"#2e4a5e", fontFamily:"sans-serif", fontStyle:"italic" }}>Add notes…</span>}
                 </div>
               )}
             </div>

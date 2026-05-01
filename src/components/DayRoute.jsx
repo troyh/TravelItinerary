@@ -19,7 +19,7 @@ const S = {
 
 const BLANK = { name: "", nm: "", speedKts: 15 };
 
-export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToDay }) {
+export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToDay, readOnly = false }) {
   const [isAdding,  setIsAdding]  = useState(false);
   const [draft,     setDraft]     = useState(BLANK);
   const [editingId, setEditingId] = useState(null);
@@ -58,6 +58,8 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
     setDraft(BLANK);
   }
 
+  if (readOnly && routes.length === 0) return null;
+
   return (
     <div style={{ marginTop: "1rem" }}>
 
@@ -74,7 +76,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
             </span>
           )}
         </div>
-        {!isAdding && (
+        {!isAdding && !readOnly && (
           <button type="button"
             onClick={() => setIsAdding(true)}
             onTouchEnd={e => { e.preventDefault(); setIsAdding(true); }}
@@ -150,12 +152,14 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
                 fontWeight: 600, lineHeight: 1.3, flex: 1 }}>
                 🚢 {route.name || "Unnamed Route"}
               </span>
-              <button type="button" onClick={() => onDelete(route.id)}
-                style={{ background: "none", border: "none", color: "#5a4a20",
-                  cursor: "pointer", fontSize: ".85rem", lineHeight: 1, padding: 0,
-                  flexShrink: 0 }}>
-                ×
-              </button>
+              {!readOnly && (
+                <button type="button" onClick={() => onDelete(route.id)}
+                  style={{ background: "none", border: "none", color: "#5a4a20",
+                    cursor: "pointer", fontSize: ".85rem", lineHeight: 1, padding: 0,
+                    flexShrink: 0 }}>
+                  ×
+                </button>
+              )}
             </div>
 
             {/* Stats row */}
@@ -172,7 +176,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
             </button>
 
             {/* Notes inline edit */}
-            {editingId === route.id ? (
+            {editingId === route.id && !readOnly ? (
               <div style={{ marginTop: ".35rem" }}>
                 <textarea value={noteDraft} rows={2} autoFocus
                   onChange={e => setNoteDraft(e.target.value)}
@@ -190,11 +194,11 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
                 </div>
               </div>
             ) : (
-              <div onClick={() => { setEditingId(route.id); setNoteDraft(route.notes); }}
-                style={{ cursor: "pointer" }}>
+              <div onClick={() => !readOnly && (setEditingId(route.id), setNoteDraft(route.notes))}
+                style={{ cursor: readOnly ? "default" : "pointer" }}>
                 {route.notes
                   ? <NoteMarkdown>{route.notes}</NoteMarkdown>
-                  : <span style={{ fontSize: ".78rem", color: "#2e4a5e", fontFamily: "sans-serif",
+                  : !readOnly && <span style={{ fontSize: ".78rem", color: "#2e4a5e", fontFamily: "sans-serif",
                       fontStyle: "italic" }}>Add notes…</span>}
               </div>
             )}

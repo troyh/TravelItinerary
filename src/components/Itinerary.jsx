@@ -93,6 +93,7 @@ export default function Itinerary() {
 
   const effectiveRepo   = settings.githubRepo   || inferRepo() || "";
   const effectiveBranch = settings.githubBranch || "data";
+  const readOnly = !settings.githubToken;
   const ghSettings = { ...settings, githubRepo: effectiveRepo, githubBranch: effectiveBranch };
 
   useEffect(() => {
@@ -680,11 +681,13 @@ export default function Itinerary() {
                   margin:0, letterSpacing:"-.02em", lineHeight:1.15, flex:1 }}>
                   {title}
                 </h1>
-                <button onClick={() => { setEditingHeader(true); setHeaderDraft({ title, subtitle }); }}
-                  style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
-                    fontSize:".7rem", fontFamily:"sans-serif", padding:0, flexShrink:0, marginTop:".35rem" }}>
-                  Edit
-                </button>
+                {!readOnly && (
+                  <button onClick={() => { setEditingHeader(true); setHeaderDraft({ title, subtitle }); }}
+                    style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
+                      fontSize:".7rem", fontFamily:"sans-serif", padding:0, flexShrink:0, marginTop:".35rem" }}>
+                    Edit
+                  </button>
+                )}
               </div>
               {subtitle && (
                 <p style={{ color:"#9ab8d4", margin:"0 0 1.5rem", fontSize:".95rem", fontStyle:"italic" }}>
@@ -734,7 +737,7 @@ export default function Itinerary() {
                         padding:"2px 8px", borderRadius:4 }}>
                       Export .ics
                     </button>
-                    {settings.githubToken && effectiveRepo && currentFile && currentFile !== "__local__" && (
+                    {effectiveRepo && currentFile && currentFile !== "__local__" && (
                       <button onClick={() => {
                           const icsFile = currentFile.replace(/\.json$/i, ".ics");
                           const url = `https://raw.githubusercontent.com/${effectiveRepo}/${effectiveBranch}/${icsFile}`;
@@ -783,19 +786,21 @@ export default function Itinerary() {
                 <div style={{ flex:1 }}>
                   <NoteMarkdown>{itineraryNotes}</NoteMarkdown>
                 </div>
-                <button onClick={() => setEditingNotes(true)}
-                  style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
-                    fontSize:".7rem", fontFamily:"sans-serif", padding:0, flexShrink:0 }}>
-                  Edit
-                </button>
+                {!readOnly && (
+                  <button onClick={() => setEditingNotes(true)}
+                    style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
+                      fontSize:".7rem", fontFamily:"sans-serif", padding:0, flexShrink:0 }}>
+                    Edit
+                  </button>
+                )}
               </div>
-            ) : (
+            ) : !readOnly ? (
               <button onClick={() => setEditingNotes(true)}
                 style={{ background:"none", border:"none", color:"#3d5060", cursor:"pointer",
                   fontSize:".75rem", fontFamily:"sans-serif", fontStyle:"italic", padding:0 }}>
                 + Add itinerary notes
               </button>
-            )}
+            ) : null}
           </div>
 
           {/* TODOs */}
@@ -1019,7 +1024,7 @@ export default function Itinerary() {
                         </button>
                       </div>
                     </div>
-                  ) : (
+                  ) : !readOnly ? (
                     <div style={{ display:"flex", justifyContent:"flex-end", marginBottom:".75rem", marginTop:"-.25rem" }}>
                       <button onClick={() => startEditCore(d.day, d)}
                         style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
@@ -1027,7 +1032,7 @@ export default function Itinerary() {
                         Edit leg / overnight / distance
                       </button>
                     </div>
-                  )}
+                  ) : null}
 
                   {/* Highlights */}
                   <ul style={{ margin:0, padding:0, listStyle:"none" }}>
@@ -1043,33 +1048,37 @@ export default function Itinerary() {
                         fontSize:".875rem", lineHeight:1.5, color:"#c8e0c8", fontFamily:"sans-serif" }}>
                         <span style={{ color:"#5cb85c", flexShrink:0, marginTop:2 }}>◆</span>
                         <span style={{ flex:1 }}>{h}</span>
-                        <button onClick={() => removeHighlight(d.day, i)}
-                          style={{ background:"none", border:"none", color:"#3d6050", cursor:"pointer",
-                            fontSize:".85rem", lineHeight:1, padding:"0 0 0 .25rem", flexShrink:0, marginTop:2 }}>
-                          ×
-                        </button>
+                        {!readOnly && (
+                          <button onClick={() => removeHighlight(d.day, i)}
+                            style={{ background:"none", border:"none", color:"#3d6050", cursor:"pointer",
+                              fontSize:".85rem", lineHeight:1, padding:"0 0 0 .25rem", flexShrink:0, marginTop:2 }}>
+                            ×
+                          </button>
+                        )}
                       </li>
                     ))}
                   </ul>
                   {/* Add highlight */}
-                  <div style={{ display:"flex", gap:".5rem", marginTop:".75rem", marginBottom:".25rem" }}>
-                    <input
-                      ref={inputRef}
-                      value={newHighlight}
-                      onChange={e => setNewHighlight(e.target.value)}
-                      onKeyDown={e => e.key === "Enter" && addHighlight(d.day)}
-                      placeholder="Add a highlight…"
-                      style={{ flex:1, background:"#0a1a2a", border:"1px solid #2e5070", color:"#e8dcc8",
-                        borderRadius:4, padding:".4rem .65rem", fontSize:".82rem", fontFamily:"sans-serif",
-                        outline:"none" }}
-                    />
-                    <button onClick={() => addHighlight(d.day)}
-                      style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
-                        borderRadius:4, padding:".4rem .85rem", fontSize:".78rem", fontFamily:"sans-serif",
-                        cursor:"pointer", whiteSpace:"nowrap" }}>
-                      Add
-                    </button>
-                  </div>
+                  {!readOnly && (
+                    <div style={{ display:"flex", gap:".5rem", marginTop:".75rem", marginBottom:".25rem" }}>
+                      <input
+                        ref={inputRef}
+                        value={newHighlight}
+                        onChange={e => setNewHighlight(e.target.value)}
+                        onKeyDown={e => e.key === "Enter" && addHighlight(d.day)}
+                        placeholder="Add a highlight…"
+                        style={{ flex:1, background:"#0a1a2a", border:"1px solid #2e5070", color:"#e8dcc8",
+                          borderRadius:4, padding:".4rem .65rem", fontSize:".82rem", fontFamily:"sans-serif",
+                          outline:"none" }}
+                      />
+                      <button onClick={() => addHighlight(d.day)}
+                        style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
+                          borderRadius:4, padding:".4rem .85rem", fontSize:".78rem", fontFamily:"sans-serif",
+                          cursor:"pointer", whiteSpace:"nowrap" }}>
+                        Add
+                      </button>
+                    </div>
+                  )}
                   {/* Captain's note */}
                   {(() => {
                     const note = customNotes[d.day] !== undefined ? customNotes[d.day] : d.note;
@@ -1079,7 +1088,7 @@ export default function Itinerary() {
                         borderLeft:"3px solid #c9a84c66", borderRadius:"0 4px 4px 0" }}>
                         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:4 }}>
                           <div style={{ fontSize:".62rem", color:"#c9a84c", letterSpacing:".1em", textTransform:"uppercase", fontFamily:"sans-serif" }}>Captain's Note</div>
-                          {!isEditing && (
+                          {!isEditing && !readOnly && (
                             <button onClick={() => startEditNote(d.day, note)}
                               style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
                                 fontSize:".7rem", fontFamily:"sans-serif", padding:0 }}>
@@ -1087,7 +1096,7 @@ export default function Itinerary() {
                             </button>
                           )}
                         </div>
-                        {isEditing ? (
+                        {isEditing && !readOnly ? (
                           <>
                             <textarea
                               autoFocus
@@ -1130,6 +1139,7 @@ export default function Itinerary() {
                     onAdd={place => addPlace(d.day, place)}
                     onUpdate={(id, updates) => updatePlace(d.day, id, updates)}
                     onDelete={id => deletePlace(d.day, id)}
+                    readOnly={readOnly}
                   />
 
                   {/* Directions */}
@@ -1139,6 +1149,7 @@ export default function Itinerary() {
                     onAdd={dir => addDirection(d.day, dir)}
                     onUpdate={(id, updates) => updateDirection(d.day, id, updates)}
                     onDelete={id => deleteDirection(d.day, id)}
+                    readOnly={readOnly}
                   />
 
                   {/* Boating Routes */}
@@ -1148,6 +1159,7 @@ export default function Itinerary() {
                     onUpdate={(id, updates) => updateRoute(d.day, id, updates)}
                     onDelete={id => deleteRoute(d.day, id)}
                     onApplyToDay={updates => updateDayFields(d.day, updates)}
+                    readOnly={readOnly}
                   />
 
                   {/* Tide warning */}
@@ -1160,57 +1172,61 @@ export default function Itinerary() {
                   )}
 
                   {/* Day actions */}
-                  <div style={{ marginTop:"1.25rem", paddingTop:".85rem", borderTop:"1px solid #1e3a5240",
-                    display:"flex", alignItems:"center", gap:".5rem", flexWrap:"wrap" }}>
-                    <button onClick={() => duplicateDay(d.day)}
-                      style={{ background:"#0d2035", border:"1px solid #2e5070", color:"#6b8fa8",
-                        borderRadius:4, padding:".3rem .75rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
-                      Duplicate day
-                    </button>
-                    <button onClick={() => addBlankDay(d.day)}
-                      style={{ background:"#0d2035", border:"1px solid #2e5070", color:"#6b8fa8",
-                        borderRadius:4, padding:".3rem .75rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
-                      Insert day after
-                    </button>
-                    <div style={{ marginLeft:"auto", display:"flex", alignItems:"center", gap:".5rem" }}>
-                      {confirmDeleteDay === d.day ? (
-                        <>
-                          <span style={{ fontSize:".72rem", color:"#e87878", fontFamily:"sans-serif" }}>Delete Day {d.day}?</span>
-                          <button onClick={() => removeDay(d.day)}
-                            style={{ background:"#3a0a0a", border:"1px solid #dc354566", color:"#e87878",
-                              borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
-                            Yes, delete
+                  {!readOnly && (
+                    <div style={{ marginTop:"1.25rem", paddingTop:".85rem", borderTop:"1px solid #1e3a5240",
+                      display:"flex", alignItems:"center", gap:".5rem", flexWrap:"wrap" }}>
+                      <button onClick={() => duplicateDay(d.day)}
+                        style={{ background:"#0d2035", border:"1px solid #2e5070", color:"#6b8fa8",
+                          borderRadius:4, padding:".3rem .75rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                        Duplicate day
+                      </button>
+                      <button onClick={() => addBlankDay(d.day)}
+                        style={{ background:"#0d2035", border:"1px solid #2e5070", color:"#6b8fa8",
+                          borderRadius:4, padding:".3rem .75rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                        Insert day after
+                      </button>
+                      <div style={{ marginLeft:"auto", display:"flex", alignItems:"center", gap:".5rem" }}>
+                        {confirmDeleteDay === d.day ? (
+                          <>
+                            <span style={{ fontSize:".72rem", color:"#e87878", fontFamily:"sans-serif" }}>Delete Day {d.day}?</span>
+                            <button onClick={() => removeDay(d.day)}
+                              style={{ background:"#3a0a0a", border:"1px solid #dc354566", color:"#e87878",
+                                borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                              Yes, delete
+                            </button>
+                            <button onClick={() => setConfirmDeleteDay(null)}
+                              style={{ background:"none", border:"1px solid #2e3a4a", color:"#4e7a9e",
+                                borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                              Cancel
+                            </button>
+                          </>
+                        ) : (
+                          <button onClick={() => setConfirmDeleteDay(d.day)} disabled={days.length <= 1}
+                            style={{ background:"none", border:"1px solid #3a1a1a",
+                              color: days.length <= 1 ? "#3d2020" : "#7a3838",
+                              borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"sans-serif",
+                              cursor: days.length <= 1 ? "not-allowed" : "pointer" }}>
+                            Delete day
                           </button>
-                          <button onClick={() => setConfirmDeleteDay(null)}
-                            style={{ background:"none", border:"1px solid #2e3a4a", color:"#4e7a9e",
-                              borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
-                            Cancel
-                          </button>
-                        </>
-                      ) : (
-                        <button onClick={() => setConfirmDeleteDay(d.day)} disabled={days.length <= 1}
-                          style={{ background:"none", border:"1px solid #3a1a1a",
-                            color: days.length <= 1 ? "#3d2020" : "#7a3838",
-                            borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"sans-serif",
-                            cursor: days.length <= 1 ? "not-allowed" : "pointer" }}>
-                          Delete day
-                        </button>
-                      )}
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               )}
             </div>
           );
         })}
-        <div style={{ display:"flex", justifyContent:"center", marginTop:"1rem" }}>
-          <button onClick={() => addBlankDay(days.length > 0 ? days[days.length - 1].day : 0)}
-            style={{ background:"none", border:"1px dashed #2e5070", color:"#4e7a9e",
-              borderRadius:6, padding:".55rem 1.5rem", fontSize:".78rem",
-              fontFamily:"sans-serif", cursor:"pointer", letterSpacing:".05em" }}>
-            + Add day at end
-          </button>
-        </div>
+        {!readOnly && (
+          <div style={{ display:"flex", justifyContent:"center", marginTop:"1rem" }}>
+            <button onClick={() => addBlankDay(days.length > 0 ? days[days.length - 1].day : 0)}
+              style={{ background:"none", border:"1px dashed #2e5070", color:"#4e7a9e",
+                borderRadius:6, padding:".55rem 1.5rem", fontSize:".78rem",
+                fontFamily:"sans-serif", cursor:"pointer", letterSpacing:".05em" }}>
+              + Add day at end
+            </button>
+          </div>
+        )}
         </>)}
 
         {/* ── FUEL TAB ── */}

@@ -175,7 +175,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
         )}
 
         {/* Create new */}
-        <div style={{ padding: "1.25rem", background: "#0a1a2a",
+        {canWrite && (<div style={{ padding: "1.25rem", background: "#0a1a2a",
           border: "1px solid #1e3a52", borderRadius: 6 }}>
           <div style={{ fontSize: ".62rem", color: "#c9a84c", letterSpacing: ".12em",
             textTransform: "uppercase", fontFamily: "sans-serif", marginBottom: ".85rem" }}>
@@ -201,13 +201,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
               An itinerary with this name already exists — open it from the list above.
             </div>
           )}
-          {!canWrite && newName.trim() && (
-            <div style={{ fontSize: ".72rem", color: "#4e7a9e", fontFamily: "sans-serif",
-              marginTop: ".4rem" }}>
-              Add a GitHub token in Settings ⚙ to save this to your repo.
-            </div>
-          )}
-        </div>
+        </div>)}
 
       </div>
     </div>
