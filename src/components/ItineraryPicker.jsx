@@ -131,15 +131,16 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
               </div>
             )}
             {files.map(f => (
-              <div key={f.path} style={{ display: "flex", justifyContent: "space-between",
-                alignItems: "center", padding: ".85rem 1.1rem", marginBottom: ".4rem",
-                background: "#0d2035", border: "1px solid #1e3a52", borderRadius: 6 }}>
+              <div key={f.path} onClick={() => loadingPath === null && handleLoad(f.path)}
+                style={{ display: "flex", justifyContent: "space-between",
+                  alignItems: "center", padding: ".85rem 1.1rem", marginBottom: ".4rem",
+                  background: "#0d2035", border: "1px solid #1e3a52", borderRadius: 6,
+                  cursor: loadingPath ? "default" : "pointer" }}>
                 <span style={{ fontSize: ".95rem", color: "#e8dcc8" }}>{f.name}</span>
-                <button onClick={() => handleLoad(f.path)}
-                  disabled={loadingPath !== null}
-                  style={{ ...S.btnGhost, opacity: loadingPath ? 0.5 : 1 }}>
+                <span style={{ fontSize: ".78rem", color: loadingPath === f.path ? "#e8dcc8" : "#4e7a9e",
+                  fontFamily: "sans-serif", flexShrink: 0 }}>
                   {loadingPath === f.path ? "Loading…" : "Open →"}
-                </button>
+                </span>
               </div>
             ))}
             {loadError && (
