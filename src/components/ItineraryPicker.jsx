@@ -2,10 +2,6 @@ import { useState, useEffect } from "react";
 import { listItineraries, loadFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import Settings from "./Settings.jsx";
 
-function sanitizeFilename(name) {
-  return name.trim().replace(/[^\w\s-]/g, "").replace(/\s+/g, " ").trim().slice(0, 80);
-}
-
 const S = {
   input: { background: "#0d1f33", border: "1px solid #2e5070", color: "#e8dcc8",
     borderRadius: 4, padding: ".45rem .75rem", fontSize: ".88rem", fontFamily: "sans-serif",
@@ -18,9 +14,29 @@ const S = {
     cursor: "pointer", whiteSpace: "nowrap" },
 };
 
+function formatDateRange(startDate, dayCount) {
+  if (!startDate || !dayCount) return null;
+  const [y, m, d] = startDate.split("-").map(Number);
+  const start = new Date(y, m - 1, d);
+  const end   = new Date(y, m - 1, d + dayCount - 1);
+  const short = dt => dt.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  const full  = dt => dt.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  return `${short(start)} – ${full(end)}`;
+}
+
+function getLocations(days) {
+  if (!days?.length) return null;
+  const overnights = days.map(d => d.overnight).filter(Boolean);
+  if (overnights.length >= 2) return `${overnights[0]} → ${overnights[overnights.length - 1]}`;
+  if (overnights.length === 1) return overnights[0];
+  const legs = days.map(d => d.leg).filter(Boolean);
+  return legs.length ? legs[0] : null;
+}
+
 export default function ItineraryPicker({ settings, onSettingsChange, onLoad, onCreate, localCache }) {
   const [files,        setFiles]        = useState([]);
-  const [listStatus,   setListStatus]   = useState("idle"); // idle|loading|error
+  const [details,      setDetails]      = useState({});  // path → { title, dateRange, dayCount, locations }
+  const [listStatus,   setListStatus]   = useState("idle");
   const [newName,      setNewName]      = useState("");
   const [creating,     setCreating]     = useState(false);
   const [loadingPath,  setLoadingPath]  = useState(null);
@@ -35,6 +51,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
   const canWrite = !!(settings.githubToken && effectiveRepo);
   const hasGitHub = canRead;
 
+  // Load file list
   useEffect(() => {
     if (!hasGitHub) return;
     setListStatus("loading");
@@ -43,6 +60,31 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
       .catch(() => setListStatus("error"));
   }, []);
 
+  // Load details for all files in parallel once the list is available
+  useEffect(() => {
+    if (!files.length) return;
+    Promise.all(
+      files.map(f =>
+        loadFromGitHub({ ...ghSettings, githubFile: f.path })
+          .then(data => data ? [f.path, data] : null)
+          .catch(() => null)
+      )
+    ).then(results => {
+      const map = {};
+      for (const r of results) {
+        if (!r) continue;
+        const [path, data] = r;
+        map[path] = {
+          title:     data.title || null,
+          dateRange: formatDateRange(data.startDate, data.days?.length),
+          dayCount:  data.days?.length ?? 0,
+          locations: getLocations(data.days),
+        };
+      }
+      setDetails(map);
+    });
+  }, [files]);
+
   async function handleLoad(path) {
     setLoadingPath(path);
     setLoadError(null);
@@ -50,20 +92,29 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
       const data = await loadFromGitHub({ ...ghSettings, githubFile: path });
       onLoad(path, data);
     } catch {
-      setLoadError(`Failed to load — check your connection and token.`);
+      setLoadError("Failed to load — check your connection and token.");
     } finally {
       setLoadingPath(null);
     }
   }
 
   function handleCreate() {
-    const name = sanitizeFilename(newName);
-    if (!name) return;
-    onCreate(name);
+    if (!newName.trim()) return;
+    onCreate(newName.trim());
   }
 
-  const nameConflict = newName.trim() &&
-    files.some(f => f.name.toLowerCase() === sanitizeFilename(newName).toLowerCase());
+  // Sort files by most recently modified (details loaded) — fall back to alphabetical
+  const sortedFiles = [...files].sort((a, b) => {
+    const da = details[a.path];
+    const db = details[b.path];
+    // If both have dateRanges, sort by date descending; otherwise alphabetical by display name
+    if (da?.dateRange && db?.dateRange) return db.dateRange.localeCompare(da.dateRange);
+    const na = da?.title || a.name;
+    const nb = db?.title || b.name;
+    return na.localeCompare(nb);
+  });
+
+  const allDetailsLoaded = files.length > 0 && files.every(f => details[f.path] !== undefined);
 
   return (
     <div style={{ fontFamily: "Georgia, 'Times New Roman', serif", background: "#0b1929",
@@ -130,19 +181,54 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
                   : "Add a GitHub token in Settings ⚙ to load your itineraries."}
               </div>
             )}
-            {files.map(f => (
-              <div key={f.path} onClick={() => loadingPath === null && handleLoad(f.path)}
-                style={{ display: "flex", justifyContent: "space-between",
-                  alignItems: "center", padding: ".85rem 1.1rem", marginBottom: ".4rem",
-                  background: "#0d2035", border: "1px solid #1e3a52", borderRadius: 6,
-                  cursor: loadingPath ? "default" : "pointer" }}>
-                <span style={{ fontSize: ".95rem", color: "#e8dcc8" }}>{f.name}</span>
-                <span style={{ fontSize: ".78rem", color: loadingPath === f.path ? "#e8dcc8" : "#4e7a9e",
-                  fontFamily: "sans-serif", flexShrink: 0 }}>
-                  {loadingPath === f.path ? "Loading…" : "Open →"}
-                </span>
-              </div>
-            ))}
+            {sortedFiles.map(f => {
+              const d = details[f.path];
+              const displayTitle = d?.title || f.name;
+              return (
+                <div key={f.path} onClick={() => loadingPath === null && handleLoad(f.path)}
+                  style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
+                    padding: ".85rem 1.1rem", marginBottom: ".4rem",
+                    background: "#0d2035", border: "1px solid #1e3a52", borderRadius: 6,
+                    cursor: loadingPath ? "default" : "pointer",
+                    opacity: loadingPath && loadingPath !== f.path ? 0.5 : 1 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: ".95rem", color: "#e8dcc8", fontWeight: 500,
+                      lineHeight: 1.3 }}>
+                      {displayTitle}
+                    </div>
+                    {d && (
+                      <div style={{ fontFamily: "sans-serif", marginTop: 3 }}>
+                        {(d.dateRange || d.dayCount > 0) && (
+                          <span style={{ fontSize: ".72rem", color: "#6b8fa8" }}>
+                            {d.dateRange
+                              ? `${d.dateRange} · ${d.dayCount} day${d.dayCount !== 1 ? "s" : ""}`
+                              : `${d.dayCount} day${d.dayCount !== 1 ? "s" : ""}`}
+                          </span>
+                        )}
+                        {d.locations && (
+                          <span style={{ fontSize: ".72rem", color: "#4e7a9e",
+                            display: "block", marginTop: 1,
+                            overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                            {d.locations}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    {!d && files.length > 0 && !allDetailsLoaded && (
+                      <div style={{ fontSize: ".68rem", color: "#2e4a5e", fontFamily: "sans-serif",
+                        marginTop: 2 }}>
+                        Loading…
+                      </div>
+                    )}
+                  </div>
+                  <span style={{ fontSize: ".78rem", fontFamily: "sans-serif", flexShrink: 0,
+                    marginLeft: ".75rem",
+                    color: loadingPath === f.path ? "#e8dcc8" : "#4e7a9e" }}>
+                    {loadingPath === f.path ? "Loading…" : "Open →"}
+                  </span>
+                </div>
+              );
+            })}
             {loadError && (
               <div style={{ color: "#e87878", fontFamily: "sans-serif", fontSize: ".78rem",
                 marginTop: ".5rem" }}>
@@ -162,12 +248,17 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
               padding: ".85rem 1.1rem", background: "#0d2035",
               border: "1px solid #2e5070", borderRadius: 6 }}>
-              <span style={{ fontSize: ".9rem", color: "#c8daea" }}>
-                {localCache.title || "Untitled"}{" "}
-                <span style={{ fontSize: ".75rem", color: "#4e7a9e", fontFamily: "sans-serif" }}>
-                  · {localCache.days?.length ?? 0} days
-                </span>
-              </span>
+              <div>
+                <div style={{ fontSize: ".9rem", color: "#c8daea", fontWeight: 500 }}>
+                  {localCache.title || "Untitled"}
+                </div>
+                {localCache.days?.length > 0 && (
+                  <div style={{ fontSize: ".72rem", color: "#4e7a9e", fontFamily: "sans-serif",
+                    marginTop: 2 }}>
+                    {localCache.days.length} day{localCache.days.length !== 1 ? "s" : ""}
+                  </div>
+                )}
+              </div>
               <button onClick={() => onLoad("__local__", localCache)} style={S.btnGhost}>
                 Resume →
               </button>
@@ -176,33 +267,29 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
         )}
 
         {/* Create new */}
-        {canWrite && (<div style={{ padding: "1.25rem", background: "#0a1a2a",
-          border: "1px solid #1e3a52", borderRadius: 6 }}>
-          <div style={{ fontSize: ".62rem", color: "#c9a84c", letterSpacing: ".12em",
-            textTransform: "uppercase", fontFamily: "sans-serif", marginBottom: ".85rem" }}>
-            New Itinerary
-          </div>
-          <div style={{ display: "flex", gap: ".5rem" }}>
-            <input
-              value={newName}
-              onChange={e => setNewName(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && !nameConflict && handleCreate()}
-              placeholder="Name — e.g. Pacific Northwest 2027"
-              style={{ ...S.input, flex: 1 }}
-            />
-            <button onClick={handleCreate}
-              disabled={!newName.trim() || nameConflict}
-              style={{ ...S.btnPrimary, opacity: (!newName.trim() || nameConflict) ? 0.45 : 1 }}>
-              Create
-            </button>
-          </div>
-          {nameConflict && (
-            <div style={{ fontSize: ".72rem", color: "#e8a838", fontFamily: "sans-serif",
-              marginTop: ".4rem" }}>
-              An itinerary with this name already exists — open it from the list above.
+        {canWrite && (
+          <div style={{ padding: "1.25rem", background: "#0a1a2a",
+            border: "1px solid #1e3a52", borderRadius: 6 }}>
+            <div style={{ fontSize: ".62rem", color: "#c9a84c", letterSpacing: ".12em",
+              textTransform: "uppercase", fontFamily: "sans-serif", marginBottom: ".85rem" }}>
+              New Itinerary
             </div>
-          )}
-        </div>)}
+            <div style={{ display: "flex", gap: ".5rem" }}>
+              <input
+                value={newName}
+                onChange={e => setNewName(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && handleCreate()}
+                placeholder="Name — e.g. Pacific Northwest 2027"
+                style={{ ...S.input, flex: 1 }}
+              />
+              <button onClick={handleCreate}
+                disabled={!newName.trim()}
+                style={{ ...S.btnPrimary, opacity: !newName.trim() ? 0.45 : 1 }}>
+                Create
+              </button>
+            </div>
+          </div>
+        )}
 
       </div>
     </div>

@@ -86,6 +86,31 @@ export async function loadFromGitHub({ githubToken, githubRepo, githubFile, gith
   return JSON.parse(decodeURIComponent(escape(atob(json.content.replace(/\s/g, "")))));
 }
 
+export async function deleteFromGitHub({ githubToken, githubRepo, githubFile, githubBranch = "main" }) {
+  const shaKey = `${githubBranch}:${githubFile}`;
+  let sha = shaByPath.get(shaKey);
+  if (!sha) {
+    try {
+      const r = await fetch(
+        repoUrl(githubRepo, githubFile) + `?ref=${encodeURIComponent(githubBranch)}`,
+        { headers: authHeaders(githubToken) }
+      );
+      if (!r.ok) return;
+      sha = (await r.json()).sha;
+    } catch { return; }
+  }
+  const res = await fetch(repoUrl(githubRepo, githubFile), {
+    method: "DELETE",
+    headers: { ...authHeaders(githubToken), "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: `Remove ${githubFile.replace(/^.*\//, "")}`,
+      sha,
+      branch: githubBranch,
+    }),
+  });
+  if (res.ok) shaByPath.delete(shaKey);
+}
+
 export async function saveToGitHub(data, { githubToken, githubRepo, githubFile, githubBranch = "main", message }) {
   const text = typeof data === "string" ? data : JSON.stringify(data, null, 2);
   const content = btoa(unescape(encodeURIComponent(text)));

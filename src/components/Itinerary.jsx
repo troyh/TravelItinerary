@@ -83,7 +83,11 @@ export default function Itinerary() {
   const [currentFile,      setCurrentFile]      = useState(() => localStorage.getItem("travelCurrentFile"));
   const [urlLoad,          setUrlLoad]          = useState(() => {
     const name = new URLSearchParams(window.location.search).get("i");
-    return name ? { file: `${ITINERARIES_FOLDER}/${name}.json`, status: "loading" } : null;
+    if (!name) return null;
+    const file = `${ITINERARIES_FOLDER}/${name}.json`;
+    // If this is already our current file, localStorage has the freshest data — skip the GitHub load
+    if (file === localStorage.getItem("travelCurrentFile")) return null;
+    return { file, status: "loading" };
   });
   const [saveAsName,       setSaveAsName]       = useState("");
   const [copiedICS,        setCopiedICS]        = useState(false);
@@ -91,6 +95,7 @@ export default function Itinerary() {
   const syncTimerRef      = useRef(null);
   const dirtyRef          = useRef(false);
   const skipNextLoadRef   = useRef(false);
+  const saveImmediatelyRef = useRef(false);
 
   const effectiveRepo   = settings.githubRepo   || inferRepo() || "";
   const effectiveBranch = settings.githubBranch || "data";
@@ -111,19 +116,19 @@ export default function Itinerary() {
     localStorage.setItem("travelItinerary", JSON.stringify(data));
     const canSync = settings.githubToken && effectiveRepo &&
                     currentFile !== "__local__" && dirtyRef.current;
-    dirtyRef.current = true; // any render after first is a user change
+    dirtyRef.current = true;
     if (canSync) {
       clearTimeout(syncTimerRef.current);
       setSyncStatus("pending");
+      const saveDelay = saveImmediatelyRef.current ? 0 : 2000;
+      saveImmediatelyRef.current = false;
       syncTimerRef.current = setTimeout(async () => {
         setSyncStatus("saving");
         try {
           await saveToGitHub(data, { ...ghSettings, githubFile: currentFile });
-          // Also save .ics alongside the JSON when a start date is set
           const icsContent = buildICSContent(days, startDate, title, customHighlights, customNotes);
           if (icsContent) {
-            const icsFile = currentFile.replace(/\.json$/i, ".ics");
-            await saveToGitHub(icsContent, { ...ghSettings, githubFile: icsFile });
+            await saveToGitHub(icsContent, { ...ghSettings, githubFile: currentFile.replace(/\.json$/i, ".ics") });
           }
           setSyncStatus("saved");
           setSyncError("");
@@ -131,7 +136,7 @@ export default function Itinerary() {
           setSyncStatus(err.message === "conflict" ? "conflict" : "error");
           setSyncError(err.message);
         }
-      }, 2000);
+      }, saveDelay);
     }
   }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, customHighlights, customNotes, startDate, openDay, title, subtitle, itineraryNotes]);
 
@@ -380,8 +385,7 @@ export default function Itinerary() {
   }
 
   function handleCreate(name) {
-    const filename = sanitizeFilename(name);
-    const path = `${ITINERARIES_FOLDER}/${filename}.json`;
+    const path = `${ITINERARIES_FOLDER}/it-${crypto.randomUUID().slice(0, 8)}.json`;
     dirtyRef.current = false;
     setDays([]); setSavedPlaces({}); setSavedDirections({}); setSavedRoutes({});
     setCustomHighlights({}); setCustomNotes({});
@@ -402,12 +406,13 @@ export default function Itinerary() {
   }
 
   function handleSaveAs() {
-    const name = sanitizeFilename(saveAsName.trim() || title);
-    if (!name) return;
-    const path = `${ITINERARIES_FOLDER}/${name}.json`;
+    const newTitle = saveAsName.trim() || title;
+    if (!newTitle) return;
+    const path = `${ITINERARIES_FOLDER}/it-${crypto.randomUUID().slice(0, 8)}.json`;
+    setTitle(newTitle);
     setCurrentFile(path);
     localStorage.setItem("travelCurrentFile", path);
-    dirtyRef.current = true; // force immediate GitHub push
+    dirtyRef.current = true;
     setSyncStatus("pending");
     setSaveAsName("");
   }
@@ -715,6 +720,7 @@ export default function Itinerary() {
                 onKeyDown={e => {
                   if (e.key === "Escape") setEditingHeader(false);
                   if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                    saveImmediatelyRef.current = true;
                     setTitle(headerDraft.title.trim() || title);
                     setSubtitle(headerDraft.subtitle);
                     setEditingHeader(false);
@@ -729,6 +735,7 @@ export default function Itinerary() {
                 onKeyDown={e => {
                   if (e.key === "Escape") setEditingHeader(false);
                   if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                    saveImmediatelyRef.current = true;
                     setTitle(headerDraft.title.trim() || title);
                     setSubtitle(headerDraft.subtitle);
                     setEditingHeader(false);
@@ -740,7 +747,7 @@ export default function Itinerary() {
                   fontFamily:"Georgia,serif", fontStyle:"italic",
                   outline:"none", boxSizing:"border-box", marginBottom:".6rem" }} />
               <div style={{ display:"flex", gap:".5rem" }}>
-                <button onClick={() => { setTitle(headerDraft.title.trim() || title); setSubtitle(headerDraft.subtitle); setEditingHeader(false); }}
+                <button onClick={() => { saveImmediatelyRef.current = true; setTitle(headerDraft.title.trim() || title); setSubtitle(headerDraft.subtitle); setEditingHeader(false); }}
                   style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
                     borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"sans-serif", cursor:"pointer" }}>
                   Save
