@@ -19,7 +19,9 @@
   "directions": {},
   "routes": {},
   "highlights": {},
-  "notes": {},
+  "notes": {
+    "1": "TODO: get airfare"
+  },
   "startDate": "",
   "openDay": 1,
   "title": "Take Hudson to College",
