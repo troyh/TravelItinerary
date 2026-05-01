@@ -120,6 +120,18 @@
         "category": "other",
         "notes": "",
         "addedAt": "2026-04-29T00:23:34.824Z"
+      },
+      {
+        "id": "1c94b20f-c93e-4cc8-b10e-a30700346d59",
+        "name": "Boucherie",
+        "address": "145 W 53rd St, New York, NY  10019, United States",
+        "phone": "",
+        "website": "",
+        "placeId": "ll:40.7627096,-73.9806437",
+        "category": "restaurant",
+        "notes": "",
+        "addedAt": "2026-05-01T01:27:36.498Z",
+        "mapsProvider": "apple"
       }
     ]
   },
