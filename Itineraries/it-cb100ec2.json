@@ -1,0 +1,456 @@
+{
+  "days": [
+    {
+      "leg": "Drive to Portland",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 1
+    },
+    {
+      "leg": "Get Puppy, Go Home",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 2
+    }
+  ],
+  "places": {
+    "1": [
+      {
+        "id": "2fa3f4df-08e3-4e2f-8cd9-5a185822c652",
+        "name": "Le Pigeon",
+        "address": "738 E Burnside St, Portland, OR 97214, USA",
+        "phone": "(503) 546-8796",
+        "website": "https://www.lepigeon.com/",
+        "placeId": "ChIJn_5mjKWglVQR94bKSpAYe4s",
+        "category": "restaurant",
+        "notes": "",
+        "addedAt": "2026-04-28T21:50:45.530Z"
+      },
+      {
+        "id": "012cde1c-ddf7-4664-a288-0cbb11582990",
+        "name": "The Nines, a Luxury Collection Hotel, Portland",
+        "address": "525 SW Morrison St, Portland, OR 97204, USA",
+        "phone": "(503) 222-9996",
+        "website": "https://www.marriott.com/en-us/hotels/pdxln-the-nines-a-luxury-collection-hotel-portland/overview/?scid=f2ae0541-1279-4f24-b197-a979c79310b0",
+        "placeId": "ChIJVZDfqQUKlVQRwBzGTWO9nDA",
+        "category": "accommodation",
+        "notes": "Confirmation: ZO-AX1045-36178\nHotel confirmation #: 98048433\n[Amex Travel](https://www.americanexpress.com/en-us/travel/my-bookings/trip-overview)",
+        "addedAt": "2026-04-29T01:16:43.986Z"
+      },
+      {
+        "id": "032ae7fe-c133-49c4-8f45-0bc21570f70d",
+        "name": "Canard",
+        "address": "734 E Burnside St, Portland, OR 97214, USA",
+        "phone": "(971) 279-2356",
+        "website": "https://www.canardrestaurant.com/",
+        "placeId": "ChIJN9nCjKWglVQRnr-YstaX95c",
+        "category": "restaurant",
+        "notes": "Walk-ins only, next to Le Pigeon, same chef. \n\nClaude: *...the foie gras dumplings and the famous \"steam burger\" are the signatures, and the duck stack breakfast is legendary if you happen to swing by during the day.*",
+        "addedAt": "2026-04-29T01:31:10.917Z"
+      },
+      {
+        "id": "86e503d6-ea55-4e81-9b6b-01d675af7012",
+        "name": "kann",
+        "address": "548 SE Ash St, Portland, OR 97214, USA",
+        "phone": "(971) 489-2202",
+        "website": "https://kannrestaurant.com/",
+        "placeId": "ChIJIUdfuzChlVQRepfM4S5jGUQ",
+        "category": "restaurant",
+        "notes": "Gregory Gourdet's Haitian wood-fire spot, James Beard \"Best New Restaurant\" winner.\n\nThey seem fully-booked until May 20!: [Resy reservation](https://resy.com/cities/portland-or/venues/kann?date=2026-05-15&seats=2)",
+        "addedAt": "2026-04-29T01:33:16.407Z"
+      },
+      {
+        "id": "ad56f8dd-7087-45a6-8cff-59fcd3aef4ce",
+        "name": "Coquine",
+        "address": "6839 SE Belmont St, Portland, OR 97215, USA",
+        "phone": "(503) 384-2483",
+        "website": "https://www.coquinepdx.com/",
+        "placeId": "ChIJj5vTbf6glVQRafj1UTq2hk4",
+        "category": "restaurant",
+        "notes": "Can get a reservation, it's prix-fixe only and you have to pay ahead of time to reserve it.",
+        "addedAt": "2026-04-29T01:51:58.915Z"
+      },
+      {
+        "id": "bb9b47ca-8f3b-4588-8db6-943513218ee8",
+        "name": "L’ Orange",
+        "address": "2005 SE 11th Ave, Portland, OR 97214, USA",
+        "phone": "(503) 880-5682",
+        "website": "http://www.lorangepdx.com/",
+        "placeId": "ChIJPV5W7FgLlVQRTbpl_7-POoc",
+        "category": "restaurant",
+        "notes": "A renovated house, kinda quirky, may be cool. NYT named it one of \"America's best restaurants\" in 2024.",
+        "addedAt": "2026-04-29T01:56:15.492Z"
+      },
+      {
+        "id": "b9405d8e-0676-4ea1-a8cc-41ac76de1f8b",
+        "name": "Mucca Osteria",
+        "address": "1022 SW Morrison St, Portland, OR 97205, USA",
+        "phone": "(503) 227-5521",
+        "website": "http://www.muccaosteria.com/?utm_source=google-gmb-maps&utm_medium=gmb-website-button&utm_campaign=locl.io&utm_content=311284b5-a632-46cd-949e-792c10c37b42",
+        "placeId": "ChIJQ6lVpAQKlVQRGf8Z15SgZdE",
+        "category": "restaurant",
+        "notes": "Old school cool Italian place, apparently been there a while. Also Prixe-fixe and must pay at booking.",
+        "addedAt": "2026-04-29T02:00:18.405Z"
+      }
+    ],
+    "2": [
+      {
+        "id": "e7e18f5e-9514-4fa2-ad21-138cb367ed0b",
+        "name": "Powell's City of Books",
+        "address": "1005 W Burnside St, Portland, OR 97209, USA",
+        "phone": "(800) 878-7323",
+        "website": "https://www.powells.com/locations/powells-city-of-books",
+        "placeId": "ChIJByq0twMKlVQRL5HMcgiC2GA",
+        "category": "other",
+        "notes": "",
+        "addedAt": "2026-04-29T00:23:34.824Z"
+      },
+      {
+        "id": "1c94b20f-c93e-4cc8-b10e-a30700346d59",
+        "name": "Boucherie",
+        "address": "145 W 53rd St, New York, NY  10019, United States",
+        "phone": "",
+        "website": "",
+        "placeId": "ll:40.7627096,-73.9806437",
+        "category": "restaurant",
+        "notes": "",
+        "addedAt": "2026-05-01T01:27:36.498Z",
+        "mapsProvider": "apple"
+      }
+    ]
+  },
+  "directions": {
+    "1": [
+      {
+        "id": "6d6d3af7-8824-4975-96d0-71c402bb8bdb",
+        "origin": {
+          "name": "1107 21st Ave E",
+          "placeId": "ChIJky3RvdYUkFQR2VOlzypd3bc"
+        },
+        "destination": {
+          "name": "The Nines, a Luxury Collection Hotel, Portland",
+          "placeId": "ChIJVZDfqQUKlVQRwBzGTWO9nDA"
+        },
+        "travelMode": "DRIVING",
+        "distance": "178 mi",
+        "duration": "2 hours 53 mins",
+        "summary": "I-5 S",
+        "steps": [
+          {
+            "instruction": "Head north on 21st Ave E toward E Highland Dr",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right at the 1st cross street onto E Highland Dr",
+            "distance": "299 ft",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto 22nd Ave E",
+            "distance": "0.2 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the traffic circle, take the 1st exit onto E Crescent Dr",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto 24th Ave E",
+            "distance": "0.7 mi",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Slight left onto E Montlake Pl E",
+            "distance": "0.2 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left to merge onto WA-520 W",
+            "distance": "0.7 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Merge onto I-5 S via the ramp to Portland",
+            "distance": "26.6 mi",
+            "duration": "26 mins"
+          },
+          {
+            "instruction": "Keep right to stay on I-5 S",
+            "distance": "1.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Keep right to stay on I-5 S",
+            "distance": "132 mi",
+            "duration": "2 hours 0 mins"
+          },
+          {
+            "instruction": "Keep left to stay on I-5 S, follow signs for Vancouver/PortlandEntering Oregon",
+            "distance": "14.8 mi",
+            "duration": "15 mins"
+          },
+          {
+            "instruction": "Take exit 300B toward US-26 E/OR-99E/Omsi/Oregon City",
+            "distance": "0.4 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Take the exit toward Morrison St/City Ctr",
+            "distance": "0.2 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto SE Morrison Brg",
+            "distance": "0.3 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto SW Washington St",
+            "distance": "276 ft",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto SW 3rd Ave",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto SW Morrison StDestination will be on the right",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          }
+        ],
+        "notes": "",
+        "addedAt": "2026-04-29T01:18:04.011Z"
+      },
+      {
+        "id": "86f0069b-b418-4e8d-a90a-6d42fb0c3f45",
+        "origin": {
+          "name": "1107 21st Ave E"
+        },
+        "destination": {
+          "name": "The Nines, a Luxury Collection Hotel, Portland"
+        },
+        "travelMode": "DRIVING",
+        "distance": "282.9 km",
+        "duration": "3h 17m",
+        "summary": "",
+        "steps": [
+          {
+            "instruction": "",
+            "distance": "",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn right onto E Prospect St",
+            "distance": "30 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn left onto 19th Ave E",
+            "distance": "140 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn right onto E Madison St",
+            "distance": "1.3 km",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn right onto 6th Ave",
+            "distance": "2.1 km",
+            "duration": ""
+          },
+          {
+            "instruction": "Take a slight right turn to merge onto I-5 South toward Portland",
+            "distance": "64 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn right to merge onto I-5 S",
+            "distance": "19 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Keep right to merge onto I-5 S",
+            "distance": "1.4 km",
+            "duration": ""
+          },
+          {
+            "instruction": "Keep left to merge onto I-5 South toward Sea - Tac Airport",
+            "distance": "324 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Keep left on I-5 S",
+            "distance": "49.0 km",
+            "duration": ""
+          },
+          {
+            "instruction": "Keep left on I-5 S toward Salem",
+            "distance": "223.7 km",
+            "duration": ""
+          },
+          {
+            "instruction": "Take exit 300B toward US-26 East, OR-99E East",
+            "distance": "2.9 km",
+            "duration": ""
+          },
+          {
+            "instruction": "Keep right onto Morrison St. toward City Center",
+            "distance": "680 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn left onto SW Third Ave",
+            "distance": "846 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn right onto SW Morrison St",
+            "distance": "159 m",
+            "duration": ""
+          },
+          {
+            "instruction": "The destination is on your right",
+            "distance": "211 m",
+            "duration": ""
+          }
+        ],
+        "notes": "",
+        "addedAt": "2026-04-30T23:40:00.352Z",
+        "mapsProvider": "apple"
+      }
+    ],
+    "2": [
+      {
+        "id": "aaead5f2-c0db-4ffa-b032-82e246bdd054",
+        "origin": {
+          "name": "Hotel Benson",
+          "placeId": "ChIJ57TiBwQKlVQRg7zsX28-9_A"
+        },
+        "destination": {
+          "name": "1107 21st Ave E",
+          "placeId": "ChIJky3RvdYUkFQR2VOlzypd3bc"
+        },
+        "travelMode": "DRIVING",
+        "distance": "176 mi",
+        "duration": "2 hours 51 mins",
+        "summary": "I-5 N",
+        "steps": [
+          {
+            "instruction": "Head west on SW Oak St toward SW Park Ave",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto SW 10th Ave",
+            "distance": "75 ft",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left at the 1st cross street onto W Burnside St",
+            "distance": "0.2 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right (signs for I-405 N/US-30 N)",
+            "distance": "292 ft",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Merge onto I-405 N via the ramp to US-30 W/I-5 N",
+            "distance": "1.3 mi",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Take the exit onto I-5 NEntering Washington",
+            "distance": "145 mi",
+            "duration": "2 hours 12 mins"
+          },
+          {
+            "instruction": "Keep right to stay on I-5 N",
+            "distance": "27.6 mi",
+            "duration": "27 mins"
+          },
+          {
+            "instruction": "Take exit 168A for Lakeview Blvd",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Lakeview Blvd E",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Harvard Ave E",
+            "distance": "0.2 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto E Boston St",
+            "distance": "0.4 mi",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "E Boston St turns slightly right and becomes 15th Ave E",
+            "distance": "0.4 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto E Galer St",
+            "distance": "0.4 mi",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Turn right onto 21st Ave EDestination will be on the right",
+            "distance": "0.2 mi",
+            "duration": "2 mins"
+          }
+        ],
+        "notes": "",
+        "addedAt": "2026-04-28T22:15:48.244Z"
+      }
+    ]
+  },
+  "routes": {},
+  "highlights": {
+    "1": [
+      "Check into hotel",
+      "Dinner at a nice restaurant",
+      "Leave early to avoid Portland traffic!!"
+    ],
+    "2": [
+      "Meet breeder to get puppy",
+      "Brunch?"
+    ]
+  },
+  "notes": {
+    "1": "TODO: Get a dinner reservation\n\nI couldn't get a reservation for this night at Le Pigeon. I'm on the **notify me** list, but doubtful I'll get one. Several other restaurant options below.... Claude likes Coquine as the best \"not-Le Pigeon\" option but it's a bit out of town.",
+    "2": "TODO: Find a meeting place"
+  },
+  "startDate": "2026-05-15",
+  "openDay": 2,
+  "title": "Copy of Copy of Copy of Portland Puppy Pickup 🐶",
+  "subtitle": "",
+  "itineraryNotes": "Our new puppy 🐶 is in Eugene and the breeder can meet us in Portland and *maybe* we can make a mini-visit to Portland out of it.\n\nTODO: Get puppy supplies beforehand?\nTODO: Fill Range Rover with gas the day before \n\nFrom the breeder:\nThe puppies are currently being fed Redbarn Ancient Grain Puppy Food – Lamb Recipe, which they are thriving on. You can find this food on Chewy here:\nhttps://www.chewy.com/redbarn-whole-grain-puppy-recipe-dry/dp/1605990  "
+}
