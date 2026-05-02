@@ -8,7 +8,6 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260505
 DTEND;VALUE=DATE:20260506
 SUMMARY:Day 1: Eagle Harbor
-DESCRIPTION:\nHighlights:\n• Testing
 URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=1
 UID:day-1-20260505@travelitinerary
 END:VEVENT
