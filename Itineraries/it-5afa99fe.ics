@@ -9,6 +9,7 @@ DTSTART;VALUE=DATE:20260918
 DTEND;VALUE=DATE:20260919
 SUMMARY:Day 1: Fly to Santa Barbara
 DESCRIPTION:\nHighlights:\n• Get rental car\n• Check into hotel\n• Shopping for dorm room?\n• Dinner\n\nNote: TODO: get airfare (round trip for 2\, one-way for Hudson!)\nTODO: Reserve rental car (big SUV)\nTodo: get hotel\n
+URL:https://troyh.github.io/TravelItinerary/?i=it-5afa99fe&day=1
 UID:day-1-20260918@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
@@ -16,6 +17,7 @@ DTSTART;VALUE=DATE:20260919
 DTEND;VALUE=DATE:20260920
 SUMMARY:Day 2: Move-in Day
 DESCRIPTION:\nHighlights:\n• Drive to campus\n• Check-in\n• Unload car\n• Move-in and set up room
+URL:https://troyh.github.io/TravelItinerary/?i=it-5afa99fe&day=2
 UID:day-2-20260919@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
@@ -23,6 +25,7 @@ DTSTART;VALUE=DATE:20260920
 DTEND;VALUE=DATE:20260921
 SUMMARY:Day 3: Fly home
 DESCRIPTION:\nHighlights:\n• Check out of hotel\n• Return rental car\n• Go to airport
+URL:https://troyh.github.io/TravelItinerary/?i=it-5afa99fe&day=3
 UID:day-3-20260920@travelitinerary
 END:VEVENT
 END:VCALENDAR
