@@ -165,7 +165,12 @@ export default function Itinerary() {
         const legs       = days.map(d => d.leg).filter(Boolean);
         const locations  = overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
                          : overnights[0] ?? legs[0] ?? null;
-        meta[`${currentDbId}:${currentFile}`] = { title, startDate, dayCount: days.length, locations };
+        const todoLines = line => line.split("\n").filter(l => /^TODO:/i.test(l.trim())).map(l => l.trim().replace(/^TODO:\s*/i, ""));
+        const todos = [
+          ...todoLines(itineraryNotes || ""),
+          ...days.flatMap(d => todoLines((customNotes[d.day] !== undefined ? customNotes[d.day] : d.note) || "")),
+        ];
+        meta[`${currentDbId}:${currentFile}`] = { title, startDate, dayCount: days.length, locations, todos };
         localStorage.setItem("itineraryMetadata", JSON.stringify(meta));
       } catch {}
     }

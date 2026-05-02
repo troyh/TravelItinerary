@@ -115,12 +115,18 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
         const key = `${f.dbId}:${f.path}`;
         const overnights = data.days?.map(d => d.overnight).filter(Boolean) ?? [];
         const legs       = data.days?.map(d => d.leg).filter(Boolean) ?? [];
+        const todoLines = str => (str || "").split("\n").filter(l => /^TODO:/i.test(l.trim())).map(l => l.trim().replace(/^TODO:\s*/i, ""));
+        const todos = [
+          ...todoLines(data.itineraryNotes),
+          ...(data.days ?? []).flatMap(d => todoLines(data.notes?.[d.day] !== undefined ? data.notes[d.day] : d.note)),
+        ];
         updates[key] = {
           title:    data.title || null,
           startDate: data.startDate,
           dayCount: data.days?.length ?? 0,
           locations: overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
                    : overnights[0] ?? legs[0] ?? null,
+          todos,
         };
       }
       if (Object.keys(updates).length) {
@@ -268,6 +274,18 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
                               marginTop: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                               {d.locations}
                             </span>
+                          )}
+                          {d.todos?.length > 0 && (
+                            <div style={{ marginTop: 5 }}>
+                              {d.todos.map((t, i) => (
+                                <div key={i} style={{ display: "flex", gap: ".4rem",
+                                  alignItems: "baseline", marginBottom: 2 }}>
+                                  <span style={{ color: "#c9a84c", fontSize: ".65rem", flexShrink: 0 }}>□</span>
+                                  <span style={{ fontSize: ".72rem", color: "#8fb0cc",
+                                    fontFamily: "sans-serif", lineHeight: 1.4 }}>{t}</span>
+                                </div>
+                              ))}
+                            </div>
                           )}
                         </div>
                       )}
