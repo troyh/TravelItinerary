@@ -314,10 +314,12 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
                         </div>
                       )}
                     </div>
-                    <span style={{ fontSize: ".78rem", fontFamily: "sans-serif", flexShrink: 0,
-                      marginLeft: ".75rem", color: isLoading ? "#e8dcc8" : "#4e7a9e" }}>
-                      {isLoading ? "Loading…" : "Open →"}
-                    </span>
+                    {isLoading && (
+                      <span style={{ fontSize: ".78rem", fontFamily: "sans-serif", flexShrink: 0,
+                        marginLeft: ".75rem", color: "#e8dcc8" }}>
+                        Loading…
+                      </span>
+                    )}
                   </div>
 
                 </div>
