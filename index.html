@@ -3,7 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script>if(navigator.standalone)document.querySelector('meta[name="viewport"]').content='width=device-width,initial-scale=1.0,user-scalable=no';</script>
+    <script>
+      if (navigator.standalone) {
+        document.querySelector('meta[name="viewport"]').content = 'width=device-width,initial-scale=1.0,user-scalable=no';
+        // Reload after 15 minutes in the background so content stays fresh
+        var _hiddenAt = 0;
+        document.addEventListener('visibilitychange', function() {
+          if (document.hidden) { _hiddenAt = Date.now(); }
+          else if (_hiddenAt && Date.now() - _hiddenAt > 15 * 60 * 1000) { window.location.reload(); }
+        });
+      }
+    </script>
     <title>Travel Itinerary</title>
     <style>
       html, body { margin: 0; background: #0b1929; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
