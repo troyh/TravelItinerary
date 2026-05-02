@@ -54,7 +54,18 @@ const BLANK_DAY = {
 
 
 export default function Itinerary() {
-  const [openDay,          setOpenDay]          = useState(() => _db?.openDay ?? null);
+  const [openDay,          setOpenDay]          = useState(() => {
+    const urlDay = parseInt(new URLSearchParams(window.location.search).get("day"));
+    if (Number.isInteger(urlDay) && urlDay >= 1 && urlDay <= (_db?.days?.length ?? 0)) return urlDay;
+    const file = localStorage.getItem("travelCurrentFile");
+    if (!file) return null;
+    try {
+      const map = JSON.parse(localStorage.getItem("itineraryOpenDay") || "{}");
+      const n = map[file];
+      if (Number.isInteger(n) && n >= 1 && n <= (_db?.days?.length ?? 0)) return n;
+    } catch {}
+    return null;
+  });
   const [activeTab,        setActiveTab]        = useState("itinerary");
   const [startDate,        setStartDate]        = useState(() => _db?.startDate ?? "");
   const [customHighlights, setCustomHighlights] = useState(() => _db?.highlights ?? {});
@@ -120,7 +131,7 @@ export default function Itinerary() {
   useEffect(() => {
     if (!currentFile) return;
     const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
-                   highlights: customHighlights, notes: customNotes, startDate, openDay,
+                   highlights: customHighlights, notes: customNotes, startDate,
                    title, subtitle, itineraryNotes };
     localStorage.setItem("travelItinerary", JSON.stringify(data));
     if (currentFile !== "__local__") {
@@ -146,7 +157,7 @@ export default function Itinerary() {
         setSyncStatus("saving");
         try {
           await saveToGitHub(data, { ...ghSettings, githubFile: currentFile });
-          const icsContent = buildICSContent(days, startDate, title, customHighlights, customNotes);
+          const icsContent = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""));
           if (icsContent) {
             await saveToGitHub(icsContent, { ...ghSettings, githubFile: currentFile.replace(/\.json$/i, ".ics") });
           }
@@ -158,13 +169,29 @@ export default function Itinerary() {
         }
       }, saveDelay);
     }
-  }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, customHighlights, customNotes, startDate, openDay, title, subtitle, itineraryNotes]);
+  }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, customHighlights, customNotes, startDate, title, subtitle, itineraryNotes]);
 
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
 
   useEffect(() => { document.title = title || "Travel Itinerary"; }, [title]);
 
   useEffect(() => { if (!currentFile) setPickerKey(k => k + 1); }, [currentFile]);
+
+  // Persist openDay to localStorage per file
+  useEffect(() => {
+    if (!currentFile || currentFile === "__local__") return;
+    try {
+      const map = JSON.parse(localStorage.getItem("itineraryOpenDay") || "{}");
+      if (openDay !== null) map[currentFile] = openDay; else delete map[currentFile];
+      localStorage.setItem("itineraryOpenDay", JSON.stringify(map));
+    } catch {}
+  }, [openDay, currentFile]);
+
+  // Clamp openDay to valid range after days load
+  useEffect(() => {
+    if (openDay === null || !days.length) return;
+    if (openDay < 1 || openDay > days.length) setOpenDay(null);
+  }, [days]);
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -191,7 +218,6 @@ export default function Itinerary() {
         if (data.highlights)                setCustomHighlights(data.highlights);
         if (data.notes)                     setCustomNotes(data.notes);
         if (data.startDate !== undefined)   setStartDate(data.startDate);
-        if (data.openDay != null)           setOpenDay(data.openDay);
         if (data.title !== undefined)       setTitle(data.title);
         if (data.subtitle !== undefined)    setSubtitle(data.subtitle);
         if (data.itineraryNotes !== undefined) setItineraryNotes(data.itineraryNotes);
@@ -200,6 +226,9 @@ export default function Itinerary() {
         setCurrentFile(urlLoad.file);
         setUrlLoad(null);
         setSyncStatus("synced");
+        const urlDay = parseInt(new URLSearchParams(window.location.search).get("day"));
+        const dayCount = data.days?.length ?? 0;
+        if (Number.isInteger(urlDay) && urlDay >= 1 && urlDay <= dayCount) setOpenDay(urlDay);
       })
       .catch(() => setUrlLoad(s => ({ ...s, status: "notfound" })));
   }, [urlLoad?.status, effectiveRepo]);
@@ -223,7 +252,6 @@ export default function Itinerary() {
         if (data.highlights)                setCustomHighlights(data.highlights);
         if (data.notes)                     setCustomNotes(data.notes);
         if (data.startDate !== undefined)          setStartDate(data.startDate);
-        if (data.openDay != null)                  setOpenDay(data.openDay);
         if (data.title !== undefined)              setTitle(data.title);
         if (data.subtitle !== undefined)           setSubtitle(data.subtitle);
         if (data.itineraryNotes !== undefined)     setItineraryNotes(data.itineraryNotes);
@@ -388,7 +416,6 @@ export default function Itinerary() {
     setCustomHighlights(data.highlights ?? {});
     setCustomNotes(data.notes ?? {});
     setStartDate(data.startDate ?? "");
-    setOpenDay(data.openDay ?? null);
     setTitle(data.title ?? "New Itinerary");
     setSubtitle(data.subtitle ?? "");
     setItineraryNotes(data.itineraryNotes ?? "");
@@ -442,7 +469,7 @@ export default function Itinerary() {
     try {
       const newPath = `${ITINERARIES_FOLDER}/it-${crypto.randomUUID().slice(0, 8)}.json`;
       const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
-                     highlights: customHighlights, notes: customNotes, startDate, openDay,
+                     highlights: customHighlights, notes: customNotes, startDate,
                      title: `Copy of ${title}`, subtitle, itineraryNotes };
       await saveToGitHub(data, { ...ghSettings, githubFile: newPath });
       const overnights = days.map(d => d.overnight).filter(Boolean);
@@ -504,7 +531,7 @@ export default function Itinerary() {
     setSaveAsName("");
   }
 
-  function buildICSContent(daysArr, sd, ttl, highlights, notes) {
+  function buildICSContent(daysArr, sd, ttl, highlights, notes, fileId) {
     if (!sd || !daysArr.length) return null;
     const [sy, sm, sday] = sd.split("-").map(Number);
     const toICSDate = n => {
@@ -534,6 +561,10 @@ export default function Itinerary() {
       cal.push(`SUMMARY:${esc(`Day ${d.day}: ${d.leg}`)}`);
       if (d.overnight) cal.push(`LOCATION:${esc(d.overnight)}`);
       if (parts.length) cal.push(`DESCRIPTION:${esc(parts.join("\n"))}`);
+      if (fileId) {
+        const base = window.location.origin + window.location.pathname;
+        cal.push(`URL:${base}?i=${encodeURIComponent(fileId)}&day=${d.day}`);
+      }
       cal.push(`UID:day-${d.day}-${toICSDate(d.day)}@travelitinerary`);
       cal.push("END:VEVENT");
     });
@@ -542,7 +573,7 @@ export default function Itinerary() {
   }
 
   function generateICS() {
-    const content = buildICSContent(days, startDate, title, customHighlights, customNotes);
+    const content = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""));
     if (!content) return;
     const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -557,7 +588,7 @@ export default function Itinerary() {
 
   async function handleMilestone(milestoneLabel) {
     const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
-                   highlights: customHighlights, notes: customNotes, startDate, openDay,
+                   highlights: customHighlights, notes: customNotes, startDate,
                    title, subtitle, itineraryNotes };
     await saveToGitHub(data, { ...ghSettings, githubFile: currentFile, message: milestoneLabel });
   }
@@ -583,7 +614,6 @@ export default function Itinerary() {
         if (data.highlights)              setCustomHighlights(data.highlights);
         if (data.notes)                   setCustomNotes(data.notes);
         if (data.startDate !== undefined)      setStartDate(data.startDate);
-        if (data.openDay != null)              setOpenDay(data.openDay);
         if (data.title !== undefined)          setTitle(data.title);
         if (data.subtitle !== undefined)       setSubtitle(data.subtitle);
         if (data.itineraryNotes !== undefined) setItineraryNotes(data.itineraryNotes);
