@@ -1,0 +1,43 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Spring Cruise 2026//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Spring Cruise 2026
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260505
+DTEND;VALUE=DATE:20260506
+SUMMARY:Day 1: Eagle Harbor
+DESCRIPTION:\nHighlights:\n• Testing
+URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=1
+UID:day-1-20260505@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260506
+DTEND;VALUE=DATE:20260507
+SUMMARY:Day 2: Poulsbo
+URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=2
+UID:day-2-20260506@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260507
+DTEND;VALUE=DATE:20260508
+SUMMARY:Day 3: Tacoma
+URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=3
+UID:day-3-20260507@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260508
+DTEND;VALUE=DATE:20260509
+SUMMARY:Day 4: Olympia
+URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=4
+UID:day-4-20260508@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260509
+DTEND;VALUE=DATE:20260510
+SUMMARY:Day 5: Seattle
+URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=5
+UID:day-5-20260509@travelitinerary
+END:VEVENT
+END:VCALENDAR
