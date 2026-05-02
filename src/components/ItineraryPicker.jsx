@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { listItineraries, loadFromGitHub, saveToGitHub, deleteFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
+import { listItineraries, loadFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import Settings from "./Settings.jsx";
 
 const S = {
@@ -57,8 +57,6 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
   const [loadingPath,  setLoadingPath]  = useState(null);
   const [loadError,    setLoadError]    = useState(null);
   const [showSettings, setShowSettings] = useState(false);
-  const [moveTarget,   setMoveTarget]   = useState(null); // { fileKey, toDbId }
-  const [moving,       setMoving]       = useState(null); // fileKey being moved
 
   useEffect(() => { document.title = "Travel Itinerary"; }, []);
 
@@ -154,43 +152,6 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
     onCreate(newName.trim(), dbId);
   }
 
-  async function handleMove(f, toDbId) {
-    const fileKey = `${f.dbId}:${f.path}`;
-    setMoving(fileKey);
-    setMoveTarget(null);
-    try {
-      const toDb = databases.find(d => d.id === toDbId);
-      const toGhs = resolveDb(toDb);
-      const data = await loadFromGitHub({ ...f.ghs, githubFile: f.path });
-      if (!data) throw new Error("Could not load source itinerary.");
-      const newPath = `${ITINERARIES_FOLDER}/it-${crypto.randomUUID().slice(0, 8)}.json`;
-      await saveToGitHub(data, { ...toGhs, githubFile: newPath });
-      await deleteFromGitHub({ ...f.ghs, githubFile: f.path });
-      try { await deleteFromGitHub({ ...f.ghs, githubFile: f.path.replace(/\.json$/i, ".ics") }); } catch {}
-      const newFile = { name: newPath.replace(/^.*\//, "").replace(/\.json$/i, ""),
-        path: newPath, dbId: toDbId, dbLabel: toDb.label || toGhs.githubRepo, dbIdx: databases.findIndex(d => d.id === toDbId), ghs: toGhs };
-      setFiles(prev => prev.filter(x => !(x.path === f.path && x.dbId === f.dbId)).concat([newFile]));
-      try {
-        const meta = JSON.parse(localStorage.getItem("itineraryMetadata") || "{}");
-        const oldKey = `${f.dbId}:${f.path}`;
-        const newKey = `${toDbId}:${newPath}`;
-        if (meta[oldKey]) { meta[newKey] = meta[oldKey]; delete meta[oldKey]; }
-        localStorage.setItem("itineraryMetadata", JSON.stringify(meta));
-      } catch {}
-      setDetails(prev => {
-        const next = { ...prev };
-        const oldKey = `${f.dbId}:${f.path}`;
-        const newKey = `${toDbId}:${newPath}`;
-        if (next[oldKey]) { next[newKey] = next[oldKey]; delete next[oldKey]; }
-        return next;
-      });
-    } catch (e) {
-      setLoadError(`Move failed: ${e.message}`);
-    } finally {
-      setMoving(null);
-    }
-  }
-
   // Sort: dated soonest first, then alphabetical
   const sortedFiles = [...files].sort((a, b) => {
     const da = details[`${a.dbId}:${a.path}`];
@@ -267,21 +228,18 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
               const displayTitle = d?.title || f.name;
               const fileKey    = `${f.dbId}:${f.path}`;
               const isLoading  = loadingPath === fileKey;
-              const isMoving   = moving === fileKey;
-              const busy       = !!loadingPath || !!moving;
+              const busy       = !!loadingPath;
               const color      = dbColor(f.dbIdx);
-              const canMoveFrom = writableDbs.some(db => db.id === f.dbId);
-              const moveTargets  = writableDbs.filter(db => db.id !== f.dbId);
-              const showMoveMenu = moveTarget?.fileKey === fileKey;
 
               return (
-                <div key={fileKey} style={{ padding: ".85rem 1.1rem", marginBottom: ".4rem",
-                  background: "#0d2035", border: "1px solid #1e3a52", borderRadius: 6,
-                  opacity: busy && !isLoading && !isMoving ? 0.5 : 1 }}>
+                <div key={fileKey} onClick={() => !busy && handleLoad(f)}
+                  style={{ padding: ".85rem 1.1rem", marginBottom: ".4rem",
+                    background: "#0d2035", border: "1px solid #1e3a52", borderRadius: 6,
+                    cursor: busy ? "default" : "pointer",
+                    opacity: busy && !isLoading ? 0.5 : 1 }}>
 
-                  <div onClick={() => !busy && handleLoad(f)}
-                    style={{ display: "flex", justifyContent: "space-between",
-                      alignItems: "flex-start", cursor: busy ? "default" : "pointer" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between",
+                      alignItems: "flex-start" }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: ".5rem",
                         flexWrap: "wrap", marginBottom: ".15rem" }}>
@@ -316,45 +274,10 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
                     </div>
                     <span style={{ fontSize: ".78rem", fontFamily: "sans-serif", flexShrink: 0,
                       marginLeft: ".75rem", color: isLoading ? "#e8dcc8" : "#4e7a9e" }}>
-                      {isLoading ? "Loading…" : isMoving ? "Moving…" : "Open →"}
+                      {isLoading ? "Loading…" : "Open →"}
                     </span>
                   </div>
 
-                  {/* Move between databases */}
-                  {multiDb && canMoveFrom && moveTargets.length > 0 && !showMoveMenu && !busy && (
-                    <div onClick={e => e.stopPropagation()}
-                      style={{ marginTop: ".5rem" }}>
-                      <button
-                        onClick={() => setMoveTarget({ fileKey, toDbId: moveTargets[0].id })}
-                        style={{ background: "none", border: "none", color: "#2e4a5e",
-                          fontFamily: "sans-serif", fontSize: ".68rem", cursor: "pointer", padding: 0 }}>
-                        Move to →
-                      </button>
-                    </div>
-                  )}
-
-                  {showMoveMenu && (
-                    <div onClick={e => e.stopPropagation()}
-                      style={{ display: "flex", alignItems: "center", gap: ".5rem",
-                        marginTop: ".5rem", flexWrap: "wrap" }}>
-                      <span style={{ fontSize: ".72rem", color: "#6b8fa8", fontFamily: "sans-serif" }}>Move to:</span>
-                      {moveTargets.map((db, i) => (
-                        <button key={db.id}
-                          onClick={() => handleMove(f, db.id)}
-                          style={{ background: "none", border: `1px solid ${dbColor(databases.findIndex(d => d.id === db.id))}55`,
-                            color: dbColor(databases.findIndex(d => d.id === db.id)),
-                            borderRadius: 4, padding: ".2rem .55rem", fontSize: ".68rem",
-                            fontFamily: "sans-serif", cursor: "pointer" }}>
-                          {db.label || db.githubRepo || `DB ${i + 2}`}
-                        </button>
-                      ))}
-                      <button onClick={() => setMoveTarget(null)}
-                        style={{ background: "none", border: "none", color: "#3d5060",
-                          fontFamily: "sans-serif", fontSize: ".68rem", cursor: "pointer" }}>
-                        Cancel
-                      </button>
-                    </div>
-                  )}
                 </div>
               );
             })}

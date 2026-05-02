@@ -122,6 +122,7 @@ export default function Itinerary() {
   const [showMenu,         setShowMenu]         = useState(false);
   const [confirmDelete,    setConfirmDelete]    = useState(false);
   const [menuWorking,      setMenuWorking]      = useState(false);
+  const [moveToDbId,       setMoveToDbId]       = useState(null);
   const [lockedFiles,      setLockedFiles]      = useState(() => {
     try { return new Set(JSON.parse(localStorage.getItem("itineraryLocked") || "[]")); }
     catch { return new Set(); }
@@ -539,6 +540,45 @@ export default function Itinerary() {
     }
   }
 
+  async function handleMoveItinerary(toDbId) {
+    setMenuWorking(true);
+    try {
+      const toDb  = databases.find(d => d.id === toDbId);
+      const toGhs = { githubToken: toDb.githubToken ?? "", githubRepo: toDb.githubRepo || inferRepo() || "", githubBranch: toDb.githubBranch || "data" };
+      const newPath = `${ITINERARIES_FOLDER}/it-${crypto.randomUUID().slice(0, 8)}.json`;
+      const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
+                     highlights: customHighlights, notes: customNotes, startDate,
+                     title, subtitle, itineraryNotes };
+      await saveToGitHub(data, { ...toGhs, githubFile: newPath });
+      await deleteFromGitHub({ ...ghSettings, githubFile: currentFile });
+      try { await deleteFromGitHub({ ...ghSettings, githubFile: currentFile.replace(/\.json$/i, ".ics") }); } catch {}
+      try {
+        const meta = JSON.parse(localStorage.getItem("itineraryMetadata") || "{}");
+        const newKey = `${toDbId}:${newPath}`;
+        meta[newKey] = { title, startDate, dayCount: days.length };
+        delete meta[`${currentDbId}:${currentFile}`];
+        localStorage.setItem("itineraryMetadata", JSON.stringify(meta));
+        const deleted = new Set(JSON.parse(localStorage.getItem("itineraryDeletedPaths") || "[]"));
+        deleted.add(`${currentDbId}:${currentFile}`);
+        localStorage.setItem("itineraryDeletedPaths", JSON.stringify([...deleted]));
+      } catch {}
+      clearTimeout(syncTimerRef.current);
+      setCurrentDbId(toDbId);
+      localStorage.setItem("travelCurrentDb", toDbId);
+      setCurrentFile(newPath);
+      localStorage.setItem("travelCurrentFile", newPath);
+      dirtyRef.current = false;
+      setSyncStatus("saved");
+      setShowMenu(false);
+      setMoveToDbId(null);
+    } catch {
+      setMoveToDbId(null);
+      setShowMenu(false);
+    } finally {
+      setMenuWorking(false);
+    }
+  }
+
   async function handleDeleteItinerary() {
     setMenuWorking(true);
     try {
@@ -847,6 +887,39 @@ export default function Itinerary() {
                               padding:".65rem 1rem", cursor:"pointer", opacity: menuWorking ? 0.5 : 1 }}>
                             {menuWorking ? "Duplicating…" : "Duplicate"}
                           </button>
+                          {databases.length > 1 && !moveToDbId && (
+                            <div style={{ borderBottom:"1px solid #1e3a5230" }}>
+                              <button onClick={() => setMoveToDbId("pick")} disabled={menuWorking}
+                                style={{ display:"block", width:"100%", textAlign:"left",
+                                  background:"none", border:"none",
+                                  color:"#c8daea", fontFamily:"sans-serif", fontSize:".82rem",
+                                  padding:".65rem 1rem", cursor:"pointer", opacity: menuWorking ? 0.5 : 1 }}>
+                                Move to…
+                              </button>
+                            </div>
+                          )}
+                          {databases.length > 1 && moveToDbId === "pick" && (
+                            <div style={{ padding:".5rem 1rem", borderBottom:"1px solid #1e3a5230" }}>
+                              <div style={{ fontSize:".72rem", color:"#6b8fa8", fontFamily:"sans-serif", marginBottom:".4rem" }}>Move to:</div>
+                              <div style={{ display:"flex", flexDirection:"column", gap:".25rem" }}>
+                                {databases.filter(d => d.id !== currentDbId).map(d => (
+                                  <button key={d.id} onClick={() => handleMoveItinerary(d.id)} disabled={menuWorking}
+                                    style={{ background:"none", border:"1px solid #2e5070", color:"#c8daea",
+                                      borderRadius:4, padding:".3rem .75rem", fontSize:".75rem",
+                                      fontFamily:"sans-serif", cursor:"pointer", textAlign:"left",
+                                      opacity: menuWorking ? 0.5 : 1 }}>
+                                    {menuWorking ? "Moving…" : (d.label || d.githubRepo || "Database")}
+                                  </button>
+                                ))}
+                                <button onClick={() => setMoveToDbId(null)} disabled={menuWorking}
+                                  style={{ background:"none", border:"none", color:"#3d5060",
+                                    fontFamily:"sans-serif", fontSize:".72rem", cursor:"pointer",
+                                    textAlign:"left", padding:".2rem 0" }}>
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          )}
                           <button onClick={() => setConfirmDelete(true)} disabled={menuWorking}
                             style={{ display:"block", width:"100%", textAlign:"left",
                               background:"none", border:"none",
