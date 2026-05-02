@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { listItineraries, loadFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import Settings from "./Settings.jsx";
 
@@ -49,16 +49,36 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
     catch { return new Set(); }
   });
   const [details,      setDetails]      = useState(() => {
-    try { return JSON.parse(localStorage.getItem("itineraryMetadata") || "{}"); } catch { return {}; }
+    try {
+      const raw = JSON.parse(localStorage.getItem("itineraryMetadata") || "{}");
+      // One-time migration: stamp old entries missing todos so display falls back to []
+      let changed = false;
+      for (const k of Object.keys(raw)) {
+        if (raw[k].todos === undefined) { raw[k].todos = []; changed = true; }
+      }
+      if (changed) { try { localStorage.setItem("itineraryMetadata", JSON.stringify(raw)); } catch {} }
+      return raw;
+    } catch { return {}; }
   });
   const [listStatus,   setListStatus]   = useState("idle");
   const [newName,      setNewName]      = useState("");
   const [createDbId,   setCreateDbId]   = useState(null); // which db to create in
   const [loadingPath,  setLoadingPath]  = useState(null);
+  const [refreshTick,  setRefreshTick]  = useState(0);
+  const refreshAllRef  = useRef(false);
   const [loadError,    setLoadError]    = useState(null);
   const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => { document.title = "Travel Itinerary"; }, []);
+
+  // Periodic refresh — re-fetch file list and all metadata every 5 minutes
+  useEffect(() => {
+    const id = setInterval(() => {
+      refreshAllRef.current = true;
+      setRefreshTick(t => t + 1);
+    }, 5 * 60 * 1000);
+    return () => clearInterval(id);
+  }, []);
 
   const databases   = settings.databases ?? [];
   const writableDbs = databases.filter(db => db.githubToken && (db.githubRepo || inferRepo()));
@@ -69,7 +89,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
   // Default create-db to first writable db
   const defaultCreateDbId = writableDbs[0]?.id ?? null;
 
-  // Load file lists from all databases in parallel
+  // Load file lists from all databases in parallel (also re-runs on periodic refresh)
   useEffect(() => {
     if (!databases.length) return;
     setListStatus("loading");
@@ -94,12 +114,14 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
       setFiles(live);
       setListStatus("idle");
     });
-  }, []);
+  }, [refreshTick]);
 
-  // Load details for files missing from local cache (keyed by "dbId:path")
+  // Load details — on initial load fetch only missing; on periodic refresh fetch all
   useEffect(() => {
     if (!files.length) return;
-    const missing = files.filter(f => !details[`${f.dbId}:${f.path}`]);
+    const forceAll = refreshAllRef.current;
+    refreshAllRef.current = false;
+    const missing = forceAll ? files : files.filter(f => !details[`${f.dbId}:${f.path}`]);
     if (!missing.length) return;
     Promise.all(
       missing.map(f =>
