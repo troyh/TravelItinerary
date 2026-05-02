@@ -74,7 +74,11 @@
   "places": {},
   "directions": {},
   "routes": {},
-  "highlights": {},
+  "highlights": {
+    "1": [
+      "Testing"
+    ]
+  },
   "notes": {},
   "startDate": "2026-05-04",
   "openDay": 1,
