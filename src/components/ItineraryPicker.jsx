@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import NoteMarkdown from "./NoteMarkdown.jsx";
 import { listItineraries, loadFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import Settings from "./Settings.jsx";
 
@@ -302,9 +303,10 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
                               {d.todos.map((t, i) => (
                                 <div key={i} style={{ display: "flex", gap: ".4rem",
                                   alignItems: "baseline", marginBottom: 2 }}>
-                                  <span style={{ color: "#c9a84c", fontSize: ".65rem", flexShrink: 0 }}>□</span>
-                                  <span style={{ fontSize: ".72rem", color: "#8fb0cc",
-                                    fontFamily: "sans-serif", lineHeight: 1.4 }}>{t}</span>
+                                  <span style={{ color: "#c9a84c", fontSize: ".65rem", flexShrink: 0, marginTop: 2 }}>□</span>
+                                  <div style={{ fontSize: ".72rem", color: "#8fb0cc", lineHeight: 1.4 }}>
+                                    <NoteMarkdown>{t}</NoteMarkdown>
+                                  </div>
                                 </div>
                               ))}
                             </div>
