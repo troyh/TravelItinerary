@@ -1,0 +1,88 @@
+{
+  "days": [
+    {
+      "leg": "Eagle Harbor",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 1
+    },
+    {
+      "leg": "Poulsbo",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 2
+    },
+    {
+      "leg": "Tacoma",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 3
+    },
+    {
+      "leg": "Olympia",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 4
+    },
+    {
+      "leg": "Seattle",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 5
+    }
+  ],
+  "places": {},
+  "directions": {},
+  "routes": {},
+  "highlights": {
+    "1": [
+      "Testing"
+    ]
+  },
+  "notes": {},
+  "startDate": "2026-05-04",
+  "openDay": 1,
+  "title": "Spring Cruise 2026",
+  "subtitle": "",
+  "itineraryNotes": "TODO: fuel-up"
+}
