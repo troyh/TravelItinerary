@@ -95,6 +95,10 @@ export default function Itinerary() {
   const [showMenu,         setShowMenu]         = useState(false);
   const [confirmDelete,    setConfirmDelete]    = useState(false);
   const [menuWorking,      setMenuWorking]      = useState(false);
+  const [lockedFiles,      setLockedFiles]      = useState(() => {
+    try { return new Set(JSON.parse(localStorage.getItem("itineraryLocked") || "[]")); }
+    catch { return new Set(); }
+  });
   const inputRef          = useRef(null);
   const syncTimerRef      = useRef(null);
   const dirtyRef          = useRef(false);
@@ -103,7 +107,8 @@ export default function Itinerary() {
 
   const effectiveRepo   = settings.githubRepo   || inferRepo() || "";
   const effectiveBranch = settings.githubBranch || "data";
-  const readOnly = !settings.githubToken;
+  const isLocked = !!(currentFile && currentFile !== "__local__" && lockedFiles.has(currentFile));
+  const readOnly = !settings.githubToken || isLocked;
   const ghSettings = { ...settings, githubRepo: effectiveRepo, githubBranch: effectiveBranch };
 
   useEffect(() => {
@@ -422,6 +427,16 @@ export default function Itinerary() {
     setSyncStatus("idle");
   }
 
+  function toggleLock() {
+    setLockedFiles(prev => {
+      const next = new Set(prev);
+      next.has(currentFile) ? next.delete(currentFile) : next.add(currentFile);
+      try { localStorage.setItem("itineraryLocked", JSON.stringify([...next])); } catch {}
+      return next;
+    });
+    setShowMenu(false);
+  }
+
   async function handleDuplicate() {
     setMenuWorking(true);
     try {
@@ -718,7 +733,7 @@ export default function Itinerary() {
                   </span>
                 );
               })()}
-              {!readOnly && currentFile && currentFile !== "__local__" && (
+              {settings.githubToken && currentFile && currentFile !== "__local__" && (
                 <div style={{ position: "relative" }}>
                   <button onClick={() => { setShowMenu(p => !p); setShowSettings(false); setShowHistory(false); setConfirmDelete(false); }}
                     title="More options"
@@ -741,6 +756,13 @@ export default function Itinerary() {
                               History
                             </button>
                           )}
+                          <button onClick={toggleLock}
+                            style={{ display:"block", width:"100%", textAlign:"left",
+                              background:"none", border:"none", borderBottom:"1px solid #1e3a5230",
+                              color:"#c8daea", fontFamily:"sans-serif", fontSize:".82rem",
+                              padding:".65rem 1rem", cursor:"pointer" }}>
+                            {isLocked ? "Unlock (make editable)" : "Lock (read-only)"}
+                          </button>
                           <button onClick={handleDuplicate} disabled={menuWorking}
                             style={{ display:"block", width:"100%", textAlign:"left",
                               background:"none", border:"none", borderBottom:"1px solid #1e3a5230",
