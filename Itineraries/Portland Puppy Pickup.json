@@ -119,6 +119,18 @@
         "notes": "",
         "addedAt": "2026-05-02T17:43:12.063Z",
         "mapsProvider": "apple"
+      },
+      {
+        "id": "bb5cff4a-1fb4-4c2e-8f2d-bb389885e028",
+        "name": "Han Oak",
+        "address": "511 NE 24th Ave, Portland, OR  97232, United States",
+        "phone": "",
+        "website": "",
+        "placeId": "ll:45.5268759,-122.6418024",
+        "category": "restaurant",
+        "notes": "",
+        "addedAt": "2026-05-02T17:44:04.595Z",
+        "mapsProvider": "apple"
       }
     ],
     "2": [
