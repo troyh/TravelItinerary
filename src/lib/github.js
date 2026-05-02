@@ -1,5 +1,7 @@
 // SHA is tracked per branch+path so switching branches doesn't cause conflicts
-const shaByPath = new Map();
+const shaByPath   = new Map();
+// Tracks files currently being saved so loadFromGitHub doesn't overwrite a fresh SHA mid-save
+const savingPaths = new Set();
 
 export function inferRepo() {
   const { hostname, pathname } = window.location;
@@ -82,7 +84,8 @@ export async function loadFromGitHub({ githubToken, githubRepo, githubFile, gith
   if (res.status === 404) return null;
   await throwIfNotOk(res, "loadFromGitHub");
   const json = await res.json();
-  shaByPath.set(`${githubBranch}:${githubFile}`, json.sha);
+  const shaKey = `${githubBranch}:${githubFile}`;
+  if (!savingPaths.has(shaKey)) shaByPath.set(shaKey, json.sha);
   return JSON.parse(decodeURIComponent(escape(atob(json.content.replace(/\s/g, "")))));
 }
 
@@ -116,29 +119,34 @@ export async function saveToGitHub(data, { githubToken, githubRepo, githubFile, 
   const content = btoa(unescape(encodeURIComponent(text)));
   const shaKey = `${githubBranch}:${githubFile}`;
 
-  // If SHA isn't cached the file may already exist (e.g. placed externally after the app loaded).
-  // Fetch it now so the PUT includes the required sha field.
-  if (!shaByPath.has(shaKey)) {
-    try {
-      const r = await fetch(
-        repoUrl(githubRepo, githubFile) + `?ref=${encodeURIComponent(githubBranch)}`,
-        { headers: authHeaders(githubToken) }
-      );
-      if (r.ok) shaByPath.set(shaKey, (await r.json()).sha);
-    } catch {}
-  }
+  savingPaths.add(shaKey);
+  try {
+    // If SHA isn't cached the file may already exist (e.g. placed externally after the app loaded).
+    // Fetch it now so the PUT includes the required sha field.
+    if (!shaByPath.has(shaKey)) {
+      try {
+        const r = await fetch(
+          repoUrl(githubRepo, githubFile) + `?ref=${encodeURIComponent(githubBranch)}`,
+          { headers: authHeaders(githubToken) }
+        );
+        if (r.ok) shaByPath.set(shaKey, (await r.json()).sha);
+      } catch {}
+    }
 
-  const res = await fetch(repoUrl(githubRepo, githubFile), {
-    method: "PUT",
-    headers: { ...authHeaders(githubToken), "Content-Type": "application/json" },
-    body: JSON.stringify({
-      message: message || `Update itinerary - ${new Date().toISOString().slice(0, 16).replace("T", " ")}`,
-      content,
-      branch: githubBranch,
-      ...(shaByPath.has(shaKey) ? { sha: shaByPath.get(shaKey) } : {}),
-    }),
-  });
-  if (res.status === 409) throw new Error("conflict");
-  await throwIfNotOk(res, "saveToGitHub");
-  shaByPath.set(shaKey, (await res.json()).content.sha);
+    const res = await fetch(repoUrl(githubRepo, githubFile), {
+      method: "PUT",
+      headers: { ...authHeaders(githubToken), "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: message || `Update itinerary - ${new Date().toISOString().slice(0, 16).replace("T", " ")}`,
+        content,
+        branch: githubBranch,
+        ...(shaByPath.has(shaKey) ? { sha: shaByPath.get(shaKey) } : {}),
+      }),
+    });
+    if (res.status === 409) throw new Error("conflict");
+    await throwIfNotOk(res, "saveToGitHub");
+    shaByPath.set(shaKey, (await res.json()).content.sha);
+  } finally {
+    savingPaths.delete(shaKey);
+  }
 }
