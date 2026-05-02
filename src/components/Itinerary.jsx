@@ -5,7 +5,7 @@ import DayPlaces from "./DayPlaces.jsx";
 import DayDirections from "./DayDirections.jsx";
 import DayRoute from "./DayRoute.jsx";
 import Settings from "./Settings.jsx";
-import { loadFromGitHub, saveToGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
+import { loadFromGitHub, saveToGitHub, deleteFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import ItineraryPicker from "./ItineraryPicker.jsx";
 import HistoryPanel from "./HistoryPanel.jsx";
 
@@ -92,6 +92,9 @@ export default function Itinerary() {
   const [saveAsName,       setSaveAsName]       = useState("");
   const [copiedICS,        setCopiedICS]        = useState(false);
   const [pickerKey,        setPickerKey]        = useState(0);
+  const [showMenu,         setShowMenu]         = useState(false);
+  const [confirmDelete,    setConfirmDelete]    = useState(false);
+  const [menuWorking,      setMenuWorking]      = useState(false);
   const inputRef          = useRef(null);
   const syncTimerRef      = useRef(null);
   const dirtyRef          = useRef(false);
@@ -419,6 +422,61 @@ export default function Itinerary() {
     setSyncStatus("idle");
   }
 
+  async function handleDuplicate() {
+    setMenuWorking(true);
+    try {
+      const newPath = `${ITINERARIES_FOLDER}/it-${crypto.randomUUID().slice(0, 8)}.json`;
+      const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
+                     highlights: customHighlights, notes: customNotes, startDate, openDay,
+                     title: `Copy of ${title}`, subtitle, itineraryNotes };
+      await saveToGitHub(data, { ...ghSettings, githubFile: newPath });
+      const overnights = days.map(d => d.overnight).filter(Boolean);
+      const legs       = days.map(d => d.leg).filter(Boolean);
+      const locations  = overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
+                       : overnights[0] ?? legs[0] ?? null;
+      try {
+        const meta = JSON.parse(localStorage.getItem("itineraryMetadata") || "{}");
+        meta[newPath] = { title: data.title, startDate, dayCount: days.length, locations };
+        localStorage.setItem("itineraryMetadata", JSON.stringify(meta));
+      } catch {}
+      // Navigate to the duplicate
+      applyData(data);
+      setCurrentFile(newPath);
+      localStorage.setItem("travelCurrentFile", newPath);
+      localStorage.setItem("travelItinerary", JSON.stringify(data));
+      dirtyRef.current = false;
+      setSyncStatus("saved");
+      setShowMenu(false);
+    } catch {
+      setShowMenu(false);
+    } finally {
+      setMenuWorking(false);
+    }
+  }
+
+  async function handleDeleteItinerary() {
+    setMenuWorking(true);
+    try {
+      await deleteFromGitHub({ ...ghSettings, githubFile: currentFile });
+      try { await deleteFromGitHub({ ...ghSettings, githubFile: currentFile.replace(/\.json$/i, ".ics") }); } catch {}
+      try {
+        const meta = JSON.parse(localStorage.getItem("itineraryMetadata") || "{}");
+        delete meta[currentFile];
+        localStorage.setItem("itineraryMetadata", JSON.stringify(meta));
+      } catch {}
+      clearTimeout(syncTimerRef.current);
+      setCurrentFile(null);
+      localStorage.removeItem("travelCurrentFile");
+      localStorage.removeItem("travelItinerary");
+      setSyncStatus("idle");
+    } catch {
+      setConfirmDelete(false);
+      setShowMenu(false);
+    } finally {
+      setMenuWorking(false);
+    }
+  }
+
   function handleSaveAs() {
     const newTitle = saveAsName.trim() || title;
     if (!newTitle) return;
@@ -660,14 +718,70 @@ export default function Itinerary() {
                   </span>
                 );
               })()}
-              {currentFile && currentFile !== "__local__" && settings.githubToken && (
-                <button onClick={() => { setShowHistory(p => !p); setShowSettings(false); }}
-                  title="Version history"
-                  style={{ background:"none", border:"none",
-                    color: showHistory ? "#c9a84c" : "#6b8fa8",
-                    cursor:"pointer", fontSize:".9rem", padding:0, lineHeight:1 }}>
-                  ⏱
-                </button>
+              {!readOnly && currentFile && currentFile !== "__local__" && (
+                <div style={{ position: "relative" }}>
+                  <button onClick={() => { setShowMenu(p => !p); setShowSettings(false); setShowHistory(false); setConfirmDelete(false); }}
+                    title="More options"
+                    style={{ background:"none", border:"none", color: showMenu ? "#c9a84c" : "#6b8fa8",
+                      cursor:"pointer", fontSize:"1rem", padding:0, lineHeight:1, letterSpacing:".05em" }}>
+                    ···
+                  </button>
+                  {showMenu && (
+                    <div style={{ position:"absolute", right:0, top:"1.6rem", zIndex:100,
+                      background:"#0d2035", border:"1px solid #2e5070", borderRadius:6,
+                      minWidth:140, boxShadow:"0 4px 16px #00000066", overflow:"hidden" }}>
+                      {!confirmDelete ? (
+                        <>
+                          {settings.githubToken && (
+                            <button onClick={() => { setShowHistory(p => !p); setShowMenu(false); }}
+                              style={{ display:"block", width:"100%", textAlign:"left",
+                                background:"none", border:"none", borderBottom:"1px solid #1e3a5230",
+                                color: showHistory ? "#c9a84c" : "#c8daea", fontFamily:"sans-serif", fontSize:".82rem",
+                                padding:".65rem 1rem", cursor:"pointer" }}>
+                              History
+                            </button>
+                          )}
+                          <button onClick={handleDuplicate} disabled={menuWorking}
+                            style={{ display:"block", width:"100%", textAlign:"left",
+                              background:"none", border:"none", borderBottom:"1px solid #1e3a5230",
+                              color:"#c8daea", fontFamily:"sans-serif", fontSize:".82rem",
+                              padding:".65rem 1rem", cursor:"pointer", opacity: menuWorking ? 0.5 : 1 }}>
+                            {menuWorking ? "Duplicating…" : "Duplicate"}
+                          </button>
+                          <button onClick={() => setConfirmDelete(true)} disabled={menuWorking}
+                            style={{ display:"block", width:"100%", textAlign:"left",
+                              background:"none", border:"none",
+                              color:"#e87878", fontFamily:"sans-serif", fontSize:".82rem",
+                              padding:".65rem 1rem", cursor:"pointer", opacity: menuWorking ? 0.5 : 1 }}>
+                            Delete
+                          </button>
+                        </>
+                      ) : (
+                        <div style={{ padding:".65rem 1rem" }}>
+                          <div style={{ fontSize:".75rem", color:"#e8a838", fontFamily:"sans-serif",
+                            marginBottom:".5rem" }}>
+                            Delete this itinerary?
+                          </div>
+                          <div style={{ display:"flex", gap:".4rem" }}>
+                            <button onClick={handleDeleteItinerary} disabled={menuWorking}
+                              style={{ background:"#3a0a0a", border:"1px solid #dc354566",
+                                color:"#e87878", borderRadius:4, padding:".3rem .6rem",
+                                fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer",
+                                opacity: menuWorking ? 0.5 : 1 }}>
+                              {menuWorking ? "Deleting…" : "Yes, delete"}
+                            </button>
+                            <button onClick={() => setConfirmDelete(false)} disabled={menuWorking}
+                              style={{ background:"none", border:"1px solid #2e3a4a",
+                                color:"#4e7a9e", borderRadius:4, padding:".3rem .6rem",
+                                fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               )}
               {currentFile && currentFile !== "__local__" && typeof navigator.share === "function" && (
                 <button
@@ -678,7 +792,7 @@ export default function Itinerary() {
                   ⬆
                 </button>
               )}
-              <button onClick={() => { setShowSettings(p => !p); setShowHistory(false); }} title="Settings"
+              <button onClick={() => { setShowSettings(p => !p); setShowHistory(false); setShowMenu(false); }} title="Settings"
                 style={{ background:"none", border:"none", color: showSettings ? "#c9a84c" : "#6b8fa8",
                   cursor:"pointer", fontSize:"1rem", padding:0, lineHeight:1 }}>
                 ⚙
