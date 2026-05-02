@@ -131,6 +131,18 @@
         "notes": "",
         "addedAt": "2026-05-02T17:44:04.595Z",
         "mapsProvider": "apple"
+      },
+      {
+        "id": "190a568b-c8c6-448d-8c1a-9214aa0ffc3d",
+        "name": "Langbaan",
+        "address": "1818 NW 23rd Pl, Portland, OR  97210, United States",
+        "phone": "",
+        "website": "",
+        "placeId": "ll:45.535777,-122.6996949",
+        "category": "restaurant",
+        "notes": "",
+        "addedAt": "2026-05-02T17:44:59.204Z",
+        "mapsProvider": "apple"
       }
     ],
     "2": [
