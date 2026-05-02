@@ -174,9 +174,12 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
   const sortedFiles = [...files].sort((a, b) => {
     const da = details[a.path];
     const db = details[b.path];
-    // If both have dateRanges, sort by date descending; otherwise alphabetical by display name
-    if (da?.dateRange && db?.dateRange) return db.dateRange.localeCompare(da.dateRange);
-    const na = da?.title || a.name;
+    const dateA = da?.startDate;
+    const dateB = db?.startDate;
+    if (dateA && dateB) return dateA.localeCompare(dateB); // both dated: soonest first
+    if (dateA) return -1;                                   // only A has date: A first
+    if (dateB) return 1;                                    // only B has date: B first
+    const na = da?.title || a.name;                         // neither dated: alphabetical
     const nb = db?.title || b.name;
     return na.localeCompare(nb);
   });
