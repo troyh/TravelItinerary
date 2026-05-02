@@ -118,6 +118,11 @@ export default function Itinerary() {
 
   const effectiveRepo   = settings.githubRepo   || inferRepo() || "";
   const effectiveBranch = settings.githubBranch || "data";
+  const appBase = (() => {
+    if (!effectiveRepo) return null;
+    const [user, repo] = effectiveRepo.split("/");
+    return user && repo ? `https://${user}.github.io/${repo}/` : null;
+  })();
   const isLocked = !!(currentFile && currentFile !== "__local__" && lockedFiles.has(currentFile));
   const readOnly = !settings.githubToken || isLocked;
   const ghSettings = { ...settings, githubRepo: effectiveRepo, githubBranch: effectiveBranch };
@@ -157,7 +162,7 @@ export default function Itinerary() {
         setSyncStatus("saving");
         try {
           await saveToGitHub(data, { ...ghSettings, githubFile: currentFile });
-          const icsContent = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""));
+          const icsContent = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase);
           if (icsContent) {
             await saveToGitHub(icsContent, { ...ghSettings, githubFile: currentFile.replace(/\.json$/i, ".ics") });
           }
@@ -531,7 +536,7 @@ export default function Itinerary() {
     setSaveAsName("");
   }
 
-  function buildICSContent(daysArr, sd, ttl, highlights, notes, fileId) {
+  function buildICSContent(daysArr, sd, ttl, highlights, notes, fileId, appBase) {
     if (!sd || !daysArr.length) return null;
     const [sy, sm, sday] = sd.split("-").map(Number);
     const toICSDate = n => {
@@ -561,9 +566,8 @@ export default function Itinerary() {
       cal.push(`SUMMARY:${esc(`Day ${d.day}: ${d.leg}`)}`);
       if (d.overnight) cal.push(`LOCATION:${esc(d.overnight)}`);
       if (parts.length) cal.push(`DESCRIPTION:${esc(parts.join("\n"))}`);
-      if (fileId) {
-        const base = window.location.origin + window.location.pathname;
-        cal.push(`URL:${base}?i=${encodeURIComponent(fileId)}&day=${d.day}`);
+      if (fileId && appBase) {
+        cal.push(`URL:${appBase}?i=${encodeURIComponent(fileId)}&day=${d.day}`);
       }
       cal.push(`UID:day-${d.day}-${toICSDate(d.day)}@travelitinerary`);
       cal.push("END:VEVENT");
@@ -573,7 +577,7 @@ export default function Itinerary() {
   }
 
   function generateICS() {
-    const content = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""));
+    const content = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase);
     if (!content) return;
     const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
     const url = URL.createObjectURL(blob);
