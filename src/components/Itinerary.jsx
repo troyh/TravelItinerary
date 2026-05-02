@@ -80,7 +80,21 @@ export default function Itinerary() {
   const [editingCoreDay,   setEditingCoreDay]   = useState(null);
   const [coreDraft,        setCoreDraft]        = useState({});
   const [confirmDeleteDay, setConfirmDeleteDay] = useState(null);
-  const [settings,         setSettings]         = useState(() => { try { const s = localStorage.getItem("travelSettings"); return s ? JSON.parse(s) : {}; } catch { return {}; } });
+  const [settings,         setSettings]         = useState(() => {
+    try {
+      const s = localStorage.getItem("travelSettings");
+      if (!s) return {};
+      const p = JSON.parse(s);
+      // Migrate old flat githubToken/Repo/Branch into databases array
+      if ((p.githubToken || p.githubRepo || p.githubBranch) && !p.databases) {
+        p.databases = [{ id: crypto.randomUUID(), label: "Default",
+          githubToken: p.githubToken ?? "", githubRepo: p.githubRepo ?? "", githubBranch: p.githubBranch ?? "" }];
+        delete p.githubToken; delete p.githubRepo; delete p.githubBranch;
+        localStorage.setItem("travelSettings", JSON.stringify(p));
+      }
+      return p;
+    } catch { return {}; }
+  });
   const [showSettings,     setShowSettings]     = useState(false);
   const [showHistory,      setShowHistory]      = useState(false);
   const [syncStatus,       setSyncStatus]       = useState("idle");
@@ -92,13 +106,15 @@ export default function Itinerary() {
   const [headerDraft,      setHeaderDraft]      = useState({});
   const [editingNotes,     setEditingNotes]     = useState(false);
   const [currentFile,      setCurrentFile]      = useState(() => localStorage.getItem("travelCurrentFile"));
+  const [currentDbId,      setCurrentDbId]      = useState(() => localStorage.getItem("travelCurrentDb") ?? null);
   const [urlLoad,          setUrlLoad]          = useState(() => {
-    const name = new URLSearchParams(window.location.search).get("i");
+    const params = new URLSearchParams(window.location.search);
+    const name  = params.get("i");
+    const dbId  = params.get("db") ?? null;
     if (!name) return null;
     const file = `${ITINERARIES_FOLDER}/${name}.json`;
-    // If this is already our current file, localStorage has the freshest data — skip the GitHub load
     if (file === localStorage.getItem("travelCurrentFile")) return null;
-    return { file, status: "loading" };
+    return { file, status: "loading", dbId };
   });
   const [saveAsName,       setSaveAsName]       = useState("");
   const [copiedICS,        setCopiedICS]        = useState(false);
@@ -116,16 +132,18 @@ export default function Itinerary() {
   const skipNextLoadRef   = useRef(false);
   const saveImmediatelyRef = useRef(false);
 
-  const effectiveRepo   = settings.githubRepo   || inferRepo() || "";
-  const effectiveBranch = settings.githubBranch || "data";
+  const databases     = settings.databases ?? [];
+  const currentDb     = databases.find(db => db.id === currentDbId) ?? databases[0] ?? {};
+  const effectiveRepo   = currentDb.githubRepo   || inferRepo() || "";
+  const effectiveBranch = currentDb.githubBranch || "data";
   const appBase = (() => {
     if (!effectiveRepo) return null;
     const [user, repo] = effectiveRepo.split("/");
     return user && repo ? `https://${user}.github.io/${repo}/` : null;
   })();
   const isLocked = !!(currentFile && currentFile !== "__local__" && lockedFiles.has(currentFile));
-  const readOnly = !settings.githubToken || isLocked;
-  const ghSettings = { ...settings, githubRepo: effectiveRepo, githubBranch: effectiveBranch };
+  const readOnly = !currentDb.githubToken || isLocked;
+  const ghSettings = { githubToken: currentDb.githubToken ?? "", githubRepo: effectiveRepo, githubBranch: effectiveBranch };
 
   useEffect(() => {
     setNewHighlight(""); setEditingNoteDay(null);
@@ -146,11 +164,11 @@ export default function Itinerary() {
         const legs       = days.map(d => d.leg).filter(Boolean);
         const locations  = overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
                          : overnights[0] ?? legs[0] ?? null;
-        meta[currentFile] = { title, startDate, dayCount: days.length, locations };
+        meta[`${currentDbId}:${currentFile}`] = { title, startDate, dayCount: days.length, locations };
         localStorage.setItem("itineraryMetadata", JSON.stringify(meta));
       } catch {}
     }
-    const canSync = settings.githubToken && effectiveRepo &&
+    const canSync = ghSettings.githubToken && effectiveRepo &&
                     currentFile !== "__local__" && dirtyRef.current;
     dirtyRef.current = true;
     if (canSync) {
@@ -201,21 +219,31 @@ export default function Itinerary() {
   useEffect(() => {
     const url = new URL(window.location.href);
     if (currentFile && currentFile !== "__local__") {
-      const name = currentFile.replace(/^.*\//, "").replace(/\.json$/i, "");
-      url.searchParams.set("i", name);
+      url.searchParams.set("i", currentFile.replace(/^.*\//, "").replace(/\.json$/i, ""));
+      if (currentDbId) url.searchParams.set("db", currentDbId);
+      else url.searchParams.delete("db");
     } else {
       url.searchParams.delete("i");
+      url.searchParams.delete("db");
     }
     history.replaceState(null, "", url);
-  }, [currentFile]);
+  }, [currentFile, currentDbId]);
 
-  // Verify and load a file that arrived via ?i= URL param
+  // Verify and load a file that arrived via ?i= URL param (tries ?db= database first, then all others)
   useEffect(() => {
     if (!urlLoad || urlLoad.status !== "loading") return;
-    if (!effectiveRepo) { setUrlLoad(s => ({ ...s, status: "notfound" })); return; }
-    loadFromGitHub({ ...ghSettings, githubFile: urlLoad.file })
-      .then(data => {
-        if (!data) { setUrlLoad(s => ({ ...s, status: "notfound" })); return; }
+    const dbs = settings.databases ?? [];
+    const candidates = urlLoad.dbId
+      ? [...dbs.filter(db => db.id === urlLoad.dbId), ...dbs.filter(db => db.id !== urlLoad.dbId)]
+      : dbs;
+    if (!candidates.length) { setUrlLoad(s => ({ ...s, status: "notfound" })); return; }
+    (async () => {
+      for (const db of candidates) {
+        const repo = db.githubRepo || inferRepo() || "";
+        if (!repo) continue;
+        const ghs = { githubToken: db.githubToken ?? "", githubRepo: repo, githubBranch: db.githubBranch || "data" };
+        const data = await loadFromGitHub({ ...ghs, githubFile: urlLoad.file }).catch(() => null);
+        if (!data) continue;
         if (data.days?.length)              setDays(data.days);
         if (data.places)                    setSavedPlaces(data.places);
         if (data.directions)                setSavedDirections(data.directions);
@@ -227,16 +255,20 @@ export default function Itinerary() {
         if (data.subtitle !== undefined)    setSubtitle(data.subtitle);
         if (data.itineraryNotes !== undefined) setItineraryNotes(data.itineraryNotes);
         localStorage.setItem("travelCurrentFile", urlLoad.file);
+        localStorage.setItem("travelCurrentDb", db.id);
         skipNextLoadRef.current = true;
+        setCurrentDbId(db.id);
         setCurrentFile(urlLoad.file);
         setUrlLoad(null);
         setSyncStatus("synced");
         const urlDay = parseInt(new URLSearchParams(window.location.search).get("day"));
         const dayCount = data.days?.length ?? 0;
         if (Number.isInteger(urlDay) && urlDay >= 1 && urlDay <= dayCount) setOpenDay(urlDay);
-      })
-      .catch(() => setUrlLoad(s => ({ ...s, status: "notfound" })));
-  }, [urlLoad?.status, effectiveRepo]);
+        return;
+      }
+      setUrlLoad(s => ({ ...s, status: "notfound" }));
+    })();
+  }, [urlLoad?.status]);
 
   // Load from GitHub on mount (localStorage already loaded synchronously above)
   useEffect(() => {
@@ -426,19 +458,22 @@ export default function Itinerary() {
     setItineraryNotes(data.itineraryNotes ?? "");
   }
 
-  function handleLoad(path, data) {
+  function handleLoad(path, data, dbId) {
     dirtyRef.current = false;
     if (data) {
       applyData(data);
       localStorage.setItem("travelItinerary", JSON.stringify(data));
     }
+    const resolvedDbId = dbId ?? databases[0]?.id ?? null;
+    setCurrentDbId(resolvedDbId);
+    if (resolvedDbId) localStorage.setItem("travelCurrentDb", resolvedDbId);
     setCurrentFile(path);
     if (path === "__local__") localStorage.removeItem("travelCurrentFile");
     else localStorage.setItem("travelCurrentFile", path);
     setSyncStatus(path === "__local__" ? "idle" : "synced");
   }
 
-  function handleCreate(name) {
+  function handleCreate(name, dbId) {
     const path = `${ITINERARIES_FOLDER}/it-${crypto.randomUUID().slice(0, 8)}.json`;
     dirtyRef.current = false;
     setDays([]); setSavedPlaces({}); setSavedDirections({}); setSavedRoutes({});
@@ -446,6 +481,9 @@ export default function Itinerary() {
     setStartDate(""); setOpenDay(null);
     setTitle(name); setSubtitle(""); setItineraryNotes("");
     localStorage.removeItem("travelItinerary");
+    const resolvedDbId = dbId ?? databases[0]?.id ?? null;
+    setCurrentDbId(resolvedDbId);
+    if (resolvedDbId) localStorage.setItem("travelCurrentDb", resolvedDbId);
     setCurrentFile(path);
     localStorage.setItem("travelCurrentFile", path);
     setSyncStatus("idle");
@@ -507,9 +545,14 @@ export default function Itinerary() {
       await deleteFromGitHub({ ...ghSettings, githubFile: currentFile });
       try { await deleteFromGitHub({ ...ghSettings, githubFile: currentFile.replace(/\.json$/i, ".ics") }); } catch {}
       try {
+        const cacheKey = `${currentDbId}:${currentFile}`;
         const meta = JSON.parse(localStorage.getItem("itineraryMetadata") || "{}");
-        delete meta[currentFile];
+        delete meta[cacheKey];
         localStorage.setItem("itineraryMetadata", JSON.stringify(meta));
+        // Record the deletion so the picker can filter it out even if GitHub CDN returns stale data
+        const deleted = new Set(JSON.parse(localStorage.getItem("itineraryDeletedPaths") || "[]"));
+        deleted.add(cacheKey);
+        localStorage.setItem("itineraryDeletedPaths", JSON.stringify([...deleted]));
       } catch {}
       clearTimeout(syncTimerRef.current);
       setCurrentFile(null);
@@ -767,7 +810,7 @@ export default function Itinerary() {
                   </span>
                 );
               })()}
-              {settings.githubToken && currentFile && currentFile !== "__local__" && (
+              {ghSettings.githubToken && currentFile && currentFile !== "__local__" && (
                 <div style={{ position: "relative" }}>
                   <button onClick={() => { setShowMenu(p => !p); setShowSettings(false); setShowHistory(false); setConfirmDelete(false); }}
                     title="More options"
@@ -781,7 +824,7 @@ export default function Itinerary() {
                       minWidth:140, boxShadow:"0 4px 16px #00000066", overflow:"hidden" }}>
                       {!confirmDelete ? (
                         <>
-                          {settings.githubToken && (
+                          {ghSettings.githubToken && (
                             <button onClick={() => { setShowHistory(p => !p); setShowMenu(false); }}
                               style={{ display:"block", width:"100%", textAlign:"left",
                                 background:"none", border:"none", borderBottom:"1px solid #1e3a5230",
@@ -896,12 +939,12 @@ export default function Itinerary() {
                   fontSize: ".82rem", fontFamily: "sans-serif", outline: "none" }}
               />
               <button onClick={handleSaveAs}
-                disabled={!settings.githubToken || !effectiveRepo}
-                title={(!settings.githubToken || !effectiveRepo) ? "Configure GitHub in Settings ⚙ first" : ""}
+                disabled={!ghSettings.githubToken || !effectiveRepo}
+                title={(!ghSettings.githubToken || !effectiveRepo) ? "Configure GitHub in Settings ⚙ first" : ""}
                 style={{ background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
                   borderRadius: 4, padding: ".35rem .85rem", fontSize: ".75rem",
                   fontFamily: "sans-serif", cursor: "pointer", whiteSpace: "nowrap",
-                  opacity: (!settings.githubToken || !effectiveRepo) ? 0.45 : 1 }}>
+                  opacity: (!ghSettings.githubToken || !effectiveRepo) ? 0.45 : 1 }}>
                 Save to GitHub
               </button>
             </div>
