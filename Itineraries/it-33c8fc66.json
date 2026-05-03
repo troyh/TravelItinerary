@@ -1,14 +1,369 @@
 {
-  "days": [],
-  "places": {},
+  "days": [
+    {
+      "day": 1,
+      "leg": "London → Calais",
+      "overnight": "Calais, France",
+      "nm": 0,
+      "hrs": 0,
+      "highlights": [],
+      "tags": [],
+      "note": ""
+    },
+    {
+      "day": 2,
+      "leg": "Calais → Reims (2.5 hours, champagne country roads)",
+      "overnight": "Reims, France",
+      "nm": 0,
+      "hrs": 0,
+      "highlights": [],
+      "tags": [],
+      "note": ""
+    },
+    {
+      "day": 3,
+      "leg": "Reims → Dijon (2 hours, scenic vineyard routes)",
+      "overnight": "Dijon, France",
+      "nm": 0,
+      "hrs": 0,
+      "highlights": [],
+      "tags": [],
+      "note": ""
+    },
+    {
+      "day": 4,
+      "leg": "Dijon → Lyon (2.5 hours, Burgundy wine region)",
+      "overnight": "Lyon, France",
+      "nm": 0,
+      "hrs": 0,
+      "highlights": [],
+      "tags": [],
+      "note": ""
+    },
+    {
+      "day": 5,
+      "leg": "Lyon → Avignon (2.5 hours, Rhône Valley roads)",
+      "overnight": "Avignon, France",
+      "nm": 0,
+      "hrs": 0,
+      "highlights": [],
+      "tags": [],
+      "note": ""
+    },
+    {
+      "day": 6,
+      "leg": "Avignon → Antibes (2.5 hours, Provence to Côte d'Azur)",
+      "overnight": "Antibes, France",
+      "nm": 0,
+      "hrs": 0,
+      "highlights": [],
+      "tags": [],
+      "note": ""
+    },
+    {
+      "day": 7,
+      "leg": "Antibes → Menton (1.5 hours, scenic coastal drive)",
+      "overnight": "Menton, France",
+      "nm": 0,
+      "hrs": 0,
+      "highlights": [],
+      "tags": [],
+      "note": ""
+    }
+  ],
+  "places": {
+    "1": [
+      {
+        "id": "8d42e3ab-03be-49b9-98c1-c78e1763d1a7",
+        "name": "L'Écritoire",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "restaurant",
+        "notes": "Charming French bistro in old Calais with regional specialties and excellent wine selection.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "73def3d6-3c9c-447b-82fb-226eb90c8589",
+        "name": "Hôtel Meurice",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "accommodation",
+        "notes": "Elegant 4-star hotel overlooking the English Channel with fine dining restaurant.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      }
+    ],
+    "2": [
+      {
+        "id": "1cd2af3f-ca13-44c1-9311-045cca021ac5",
+        "name": "Veuve Clicquot",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "activity",
+        "notes": "Iconic champagne house offering tours of historic cellars and tastings in Reims.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "95fbf4e9-df0e-4aee-be82-56c32f7d6986",
+        "name": "Restaurant Au Petit Comptoir",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "restaurant",
+        "notes": "Cozy Michelin-recommended bistro serving traditional Champenois cuisine.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "e3f37dab-af30-4cf3-8f6b-fb88d51e3f90",
+        "name": "Hôtel De La Paix",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "accommodation",
+        "notes": "Luxury 4-star hotel in the heart of Reims with spa and gourmet restaurant.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      }
+    ],
+    "3": [
+      {
+        "id": "35bc5595-f797-40fc-9f0e-e4742c55ef41",
+        "name": "Route des Grands Crus",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "activity",
+        "notes": "Scenic drive through Burgundy's most prestigious vineyards between Dijon and Beaune.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "d12f2280-0597-44ef-be58-0c857b0ce487",
+        "name": "Stephane Derbord",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "restaurant",
+        "notes": "Michelin-starred restaurant in Dijon specializing in contemporary French cuisine with Burgundy wines.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "cfe5d1e5-30da-4976-95cb-d2c622e95b99",
+        "name": "Hôtel Wilson",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "accommodation",
+        "notes": "Elegant 4-star hotel on Place Liberation with fine dining and regional wine cellar.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      }
+    ],
+    "4": [
+      {
+        "id": "904ba966-5d54-435b-8477-ccb8a8f0d7d2",
+        "name": "Institut Paul Bocuse",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "activity",
+        "notes": "Culinary institute and restaurant showcasing Lyon's legendary gastronomic heritage.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "9f945092-3a37-4676-8afa-7ecd2fe6b5eb",
+        "name": "Le Passage",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "restaurant",
+        "notes": "Award-winning restaurant in Old Town offering innovative French cuisine with local ingredients.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "2fbb44ee-f6e5-4996-8d80-96753745ccf7",
+        "name": "Hôtel Villa Florentine",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "accommodation",
+        "notes": "Luxury 5-star Renaissance palace hotel with panoramic city views and Michelin-starred dining.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      }
+    ],
+    "5": [
+      {
+        "id": "a6da8c59-a2d3-4dcf-89f5-61d3c7bb6716",
+        "name": "Palais des Papes",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "activity",
+        "notes": "UNESCO World Heritage medieval papal palace with stunning architecture and historical tours.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "54583cb8-5ce1-410a-a54d-1e82f7f64e50",
+        "name": "Christian Etienne",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "restaurant",
+        "notes": "Michelin-starred restaurant in Avignon serving Provençal cuisine with Mediterranean influences.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "bb41b0a3-885c-43fe-b213-55785b8eb06a",
+        "name": "Hôtel de l'Horloge",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "accommodation",
+        "notes": "4-star boutique hotel in the medieval center with rooftop restaurant overlooking the city.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      }
+    ],
+    "6": [
+      {
+        "id": "b4d2355c-1088-4181-970e-17108f6c41e6",
+        "name": "Old Town Antibes",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "activity",
+        "notes": "Wander narrow medieval streets, visit Picasso Museum, and stroll the charming harbor promenade.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "3f974c4e-b4bb-4686-abcf-15795b15744e",
+        "name": "Bacon Restaurant",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "restaurant",
+        "notes": "Waterfront Michelin-starred restaurant specializing in Mediterranean seafood and local fish.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "577933a8-a841-4f2e-9473-0582e9a88662",
+        "name": "Hôtel du Cap-Eden-Roc",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "accommodation",
+        "notes": "Legendary 5-star luxury resort on the Cap d'Antibes with private beach and world-class dining.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      }
+    ],
+    "7": [
+      {
+        "id": "9ca29a34-59a8-4293-90c2-6704b4323c10",
+        "name": "Corniche de l'Estérel",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "activity",
+        "notes": "Thrilling coastal road with dramatic red rock formations and Mediterranean Sea views perfect for sports cars.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "58783f84-5e7c-44b7-b00e-133ea2416a31",
+        "name": "Le Méridien",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "restaurant",
+        "notes": "Elegant beachfront restaurant in Menton with fresh seafood and views of the Italian coast.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "7d53bce7-5850-42dd-9757-6e857d144ed8",
+        "name": "Hôtel Britannia",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "accommodation",
+        "notes": "Historic Belle Époque 4-star hotel overlooking Menton's pebble beach with fine dining.",
+        "addedAt": "2026-05-03T17:14:37.552Z",
+        "mapsProvider": null
+      }
+    ]
+  },
   "directions": {},
   "routes": {},
   "flights": {},
   "rentalCars": {},
-  "highlights": {},
+  "highlights": {
+    "1": [
+      "Channel crossing to continental Europe",
+      "Explore medieval Calais old town"
+    ],
+    "2": [
+      "Champagne house tours in UNESCO Reims",
+      "Drive through prestigious vineyards"
+    ],
+    "3": [
+      "Burgundy wine region scenic routes",
+      "Historic Dijon medieval architecture"
+    ],
+    "4": [
+      "Lyon's Renaissance riverside charm",
+      "Confluence of Rhône and Saône rivers"
+    ],
+    "5": [
+      "Papal Palace in Avignon",
+      "Provence lavender fields and villages"
+    ],
+    "6": [
+      "Arrive at French Riviera",
+      "Antibes old town and yacht-lined harbor"
+    ],
+    "7": [
+      "Final coastal drive to Mediterranean",
+      "Menton's Belle Époque seaside charm"
+    ]
+  },
   "notes": {},
   "startDate": "",
-  "title": "Testing Claude",
-  "subtitle": "",
+  "title": "7-Day Porsche 911 Adventure: London to the Mediterranean",
+  "subtitle": "London → Calais → Reims → Burgundy → Lyon → Provence → French Riviera",
   "itineraryNotes": ""
 }
