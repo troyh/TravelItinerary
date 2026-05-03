@@ -46,6 +46,20 @@
   "places": {},
   "directions": {},
   "routes": {},
+  "flights": {
+    "1": [
+      {
+        "id": "a79f1bd6-5372-4e6e-ba87-4ca1991a26bc",
+        "flightNumber": "aa2763",
+        "departure": "CLT",
+        "arrival": "BDL",
+        "miles": 644,
+        "confirmation": "",
+        "notes": "",
+        "addedAt": "2026-05-03T00:23:57.741Z"
+      }
+    ]
+  },
   "highlights": {
     "1": [
       "Get rental car",
