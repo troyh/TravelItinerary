@@ -883,6 +883,128 @@
         "addedAt": "2026-05-03T18:12:05.682Z",
         "mapsProvider": "google"
       }
+    ],
+    "4": [
+      {
+        "id": "79c22c61-6da4-4602-aeca-4adaa03d95f0",
+        "origin": {
+          "name": "Dijon",
+          "placeId": "ChIJdZb974yd8kcR0FgUszTOCQQ"
+        },
+        "destination": {
+          "name": "Lyon",
+          "placeId": "ChIJl4foalHq9EcR8CG75CqrCAQ"
+        },
+        "travelMode": "DRIVING",
+        "distance": "195 km",
+        "duration": "2 hours 4 mins",
+        "summary": "A6",
+        "steps": [
+          {
+            "instruction": "Head southwest on Rue Marceau/D28 toward Rue du 26ème Dragons",
+            "distance": "3 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Bd de la Marne",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 3rd exit onto Bd de Champagne/D70Continue to follow D70",
+            "distance": "1.5 km",
+            "duration": "5 mins"
+          },
+          {
+            "instruction": "Keep right to continue on Rue Jean Moulin",
+            "distance": "0.4 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 3rd exit and stay on Rue Jean Moulin",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 1st exit onto the N274 ramp to A31/Lyon/Beaune/A39/Besançon/Dijon-Sud/Portes de Mirande/Parcs Relais",
+            "distance": "0.4 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Merge onto M274",
+            "distance": "5.9 km",
+            "duration": "4 mins"
+          },
+          {
+            "instruction": "Continue onto A311Toll road",
+            "distance": "4.6 km",
+            "duration": "3 mins"
+          },
+          {
+            "instruction": "Merge onto A31Toll road",
+            "distance": "27.7 km",
+            "duration": "15 mins"
+          },
+          {
+            "instruction": "Continue onto A6Toll road",
+            "distance": "128 km",
+            "duration": "1 hour 10 mins"
+          },
+          {
+            "instruction": "Slight left to stay on A6 (signs for Lyon-Center)Toll road",
+            "distance": "23.7 km",
+            "duration": "15 mins"
+          },
+          {
+            "instruction": "Take exit 39b toward Lyon-Centre",
+            "distance": "0.5 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Slight left onto the ramp to Quai du Dr Gailleton",
+            "distance": "0.4 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Quai du Dr Gailleton",
+            "distance": "0.6 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Continue straight to stay on Quai du Dr Gailleton",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Quai Jules Courmont",
+            "distance": "0.7 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Continue onto Quai Jean Moulin",
+            "distance": "52 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Keep right to stay on Quai Jean Moulin",
+            "distance": "0.1 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Rue Gentil",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Rue de la Gerbe",
+            "distance": "92 m",
+            "duration": "1 min"
+          }
+        ],
+        "notes": "",
+        "addedAt": "2026-05-03T18:12:41.967Z",
+        "mapsProvider": "google"
+      }
     ]
   },
   "routes": {},
