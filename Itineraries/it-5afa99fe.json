@@ -47,7 +47,19 @@
   "directions": {},
   "routes": {},
   "flights": {},
-  "rentalCars": {},
+  "rentalCars": {
+    "2": [
+      {
+        "id": "fbeab3d1-e28a-4299-b99c-9b9bf3b032dc",
+        "agency": "Hertz",
+        "confirmation": "sadflkjadlkf",
+        "pickupLocation": "Airport",
+        "dropoffLocation": "Airport",
+        "notes": "",
+        "addedAt": "2026-05-03T01:08:04.474Z"
+      }
+    ]
+  },
   "highlights": {
     "1": [
       "Get rental car",
