@@ -8,7 +8,8 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260515
 DTEND;VALUE=DATE:20260516
 SUMMARY:Day 1: Drive to Portland
-DESCRIPTION:\nHighlights:\n• Check into hotel\n• Leave early to avoid Portland traffic!!\n• Dinner at Lang Baan\n\nNote: I made a reservation at 8:15pm at Lang Baan. \n\nI couldn't get a reservation for this night at Le Pigeon. I'm on the **notify me** list\, but doubtful I'll get one. Several other restaurant options below.... Claude likes Coquine as the best "not-Le Pigeon" option but it's a bit out of town.
+LOCATION:Portland
+DESCRIPTION:Overnight: Portland\n\nHighlights:\n• Check into hotel\n• Leave early to avoid Portland traffic!!\n• Dinner at Lang Baan\n\nNote: I made a reservation at 8:15pm at Lang Baan. \n\nI couldn't get a reservation for this night at Le Pigeon. I'm on the **notify me** list\, but doubtful I'll get one. Several other restaurant options below.... Claude likes Coquine as the best "not-Le Pigeon" option but it's a bit out of town.
 URL:https://troyh.github.io/TravelItinerary/?i=Portland%20Puppy%20Pickup&day=1
 UID:day-1-20260515@travelitinerary
 END:VEVENT
