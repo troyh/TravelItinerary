@@ -46,27 +46,6 @@
   "places": {},
   "directions": {},
   "routes": {},
-  "flights": {
-    "1": [
-      {
-        "id": "7b22ec1c-9c8a-4697-aeee-5e72b4dd0add",
-        "flightNumber": "AA2763",
-        "departure": "CLT",
-        "arrival": "BDL",
-        "departureName": "Charlotte",
-        "arrivalName": "Hartford",
-        "departureTime": "8:15 PM",
-        "arrivalTime": "10:19 PM",
-        "airline": "American Airlines",
-        "aircraft": "Airbus A321",
-        "status": "Expected",
-        "miles": 644,
-        "confirmation": "",
-        "notes": "",
-        "addedAt": "2026-05-03T00:28:55.615Z"
-      }
-    ]
-  },
   "highlights": {
     "1": [
       "Get rental car",
