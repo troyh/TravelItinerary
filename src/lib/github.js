@@ -133,16 +133,38 @@ export async function saveToGitHub(data, { githubToken, githubRepo, githubFile, 
       } catch {}
     }
 
-    const res = await fetch(repoUrl(githubRepo, githubFile), {
+    const putBody = sha => JSON.stringify({
+      message: message || `Update itinerary - ${new Date().toISOString().slice(0, 16).replace("T", " ")}`,
+      content,
+      branch: githubBranch,
+      ...(sha ? { sha } : {}),
+    });
+
+    let res = await fetch(repoUrl(githubRepo, githubFile), {
       method: "PUT",
       headers: { ...authHeaders(githubToken), "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message: message || `Update itinerary - ${new Date().toISOString().slice(0, 16).replace("T", " ")}`,
-        content,
-        branch: githubBranch,
-        ...(shaByPath.has(shaKey) ? { sha: shaByPath.get(shaKey) } : {}),
-      }),
+      body: putBody(shaByPath.get(shaKey)),
     });
+
+    // On 409, fetch the current SHA and retry once so stale-SHA conflicts self-heal.
+    if (res.status === 409) {
+      try {
+        const r = await fetch(
+          repoUrl(githubRepo, githubFile) + `?ref=${encodeURIComponent(githubBranch)}`,
+          { headers: authHeaders(githubToken) }
+        );
+        if (r.ok) {
+          const freshSha = (await r.json()).sha;
+          shaByPath.set(shaKey, freshSha);
+          res = await fetch(repoUrl(githubRepo, githubFile), {
+            method: "PUT",
+            headers: { ...authHeaders(githubToken), "Content-Type": "application/json" },
+            body: putBody(freshSha),
+          });
+        }
+      } catch {}
+    }
+
     if (res.status === 409) throw new Error("conflict");
     await throwIfNotOk(res, "saveToGitHub");
     shaByPath.set(shaKey, (await res.json()).content.sha);

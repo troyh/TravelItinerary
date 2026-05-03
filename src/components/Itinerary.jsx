@@ -5,6 +5,7 @@ import DayPlaces from "./DayPlaces.jsx";
 import DayDirections from "./DayDirections.jsx";
 import DayRoute from "./DayRoute.jsx";
 import DayFlights from "./DayFlights.jsx";
+import DayRentalCar from "./DayRentalCar.jsx";
 import Settings from "./Settings.jsx";
 import { loadFromGitHub, saveToGitHub, deleteFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import ItineraryPicker from "./ItineraryPicker.jsx";
@@ -78,6 +79,7 @@ export default function Itinerary() {
   const [savedDirections,  setSavedDirections]  = useState(() => _db?.directions ?? {});
   const [savedRoutes,      setSavedRoutes]      = useState(() => _db?.routes ?? {});
   const [savedFlights,     setSavedFlights]     = useState(() => _db?.flights ?? {});
+  const [savedRentalCars,  setSavedRentalCars]  = useState(() => _db?.rentalCars ?? {});
   const [days,             setDays]             = useState(() => _db?.days ?? []);
   const [editingCoreDay,   setEditingCoreDay]   = useState(null);
   const [coreDraft,        setCoreDraft]        = useState({});
@@ -157,7 +159,7 @@ export default function Itinerary() {
   useEffect(() => {
     if (!currentFile) return;
     const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
-                   flights: savedFlights,
+                   flights: savedFlights, rentalCars: savedRentalCars,
                    highlights: customHighlights, notes: customNotes, startDate,
                    title, subtitle, itineraryNotes };
     localStorage.setItem("travelItinerary", JSON.stringify(data));
@@ -189,7 +191,7 @@ export default function Itinerary() {
         setSyncStatus("saving");
         try {
           await saveToGitHub(data, { ...ghSettings, githubFile: currentFile });
-          const icsContent = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase, savedFlights);
+          const icsContent = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase, savedFlights, savedRentalCars);
           if (icsContent) {
             await saveToGitHub(icsContent, { ...ghSettings, githubFile: currentFile.replace(/\.json$/i, ".ics") });
           }
@@ -201,7 +203,7 @@ export default function Itinerary() {
         }
       }, saveDelay);
     }
-  }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, savedFlights, customHighlights, customNotes, startDate, title, subtitle, itineraryNotes]);
+  }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, savedFlights, savedRentalCars, customHighlights, customNotes, startDate, title, subtitle, itineraryNotes]);
 
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
 
@@ -377,6 +379,22 @@ export default function Itinerary() {
     }));
   }
 
+  function addRentalCar(dayNum, car) {
+    setSavedRentalCars(prev => ({ ...prev, [dayNum]: [...(prev[dayNum] ?? []), car] }));
+  }
+  function updateRentalCar(dayNum, id, updates) {
+    setSavedRentalCars(prev => ({
+      ...prev,
+      [dayNum]: (prev[dayNum] ?? []).map(c => c.id === id ? { ...c, ...updates } : c),
+    }));
+  }
+  function deleteRentalCar(dayNum, id) {
+    setSavedRentalCars(prev => ({
+      ...prev,
+      [dayNum]: (prev[dayNum] ?? []).filter(c => c.id !== id),
+    }));
+  }
+
   function addRoute(dayNum, route) {
     setSavedRoutes(prev => ({ ...prev, [dayNum]: [...(prev[dayNum] ?? []), route] }));
   }
@@ -422,6 +440,7 @@ export default function Itinerary() {
     setSavedPlaces(prev => { const s = remapKeys(prev, newNum, +1); if (prev[dayNum]) s[newNum] = prev[dayNum].map(p => ({ ...p, id: crypto.randomUUID() })); return s; });
     setSavedDirections(prev => remapKeys(prev, newNum, +1));
     setSavedRoutes(prev => remapKeys(prev, newNum, +1));
+    setSavedRentalCars(prev => remapKeys(prev, newNum, +1));
     setOpenDay(newNum);
   }
 
@@ -436,6 +455,7 @@ export default function Itinerary() {
     setSavedPlaces(prev => remapKeys(prev, newNum, +1));
     setSavedDirections(prev => remapKeys(prev, newNum, +1));
     setSavedRoutes(prev => remapKeys(prev, newNum, +1));
+    setSavedRentalCars(prev => remapKeys(prev, newNum, +1));
     setOpenDay(newNum);
     setEditingCoreDay(newNum);
     setCoreDraft({ leg: "New Day", overnight: "", nm: 0, hrs: 0 });
@@ -449,6 +469,7 @@ export default function Itinerary() {
     setSavedPlaces(prev => remapKeys(prev, dayNum, -1));
     setSavedDirections(prev => remapKeys(prev, dayNum, -1));
     setSavedRoutes(prev => remapKeys(prev, dayNum, -1));
+    setSavedRentalCars(prev => remapKeys(prev, dayNum, -1));
     setOpenDay(prev => prev === dayNum ? Math.max(1, dayNum - 1) : prev > dayNum ? prev - 1 : prev);
     setConfirmDeleteDay(null);
     setEditingCoreDay(null);
@@ -476,6 +497,7 @@ export default function Itinerary() {
     setSavedDirections(data.directions ?? {});
     setSavedRoutes(data.routes ?? {});
     setSavedFlights(data.flights ?? {});
+    setSavedRentalCars(data.rentalCars ?? {});
     setCustomHighlights(data.highlights ?? {});
     setCustomNotes(data.notes ?? {});
     setStartDate(data.startDate ?? "");
@@ -502,7 +524,7 @@ export default function Itinerary() {
   function handleCreate(name, dbId) {
     const path = `${ITINERARIES_FOLDER}/it-${crypto.randomUUID().slice(0, 8)}.json`;
     dirtyRef.current = false;
-    setDays([]); setSavedPlaces({}); setSavedDirections({}); setSavedRoutes({}); setSavedFlights({});
+    setDays([]); setSavedPlaces({}); setSavedDirections({}); setSavedRoutes({}); setSavedFlights({}); setSavedRentalCars({});
     setCustomHighlights({}); setCustomNotes({});
     setStartDate(""); setOpenDay(null);
     setTitle(name); setSubtitle(""); setItineraryNotes("");
@@ -644,7 +666,7 @@ export default function Itinerary() {
     setSaveAsName("");
   }
 
-  function buildICSContent(daysArr, sd, ttl, highlights, notes, fileId, appBase, flights) {
+  function buildICSContent(daysArr, sd, ttl, highlights, notes, fileId, appBase, flights, rentalCars) {
     if (!sd || !daysArr.length) return null;
     const [sy, sm, sday] = sd.split("-").map(Number);
     const toICSDate = n => {
@@ -674,6 +696,13 @@ export default function Itinerary() {
         (f.miles ? ` · ${f.miles.toLocaleString()} mi` : "") +
         (f.confirmation ? ` (Conf: ${f.confirmation})` : "")
       ).join("\n"));
+      const cars = (rentalCars ?? {})[d.day] ?? [];
+      if (cars.length) parts.push("\nRental Cars:\n" + cars.map(c =>
+        `🚗 ${c.agency}` +
+        (c.confirmation ? ` · Conf: ${c.confirmation}` : "") +
+        (c.pickupLocation ? `\n   Pick-up: ${c.pickupLocation}` : "") +
+        (c.dropoffLocation ? `\n   Drop-off: ${c.dropoffLocation}` : "")
+      ).join("\n"));
       cal.push("BEGIN:VEVENT");
       cal.push(`DTSTART;VALUE=DATE:${toICSDate(d.day)}`);
       cal.push(`DTEND;VALUE=DATE:${toICSDate(d.day + 1)}`);
@@ -691,7 +720,7 @@ export default function Itinerary() {
   }
 
   function generateICS() {
-    const content = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase, savedFlights);
+    const content = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase, savedFlights, savedRentalCars);
     if (!content) return;
     const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -706,7 +735,7 @@ export default function Itinerary() {
 
   async function handleMilestone(milestoneLabel) {
     const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
-                   flights: savedFlights,
+                   flights: savedFlights, rentalCars: savedRentalCars,
                    highlights: customHighlights, notes: customNotes, startDate,
                    title, subtitle, itineraryNotes };
     await saveToGitHub(data, { ...ghSettings, githubFile: currentFile, message: milestoneLabel });
@@ -1618,6 +1647,15 @@ export default function Itinerary() {
                     startDate={startDate}
                     dayNum={d.day}
                     aeroDataBoxKey={settings.aeroDataBoxKey ?? ""}
+                  />
+
+                  {/* Rental Cars */}
+                  <DayRentalCar
+                    rentalCars={savedRentalCars[d.day] ?? []}
+                    onAdd={car => addRentalCar(d.day, car)}
+                    onUpdate={(id, updates) => updateRentalCar(d.day, id, updates)}
+                    onDelete={id => deleteRentalCar(d.day, id)}
+                    readOnly={readOnly}
                   />
 
                   {/* Tide warning */}
