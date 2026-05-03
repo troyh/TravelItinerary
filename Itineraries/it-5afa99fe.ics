@@ -16,7 +16,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260919
 DTEND;VALUE=DATE:20260920
 SUMMARY:Day 2: Move-in Day
-DESCRIPTION:\nHighlights:\n• Drive to campus\n• Check-in\n• Unload car\n• Move-in and set up room
+DESCRIPTION:\nHighlights:\n• Drive to campus\n• Check-in\n• Unload car\n• Move-in and set up room\n\nRental Cars:\n🚗 Hertz · Conf: sadflkjadlkf\n   Pick-up: Airport\n   Drop-off: Airport
 URL:https://troyh.github.io/TravelItinerary/?i=it-5afa99fe&day=2
 UID:day-2-20260919@travelitinerary
 END:VEVENT
