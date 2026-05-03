@@ -93,6 +93,68 @@
         "addedAt": "2026-05-03T20:36:07.599Z",
         "mapsProvider": null
       }
+    ],
+    "2": [
+      {
+        "id": "d66244c4-cab2-4a64-8eb3-752c11d82bce",
+        "name": "Bed Bath & Beyond",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "provisioning",
+        "notes": "Full selection of bedding, pillows, towels, and dorm essentials. Typically offers student discounts during move-in season.",
+        "addedAt": "2026-05-03T20:38:17.263Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "60e67369-6397-4a22-a02c-6dab72a8196a",
+        "name": "Target",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "provisioning",
+        "notes": "Wide range of affordable dorm items including storage bins, desk organizers, lighting, and décor. Often has dedicated back-to-college sections.",
+        "addedAt": "2026-05-03T20:38:17.263Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "825c98f9-eb52-43fe-ac98-b8f7be7fc3eb",
+        "name": "Walmart",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "provisioning",
+        "notes": "Budget-friendly option for basics like bedding, hangers, cleaning supplies, and electronics accessories.",
+        "addedAt": "2026-05-03T20:38:17.263Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "d74b6f03-2764-425e-8500-c69ea6df102f",
+        "name": "IKEA",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "provisioning",
+        "notes": "Compact furniture and storage solutions perfect for dorm rooms, plus affordable décor and organizational items.",
+        "addedAt": "2026-05-03T20:38:17.263Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "2dbc967b-3d14-4c32-a081-7963d6c3ccd5",
+        "name": "Local Home Depot or Lowe's",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "provisioning",
+        "notes": "Hardware store option for items like power strips, extension cords, and any last-minute repairs or modifications.",
+        "addedAt": "2026-05-03T20:38:17.263Z",
+        "mapsProvider": null
+      }
     ]
   },
   "directions": {},
@@ -125,7 +187,11 @@
       "Drive to campus",
       "Check-in",
       "Unload car",
-      "Move-in and set up room"
+      "Move-in and set up room",
+      "Shop early morning on move-in day to beat crowds and ensure full stock of popular items",
+      "Bring a detailed packing list and dorm room dimensions to avoid over-purchasing",
+      "Check if your college has a move-in essentials list or partnerships with specific retailers for discounts",
+      "Consider purchasing bulky items (pillows, mattress pad) before arriving to save luggage space"
     ],
     "3": [
       "Check out of hotel",
