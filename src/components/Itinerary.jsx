@@ -88,16 +88,26 @@ export default function Itinerary() {
   const [confirmDeleteDay, setConfirmDeleteDay] = useState(null);
   const [settings,         setSettings]         = useState(() => {
     try {
+      let p = {};
       const s = localStorage.getItem("travelSettings");
-      if (!s) return {};
-      const p = JSON.parse(s);
-      // Migrate old flat githubToken/Repo/Branch into databases array
-      if ((p.githubToken || p.githubRepo || p.githubBranch) && !p.databases) {
-        p.databases = [{ id: crypto.randomUUID(), label: "Default",
-          githubToken: p.githubToken ?? "", githubRepo: p.githubRepo ?? "", githubBranch: p.githubBranch ?? "" }];
-        delete p.githubToken; delete p.githubRepo; delete p.githubBranch;
-        localStorage.setItem("travelSettings", JSON.stringify(p));
+      if (s) {
+        p = JSON.parse(s);
+        // Migrate old flat githubToken/Repo/Branch into databases array
+        if ((p.githubToken || p.githubRepo || p.githubBranch) && !p.databases) {
+          p.databases = [{ id: crypto.randomUUID(), label: "Default",
+            githubToken: p.githubToken ?? "", githubRepo: p.githubRepo ?? "", githubBranch: p.githubBranch ?? "" }];
+          delete p.githubToken; delete p.githubRepo; delete p.githubBranch;
+        }
       }
+      // Auto-configure from URL when hosted on GitHub Pages and no databases set yet
+      if (!p.databases?.length) {
+        const repo = inferRepo();
+        if (repo) {
+          p.databases = [{ id: crypto.randomUUID(), label: "Personal",
+            githubToken: "", githubRepo: repo, githubBranch: "data" }];
+        }
+      }
+      if (p.databases?.length) localStorage.setItem("travelSettings", JSON.stringify(p));
       return p;
     } catch { return {}; }
   });
