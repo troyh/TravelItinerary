@@ -161,17 +161,7 @@
   "routes": {},
   "flights": {},
   "rentalCars": {
-    "3": [
-      {
-        "id": "4cd684f7-1bdb-46bc-963c-f09f850a8d66",
-        "agency": "Hertz",
-        "confirmation": "aslkdjfakl;jsdfklajsd;flkjs",
-        "pickupLocation": "",
-        "dropoffLocation": "",
-        "notes": "",
-        "addedAt": "2026-05-03T01:08:50.229Z"
-      }
-    ]
+    "3": []
   },
   "highlights": {
     "1": [
