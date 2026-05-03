@@ -100,6 +100,7 @@ export default function Settings({ settings, onSave, onClose }) {
     mapsProvider:     settings.mapsProvider     ?? "google",
     googleMapsKey:    settings.googleMapsKey    ?? "",
     appleMapKitToken: settings.appleMapKitToken ?? "",
+    aeroDataBoxKey:   settings.aeroDataBoxKey   ?? "",
   });
   const set = (k, v) => setDraft(p => ({ ...p, [k]: v }));
 
@@ -186,6 +187,19 @@ export default function Settings({ settings, onSave, onClose }) {
               </div>
             </div>
           )}
+
+          {/* AeroDataBox */}
+          <div>
+            <div style={S.label}>
+              AeroDataBox API Key <span style={{ color: "#3d5060", fontStyle: "italic" }}>(optional)</span>
+            </div>
+            <input value={draft.aeroDataBoxKey} onChange={e => set("aeroDataBoxKey", e.target.value)}
+              placeholder="RapidAPI key…" style={S.input} />
+            <div style={{ fontSize: ".68rem", color: "#3d5060", fontFamily: "sans-serif",
+              fontStyle: "italic", marginTop: 4 }}>
+              From rapidapi.com → AeroDataBox. Enables automatic flight lookup by flight number.
+            </div>
+          </div>
         </div>
       )}
 

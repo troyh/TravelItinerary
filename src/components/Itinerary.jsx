@@ -4,6 +4,7 @@ import { days as initialDays, tagConfig, fuelStops, fuelSummary, tideWarnings } 
 import DayPlaces from "./DayPlaces.jsx";
 import DayDirections from "./DayDirections.jsx";
 import DayRoute from "./DayRoute.jsx";
+import DayFlights from "./DayFlights.jsx";
 import Settings from "./Settings.jsx";
 import { loadFromGitHub, saveToGitHub, deleteFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import ItineraryPicker from "./ItineraryPicker.jsx";
@@ -76,6 +77,7 @@ export default function Itinerary() {
   const [savedPlaces,      setSavedPlaces]      = useState(() => _db?.places ?? {});
   const [savedDirections,  setSavedDirections]  = useState(() => _db?.directions ?? {});
   const [savedRoutes,      setSavedRoutes]      = useState(() => _db?.routes ?? {});
+  const [savedFlights,     setSavedFlights]     = useState(() => _db?.flights ?? {});
   const [days,             setDays]             = useState(() => _db?.days ?? []);
   const [editingCoreDay,   setEditingCoreDay]   = useState(null);
   const [coreDraft,        setCoreDraft]        = useState({});
@@ -155,6 +157,7 @@ export default function Itinerary() {
   useEffect(() => {
     if (!currentFile) return;
     const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
+                   flights: savedFlights,
                    highlights: customHighlights, notes: customNotes, startDate,
                    title, subtitle, itineraryNotes };
     localStorage.setItem("travelItinerary", JSON.stringify(data));
@@ -186,7 +189,7 @@ export default function Itinerary() {
         setSyncStatus("saving");
         try {
           await saveToGitHub(data, { ...ghSettings, githubFile: currentFile });
-          const icsContent = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase);
+          const icsContent = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase, savedFlights);
           if (icsContent) {
             await saveToGitHub(icsContent, { ...ghSettings, githubFile: currentFile.replace(/\.json$/i, ".ics") });
           }
@@ -198,7 +201,7 @@ export default function Itinerary() {
         }
       }, saveDelay);
     }
-  }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, customHighlights, customNotes, startDate, title, subtitle, itineraryNotes]);
+  }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, savedFlights, customHighlights, customNotes, startDate, title, subtitle, itineraryNotes]);
 
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
 
@@ -358,6 +361,22 @@ export default function Itinerary() {
     setDays(prev => prev.map(d => d.day === dayNum ? { ...d, ...updates } : d));
   }
 
+  function addFlight(dayNum, flight) {
+    setSavedFlights(prev => ({ ...prev, [dayNum]: [...(prev[dayNum] ?? []), flight] }));
+  }
+  function updateFlight(dayNum, id, updates) {
+    setSavedFlights(prev => ({
+      ...prev,
+      [dayNum]: (prev[dayNum] ?? []).map(f => f.id === id ? { ...f, ...updates } : f),
+    }));
+  }
+  function deleteFlight(dayNum, id) {
+    setSavedFlights(prev => ({
+      ...prev,
+      [dayNum]: (prev[dayNum] ?? []).filter(f => f.id !== id),
+    }));
+  }
+
   function addRoute(dayNum, route) {
     setSavedRoutes(prev => ({ ...prev, [dayNum]: [...(prev[dayNum] ?? []), route] }));
   }
@@ -456,6 +475,7 @@ export default function Itinerary() {
     setSavedPlaces(data.places ?? {});
     setSavedDirections(data.directions ?? {});
     setSavedRoutes(data.routes ?? {});
+    setSavedFlights(data.flights ?? {});
     setCustomHighlights(data.highlights ?? {});
     setCustomNotes(data.notes ?? {});
     setStartDate(data.startDate ?? "");
@@ -482,7 +502,7 @@ export default function Itinerary() {
   function handleCreate(name, dbId) {
     const path = `${ITINERARIES_FOLDER}/it-${crypto.randomUUID().slice(0, 8)}.json`;
     dirtyRef.current = false;
-    setDays([]); setSavedPlaces({}); setSavedDirections({}); setSavedRoutes({});
+    setDays([]); setSavedPlaces({}); setSavedDirections({}); setSavedRoutes({}); setSavedFlights({});
     setCustomHighlights({}); setCustomNotes({});
     setStartDate(""); setOpenDay(null);
     setTitle(name); setSubtitle(""); setItineraryNotes("");
@@ -624,7 +644,7 @@ export default function Itinerary() {
     setSaveAsName("");
   }
 
-  function buildICSContent(daysArr, sd, ttl, highlights, notes, fileId, appBase) {
+  function buildICSContent(daysArr, sd, ttl, highlights, notes, fileId, appBase, flights) {
     if (!sd || !daysArr.length) return null;
     const [sy, sm, sday] = sd.split("-").map(Number);
     const toICSDate = n => {
@@ -648,6 +668,12 @@ export default function Itinerary() {
       if (hl.length) parts.push("\nHighlights:\n" + hl.map(h => `• ${h}`).join("\n"));
       const note = notes[d.day] !== undefined ? notes[d.day] : d.note;
       if (note) parts.push(`\nNote: ${note}`);
+      const fl = (flights ?? {})[d.day] ?? [];
+      if (fl.length) parts.push("\nFlights:\n" + fl.map(f =>
+        `✈ ${f.flightNumber}: ${f.departure} → ${f.arrival}` +
+        (f.miles ? ` · ${f.miles.toLocaleString()} mi` : "") +
+        (f.confirmation ? ` (Conf: ${f.confirmation})` : "")
+      ).join("\n"));
       cal.push("BEGIN:VEVENT");
       cal.push(`DTSTART;VALUE=DATE:${toICSDate(d.day)}`);
       cal.push(`DTEND;VALUE=DATE:${toICSDate(d.day + 1)}`);
@@ -665,7 +691,7 @@ export default function Itinerary() {
   }
 
   function generateICS() {
-    const content = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase);
+    const content = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase, savedFlights);
     if (!content) return;
     const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -680,6 +706,7 @@ export default function Itinerary() {
 
   async function handleMilestone(milestoneLabel) {
     const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
+                   flights: savedFlights,
                    highlights: customHighlights, notes: customNotes, startDate,
                    title, subtitle, itineraryNotes };
     await saveToGitHub(data, { ...ghSettings, githubFile: currentFile, message: milestoneLabel });
@@ -735,8 +762,26 @@ export default function Itinerary() {
   })();
 
   const totalNM  = days.reduce((s, d) => s + d.nm, 0);
-  const underway = days.filter(d => d.nm > 0).length;
-  const layovers = days.filter(d => d.nm === 0).length;
+  const travelDays = days.filter(d =>
+    d.nm > 0 ||
+    (savedFlights[d.day] ?? []).length > 0 ||
+    (savedDirections[d.day] ?? []).length > 0
+  ).length;
+
+  const totalFlightMiles = Math.round(
+    Object.values(savedFlights).flat().reduce((s, f) => s + (f.miles || 0), 0)
+  );
+
+  const totalDrivingMiles = Math.round(
+    Object.values(savedDirections).flat().reduce((s, d) => {
+      if (!d.distance) return s;
+      const m = d.distance.match(/([\d,.]+)\s*(km|mi|miles)?/i);
+      if (!m) return s;
+      const val = parseFloat(m[1].replace(/,/g, ""));
+      const unit = (m[2] || "mi").toLowerCase();
+      return s + (unit === "km" ? val * 0.621371 : val);
+    }, 0)
+  );
   const todos = [
     ...(itineraryNotes ? itineraryNotes.split("\n")
       .filter(line => /^TODO:/i.test(line.trim()))
@@ -1100,11 +1145,12 @@ export default function Itinerary() {
           {/* Stats */}
           <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", marginBottom: "1.25rem" }}>
             {[
-              { label: "Total Distance", val: `${totalNM} NM` },
-              { label: "Underway Days",  val: String(underway)  },
-              { label: "Layover Days",   val: String(layovers)  },
+              totalNM > 0          && { label: "Boating",  val: `${totalNM} NM` },
+              totalFlightMiles > 0 && { label: "Flying",   val: `${totalFlightMiles.toLocaleString()} mi` },
+              totalDrivingMiles > 0 && { label: "Driving",  val: `${totalDrivingMiles.toLocaleString()} mi` },
+              { label: "Travel Days",    val: String(travelDays) },
               { label: "Fuel Stops",     val: String(days.filter(d => d.fuelStop).length) },
-            ].map(s => (
+            ].filter(Boolean).map(s => (
               <div key={s.label}>
                 <div style={{ fontSize: "1.3rem", color: "#c9a84c" }}>{s.val}</div>
                 <div style={{ fontSize: ".7rem", color: "#6b8fa8", letterSpacing: ".1em", textTransform: "uppercase" }}>{s.label}</div>
@@ -1560,6 +1606,18 @@ export default function Itinerary() {
                     onDelete={id => deleteRoute(d.day, id)}
                     onApplyToDay={updates => updateDayFields(d.day, updates)}
                     readOnly={readOnly}
+                  />
+
+                  {/* Flights */}
+                  <DayFlights
+                    flights={savedFlights[d.day] ?? []}
+                    onAdd={flight => addFlight(d.day, flight)}
+                    onUpdate={(id, updates) => updateFlight(d.day, id, updates)}
+                    onDelete={id => deleteFlight(d.day, id)}
+                    readOnly={readOnly}
+                    startDate={startDate}
+                    dayNum={d.day}
+                    aeroDataBoxKey={settings.aeroDataBoxKey ?? ""}
                   />
 
                   {/* Tide warning */}
