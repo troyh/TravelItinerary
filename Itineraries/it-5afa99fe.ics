@@ -23,7 +23,7 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260920
 DTEND;VALUE=DATE:20260921
-SUMMARY:Day 3: Fly home
+SUMMARY:Day 3: Fly to Seattle
 DESCRIPTION:\nHighlights:\n• Check out of hotel\n• Return rental car\n• Go to airport\n\nRental Cars:\n🚗 Hertz · Conf: aslkdjfakl\;jsdfklajsd\;flkjs
 URL:https://troyh.github.io/TravelItinerary/?i=it-5afa99fe&day=3
 UID:day-3-20260920@travelitinerary
