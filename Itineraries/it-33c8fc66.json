@@ -584,6 +584,158 @@
         "addedAt": "2026-05-03T17:16:39.543Z",
         "mapsProvider": "google"
       }
+    ],
+    "2": [
+      {
+        "id": "60fb507c-28f7-4a7f-929c-ad4cde12594a",
+        "origin": {
+          "name": "Calais",
+          "placeId": "ChIJY-Px13U_3EcR9HnSjODZvqw"
+        },
+        "destination": {
+          "name": "Reims",
+          "placeId": "ChIJCTtTSjN06UcRwEU7mrlfCgQ"
+        },
+        "travelMode": "DRIVING",
+        "distance": "270 km",
+        "duration": "2 hours 44 mins",
+        "summary": "A26",
+        "steps": [
+          {
+            "instruction": "Head west on Rue Anatole France toward Quai de la Gendarmerie",
+            "distance": "93 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Quai de la Gendarmerie",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 2nd exit onto Quai de l'Yser",
+            "distance": "0.5 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Quai de l'Yser turns slightly left and becomes Rue Watteau",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Bd de l'Égalité",
+            "distance": "18 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Rue du Lieutenant Jacques Faguer",
+            "distance": "41 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Rue du Lieutenant Jacques Faguer turns slightly left and becomes Bd Victor Hugo",
+            "distance": "0.9 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "At Rdpt de la Nouvelle France, take the 3rd exit onto Rte de Saint-Omer/D119 heading to A16/A26/Centre Hospitalier/Point écotaxe/Clinique du Virval/E.H.P.A.D. la Roselière",
+            "distance": "1.1 km",
+            "duration": "3 mins"
+          },
+          {
+            "instruction": "At the roundabout, take the 3rd exit onto the A16 ramp to St Omer/Reims/Paris/Dunkerque/Lille/Calais-Port/Car Ferry/Z.I. Est/Déviation",
+            "distance": "0.5 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Merge onto A16",
+            "distance": "0.4 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Take the A26/E15 exit toward St Omer/Arras/ReimsToll road",
+            "distance": "1.0 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto A26/E15Continue to follow A26Toll road",
+            "distance": "256 km",
+            "duration": "2 hours 22 mins"
+          },
+          {
+            "instruction": "Take exit 16 toward Bétheny/Reims-Nord/Reims-Ouest/St Brice-Courcelles",
+            "distance": "0.9 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto D944T",
+            "distance": "2.6 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Continue onto Av. Salvador Allende Gossens",
+            "distance": "0.4 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Bd des Tondeurs",
+            "distance": "1.8 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Take the exit toward Reims-Centre/Bétheny/Z.I. Port Sec/Les Équiernolles",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 1st exit onto Chem. de Saint-Etienne",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, continue straight onto Av. du Berceau de l'Aviation",
+            "distance": "0.5 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 3rd exit onto Rue Léon Faucher",
+            "distance": "1.0 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "At the roundabout, take the 1st exit onto Rue de Bétheny/D74",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At Pl. du Dr Knoeri, continue straight onto Rue Camille Lenoir/D74",
+            "distance": "0.5 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue straight to stay on Rue Camille Lenoir/D74",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Rue Courmeaux",
+            "distance": "76 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Slight right onto Rue Jean-Jacques Rousseau",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Rue de Mars",
+            "distance": "79 m",
+            "duration": "1 min"
+          }
+        ],
+        "notes": "",
+        "addedAt": "2026-05-03T17:17:39.556Z",
+        "mapsProvider": "google"
+      }
     ]
   },
   "routes": {},
