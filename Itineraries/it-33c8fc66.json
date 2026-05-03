@@ -736,6 +736,153 @@
         "addedAt": "2026-05-03T17:17:39.556Z",
         "mapsProvider": "google"
       }
+    ],
+    "3": [
+      {
+        "id": "902d0bec-c13e-47ec-8473-eaa510cd4bc0",
+        "origin": {
+          "name": "Reims",
+          "placeId": "ChIJCTtTSjN06UcRwEU7mrlfCgQ"
+        },
+        "destination": {
+          "name": "Dijon",
+          "placeId": "ChIJdZb974yd8kcR0FgUszTOCQQ"
+        },
+        "travelMode": "DRIVING",
+        "distance": "298 km",
+        "duration": "2 hours 59 mins",
+        "summary": "A26 and A5",
+        "steps": [
+          {
+            "instruction": "Head north on Rue de Mars toward Rue de la Grosse Écritoire",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Pl. de la République",
+            "distance": "73 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Slight left onto Pl. de la République/D944",
+            "distance": "91 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Bd Joffre (signs for A4/A26/A34)",
+            "distance": "0.6 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Bd Louis Roederer",
+            "distance": "0.4 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Keep left to stay on Bd Louis Roederer",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Slight left onto the ramp to A4/E17/E50/Metz/Nancy/Châlons en Ch../Épernay/Troyes/Strasbourg",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 1st exit onto the A344 ramp",
+            "distance": "0.5 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Merge onto A344",
+            "distance": "4.2 km",
+            "duration": "3 mins"
+          },
+          {
+            "instruction": "Continue onto A344Toll road",
+            "distance": "0.9 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto A34Toll road",
+            "distance": "1.5 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Take the exit onto A4/E17/E50 toward Lyon/Troyes/Strasbourg/Metz-Nancy/Châlons-en-Ch.Toll road",
+            "distance": "23.5 km",
+            "duration": "13 mins"
+          },
+          {
+            "instruction": "Take the A26 exit toward E50/Lyon/Troyes/Châlons en Ch.- Rive GaucheToll road",
+            "distance": "0.7 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto A26Toll road",
+            "distance": "95.6 km",
+            "duration": "52 mins"
+          },
+          {
+            "instruction": "Take the exit onto A5/E17 toward Mulhouse/Lyon/Dijon/ChaumontToll road",
+            "distance": "93.1 km",
+            "duration": "51 mins"
+          },
+          {
+            "instruction": "Continue onto A31/E17Toll road",
+            "distance": "65.5 km",
+            "duration": "37 mins"
+          },
+          {
+            "instruction": "Take exit 4 toward Dijon-Centre/St Apollinaire/Arc s/ TilleToll road",
+            "distance": "1.0 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 3rd exit onto M700 heading to Dijon",
+            "distance": "7.0 km",
+            "duration": "5 mins"
+          },
+          {
+            "instruction": "At the roundabout, take the 3rd exit onto Rue Jean Moulin",
+            "distance": "0.4 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 2nd exit and stay on Rue Jean Moulin",
+            "distance": "0.5 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Rdpt du 8 mai 1945",
+            "distance": "23 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left to stay on Rdpt du 8 mai 1945",
+            "distance": "28 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left to stay on Rdpt du 8 mai 1945",
+            "distance": "68 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue straight onto Av. Raymond Poincaré/D70Continue to follow D70",
+            "distance": "1.4 km",
+            "duration": "4 mins"
+          },
+          {
+            "instruction": "At the roundabout, take the 2nd exit onto Bd de la Marne",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          }
+        ],
+        "notes": "",
+        "addedAt": "2026-05-03T18:12:05.682Z",
+        "mapsProvider": "google"
+      }
     ]
   },
   "routes": {},
