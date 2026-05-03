@@ -8,7 +8,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260918
 DTEND;VALUE=DATE:20260919
 SUMMARY:Day 1: Fly to Santa Barbara
-DESCRIPTION:\nHighlights:\n• Get rental car\n• Check into hotel\n• Shopping for dorm room?\n• Dinner\n\nNote: TODO: Get airfare (round trip for 2\, one-way for Hudson!)\nTODO: Reserve rental car (big SUV)\nTodo: Get hotel\n
+DESCRIPTION:\nHighlights:\n• Get rental car\n• Check into hotel\n• Shopping for dorm room?\n• Dinner\n\nNote: TODO: Get airfare (round trip for 2\, one-way for Hudson!)\nTODO: Reserve rental car (big SUV)\nTodo: Get hotel\n\n\nFlights:\n✈ aa2763: CLT → BDL · 644 mi
 URL:https://troyh.github.io/TravelItinerary/?i=it-5afa99fe&day=1
 UID:day-1-20260918@travelitinerary
 END:VEVENT
