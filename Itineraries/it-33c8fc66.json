@@ -327,7 +327,265 @@
       }
     ]
   },
-  "directions": {},
+  "directions": {
+    "1": [
+      {
+        "id": "d988d7a9-d609-457f-a3af-0d50e1233d08",
+        "origin": {
+          "name": "London",
+          "placeId": "ChIJdd4hrwug2EcRmSrV3Vo6llI"
+        },
+        "destination": {
+          "name": "Calais",
+          "placeId": "ChIJY-Px13U_3EcR9HnSjODZvqw"
+        },
+        "travelMode": "DRIVING",
+        "distance": "176 km",
+        "duration": "2 hours 52 mins",
+        "summary": "M20 and Channel Tunnel",
+        "steps": [
+          {
+            "instruction": "Head west toward Whitehall/A3212",
+            "distance": "0.1 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Exit the roundabout onto Northumberland AveLeaving toll zoneEntering toll zone",
+            "distance": "0.4 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Turn left onto Victoria Embankment/A3211Continue to follow A3211",
+            "distance": "3.2 km",
+            "duration": "10 mins"
+          },
+          {
+            "instruction": "Continue onto Byward St/A100Continue to follow A100Leaving toll zone in 400m at Minories/A1211",
+            "distance": "0.5 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "A100 turns slightly right and becomes E Smithfield/A1203Continue to follow A1203",
+            "distance": "4.1 km",
+            "duration": "9 mins"
+          },
+          {
+            "instruction": "Continue onto A1261",
+            "distance": "0.6 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Keep right to continue on Aspen Way/A1261",
+            "distance": "0.7 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Slight left onto the ramp to Silvertown Tunl/A1026/City Airport/ExCel/A1020",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 4th exit onto Lower Lea Crossing/A1026",
+            "distance": "0.9 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Slight right onto Silvertown Tunnel/A1026Toll road",
+            "distance": "1.9 km",
+            "duration": "3 mins"
+          },
+          {
+            "instruction": "Merge onto Blackwall Tunnel Southern Approach/A102",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Keep right to stay on Blackwall Tunnel Southern Approach/A102",
+            "distance": "2.3 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Continue straight to stay on Blackwall Tunnel Southern Approach/A102",
+            "distance": "0.7 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto A2",
+            "distance": "31.4 km",
+            "duration": "22 mins"
+          },
+          {
+            "instruction": "Continue onto M2 (signs for Dover/Channel Tunl/Canterbury/Chatham)",
+            "distance": "8.7 km",
+            "duration": "5 mins"
+          },
+          {
+            "instruction": "At junction 3, take the A229 exit to Maidstone/Chatham/M20/Channel Tunl",
+            "distance": "0.6 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At Taddington Roundabout, take the 3rd exit onto A229",
+            "distance": "0.6 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "At Lord Lees Roundabout, take the 1st exit onto the A229 ramp to Channel Tunl/M20/Maidstone",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Merge onto A229",
+            "distance": "2.3 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Keep right to stay on A229",
+            "distance": "1.0 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Take the ramp to Ashford/Dover",
+            "distance": "1.6 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Merge onto M20",
+            "distance": "47.2 km",
+            "duration": "28 mins"
+          },
+          {
+            "instruction": "At junction 11A, exit toward Channel Tunnel",
+            "distance": "0.4 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Take the ramp to Vehicle Departure Rd",
+            "distance": "60 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Keep left to continue toward Vehicle Departure Rd",
+            "distance": "36 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Slight right onto the ramp to Vehicle Departure Rd",
+            "distance": "64 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Take the ramp to Vehicle Departure Rd",
+            "distance": "1.2 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Continue onto Vehicle Departure Rd",
+            "distance": "60 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue straight to stay on Vehicle Departure Rd",
+            "distance": "0.2 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Turn right to stay on Vehicle Departure Rd",
+            "distance": "1.4 km",
+            "duration": "6 mins"
+          },
+          {
+            "instruction": "Turn left",
+            "distance": "0.1 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Slight right",
+            "distance": "29 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Take the Channel Tunnel train to CoquellesEntering France",
+            "distance": "54.6 km",
+            "duration": "56 mins"
+          },
+          {
+            "instruction": "Sharp right",
+            "distance": "0.1 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right",
+            "distance": "1.1 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Av. de France",
+            "distance": "0.8 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Slight right to merge onto A16",
+            "distance": "3.1 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Take exit 44 toward Calais/St Pierre",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto D245",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 1st exit onto Rue Gutenberg",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 2nd exit and stay on Rue Gutenberg",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 2nd exit onto Rue Copernic",
+            "distance": "0.4 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Rue Masséna",
+            "distance": "0.1 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Rue de la Vendée",
+            "distance": "0.4 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Quai du Commerce",
+            "distance": "0.5 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Pont de Vic",
+            "distance": "34 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 3rd exit onto Rue Descartes",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          }
+        ],
+        "notes": "",
+        "addedAt": "2026-05-03T17:16:39.543Z",
+        "mapsProvider": "google"
+      }
+    ]
+  },
   "routes": {},
   "flights": {},
   "rentalCars": {},
