@@ -47,20 +47,7 @@
   "directions": {},
   "routes": {},
   "flights": {
-    "1": [
-      {
-        "id": "d542be6e-5ec4-483f-8e6e-54d5dccd1708",
-        "flightNumber": "aa2763",
-        "departure": "CLT",
-        "arrival": "BDL",
-        "departureName": "Charlotte",
-        "arrivalName": "Hartford",
-        "miles": 644,
-        "confirmation": "",
-        "notes": "",
-        "addedAt": "2026-05-03T00:25:52.534Z"
-      }
-    ]
+    "1": []
   },
   "highlights": {
     "1": [
