@@ -1157,6 +1157,218 @@
         "addedAt": "2026-05-03T18:12:57.308Z",
         "mapsProvider": "google"
       }
+    ],
+    "6": [
+      {
+        "id": "5598443b-1b8f-495c-b6d8-f5f8be15b3f8",
+        "origin": {
+          "name": "Avignon",
+          "placeId": "ChIJB528OYfrtRIRNnsd-m6bQuY"
+        },
+        "destination": {
+          "name": "Antibes",
+          "placeId": "ChIJqZFankXVzRIRsJ-X_aUZCAQ"
+        },
+        "travelMode": "DRIVING",
+        "distance": "246 km",
+        "duration": "2 hours 35 mins",
+        "summary": "A8",
+        "steps": [
+          {
+            "instruction": "Head west on Rue Saint-Agricol toward Rue Félicien David",
+            "distance": "9 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Rue Félicien David",
+            "distance": "0.1 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Rue Félicien David turns right and becomes Rue Racine",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Rue Saint-Etienne",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Rue Rem du Rhône",
+            "distance": "83 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Prte de l'Oulle",
+            "distance": "12 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Sharp right onto Bd du Rhône",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Bd du Rhône turns slightly right and becomes Bd du Rhône",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Bd de la Ligne",
+            "distance": "0.5 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Bd Saint-Lazare",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Keep right to continue on Route Touristique du Dr Pons/D225",
+            "distance": "2.8 km",
+            "duration": "3 mins"
+          },
+          {
+            "instruction": "Merge onto D907",
+            "distance": "1.8 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto D225",
+            "distance": "2.3 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Take the exit toward Valence/Marseille/Centre Commercial entrèe 1 et 2",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 1st exit onto the A7 ramp to Lyon/Valence/Orange/Cavaillon/MarseilleToll road",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Slight right to merge onto A7/E714 toward Marseille/Aix en PCEToll road",
+            "distance": "58.1 km",
+            "duration": "32 mins"
+          },
+          {
+            "instruction": "Slight left onto A8/E80 (signs for Aix-Ouest/Aix-en-Provence/Toulon/Nice)Toll road",
+            "distance": "171 km",
+            "duration": "1 hour 37 mins"
+          },
+          {
+            "instruction": "Take exit 44 toward Antibes/Vallauris/Sophia AntipolisToll road",
+            "distance": "0.5 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Take the ramp to Nice/Antibens/Juan-les-Pins/Biot/MarinelandToll road",
+            "distance": "81 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 4th exit onto the D35 ramp to Nice/Antibes/Juan les Pins/Biot/Marineland/Centre d'Affaires/Espace Commercial",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Merge onto Rte de Grasse/D35",
+            "distance": "0.5 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Keep right to stay on Rte de Grasse/D35",
+            "distance": "0.4 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At Rdpt Weisweiller, take the 2nd exit and stay on Rte de Grasse/D35",
+            "distance": "0.5 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At Rdpt de la Croix-Rouge, take the 2nd exit onto D35BIS heading to Cannes/Juan-les-Pins",
+            "distance": "1.2 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "At Rond-Point de la Chapelle St Jean, take the 2nd exit and stay on D35BISGo through 1 roundabout",
+            "distance": "0.9 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At Rdpt des Eucalyptus, take the 2nd exit onto D6007/D6107",
+            "distance": "2.1 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Take the exit toward Antibes-Centre",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Av. du Châtaignier",
+            "distance": "83 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At Rdpt des chataigniers, continue straight onto Av. Aristide Briand",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Merge onto Rue Directeur Chaudon",
+            "distance": "91 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left to stay on Rue Directeur Chaudon",
+            "distance": "20 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Bd Gustave Chancel",
+            "distance": "5 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Bd Maréchal Foch",
+            "distance": "0.1 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Av. Niquet",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Bd Albert 1er",
+            "distance": "0.1 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Av. Meissonnier",
+            "distance": "0.1 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue straight onto Rue Général Vandenberg",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Rue Paul Bourgarel",
+            "distance": "64 m",
+            "duration": "1 min"
+          }
+        ],
+        "notes": "",
+        "addedAt": "2026-05-03T18:13:36.600Z",
+        "mapsProvider": "google"
+      }
     ]
   },
   "routes": {},
