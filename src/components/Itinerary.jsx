@@ -6,6 +6,7 @@ import DayDirections from "./DayDirections.jsx";
 import DayRoute from "./DayRoute.jsx";
 import DayFlights from "./DayFlights.jsx";
 import DayRentalCar from "./DayRentalCar.jsx";
+import ClaudePrompt from "./ClaudePrompt.jsx";
 import Settings from "./Settings.jsx";
 import { loadFromGitHub, saveToGitHub, deleteFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import ItineraryPicker from "./ItineraryPicker.jsx";
@@ -489,6 +490,56 @@ export default function Itinerary() {
         : d
     ));
     setEditingCoreDay(null);
+  }
+
+  function applyClaudeFullItinerary(data) {
+    if (data.title)     setTitle(data.title);
+    if (data.subtitle)  setSubtitle(data.subtitle);
+    if (data.startDate) setStartDate(data.startDate);
+    if (data.days?.length) {
+      setDays(data.days.map(d => ({
+        day: d.day, leg: d.leg ?? "", overnight: d.overnight ?? "",
+        nm: 0, hrs: 0, highlights: [], tags: [], note: "",
+      })));
+    }
+    if (data.highlights) {
+      setCustomHighlights(
+        Object.fromEntries(Object.entries(data.highlights).map(([k, v]) => [Number(k), v]))
+      );
+    }
+    if (data.places) {
+      setSavedPlaces(
+        Object.fromEntries(Object.entries(data.places).map(([k, arr]) => [
+          Number(k),
+          arr.map(p => ({
+            id: crypto.randomUUID(), name: p.name ?? "", address: "", phone: "",
+            website: "", placeId: "", category: p.category ?? "activity",
+            notes: p.notes ?? "", addedAt: new Date().toISOString(), mapsProvider: null,
+          })),
+        ]))
+      );
+    }
+    dirtyRef.current = true;
+    if (data.days?.length) setOpenDay(1);
+  }
+
+  function applyClaudeDaySuggestions(dayNum, data) {
+    if (data.places?.length) {
+      setSavedPlaces(prev => ({
+        ...prev,
+        [dayNum]: [...(prev[dayNum] ?? []), ...data.places.map(p => ({
+          id: crypto.randomUUID(), name: p.name ?? "", address: "", phone: "",
+          website: "", placeId: "", category: p.category ?? "activity",
+          notes: p.notes ?? "", addedAt: new Date().toISOString(), mapsProvider: null,
+        }))],
+      }));
+    }
+    if (data.highlights?.length) {
+      setCustomHighlights(prev => ({
+        ...prev,
+        [dayNum]: [...(prev[dayNum] ?? []), ...data.highlights],
+      }));
+    }
   }
 
   function applyData(data) {
@@ -1374,14 +1425,28 @@ export default function Itinerary() {
 
         {/* ── ITINERARY TAB ── */}
         {activeTab === "itinerary" && days.length === 0 && (
-          <div style={{ textAlign:"center", padding:"3rem 1rem", fontFamily:"sans-serif" }}>
-            <div style={{ color:"#4e7a9e", marginBottom:"1.25rem", fontSize:".9rem" }}>No itinerary yet.</div>
-            <button onClick={() => { setDays(initialDays); setOpenDay(1); }}
-              style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
-                borderRadius:6, padding:".55rem 1.5rem", fontSize:".82rem",
-                fontFamily:"sans-serif", cursor:"pointer" }}>
-              Load sample itinerary
-            </button>
+          <div style={{ padding: "2rem 1rem", fontFamily: "sans-serif" }}>
+            {settings.anthropicKey ? (
+              <ClaudePrompt
+                mode="full"
+                onApplyFull={applyClaudeFullItinerary}
+                apiKey={settings.anthropicKey}
+                model={settings.claudeModel ?? "claude-sonnet-4-6"}
+              />
+            ) : (
+              <div style={{ textAlign: "center", color: "#4e7a9e", marginBottom: "1.25rem",
+                fontSize: ".9rem" }}>
+                No itinerary yet.
+              </div>
+            )}
+            <div style={{ textAlign: "center", marginTop: "1.25rem" }}>
+              <button onClick={() => { setDays(initialDays); setOpenDay(1); }}
+                style={{ background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
+                  borderRadius: 6, padding: ".55rem 1.5rem", fontSize: ".82rem",
+                  fontFamily: "sans-serif", cursor: "pointer" }}>
+                Load sample itinerary
+              </button>
+            </div>
           </div>
         )}
         {activeTab === "itinerary" && (<>
@@ -1657,6 +1722,19 @@ export default function Itinerary() {
                     onDelete={id => deleteRentalCar(d.day, id)}
                     readOnly={readOnly}
                   />
+
+                  {/* Claude suggestions */}
+                  {settings.anthropicKey && !readOnly && (
+                    <ClaudePrompt
+                      mode="day"
+                      dayNum={d.day}
+                      dayContext={{ leg: d.leg, overnight: d.overnight }}
+                      itineraryContext={{ title, startDate, days }}
+                      onApplyDay={applyClaudeDaySuggestions}
+                      apiKey={settings.anthropicKey}
+                      model={settings.claudeModel ?? "claude-sonnet-4-6"}
+                    />
+                  )}
 
                   {/* Tide warning */}
                   {d.tideWarning && d.tideNote && (

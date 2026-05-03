@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { testConnection, inferRepo } from "../lib/github.js";
+import { CLAUDE_MODELS } from "../lib/claude.js";
 
 const S = {
   label: { fontSize: ".62rem", color: "#6b8fa8", letterSpacing: ".08em",
@@ -101,7 +102,10 @@ export default function Settings({ settings, onSave, onClose }) {
     googleMapsKey:    settings.googleMapsKey    ?? "",
     appleMapKitToken: settings.appleMapKitToken ?? "",
     aeroDataBoxKey:   settings.aeroDataBoxKey   ?? "",
+    anthropicKey:     settings.anthropicKey     ?? "",
+    claudeModel:      settings.claudeModel      ?? "claude-sonnet-4-6",
   });
+  const [showAnthropicKey, setShowAnthropicKey] = useState(false);
   const set = (k, v) => setDraft(p => ({ ...p, [k]: v }));
 
   // ── Databases draft ──────────────────────────────────────────────────────
@@ -200,6 +204,43 @@ export default function Settings({ settings, onSave, onClose }) {
               From rapidapi.com → AeroDataBox. Enables automatic flight lookup by flight number.
             </div>
           </div>
+
+          {/* Anthropic / Claude */}
+          <div>
+            <div style={S.label}>
+              Anthropic API Key <span style={{ color: "#3d5060", fontStyle: "italic" }}>(optional)</span>
+            </div>
+            <div style={{ display: "flex", gap: ".4rem" }}>
+              <input value={draft.anthropicKey}
+                onChange={e => set("anthropicKey", e.target.value)}
+                type={showAnthropicKey ? "text" : "password"}
+                placeholder="sk-ant-…"
+                style={{ ...S.input, flex: 1 }} />
+              <button onClick={() => setShowAnthropicKey(p => !p)}
+                style={{ ...S.btnGhost, padding: ".35rem .6rem", flexShrink: 0 }}>
+                {showAnthropicKey ? "Hide" : "Show"}
+              </button>
+            </div>
+            <div style={{ fontSize: ".68rem", color: "#3d5060", fontFamily: "sans-serif",
+              fontStyle: "italic", marginTop: 4 }}>
+              From console.anthropic.com. Enables Ask Claude suggestions.
+            </div>
+          </div>
+
+          {/* Claude model */}
+          {draft.anthropicKey && (
+            <div>
+              <div style={S.label}>Claude Model</div>
+              <div style={{ display: "flex", gap: ".4rem", marginTop: 3 }}>
+                {CLAUDE_MODELS.map(m => (
+                  <button key={m.id} onClick={() => set("claudeModel", m.id)}
+                    style={draft.claudeModel === m.id ? S.btnPrimary : S.btnGhost}>
+                    {m.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
