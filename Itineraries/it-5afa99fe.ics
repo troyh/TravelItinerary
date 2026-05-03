@@ -8,7 +8,8 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260918
 DTEND;VALUE=DATE:20260919
 SUMMARY:Day 1: Fly to Santa Barbara
-DESCRIPTION:\nHighlights:\n• Get rental car\n• Check into hotel\n• Shopping for dorm room?\n• Dinner\n• Book a spa treatment at sunset to recover from travel\n• Dinner reservations at The Biltmore or Rosewood restaurants for arrival night\n• Request ocean-view rooms for morning views before departure to Hudson River\n\nNote: TODO: Get SEA -> SBA airfare (round trip for 2\, one-way for Hudson!)\nTODO: Reserve rental car (big SUV)\nTodo: Get hotel\n
+LOCATION:Santa Barbara
+DESCRIPTION:Overnight: Santa Barbara\n\nHighlights:\n• Get rental car\n• Check into hotel\n• Shopping for dorm room?\n• Dinner\n• Book a spa treatment at sunset to recover from travel\n• Dinner reservations at The Biltmore or Rosewood restaurants for arrival night\n• Request ocean-view rooms for morning views before departure to Hudson River\n\nNote: TODO: Get SEA -> SBA airfare (round trip for 2\, one-way for Hudson!)\nTODO: Reserve rental car (big SUV)\nTodo: Get hotel\n
 URL:https://troyh.github.io/TravelItinerary/?i=it-5afa99fe&day=1
 UID:day-1-20260918@travelitinerary
 END:VEVENT
