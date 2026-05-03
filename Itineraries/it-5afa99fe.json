@@ -48,15 +48,15 @@
   "routes": {},
   "flights": {},
   "rentalCars": {
-    "2": [
+    "3": [
       {
-        "id": "fbeab3d1-e28a-4299-b99c-9b9bf3b032dc",
+        "id": "4cd684f7-1bdb-46bc-963c-f09f850a8d66",
         "agency": "Hertz",
-        "confirmation": "sadflkjadlkf",
-        "pickupLocation": "Airport",
-        "dropoffLocation": "Airport",
+        "confirmation": "aslkdjfakl;jsdfklajsd;flkjs",
+        "pickupLocation": "",
+        "dropoffLocation": "",
         "notes": "",
-        "addedAt": "2026-05-03T01:08:04.474Z"
+        "addedAt": "2026-05-03T01:08:50.229Z"
       }
     ]
   },
