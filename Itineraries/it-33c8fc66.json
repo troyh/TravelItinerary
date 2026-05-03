@@ -1369,6 +1369,168 @@
         "addedAt": "2026-05-03T18:13:36.600Z",
         "mapsProvider": "google"
       }
+    ],
+    "7": [
+      {
+        "id": "29b324c7-84a1-460b-817e-38ed86808dff",
+        "origin": {
+          "name": "Antibes",
+          "placeId": "ChIJqZFankXVzRIRsJ-X_aUZCAQ"
+        },
+        "destination": {
+          "name": "Menton",
+          "placeId": "ChIJTwLKxL7rzRIRwJqX_aUZCAQ"
+        },
+        "travelMode": "DRIVING",
+        "distance": "58.1 km",
+        "duration": "57 mins",
+        "summary": "A8",
+        "steps": [
+          {
+            "instruction": "Head south on Rue Paul Bourgarel toward Rue Général Vandenberg",
+            "distance": "64 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Rue Général Vandenberg",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Av. 24 Août",
+            "distance": "71 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Av. Guillabert",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Bd Maréchal Foch",
+            "distance": "89 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Bd du Président Wilson",
+            "distance": "67 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Av. des Frères Olivier",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Av. Aristide Briand",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At Rdpt des chataigniers, continue straight onto Av. du Châtaignier",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Slight left toward D6007/D6107",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Merge onto D6007/D6107",
+            "distance": "1.9 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "At Rdpt des Eucalyptus, take the 1st exit onto Chem. des Eucalyptus/D35BIS",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At Rdpt Gilbert Auvergne, take the 1st exit and stay on Chem. des Eucalyptus/D35BISGo through 1 roundabout",
+            "distance": "1.8 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "At Rdpt de la Croix-Rouge, take the 2nd exit onto Rte de Grasse/D35 heading to A 8/Cannes/Nice/Aéroport/Grasse/Vallauris/Biot/Valbonne",
+            "distance": "0.5 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At Rdpt Weisweiller, take the 2nd exit and stay on Rte de Grasse/D35",
+            "distance": "83 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Slight right onto the ramp to Nice/Super-Antibes/Les Trois Moulins",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At Rdpt de Provence, take the 2nd exit onto D535",
+            "distance": "80 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Merge onto A8 via the ramp to NiceToll road",
+            "distance": "47.5 km",
+            "duration": "33 mins"
+          },
+          {
+            "instruction": "Take exit 59 toward Menton/Sospel",
+            "distance": "0.1 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto D22A",
+            "distance": "0.5 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right to stay on D22A",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 1st exit onto Rte de Sospel/D2566 heading to Menton",
+            "distance": "0.7 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 1st exit and stay on Rte de Sospel/D2566Continue to follow D2566",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 2nd exit and stay on D2566",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 2nd exit and stay on D2566Go through 1 roundabout",
+            "distance": "1.0 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "At the roundabout, take the 1st exit onto Av. de Sospel/D2566Go through 2 roundabouts",
+            "distance": "1.2 km",
+            "duration": "4 mins"
+          },
+          {
+            "instruction": "At the roundabout, take the 2nd exit onto D6007",
+            "distance": "65 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Av. Boyer",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          }
+        ],
+        "notes": "",
+        "addedAt": "2026-05-03T18:14:00.528Z",
+        "mapsProvider": "google"
+      }
     ]
   },
   "routes": {},
