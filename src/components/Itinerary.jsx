@@ -7,6 +7,7 @@ import DayRoute from "./DayRoute.jsx";
 import DayFlights from "./DayFlights.jsx";
 import DayRentalCar from "./DayRentalCar.jsx";
 import ClaudePrompt from "./ClaudePrompt.jsx";
+import ItineraryMap from "./ItineraryMap.jsx";
 import Settings from "./Settings.jsx";
 import { loadFromGitHub, saveToGitHub, deleteFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import ItineraryPicker from "./ItineraryPicker.jsx";
@@ -1221,6 +1222,9 @@ export default function Itinerary() {
               )}
             </>
           )}
+
+          {/* Overview map */}
+          <ItineraryMap days={days} savedFlights={savedFlights} savedDirections={savedDirections} />
 
           {/* Stats */}
           <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", marginBottom: "1.25rem" }}>

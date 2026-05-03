@@ -72,6 +72,8 @@ export function appleFetchPlaceDetails(mk, autocompleteResult) {
         website:  "",
         placeId:  `ll:${lat},${lng}`,
         category: detectAppleCategory(place.pointOfInterestCategory),
+        lat,
+        lng,
       });
     });
   });
@@ -120,9 +122,13 @@ export async function appleFetchDirections(mk, originData, destData, travelMode)
       }
       const route = data.routes[0];
       resolve({
-        distance: formatDistance(route.distance),
-        duration: formatDuration(route.expectedTravelTime),
-        summary:  "",
+        distance:       formatDistance(route.distance),
+        duration:       formatDuration(route.expectedTravelTime),
+        summary:        "",
+        originLat:      originCoord.latitude,
+        originLng:      originCoord.longitude,
+        destinationLat: destCoord.latitude,
+        destinationLng: destCoord.longitude,
         steps: (route.steps ?? []).map(s => ({
           instruction: s.instructions ?? "",
           distance:    formatDistance(s.distance),

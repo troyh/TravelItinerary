@@ -176,6 +176,8 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
           website: "",
           placeId: details.placeId,
           category: details.category,
+          lat: details.lat ?? null,
+          lng: details.lng ?? null,
           notes: "",
           addedAt: new Date().toISOString(),
           mapsProvider: "apple",
@@ -183,7 +185,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
       } else {
         const place = pred._data.placePrediction.toPlace();
         await place.fetchFields({
-          fields: ["displayName", "formattedAddress", "nationalPhoneNumber", "websiteURI", "id", "types"],
+          fields: ["displayName", "formattedAddress", "nationalPhoneNumber", "websiteURI", "id", "types", "location"],
         });
         sessionTokenRef.current = null;
         setLoadingPredictions(false);
@@ -195,6 +197,8 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
           website: place.websiteURI ?? "",
           placeId: place.id ?? "",
           category: detectCategory(place.types ?? []),
+          lat: place.location?.lat() ?? null,
+          lng: place.location?.lng() ?? null,
           notes: "",
           addedAt: new Date().toISOString(),
           mapsProvider: "google",

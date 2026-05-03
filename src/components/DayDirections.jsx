@@ -210,20 +210,26 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
           destination: { placeId: destination._data?.placePrediction?.placeId },
           travelMode:  TravelMode[travelMode],
         });
-        const leg = result.routes[0].legs[0];
+        const leg   = result.routes[0].legs[0];
+        const route = result.routes[0];
         onAdd({
-          id:          crypto.randomUUID(),
-          origin:      { name: origin.name, placeId: origin._data?.placePrediction?.placeId },
-          destination: { name: destination.name, placeId: destination._data?.placePrediction?.placeId },
+          id:             crypto.randomUUID(),
+          origin:         { name: origin.name, placeId: origin._data?.placePrediction?.placeId },
+          destination:    { name: destination.name, placeId: destination._data?.placePrediction?.placeId },
           travelMode,
-          distance:    leg.distance.text,
-          duration:    leg.duration.text,
-          summary:     result.routes[0].summary || "",
-          steps:       leg.steps.map(s => ({
-                         instruction: stripHtml(s.instructions),
-                         distance:    s.distance?.text ?? "",
-                         duration:    s.duration?.text ?? "",
-                       })),
+          distance:       leg.distance.text,
+          duration:       leg.duration.text,
+          summary:        route.summary || "",
+          originLat:      leg.start_location.lat(),
+          originLng:      leg.start_location.lng(),
+          destinationLat: leg.end_location.lat(),
+          destinationLng: leg.end_location.lng(),
+          overviewPolyline: route.overview_polyline?.points ?? null,
+          steps:          leg.steps.map(s => ({
+                            instruction: stripHtml(s.instructions),
+                            distance:    s.distance?.text ?? "",
+                            duration:    s.duration?.text ?? "",
+                          })),
           notes:        "",
           addedAt:      new Date().toISOString(),
           mapsProvider: "google",

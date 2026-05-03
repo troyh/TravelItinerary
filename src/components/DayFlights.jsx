@@ -19,7 +19,8 @@ const S = {
 };
 
 const BLANK = { flightNumber: "", departure: "", arrival: "", departureName: "", arrivalName: "",
-                departureTime: "", arrivalTime: "", airline: "", aircraft: "", status: "", miles: "", confirmation: "" };
+                departureTime: "", arrivalTime: "", airline: "", aircraft: "", status: "", miles: "", confirmation: "",
+                departureLat: "", departureLng: "", arrivalLat: "", arrivalLng: "" };
 
 function parseLocalTime(localStr) {
   // Format: "2026-06-01 07:00-07:00" → "7:00 AM"
@@ -103,9 +104,14 @@ export default function DayFlights({
       const airline       = flight.airline?.name ?? "";
       const aircraft      = flight.aircraft?.model ?? "";
       const status        = flight.status ?? "";
+      const departureLat = dep?.location?.lat ?? "";
+      const departureLng = dep?.location?.lon ?? "";
+      const arrivalLat   = arr?.location?.lat ?? "";
+      const arrivalLng   = arr?.location?.lon ?? "";
       setDraft(p => ({ ...p, departure: depIata, arrival: arrIata,
         departureName: depName, arrivalName: arrName,
-        departureTime, arrivalTime, airline, aircraft, status, miles }));
+        departureTime, arrivalTime, airline, aircraft, status, miles,
+        departureLat, departureLng, arrivalLat, arrivalLng }));
     } catch {
       setLookupErr("Lookup failed — check your API key.");
     } finally {
@@ -129,7 +135,11 @@ export default function DayFlights({
       aircraft:       draft.aircraft.trim(),
       status:         draft.status.trim(),
       miles:          isNaN(miles) ? null : miles,
-      confirmation: draft.confirmation.trim(),
+      confirmation:  draft.confirmation.trim(),
+      departureLat:  parseFloat(draft.departureLat) || null,
+      departureLng:  parseFloat(draft.departureLng) || null,
+      arrivalLat:    parseFloat(draft.arrivalLat)   || null,
+      arrivalLng:    parseFloat(draft.arrivalLng)   || null,
       notes:        "",
       addedAt:      new Date().toISOString(),
     });
