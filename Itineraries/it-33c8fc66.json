@@ -86,18 +86,6 @@
         "mapsProvider": null
       },
       {
-        "id": "73def3d6-3c9c-447b-82fb-226eb90c8589",
-        "name": "Hôtel Meurice",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "accommodation",
-        "notes": "Elegant 4-star hotel overlooking the English Channel with fine dining restaurant.",
-        "addedAt": "2026-05-03T17:14:37.552Z",
-        "mapsProvider": null
-      },
-      {
         "id": "8740dfdf-382a-45ba-bdad-d9f0699e703b",
         "name": "Hôtel Meurice de Calais",
         "address": "5-7 Rue Edmond Roche, 62100 Calais, France",
