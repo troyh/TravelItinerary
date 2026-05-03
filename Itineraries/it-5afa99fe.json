@@ -43,7 +43,58 @@
       "day": 3
     }
   ],
-  "places": {},
+  "places": {
+    "1": [
+      {
+        "id": "e4dde30d-626f-4968-8000-d50a9bc5bc2b",
+        "name": "Rosewood Miramar Beach",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "accommodation",
+        "notes": "Ultra-luxury beachfront resort with private beach access, spa, and fine dining. Located west of downtown with stunning coastal views.",
+        "addedAt": "2026-05-03T20:36:07.599Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "3c7cb364-d820-4f74-b86b-a8f36e73ed68",
+        "name": "Four Seasons Resort The Biltmore Santa Barbara",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "accommodation",
+        "notes": "Historic oceanfront luxury property with lush gardens, multiple pools, and Michelin-starred dining options in Montecito.",
+        "addedAt": "2026-05-03T20:36:07.599Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "58f2533e-0d35-423b-9c36-26d517a5e2c0",
+        "name": "Santa Barbara Hillside House",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "accommodation",
+        "notes": "Intimate luxury inn with contemporary design, ocean views, and personalized service near State Street shopping and dining.",
+        "addedAt": "2026-05-03T20:36:07.599Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "1a66231c-246a-4d59-8cb2-26e0a67d95b8",
+        "name": "Belmond El Encanto",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "accommodation",
+        "notes": "Elegant hillside retreat with gardens, spa, and fine dining overlooking the city and Pacific Ocean.",
+        "addedAt": "2026-05-03T20:36:07.599Z",
+        "mapsProvider": null
+      }
+    ]
+  },
   "directions": {},
   "routes": {},
   "flights": {},
@@ -65,7 +116,10 @@
       "Get rental car",
       "Check into hotel",
       "Shopping for dorm room?",
-      "Dinner"
+      "Dinner",
+      "Book a spa treatment at sunset to recover from travel",
+      "Dinner reservations at The Biltmore or Rosewood restaurants for arrival night",
+      "Request ocean-view rooms for morning views before departure to Hudson River"
     ],
     "2": [
       "Drive to campus",
