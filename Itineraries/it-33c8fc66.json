@@ -1005,6 +1005,158 @@
         "addedAt": "2026-05-03T18:12:41.967Z",
         "mapsProvider": "google"
       }
+    ],
+    "5": [
+      {
+        "id": "621e1711-4817-49d0-9018-7576f57bf709",
+        "origin": {
+          "name": "Lyon",
+          "placeId": "ChIJl4foalHq9EcR8CG75CqrCAQ"
+        },
+        "destination": {
+          "name": "Avignon",
+          "placeId": "ChIJB528OYfrtRIRNnsd-m6bQuY"
+        },
+        "travelMode": "DRIVING",
+        "distance": "228 km",
+        "duration": "2 hours 30 mins",
+        "summary": "A7",
+        "steps": [
+          {
+            "instruction": "Head west on Rue de la Poulaillerie toward Rue du Président Édouard Herriot",
+            "distance": "0.1 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Rue du Président Édouard Herriot",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Rue du Bât d'Argent",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Quai Jean Moulin",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Quai Jules Courmont",
+            "distance": "0.5 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Keep left to stay on Quai Jules Courmont",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Quai du Dr Gailleton",
+            "distance": "1.0 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Keep left to stay on Quai du Dr Gailleton",
+            "distance": "48 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Keep left to stay on Quai du Dr Gailleton",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Keep left to stay on Quai du Dr Gailleton",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Merge onto A7Toll road",
+            "distance": "196 km",
+            "duration": "1 hour 53 mins"
+          },
+          {
+            "instruction": "Take exit 21 for A9/E15 toward Barcelone/Toulouse/Montpellier/NîmesToll road",
+            "distance": "1.1 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto A9/E15Toll road",
+            "distance": "12.8 km",
+            "duration": "7 mins"
+          },
+          {
+            "instruction": "Take exit 22-Roquemaure toward Roquemaure/Villeneuve-les-A./Avignon/Z.I. l' Ardoise/MarcouleToll road",
+            "distance": "0.8 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 1st exit onto N580",
+            "distance": "0.4 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto D6580",
+            "distance": "0.5 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 2nd exit and stay on D6580 heading to Avignon/Villeneuve les A./Les Angles/Pujaut",
+            "distance": "1.7 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "At the roundabout, take the 2nd exit and stay on D6580",
+            "distance": "2.5 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "At the roundabout, take the 2nd exit and stay on D6580",
+            "distance": "1.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "At the roundabout, take the 2nd exit and stay on D6580",
+            "distance": "2.2 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "At the roundabout, take the 3rd exit onto N100 heading to A7/Avignon/Aramon/Montpellier",
+            "distance": "4.8 km",
+            "duration": "4 mins"
+          },
+          {
+            "instruction": "Keep left to continue toward Bd Saint-Dominique/N570",
+            "distance": "0.2 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Bd Saint-Dominique/N570Continue to follow N570",
+            "distance": "0.6 km",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Turn left onto Prte de la République",
+            "distance": "42 m",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Cr Jean Jaurès",
+            "distance": "0.3 km",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto Rue de la République",
+            "distance": "0.4 km",
+            "duration": "2 mins"
+          }
+        ],
+        "notes": "",
+        "addedAt": "2026-05-03T18:12:57.308Z",
+        "mapsProvider": "google"
+      }
     ]
   },
   "routes": {},
