@@ -110,7 +110,10 @@ export default function Settings({ settings, onSave, onClose }) {
 
   // ── Databases draft ──────────────────────────────────────────────────────
   const [dbs, setDbs] = useState(() => settings.databases ?? []);
-  const [editingDbId, setEditingDbId] = useState(null); // db id or "new"
+  // Auto-open the add form when there are no databases and we can infer the repo from the URL
+  const [editingDbId, setEditingDbId] = useState(
+    () => (settings.databases ?? []).length === 0 && inferRepo() ? "new" : null
+  );
 
   function saveDb(formData) {
     if (editingDbId === "new") {
@@ -281,7 +284,11 @@ export default function Settings({ settings, onSave, onClose }) {
           ))}
 
           {editingDbId === "new" ? (
-            <DbForm db={null} inferredRepo={inferredRepo}
+            <DbForm
+              db={dbs.length === 0 && inferredRepo
+                ? { label: "Personal", githubRepo: inferredRepo, githubBranch: "data" }
+                : null}
+              inferredRepo={inferredRepo}
               onSave={saveDb} onCancel={() => setEditingDbId(null)} />
           ) : (
             <button onClick={() => setEditingDbId("new")}
