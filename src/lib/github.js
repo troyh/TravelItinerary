@@ -53,8 +53,8 @@ export async function testConnection({ githubToken, githubRepo }) {
 export async function listCommits({ githubToken, githubRepo, githubFile, githubBranch = "main" }, page = 1) {
   const res = await fetch(
     `https://api.github.com/repos/${normalizeRepo(githubRepo)}/commits` +
-    `?path=${encodePath(githubFile)}&sha=${encodeURIComponent(githubBranch)}&per_page=30&page=${page}`,
-    { headers: authHeaders(githubToken) }
+    `?path=${encodePath(githubFile)}&sha=${encodeURIComponent(githubBranch)}&per_page=30&page=${page}&_=${Date.now()}`,
+    { headers: authHeaders(githubToken), cache: "no-store" }
   );
   if (!res.ok) return [];
   const commits = await res.json();
@@ -167,7 +167,9 @@ export async function saveToGitHub(data, { githubToken, githubRepo, githubFile, 
 
     if (res.status === 409) throw new Error("conflict");
     await throwIfNotOk(res, "saveToGitHub");
-    shaByPath.set(shaKey, (await res.json()).content.sha);
+    const json = await res.json();
+    shaByPath.set(shaKey, json.content.sha);
+    return { sha: json.commit.sha, message: json.commit.message, date: json.commit.author.date };
   } finally {
     savingPaths.delete(shaKey);
   }

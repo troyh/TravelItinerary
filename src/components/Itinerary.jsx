@@ -113,6 +113,9 @@ export default function Itinerary() {
   });
   const [showSettings,     setShowSettings]     = useState(false);
   const [showHistory,      setShowHistory]      = useState(false);
+  const [showCommitForm,   setShowCommitForm]   = useState(false);
+  const [commitDraft,      setCommitDraft]      = useState("");
+  const [showCloseWarn,    setShowCloseWarn]    = useState(false);
   const [syncStatus,       setSyncStatus]       = useState("idle");
   const [syncError,        setSyncError]        = useState("");
   const [title,            setTitle]            = useState(() => _db?.title    ?? "");
@@ -147,7 +150,6 @@ export default function Itinerary() {
   const syncTimerRef      = useRef(null);
   const dirtyRef          = useRef(false);
   const skipNextLoadRef   = useRef(false);
-  const saveImmediatelyRef = useRef(false);
 
   const databases     = settings.databases ?? [];
   const currentDb     = databases.find(db => db.id === currentDbId) ?? databases[0] ?? {};
@@ -167,7 +169,7 @@ export default function Itinerary() {
     setEditingCoreDay(null); setConfirmDeleteDay(null);
   }, [openDay]);
 
-  // Single combined save: localStorage immediately + debounced GitHub push
+  // Save to localStorage immediately on every change; GitHub is manual only.
   useEffect(() => {
     if (!currentFile) return;
     const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
@@ -191,30 +193,10 @@ export default function Itinerary() {
         localStorage.setItem("itineraryMetadata", JSON.stringify(meta));
       } catch {}
     }
-    const canSync = ghSettings.githubToken && effectiveRepo &&
-                    currentFile !== "__local__" && dirtyRef.current;
-    dirtyRef.current = true;
-    if (canSync) {
-      clearTimeout(syncTimerRef.current);
-      setSyncStatus("pending");
-      const saveDelay = saveImmediatelyRef.current ? 0 : 2000;
-      saveImmediatelyRef.current = false;
-      syncTimerRef.current = setTimeout(async () => {
-        setSyncStatus("saving");
-        try {
-          await saveToGitHub(data, { ...ghSettings, githubFile: currentFile });
-          const icsContent = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase, savedFlights, savedRentalCars);
-          if (icsContent) {
-            await saveToGitHub(icsContent, { ...ghSettings, githubFile: currentFile.replace(/\.json$/i, ".ics") });
-          }
-          setSyncStatus("saved");
-          setSyncError("");
-        } catch (err) {
-          setSyncStatus(err.message === "conflict" ? "conflict" : "error");
-          setSyncError(err.message);
-        }
-      }, saveDelay);
+    if (dirtyRef.current && ghSettings.githubToken && effectiveRepo && currentFile !== "__local__") {
+      setSyncStatus("unsaved");
     }
+    dirtyRef.current = true;
   }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, savedFlights, savedRentalCars, customHighlights, customNotes, startDate, title, subtitle, itineraryNotes]);
 
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
@@ -795,12 +777,36 @@ export default function Itinerary() {
     URL.revokeObjectURL(url);
   }
 
-  async function handleMilestone(milestoneLabel) {
+  async function handleCommit(message = "") {
+    if (!ghSettings.githubToken || !effectiveRepo || !currentFile || currentFile === "__local__") return;
+    setSyncStatus("saving");
+    setSyncError("");
+    const msg = message.trim() ||
+      `Saved ${new Date().toLocaleString("en-US", { month:"short", day:"numeric", year:"numeric", hour:"numeric", minute:"2-digit" })}`;
     const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
                    flights: savedFlights, rentalCars: savedRentalCars,
                    highlights: customHighlights, notes: customNotes, startDate,
                    title, subtitle, itineraryNotes };
-    await saveToGitHub(data, { ...ghSettings, githubFile: currentFile, message: milestoneLabel });
+    try {
+      await saveToGitHub(data, { ...ghSettings, githubFile: currentFile, message: msg });
+      const icsContent = buildICSContent(days, startDate, title, customHighlights, customNotes,
+        currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase, savedFlights, savedRentalCars);
+      if (icsContent) {
+        await saveToGitHub(icsContent, { ...ghSettings, githubFile: currentFile.replace(/\.json$/i, ".ics") });
+      }
+      setSyncStatus("saved");
+      dirtyRef.current = false;
+      setShowCommitForm(false);
+      setCommitDraft("");
+    } catch (err) {
+      setSyncStatus(err.message === "conflict" ? "conflict" : "error");
+      setSyncError(err.message);
+    }
+  }
+
+  function handleCloseRequest() {
+    if (syncStatus === "unsaved") { setShowCloseWarn(true); return; }
+    handleClose();
   }
 
   async function handleRestore(sha) {
@@ -955,7 +961,7 @@ export default function Itinerary() {
           {/* Subtitle row: back button + file name + sync status + settings gear */}
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:".5rem" }}>
             <div style={{ display:"flex", alignItems:"center", gap:".75rem" }}>
-              <button onClick={handleClose}
+              <button onClick={handleCloseRequest}
                 style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
                   fontSize:".7rem", fontFamily:"sans-serif", padding:0 }}>
                 ← All Itineraries
@@ -974,21 +980,34 @@ export default function Itinerary() {
             <div style={{ display:"flex", alignItems:"center", gap:".75rem" }}>
               {syncStatus !== "idle" && (() => {
                 const map = {
-                  loading: ["Loading…",  "#6b8fa8"],
-                  pending: ["Pending",   "#e8a838"],
-                  saving:  ["Saving…",   "#e8a838"],
-                  saved:   ["● Synced",  "#5cb85c"],
-                  synced:  ["● Synced",  "#5cb85c"],
-                  offline: ["Offline",   "#4e7a9e"],
-                  error:   ["⚠ Error",   "#e87878"],
-                  conflict:["⚠ Conflict","#e87878"],
+                  loading:  ["Loading…",        "#6b8fa8"],
+                  saving:   ["Saving…",          "#e8a838"],
+                  saved:    ["● Synced",         "#5cb85c"],
+                  synced:   ["● Synced",         "#5cb85c"],
+                  unsaved:  ["● Unsaved",        "#e8a838"],
+                  offline:  ["Offline",          "#4e7a9e"],
+                  error:    ["⚠ Error",          "#e87878"],
+                  conflict: ["⚠ Conflict",       "#e87878"],
                 };
                 const [label, color] = map[syncStatus] ?? ["", "#6b8fa8"];
+                const canCommit = ghSettings.githubToken && effectiveRepo && syncStatus !== "saving";
+                const showCommit = ["unsaved", "error", "conflict"].includes(syncStatus) && canCommit;
                 return (
-                  <span style={{ fontSize:".62rem", color, fontFamily:"sans-serif" }}
-                    title={syncError || undefined}>
-                    {label}{syncError && syncStatus === "error" ? ` — ${syncError}` : ""}
-                  </span>
+                  <div style={{ display:"flex", alignItems:"center", gap:".4rem" }}>
+                    <span style={{ fontSize:".62rem", color, fontFamily:"sans-serif" }}
+                      title={syncError || undefined}>
+                      {label}{syncError && syncStatus === "error" ? ` — ${syncError}` : ""}
+                    </span>
+                    {showCommit && (
+                      <button onClick={() => setShowCommitForm(p => !p)}
+                        style={{ background: showCommitForm ? "#1a3352" : "none",
+                          border:"1px solid #2e5070", color:"#c9a84c",
+                          borderRadius:3, padding:".15rem .5rem", fontSize:".62rem",
+                          fontFamily:"sans-serif", cursor:"pointer", whiteSpace:"nowrap" }}>
+                        Commit{showCommitForm ? " ▲" : "…"}
+                      </button>
+                    )}
+                  </div>
                 );
               })()}
               {ghSettings.githubToken && currentFile && currentFile !== "__local__" && (
@@ -1129,9 +1148,88 @@ export default function Itinerary() {
               settings={ghSettings}
               currentFile={currentFile}
               onRestore={handleRestore}
-              onMilestone={handleMilestone}
               onClose={() => setShowHistory(false)}
             />
+          )}
+
+          {/* Commit form */}
+          {showCommitForm && (
+            <div style={{ margin: ".75rem 0 1rem", padding: ".75rem 1rem", background: "#0a1a2a",
+              border: "1px solid #2e5070", borderRadius: 6 }}>
+              <div style={{ fontSize: ".62rem", color: "#c9a84c", letterSpacing: ".1em",
+                textTransform: "uppercase", fontFamily: "sans-serif", marginBottom: ".6rem" }}>
+                Commit to GitHub
+              </div>
+              <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
+                <input
+                  autoFocus
+                  value={commitDraft}
+                  onChange={e => setCommitDraft(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === "Enter") handleCommit(commitDraft);
+                    if (e.key === "Escape") { setShowCommitForm(false); setCommitDraft(""); }
+                  }}
+                  placeholder="Commit message (optional)"
+                  style={{ flex: 1, minWidth: 180, background: "#0d1f33", border: "1px solid #2e5070",
+                    color: "#e8dcc8", borderRadius: 4, padding: ".35rem .65rem",
+                    fontSize: ".82rem", fontFamily: "sans-serif", outline: "none" }}
+                />
+                <button onClick={() => handleCommit(commitDraft)}
+                  disabled={syncStatus === "saving"}
+                  style={{ background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
+                    borderRadius: 4, padding: ".35rem .85rem", fontSize: ".75rem",
+                    fontFamily: "sans-serif", cursor: "pointer", whiteSpace: "nowrap",
+                    opacity: syncStatus === "saving" ? 0.5 : 1 }}>
+                  {syncStatus === "saving" ? "Committing…" : "Commit"}
+                </button>
+                <button onClick={() => { setShowCommitForm(false); setCommitDraft(""); }}
+                  style={{ background: "none", border: "1px solid #2e3a4a", color: "#4e7a9e",
+                    borderRadius: 4, padding: ".35rem .85rem", fontSize: ".75rem",
+                    fontFamily: "sans-serif", cursor: "pointer" }}>
+                  Cancel
+                </button>
+              </div>
+              {syncError && (
+                <div style={{ marginTop: ".5rem", fontSize: ".72rem", color: "#e87878",
+                  fontFamily: "sans-serif" }}>{syncError}</div>
+              )}
+            </div>
+          )}
+
+          {/* Navigation warning */}
+          {showCloseWarn && (
+            <div style={{ position: "fixed", inset: 0, background: "#00000088", zIndex: 200,
+              display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
+              <div style={{ background: "#0d2035", border: "1px solid #2e5070", borderRadius: 8,
+                padding: "1.5rem", maxWidth: 360, width: "100%", fontFamily: "sans-serif" }}>
+                <div style={{ fontSize: ".88rem", color: "#e8dcc8", marginBottom: ".75rem",
+                  fontWeight: 500 }}>
+                  Uncommitted changes
+                </div>
+                <div style={{ fontSize: ".78rem", color: "#8fb0cc", marginBottom: "1.25rem",
+                  lineHeight: 1.5 }}>
+                  You have local changes that haven't been committed to GitHub. They're saved in
+                  your browser but will be lost if you clear your data.
+                </div>
+                <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
+                  <button onClick={() => { setShowCloseWarn(false); setShowCommitForm(true); }}
+                    style={{ background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
+                      borderRadius: 4, padding: ".4rem .9rem", fontSize: ".78rem", cursor: "pointer" }}>
+                    Commit now
+                  </button>
+                  <button onClick={() => { setShowCloseWarn(false); handleClose(); }}
+                    style={{ background: "none", border: "1px solid #2e3a4a", color: "#4e7a9e",
+                      borderRadius: 4, padding: ".4rem .9rem", fontSize: ".78rem", cursor: "pointer" }}>
+                    Leave anyway
+                  </button>
+                  <button onClick={() => setShowCloseWarn(false)}
+                    style={{ background: "none", border: "none", color: "#3d5060",
+                      fontSize: ".78rem", cursor: "pointer", padding: ".4rem .5rem" }}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
 
           {/* Save-to-GitHub banner (local session only) */}
@@ -1171,7 +1269,6 @@ export default function Itinerary() {
                 onKeyDown={e => {
                   if (e.key === "Escape") setEditingHeader(false);
                   if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                    saveImmediatelyRef.current = true;
                     setTitle(headerDraft.title.trim() || title);
                     setSubtitle(headerDraft.subtitle);
                     setEditingHeader(false);
@@ -1186,7 +1283,6 @@ export default function Itinerary() {
                 onKeyDown={e => {
                   if (e.key === "Escape") setEditingHeader(false);
                   if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                    saveImmediatelyRef.current = true;
                     setTitle(headerDraft.title.trim() || title);
                     setSubtitle(headerDraft.subtitle);
                     setEditingHeader(false);
@@ -1198,7 +1294,7 @@ export default function Itinerary() {
                   fontFamily:"Georgia,serif", fontStyle:"italic",
                   outline:"none", boxSizing:"border-box", marginBottom:".6rem" }} />
               <div style={{ display:"flex", gap:".5rem" }}>
-                <button onClick={() => { saveImmediatelyRef.current = true; setTitle(headerDraft.title.trim() || title); setSubtitle(headerDraft.subtitle); setEditingHeader(false); }}
+                <button onClick={() => { setTitle(headerDraft.title.trim() || title); setSubtitle(headerDraft.subtitle); setEditingHeader(false); }}
                   style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
                     borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"sans-serif", cursor:"pointer" }}>
                   Save
