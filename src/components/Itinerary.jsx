@@ -1457,7 +1457,7 @@ export default function Itinerary() {
                     {t.day != null ? `Day ${t.day}` : "General"}
                   </span>
                   <span style={{ fontSize:".78rem", color:"#e8dcc8", fontFamily:"sans-serif",
-                    lineHeight:1.4 }}>{t.text}</span>
+                    lineHeight:1.4 }}><NoteMarkdown>{t.text}</NoteMarkdown></span>
                 </div>
               ))}
             </div>
