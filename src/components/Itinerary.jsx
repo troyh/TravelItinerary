@@ -1447,19 +1447,22 @@ export default function Itinerary() {
                 textTransform:"uppercase", fontFamily:"sans-serif", marginBottom:".5rem" }}>
                 {todos.length} TODO{todos.length !== 1 ? "s" : ""}
               </div>
-              {todos.map((t, i) => (
-                <div key={i}
-                  onClick={t.day != null ? () => { setOpenDay(t.day); setActiveTab("itinerary"); } : undefined}
-                  style={{ display:"flex", gap:".65rem", marginBottom: i < todos.length - 1 ? ".3rem" : 0,
-                    cursor: t.day != null ? "pointer" : "default", alignItems:"baseline" }}>
-                  <span style={{ fontSize:".65rem", color:"#e8a838", fontFamily:"sans-serif",
-                    flexShrink:0, opacity:.8 }}>
-                    {t.day != null ? `Day ${t.day}` : "General"}
-                  </span>
-                  <span style={{ fontSize:".78rem", color:"#e8dcc8", fontFamily:"sans-serif",
-                    lineHeight:1.4 }}><NoteMarkdown>{t.text}</NoteMarkdown></span>
-                </div>
-              ))}
+              <ul style={{ margin:0, paddingLeft:"1.1rem" }}>
+                {todos.map((t, i) => (
+                  <li key={i}
+                    onClick={t.day != null ? () => { setOpenDay(t.day); setActiveTab("itinerary"); } : undefined}
+                    style={{ fontSize:".78rem", color:"#e8dcc8", fontFamily:"sans-serif",
+                      lineHeight:1.5, cursor: t.day != null ? "pointer" : "default",
+                      marginBottom: i < todos.length - 1 ? ".15rem" : 0 }}>
+                    {t.day != null && (
+                      <span style={{ fontSize:".65rem", color:"#e8a838", marginRight:".4rem", opacity:.8 }}>
+                        Day {t.day}
+                      </span>
+                    )}
+                    {t.text}
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
 
