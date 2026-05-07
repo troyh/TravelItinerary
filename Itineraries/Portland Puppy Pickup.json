@@ -32,28 +32,6 @@
   "places": {
     "1": [
       {
-        "id": "2fa3f4df-08e3-4e2f-8cd9-5a185822c652",
-        "name": "Le Pigeon",
-        "address": "738 E Burnside St, Portland, OR 97214, USA",
-        "phone": "(503) 546-8796",
-        "website": "https://www.lepigeon.com/",
-        "placeId": "ChIJn_5mjKWglVQR94bKSpAYe4s",
-        "category": "restaurant",
-        "notes": "",
-        "addedAt": "2026-04-28T21:50:45.530Z"
-      },
-      {
-        "id": "012cde1c-ddf7-4664-a288-0cbb11582990",
-        "name": "The Nines, a Luxury Collection Hotel, Portland",
-        "address": "525 SW Morrison St, Portland, OR 97204, USA",
-        "phone": "(503) 222-9996",
-        "website": "https://www.marriott.com/en-us/hotels/pdxln-the-nines-a-luxury-collection-hotel-portland/overview/?scid=f2ae0541-1279-4f24-b197-a979c79310b0",
-        "placeId": "ChIJVZDfqQUKlVQRwBzGTWO9nDA",
-        "category": "accommodation",
-        "notes": "Confirmation: ZO-AX1045-36178\nHotel confirmation #: 98048433\n[Amex Travel](https://www.americanexpress.com/en-us/travel/my-bookings/trip-overview)",
-        "addedAt": "2026-04-29T01:16:43.986Z"
-      },
-      {
         "id": "032ae7fe-c133-49c4-8f45-0bc21570f70d",
         "name": "Canard",
         "address": "734 E Burnside St, Portland, OR 97214, USA",
@@ -131,6 +109,34 @@
         "notes": "",
         "addedAt": "2026-05-02T17:44:04.595Z",
         "mapsProvider": "apple"
+      },
+      {
+        "id": "fd04a43e-6b7b-4cc1-9d1c-9e6e6390157d",
+        "name": "Le Pigeon",
+        "address": "738 E Burnside St, Portland, OR 97214, USA",
+        "phone": "(503) 546-8796",
+        "website": "https://www.lepigeon.com/",
+        "placeId": "ChIJn_5mjKWglVQR94bKSpAYe4s",
+        "category": "restaurant",
+        "lat": 45.5228349,
+        "lng": -122.6578121,
+        "notes": "",
+        "addedAt": "2026-05-07T00:48:47.793Z",
+        "mapsProvider": "google"
+      },
+      {
+        "id": "1ae8c071-3cf6-43e5-be62-2fe683f9e4ee",
+        "name": "The Nines, a Luxury Collection Hotel, Portland",
+        "address": "525 SW Morrison St, Portland, OR 97204, USA",
+        "phone": "(503) 222-9996",
+        "website": "https://www.marriott.com/en-us/hotels/pdxln-the-nines-a-luxury-collection-hotel-portland/overview/?scid=f2ae0541-1279-4f24-b197-a979c79310b0",
+        "placeId": "ChIJVZDfqQUKlVQRwBzGTWO9nDA",
+        "category": "accommodation",
+        "lat": 45.518943,
+        "lng": -122.67779709999999,
+        "notes": "Confirmation: ZO-AX1045-36178\nHotel confirmation #: 98048433\n[Amex Travel](https://www.americanexpress.com/en-us/travel/my-bookings/trip-overview)",
+        "addedAt": "2026-05-07T00:49:34.085Z",
+        "mapsProvider": "google"
       }
     ],
     "2": [
