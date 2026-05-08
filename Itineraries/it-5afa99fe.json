@@ -15,6 +15,20 @@
       "day": 1
     },
     {
+      "leg": "Shopping Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 2
+    },
+    {
       "leg": "Move-in Day",
       "nm": 0,
       "hrs": 0,
@@ -26,7 +40,7 @@
       "tideWarning": false,
       "highlights": [],
       "note": "",
-      "day": 2
+      "day": 3
     },
     {
       "leg": "Fly to Seattle",
@@ -40,7 +54,7 @@
       "tideWarning": false,
       "highlights": [],
       "note": "",
-      "day": 3
+      "day": 4
     }
   ],
   "places": {
@@ -94,7 +108,7 @@
         "mapsProvider": null
       }
     ],
-    "2": [
+    "3": [
       {
         "id": "d66244c4-cab2-4a64-8eb3-752c11d82bce",
         "name": "Bed Bath & Beyond",
@@ -161,7 +175,7 @@
   "routes": {},
   "flights": {},
   "rentalCars": {
-    "3": []
+    "4": []
   },
   "highlights": {
     "1": [
@@ -173,7 +187,7 @@
       "Dinner reservations at The Biltmore or Rosewood restaurants for arrival night",
       "Request ocean-view rooms for morning views before departure to Hudson River"
     ],
-    "2": [
+    "3": [
       "Drive to campus",
       "Check-in",
       "Unload car",
@@ -183,7 +197,7 @@
       "Check if your college has a move-in essentials list or partnerships with specific retailers for discounts",
       "Consider purchasing bulky items (pillows, mattress pad) before arriving to save luggage space"
     ],
-    "3": [
+    "4": [
       "Check out of hotel",
       "Return rental car",
       "Go to airport"
@@ -192,7 +206,7 @@
   "notes": {
     "1": "TODO: Get SEA -> SBA airfare (round trip for 2, one-way for Hudson!)\nTODO: Reserve rental car (big SUV)\nTodo: Get hotel\n"
   },
-  "startDate": "2026-09-18",
+  "startDate": "2026-09-17",
   "title": "Take Hudson to College",
   "subtitle": "Move into UCSB",
   "itineraryNotes": ""
