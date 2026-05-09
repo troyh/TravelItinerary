@@ -134,6 +134,20 @@
         "notes": "Hardware store option for items like power strips, extension cords, and any last-minute repairs or modifications.",
         "addedAt": "2026-05-03T20:38:17.263Z",
         "mapsProvider": null
+      },
+      {
+        "id": "7340b7ec-9ef4-406a-a040-85ae975d5a9f",
+        "name": "University of California, Santa Barbara",
+        "address": "Santa Barbara, CA 93106, USA",
+        "phone": "(805) 893-8000",
+        "website": "http://www.ucsb.edu/",
+        "placeId": "ChIJN0sx82c_6YARws62XH5rlU4",
+        "category": "other",
+        "lat": 34.4139629,
+        "lng": -119.84894700000001,
+        "notes": "",
+        "addedAt": "2026-05-09T23:36:11.248Z",
+        "mapsProvider": "google"
       }
     ]
   },
