@@ -1355,7 +1355,7 @@ export default function Itinerary() {
           )}
 
           {/* Overview map */}
-          <ItineraryMap days={days} savedFlights={savedFlights} savedDirections={savedDirections} />
+          <ItineraryMap days={days} savedFlights={savedFlights} savedDirections={savedDirections} savedPlaces={savedPlaces} />
 
           {/* Stats */}
           <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", marginBottom: "1.25rem" }}>

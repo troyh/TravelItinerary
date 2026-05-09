@@ -60,58 +60,72 @@ export default function DayFlights({
   flights, onAdd, onUpdate, onDelete,
   readOnly = false, startDate, dayNum, aeroDataBoxKey,
 }) {
-  const [isAdding,   setIsAdding]   = useState(false);
-  const [draft,      setDraft]      = useState(BLANK);
-  const [looking,    setLooking]    = useState(false);
-  const [lookupErr,  setLookupErr]  = useState(null);
-  const [editingId,  setEditingId]  = useState(null);
-  const [noteDraft,  setNoteDraft]  = useState("");
+  const [isAdding,      setIsAdding]      = useState(false);
+  const [draft,         setDraft]         = useState(BLANK);
+  const [looking,       setLooking]       = useState(false);
+  const [lookupErr,     setLookupErr]     = useState(null);
+  const [lookupResults, setLookupResults] = useState(null); // null | Flight[]
+  const [editingId,     setEditingId]     = useState(null);
+  const [noteDraft,     setNoteDraft]     = useState("");
 
   const set = (k, v) => setDraft(p => ({ ...p, [k]: v }));
 
   const canAdd = draft.flightNumber.trim() && draft.departure.trim() && draft.arrival.trim();
 
+  function applyFlight(flight) {
+    const dep = flight.departure?.airport;
+    const arr = flight.arrival?.airport;
+    const depIata = dep?.iata ?? "";
+    const arrIata = arr?.iata ?? "";
+    let miles = "";
+    if (dep?.location && arr?.location) {
+      miles = String(haversineDistance(
+        dep.location.lat, dep.location.lon,
+        arr.location.lat, arr.location.lon
+      ));
+    }
+    setDraft(p => ({
+      ...p,
+      departure:    depIata,
+      arrival:      arrIata,
+      departureName: dep?.municipalityName ?? "",
+      arrivalName:   arr?.municipalityName ?? "",
+      departureTime: parseLocalTime(flight.departure?.scheduledTime?.local ?? ""),
+      arrivalTime:   parseLocalTime(flight.arrival?.scheduledTime?.local ?? ""),
+      airline:       flight.airline?.name ?? "",
+      aircraft:      flight.aircraft?.model ?? "",
+      status:        flight.status ?? "",
+      miles,
+      departureLat:  dep?.location?.lat ?? "",
+      departureLng:  dep?.location?.lon ?? "",
+      arrivalLat:    arr?.location?.lat ?? "",
+      arrivalLng:    arr?.location?.lon ?? "",
+    }));
+    setLookupResults(null);
+  }
+
   async function handleLookup() {
     const fn = draft.flightNumber.trim().replace(/\s+/g, "");
     const date = getFlightDate(startDate, dayNum);
-    if (!fn || !date) return;
+    if (!fn) return;
+    if (!date) { setLookupErr("Set a departure date on the itinerary first."); return; }
     setLooking(true);
     setLookupErr(null);
+    setLookupResults(null);
     try {
       const res = await fetch(
         `https://aerodatabox.p.rapidapi.com/flights/number/${encodeURIComponent(fn)}/${date}`,
         { headers: { "X-RapidAPI-Key": aeroDataBoxKey, "X-RapidAPI-Host": "aerodatabox.p.rapidapi.com" } }
       );
-      if (!res.ok) { setLookupErr("Flight not found."); return; }
+      if (!res.ok) { setLookupErr(`Flight not found for ${fn} on ${date}.`); return; }
       const data = await res.json();
-      const flight = Array.isArray(data) ? data[0] : data;
-      if (!flight) { setLookupErr("No results."); return; }
-      const dep = flight.departure?.airport;
-      const arr = flight.arrival?.airport;
-      const depIata = dep?.iata ?? "";
-      const arrIata = arr?.iata ?? "";
-      let miles = "";
-      if (dep?.location && arr?.location) {
-        miles = String(haversineDistance(
-          dep.location.lat, dep.location.lon,
-          arr.location.lat, arr.location.lon
-        ));
+      const results = (Array.isArray(data) ? data : [data]).filter(Boolean);
+      if (!results.length) { setLookupErr("No results."); return; }
+      if (results.length === 1) {
+        applyFlight(results[0]);
+      } else {
+        setLookupResults(results);
       }
-      const depName      = dep?.municipalityName ?? "";
-      const arrName      = arr?.municipalityName ?? "";
-      const departureTime = parseLocalTime(flight.departure?.scheduledTime?.local ?? "");
-      const arrivalTime   = parseLocalTime(flight.arrival?.scheduledTime?.local ?? "");
-      const airline       = flight.airline?.name ?? "";
-      const aircraft      = flight.aircraft?.model ?? "";
-      const status        = flight.status ?? "";
-      const departureLat = dep?.location?.lat ?? "";
-      const departureLng = dep?.location?.lon ?? "";
-      const arrivalLat   = arr?.location?.lat ?? "";
-      const arrivalLng   = arr?.location?.lon ?? "";
-      setDraft(p => ({ ...p, departure: depIata, arrival: arrIata,
-        departureName: depName, arrivalName: arrName,
-        departureTime, arrivalTime, airline, aircraft, status, miles,
-        departureLat, departureLng, arrivalLat, arrivalLng }));
     } catch {
       setLookupErr("Lookup failed — check your API key.");
     } finally {
@@ -204,6 +218,7 @@ export default function DayFlights({
                 style={{ ...S.input, flex: 1 }} />
               {aeroDataBoxKey && (
                 <button type="button" onClick={handleLookup} disabled={!draft.flightNumber.trim() || looking}
+                  title={getFlightDate(startDate, dayNum) ? `Query date: ${getFlightDate(startDate, dayNum)}` : "Set a departure date on the itinerary to enable lookup"}
                   style={{ ...S.btnGhost, opacity: (!draft.flightNumber.trim() || looking) ? 0.45 : 1 }}>
                   {looking ? "Looking…" : "Look up"}
                 </button>
@@ -212,6 +227,37 @@ export default function DayFlights({
             {lookupErr && (
               <div style={{ fontSize: ".72rem", color: "#e87878", fontFamily: "sans-serif", marginTop: 3 }}>
                 {lookupErr}
+              </div>
+            )}
+            {lookupResults && (
+              <div style={{ marginTop: ".5rem", border: "1px solid #2e5070", borderRadius: 4,
+                background: "#071520", overflow: "hidden" }}>
+                <div style={{ fontSize: ".62rem", color: "#6b8fa8", letterSpacing: ".08em",
+                  textTransform: "uppercase", fontFamily: "sans-serif",
+                  padding: ".35rem .65rem", borderBottom: "1px solid #1e3a5230" }}>
+                  Multiple flights found — select one
+                </div>
+                {lookupResults.map((r, i) => {
+                  const dep = r.departure?.airport;
+                  const arr = r.arrival?.airport;
+                  const label = [
+                    dep?.iata && arr?.iata ? `${dep.iata} → ${arr.iata}` : null,
+                    dep?.municipalityName && arr?.municipalityName
+                      ? `${dep.municipalityName} → ${arr.municipalityName}` : null,
+                    r.airline?.name ?? null,
+                    parseLocalTime(r.departure?.scheduledTime?.local ?? "") || null,
+                  ].filter(Boolean).join("  ·  ");
+                  return (
+                    <div key={i} onClick={() => applyFlight(r)}
+                      style={{ padding: ".45rem .65rem", cursor: "pointer",
+                        borderBottom: i < lookupResults.length - 1 ? "1px solid #1e3a5230" : "none",
+                        fontFamily: "sans-serif", fontSize: ".8rem", color: "#e8dcc8" }}
+                      onMouseEnter={e => e.currentTarget.style.background = "#1a3352"}
+                      onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                      {label || `Option ${i + 1}`}
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>

@@ -301,20 +301,11 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
             )}
           </div>
 
-          {/* Right side: loading indicator or expand toggle */}
-          {isLoading ? (
+          {/* Right side: loading indicator */}
+          {isLoading && (
             <span style={{ fontSize: ".75rem", fontFamily: "sans-serif",
               flexShrink: 0, color: "#e8dcc8" }}>Loading…</span>
-          ) : hasTodos ? (
-            <button
-              type="button"
-              onClick={e => toggleExpanded(fileKey, e)}
-              style={{ background: "none", border: "none", color: "#4e7a9e",
-                cursor: "pointer", fontSize: ".75rem", flexShrink: 0, padding: "0 .2rem",
-                lineHeight: 1 }}>
-              {isExpanded ? "▾" : "▸"}
-            </button>
-          ) : null}
+          )}
         </div>
 
         {/* Summary line */}
@@ -326,8 +317,8 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
           </div>
         )}
 
-        {/* Todos — shown when expanded */}
-        {hasTodos && isExpanded && (
+        {/* Todos */}
+        {hasTodos && (
           <div style={{ marginTop: ".45rem" }}>
             {d.todos.map((t, i) => (
               <div key={i} style={{ display: "flex", gap: ".4rem",

@@ -69,6 +69,29 @@ function greatCirclePoints(lat1, lng1, lat2, lng2, steps = 48) {
   });
 }
 
+// ── Place category colours (match DayPlaces) ─────────────────────────────────
+
+const CATEGORY_COLOR = {
+  restaurant:    "#e83870",
+  marina:        "#4a9eff",
+  accommodation: "#8338e8",
+  provisioning:  "#38a8e8",
+  activity:      "#5cb85c",
+  other:         "#6b8fa8",
+};
+
+function placeIcon(category) {
+  const color = CATEGORY_COLOR[category] ?? CATEGORY_COLOR.other;
+  return L.divIcon({
+    className: "",
+    iconAnchor: [6, 6],
+    iconSize:   [12, 12],
+    html: `<svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="6" cy="6" r="5" fill="${color}" stroke="#0b1929" stroke-width="1.5"/>
+    </svg>`,
+  });
+}
+
 // ── Marker icon ───────────────────────────────────────────────────────────────
 
 function markerIcon(n) {
@@ -86,37 +109,51 @@ function markerIcon(n) {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export default function ItineraryMap({ days, savedFlights, savedDirections }) {
+export default function ItineraryMap({ days, savedFlights, savedDirections, savedPlaces }) {
   const mapElRef   = useRef(null);
   const leafletRef = useRef(null);
   const [open,   setOpen]   = useState(true);
-  const [coords, setCoords] = useState({});       // { "overnight text": { lat, lng } }
+  const [coords, setCoords] = useState({});       // { key: { lat, lng } }
   const [geocoding, setGeocoding] = useState(false);
 
   // Collect overnight strings that need geocoding
   const stopsWithOvernight = days.filter(d => d.overnight?.trim());
   const uniqueOvernights   = [...new Set(stopsWithOvernight.map(d => d.overnight.trim()))];
 
-  // Geocode any uncached overnight locations on mount / when days change
+  // Flatten all places; extract Apple coords directly, collect addresses for geocoding
+  const allPlaces = Object.values(savedPlaces ?? {}).flat();
+  const placesWithCoords = allPlaces.map(p => {
+    if (p.placeId?.startsWith("ll:")) {
+      const [lat, lng] = p.placeId.slice(3).split(",").map(Number);
+      if (!isNaN(lat) && !isNaN(lng)) return { ...p, _lat: lat, _lng: lng };
+    }
+    return { ...p, _lat: null, _lng: null };
+  });
+  const placeAddressesToGeocode = [
+    ...new Set(
+      placesWithCoords
+        .filter(p => !p._lat && p.address?.trim())
+        .map(p => p.address.trim())
+    ),
+  ];
+
+  // Geocode overnight locations + place addresses
   useEffect(() => {
-    if (!uniqueOvernights.length) return;
-    // Filter to only uncached
+    const queries = [...uniqueOvernights, ...placeAddressesToGeocode];
+    if (!queries.length) return;
     let cache = {};
     try { cache = JSON.parse(localStorage.getItem("geocodeCache") || "{}"); } catch {}
-    const uncached = uniqueOvernights.filter(q => !cache[q]);
-    // Seed state with what we already have cached
-    if (Object.keys(cache).length) {
-      const known = {};
-      uniqueOvernights.forEach(q => { if (cache[q]) known[q] = cache[q]; });
-      if (Object.keys(known).length) setCoords(known);
-    }
+    const uncached = queries.filter(q => !cache[q]);
+    const known = {};
+    queries.forEach(q => { if (cache[q]) known[q] = cache[q]; });
+    if (Object.keys(known).length) setCoords(prev => ({ ...prev, ...known }));
     if (!uncached.length) return;
     setGeocoding(true);
     geocodeAll(uncached, partial => {
       setCoords(prev => ({ ...prev, ...partial }));
     }).finally(() => setGeocoding(false));
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [days.map(d => d.overnight).join("|")]);
+  }, [days.map(d => d.overnight).join("|"), placeAddressesToGeocode.join("|")]);
 
   // Build / rebuild Leaflet map whenever coords or open changes
   useEffect(() => {
@@ -154,10 +191,13 @@ export default function ItineraryMap({ days, savedFlights, savedDirections }) {
       const toC   = coords[to.overnight];
       if (!fromC || !toC) continue;
 
-      // Check if the "to" day had a flight
-      const flights = savedFlights?.[to.day] ?? [];
-      const hasFlight = flights.length > 0;
-      const flightWithCoords = flights.find(f =>
+      // Check both departure day (from) and arrival day (to) for flights on this leg
+      const legFlights = [
+        ...(savedFlights?.[from.day] ?? []),
+        ...(savedFlights?.[to.day]   ?? []),
+      ];
+      const hasFlight = legFlights.length > 0;
+      const flightWithCoords = legFlights.find(f =>
         f.departureLat && f.departureLng && f.arrivalLat && f.arrivalLng
       );
 
@@ -217,6 +257,19 @@ export default function ItineraryMap({ days, savedFlights, savedDirections }) {
       bounds.extend([c.lat, c.lng]);
     });
 
+    // Draw place markers
+    placesWithCoords.forEach(p => {
+      const lat = p._lat ?? coords[p.address?.trim()]?.lat;
+      const lng = p._lng ?? coords[p.address?.trim()]?.lng;
+      if (!lat || !lng) return;
+      L.marker([lat, lng], { icon: placeIcon(p.category) })
+        .bindTooltip(p.name || p.address || "", {
+          direction: "top", offset: [0, -8], className: "leaflet-tooltip-dark",
+        })
+        .addTo(map);
+      bounds.extend([lat, lng]);
+    });
+
     if (bounds.isValid()) map.fitBounds(bounds.pad(0.2));
 
     return () => {
@@ -224,7 +277,7 @@ export default function ItineraryMap({ days, savedFlights, savedDirections }) {
     };
   // Rebuild when open toggles or coords change
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, coords, JSON.stringify(savedFlights), JSON.stringify(savedDirections)]);
+  }, [open, coords, JSON.stringify(savedFlights), JSON.stringify(savedDirections), JSON.stringify(savedPlaces)]);
 
   // Don't render if fewer than 2 days have overnight locations
   if (stopsWithOvernight.length < 2) return null;
