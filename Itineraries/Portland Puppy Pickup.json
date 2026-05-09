@@ -150,6 +150,20 @@
         "category": "other",
         "notes": "",
         "addedAt": "2026-04-29T00:23:34.824Z"
+      },
+      {
+        "id": "a59f48e4-42dc-42c4-90e8-9739ee3341a6",
+        "name": "Luuwit View Park",
+        "address": "NE 127th and, NE Fremont St, Portland, OR 97230, USA",
+        "phone": "(503) 823-2525",
+        "website": "https://www.portlandoregon.gov/parks/finder/index.cfm?action=ViewPark&PropertyID=1461",
+        "placeId": "ChIJzZN7BMGjlVQRJLtLatVQNIQ",
+        "category": "other",
+        "lat": 45.5488053,
+        "lng": -122.53093399999999,
+        "notes": "11am",
+        "addedAt": "2026-05-09T19:26:35.601Z",
+        "mapsProvider": "google"
       }
     ]
   },
@@ -368,7 +382,7 @@
   },
   "notes": {
     "1": "I made a reservation at 8:15pm at Lang Baan. \n\nI couldn't get a reservation for this night at Le Pigeon. I'm on the **notify me** list, but doubtful I'll get one. Several other restaurant options below.... Claude likes Coquine as the best \"not-Le Pigeon\" option but it's a bit out of town.",
-    "2": "TODO: Find a meeting place"
+    "2": ""
   },
   "startDate": "2026-05-15",
   "title": "Portland Puppy Pickup 🐶",
