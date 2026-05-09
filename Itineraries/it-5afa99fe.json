@@ -173,7 +173,54 @@
   },
   "directions": {},
   "routes": {},
-  "flights": {},
+  "flights": {
+    "1": [
+      {
+        "id": "23cd935b-2a37-43cf-89fe-2b97221eb485",
+        "flightNumber": "As610",
+        "departure": "SEA",
+        "arrival": "SBA",
+        "departureName": "",
+        "arrivalName": "",
+        "departureTime": "",
+        "arrivalTime": "",
+        "airline": "",
+        "aircraft": "",
+        "status": "",
+        "miles": null,
+        "confirmation": "LCJDCP",
+        "departureLat": null,
+        "departureLng": null,
+        "arrivalLat": null,
+        "arrivalLng": null,
+        "notes": "Confirmation for Hudson’s one-way flight: LZCYHY",
+        "addedAt": "2026-05-09T19:59:55.920Z"
+      }
+    ],
+    "4": [
+      {
+        "id": "ac80c3a2-8227-4999-abc1-f227b2112f46",
+        "flightNumber": "AS 618",
+        "departure": "SBA",
+        "arrival": "SEA",
+        "departureName": "",
+        "arrivalName": "",
+        "departureTime": "",
+        "arrivalTime": "",
+        "airline": "",
+        "aircraft": "",
+        "status": "",
+        "miles": null,
+        "confirmation": "",
+        "departureLat": null,
+        "departureLng": null,
+        "arrivalLat": null,
+        "arrivalLng": null,
+        "notes": "",
+        "addedAt": "2026-05-09T20:01:55.610Z"
+      }
+    ]
+  },
   "rentalCars": {
     "4": []
   },
@@ -204,7 +251,7 @@
     ]
   },
   "notes": {
-    "1": "TODO: Get SEA -> SBA airfare (round trip for 2, one-way for Hudson!)\nTODO: Reserve rental car (big SUV)\nTodo: Get hotel\n"
+    "1": "TODO: Reserve rental car (big SUV)\nTodo: Get hotel\n"
   },
   "startDate": "2026-09-17",
   "title": "Take Hudson to College",
