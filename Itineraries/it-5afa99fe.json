@@ -74,6 +74,36 @@
         "mapsProvider": "google"
       }
     ],
+    "2": [
+      {
+        "id": "105c6d26-848e-4121-993b-74ba7bed10b2",
+        "name": "Target",
+        "address": "3891 State St, Santa Barbara, CA 93105, USA",
+        "phone": "(805) 979-3115",
+        "website": "https://www.target.com/sl/santa-barbara-galleria/3298",
+        "placeId": "ChIJGzUpWXYV6YARuh1yKZMyuug",
+        "category": "other",
+        "lat": 34.4401136,
+        "lng": -119.75067089999999,
+        "notes": "",
+        "addedAt": "2026-05-09T23:44:20.797Z",
+        "mapsProvider": "google"
+      },
+      {
+        "id": "ada14d4d-7e9d-4307-b69b-190715be07be",
+        "name": "Pottery Barn",
+        "address": "110 S Hope Ave Ste H-28C, Santa Barbara, CA 93105, USA",
+        "phone": "(805) 687-6707",
+        "website": "https://www.potterybarn.com/stores/us-ca-santa-barbara-la-cumbre-plaza/",
+        "placeId": "ChIJIXsUhCYV6YARDmkw-OounJY",
+        "category": "other",
+        "lat": 34.4386811,
+        "lng": -119.7474872,
+        "notes": "",
+        "addedAt": "2026-05-09T23:45:06.029Z",
+        "mapsProvider": "google"
+      }
+    ],
     "3": [
       {
         "id": "d66244c4-cab2-4a64-8eb3-752c11d82bce",
