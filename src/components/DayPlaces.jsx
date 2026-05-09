@@ -418,7 +418,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
                     <a href={
                         (place.mapsProvider ?? "google") === "apple"
                           ? applePlaceMapsUrl(place)
-                          : `https://www.google.com/maps/place/?q=place_id:${place.placeId}`
+                          : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)}&query_place_id=${encodeURIComponent(place.placeId)}`
                       }
                       target="_blank" rel="noopener noreferrer"
                       style={{ fontSize: ".7rem", color: "#4a9eff", fontFamily: "sans-serif",
