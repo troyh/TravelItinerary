@@ -848,6 +848,31 @@ export default function Itinerary() {
     };
   }
 
+  const SKIP_COUNTRY = /^(United States|USA|US|Canada|Australia|New Zealand|United Kingdom|UK|Mexico|France|Germany|Italy|Spain|Japan|China|Brazil|Ireland|Netherlands|Sweden|Norway|Denmark|Finland|Switzerland|Austria|Belgium|Portugal|Greece|Poland)$/i;
+  const SKIP_STATE   = /^[A-Z]{1,3}(\s+[\dA-Z][\dA-Z\s-]{2,8})?$/;
+
+  function cityFromAddress(text) {
+    if (!text?.trim()) return null;
+    const parts = text.split(",").map(p => p.trim()).filter(Boolean);
+    if (!parts.length) return null;
+    let end = parts.length - 1;
+    while (end > 0 && (SKIP_COUNTRY.test(parts[end]) || SKIP_STATE.test(parts[end]))) end--;
+    return parts[end] || null;
+  }
+
+  function getDayCities(dayNum) {
+    const seen = new Set();
+    const add = (text) => { const c = cityFromAddress(text); if (c) seen.add(c); };
+    (savedFlights[dayNum]    ?? []).forEach(f => {
+      if (f.departureName) seen.add(f.departureName);
+      if (f.arrivalName)   seen.add(f.arrivalName);
+    });
+    (savedDirections[dayNum] ?? []).forEach(dir => { add(dir.origin?.name); add(dir.destination?.name); });
+    (savedPlaces[dayNum]     ?? []).forEach(p   => add(p.address));
+    (savedRentalCars[dayNum] ?? []).forEach(c   => { add(c.pickupLocation); add(c.dropoffLocation); });
+    return [...seen].filter(Boolean);
+  }
+
   const dateRange = (() => {
     if (!startDate || !days.length) return null;
     const [y, m, d] = startDate.split("-").map(Number);
@@ -1600,6 +1625,16 @@ export default function Itinerary() {
                     {" · "}
                     <span style={{ fontStyle:"italic", color:"#3d6680" }}>{d.overnight}</span>
                   </div>
+                  {(() => {
+                    const cities = getDayCities(d.day);
+                    if (!cities.length) return null;
+                    return (
+                      <div style={{ fontSize:".7rem", color:"#3d6680", fontFamily:"sans-serif",
+                        marginTop:2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
+                        {cities.join(" · ")}
+                      </div>
+                    );
+                  })()}
                 </div>
                 <div style={{ color:"#4e7a9e", transform: isOpen ? "rotate(180deg)" : "none" }}>▾</div>
               </button>
