@@ -9,7 +9,7 @@ DTSTART;VALUE=DATE:20260917
 DTEND;VALUE=DATE:20260918
 SUMMARY:Day 1: Fly to Santa Barbara
 LOCATION:Santa Barbara
-DESCRIPTION:Overnight: Santa Barbara\n\nHighlights:\n• Get rental car\n• Check into hotel\n• Shopping for dorm room?\n• Dinner\n\nNote: TODO: Reserve rental car (big SUV)\n\n\n\nFlights:\n✈ as610: SEA → SBA · 909 mi (Conf: LCJDCP)
+DESCRIPTION:Overnight: Santa Barbara\n\nHighlights:\n• Get rental car\n• Check into hotel\n• Dinner\n\nNote: TODO: Reserve rental car (big SUV)\n\n\n\nFlights:\n✈ as610: SEA → SBA · 909 mi (Conf: LCJDCP)
 URL:https://troyh.github.io/TravelItinerary/?i=it-5afa99fe&day=1
 UID:day-1-20260917@travelitinerary
 END:VEVENT
