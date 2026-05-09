@@ -151,7 +151,70 @@
       }
     ]
   },
-  "directions": {},
+  "directions": {
+    "3": [
+      {
+        "id": "29a63738-7a4a-42c5-9036-dd99a7de6c3e",
+        "origin": {
+          "name": "Hotel Californian",
+          "placeId": "ChIJL33RqY4T6YARpZWlN590OyM"
+        },
+        "destination": {
+          "name": "UCSB",
+          "placeId": "ChIJN0sx82c_6YARws62XH5rlU4"
+        },
+        "travelMode": "DRIVING",
+        "distance": "10.7 mi",
+        "duration": "14 mins",
+        "summary": "US-101 N",
+        "originLat": 34.4133488,
+        "originLng": -119.6900779,
+        "destinationLat": 34.4153763,
+        "destinationLng": -119.8383801,
+        "overviewPolyline": null,
+        "steps": [
+          {
+            "instruction": "Head northeast on E Mason St toward Helena Ave",
+            "distance": "381 ft",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Anacapa St",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto E Yanonali St",
+            "distance": "0.2 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Garden St",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left to merge onto US-101 N",
+            "distance": "7.6 mi",
+            "duration": "7 mins"
+          },
+          {
+            "instruction": "Take exit 104B for CA-217 toward Airport/Ucsb",
+            "distance": "0.2 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto CA-217 W/Ward Memorial BlvdDestination will be on the right",
+            "distance": "2.4 mi",
+            "duration": "3 mins"
+          }
+        ],
+        "notes": "",
+        "addedAt": "2026-05-09T23:38:13.664Z",
+        "mapsProvider": "google"
+      }
+    ]
+  },
   "routes": {},
   "flights": {
     "1": [
