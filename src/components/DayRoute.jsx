@@ -186,9 +186,18 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
               marginBottom: ".4rem", display: "flex", alignItems: "center", gap: ".5rem", flexWrap: "wrap" }}>
               <span>{route.nm} NM · ~{route.hrs} hrs at {route.speedKts} kts</span>
               {!readOnly
-                ? <input type="time" value={route.time || ""}
-                    onChange={e => onUpdate(route.id, { time: e.target.value })}
-                    style={{ ...timeInputStyle, color: route.time ? "#c9a84c" : "#2e4a5e" }} />
+                ? <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <input type="time" value={route.time || ""}
+                      onChange={e => onUpdate(route.id, { time: e.target.value })}
+                      style={{ ...timeInputStyle, color: route.time ? "#c9a84c" : "#2e4a5e" }} />
+                    {route.time && (
+                      <button type="button" onClick={() => onUpdate(route.id, { time: "" })}
+                        style={{ background: "none", border: "none", color: "#2e4a5e",
+                          cursor: "pointer", fontSize: ".75rem", padding: "0 2px", lineHeight: 1 }}>
+                        ×
+                      </button>
+                    )}
+                  </div>
                 : route.time
                   ? <span style={{ color: "#c9a84c" }}>{fmtTime(route.time)}</span>
                   : null}

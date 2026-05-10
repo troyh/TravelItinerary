@@ -436,10 +436,18 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
                     {place.name}
                   </span>
                   {!readOnly
-                    ? <input type="time" value={place.time || ""}
-                        onChange={e => onUpdate(place.id, { time: e.target.value })}
-                        style={{ ...timeInputStyle, display: "block", marginTop: 2,
-                          color: place.time ? "#c9a84c" : "#2e4a5e" }} />
+                    ? <div style={{ display: "flex", alignItems: "center", gap: 2, marginTop: 2 }}>
+                        <input type="time" value={place.time || ""}
+                          onChange={e => onUpdate(place.id, { time: e.target.value })}
+                          style={{ ...timeInputStyle, color: place.time ? "#c9a84c" : "#2e4a5e" }} />
+                        {place.time && (
+                          <button type="button" onClick={() => onUpdate(place.id, { time: "" })}
+                            style={{ background: "none", border: "none", color: "#2e4a5e",
+                              cursor: "pointer", fontSize: ".75rem", padding: "0 2px", lineHeight: 1 }}>
+                            ×
+                          </button>
+                        )}
+                      </div>
                     : place.time
                       ? <div style={{ fontSize: ".72rem", color: "#c9a84c", marginTop: 2 }}>{fmtTime(place.time)}</div>
                       : null}

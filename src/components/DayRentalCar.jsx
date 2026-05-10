@@ -208,9 +208,18 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
                     </span>
                   )}
                   {!readOnly
-                    ? <input type="time" value={c.time || ""}
-                        onChange={e => onUpdate(c.id, { time: e.target.value })}
-                        style={{ ...timeInputStyle, color: c.time ? "#c9a84c" : "#2e4a5e" }} />
+                    ? <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+                        <input type="time" value={c.time || ""}
+                          onChange={e => onUpdate(c.id, { time: e.target.value })}
+                          style={{ ...timeInputStyle, color: c.time ? "#c9a84c" : "#2e4a5e" }} />
+                        {c.time && (
+                          <button type="button" onClick={() => onUpdate(c.id, { time: "" })}
+                            style={{ background: "none", border: "none", color: "#2e4a5e",
+                              cursor: "pointer", fontSize: ".75rem", padding: "0 2px", lineHeight: 1 }}>
+                            ×
+                          </button>
+                        )}
+                      </div>
                     : c.time
                       ? <span style={{ color: "#c9a84c" }}>{fmtTime(c.time)}</span>
                       : null}

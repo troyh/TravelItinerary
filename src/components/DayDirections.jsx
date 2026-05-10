@@ -442,9 +442,18 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
                   {dir.duration && <span> · {dir.duration}</span>}
                 </span>
                 {!readOnly
-                  ? <input type="time" value={dir.time || ""}
-                      onChange={e => onUpdate(dir.id, { time: e.target.value })}
-                      style={{ ...timeInputStyle, color: dir.time ? "#c9a84c" : "#2e4a5e" }} />
+                  ? <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+                      <input type="time" value={dir.time || ""}
+                        onChange={e => onUpdate(dir.id, { time: e.target.value })}
+                        style={{ ...timeInputStyle, color: dir.time ? "#c9a84c" : "#2e4a5e" }} />
+                      {dir.time && (
+                        <button type="button" onClick={() => onUpdate(dir.id, { time: "" })}
+                          style={{ background: "none", border: "none", color: "#2e4a5e",
+                            cursor: "pointer", fontSize: ".75rem", padding: "0 2px", lineHeight: 1 }}>
+                          ×
+                        </button>
+                      )}
+                    </div>
                   : dir.time
                     ? <span style={{ color: "#c9a84c" }}>{fmtTime(dir.time)}</span>
                     : null}
