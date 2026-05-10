@@ -17,7 +17,19 @@ const S = {
     fontFamily: "sans-serif" },
 };
 
-const BLANK = { name: "", nm: "", speedKts: 15 };
+const BLANK = { name: "", nm: "", speedKts: 15, time: "" };
+
+function fmtTime(hhmm) {
+  if (!hhmm) return "";
+  const [h, m] = hhmm.split(":").map(Number);
+  return `${h % 12 || 12}:${String(m).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}`;
+}
+
+const timeInputStyle = {
+  background: "none", border: "none", color: "#c9a84c",
+  fontSize: ".75rem", fontFamily: "sans-serif",
+  cursor: "pointer", padding: 0, outline: "none", colorScheme: "dark",
+};
 
 export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToDay, readOnly = false }) {
   const [isAdding,  setIsAdding]  = useState(false);
@@ -46,6 +58,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
       nm:       Math.round(nm * 10) / 10,
       speedKts,
       hrs:      Math.round((nm / speedKts) * 10) / 10,
+      time:     draft.time,
       notes:    "",
       addedAt:  new Date().toISOString(),
     });
@@ -122,6 +135,12 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
                 placeholder="kts"
                 style={{ ...S.input, width: "100%" }} />
             </div>
+            <div style={{ width: 90 }}>
+              <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Depart</div>
+              <input type="time" value={draft.time}
+                onChange={e => set("time", e.target.value)}
+                style={{ ...S.input, width: "100%", colorScheme: "dark" }} />
+            </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: ".75rem" }}>
             <button type="button"
@@ -164,8 +183,15 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
 
             {/* Stats row */}
             <div style={{ fontSize: ".75rem", color: "#4e7a9e", fontFamily: "sans-serif",
-              marginBottom: ".4rem" }}>
-              {route.nm} NM · ~{route.hrs} hrs at {route.speedKts} kts
+              marginBottom: ".4rem", display: "flex", alignItems: "center", gap: ".5rem", flexWrap: "wrap" }}>
+              <span>{route.nm} NM · ~{route.hrs} hrs at {route.speedKts} kts</span>
+              {!readOnly
+                ? <input type="time" value={route.time || ""}
+                    onChange={e => onUpdate(route.id, { time: e.target.value })}
+                    style={{ ...timeInputStyle, color: route.time ? "#c9a84c" : "#2e4a5e" }} />
+                : route.time
+                  ? <span style={{ color: "#c9a84c" }}>{fmtTime(route.time)}</span>
+                  : null}
             </div>
 
             {/* Use these values */}

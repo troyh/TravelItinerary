@@ -54,6 +54,18 @@ const PLACE_TYPE_MAP = {
   convenience_store: "provisioning",
 };
 
+function fmtTime(hhmm) {
+  if (!hhmm) return "";
+  const [h, m] = hhmm.split(":").map(Number);
+  return `${h % 12 || 12}:${String(m).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}`;
+}
+
+const timeInputStyle = {
+  background: "none", border: "none", color: "#c9a84c",
+  fontSize: ".75rem", fontFamily: "sans-serif",
+  cursor: "pointer", padding: 0, outline: "none", colorScheme: "dark",
+};
+
 function detectCategory(types = []) {
   for (const t of types) if (PLACE_TYPE_MAP[t]) return PLACE_TYPE_MAP[t];
   return "other";
@@ -178,6 +190,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
           category: details.category,
           lat: details.lat ?? null,
           lng: details.lng ?? null,
+          time: "",
           notes: "",
           addedAt: new Date().toISOString(),
           mapsProvider: "apple",
@@ -199,6 +212,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
           category: detectCategory(place.types ?? []),
           lat: place.location?.lat() ?? null,
           lng: place.location?.lng() ?? null,
+          time: "",
           notes: "",
           addedAt: new Date().toISOString(),
           mapsProvider: "google",
@@ -355,6 +369,13 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
               </div>
 
               <div>
+                <div style={{ ...S.sectionLabel, color: "#6b8fa8", marginBottom: 3 }}>Time (optional)</div>
+                <input type="time" value={pendingPlace.time || ""}
+                  onChange={e => setPendingPlace(p => ({ ...p, time: e.target.value }))}
+                  style={{ ...S.input, width: 140, colorScheme: "dark" }} />
+              </div>
+
+              <div>
                 <div style={{ ...S.sectionLabel, color: "#6b8fa8", marginBottom: 3 }}>Notes</div>
                 <textarea value={pendingPlace.notes}
                   onChange={e => setPendingPlace(p => ({ ...p, notes: e.target.value }))}
@@ -409,10 +430,20 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
 
               <div style={{ display: "flex", justifyContent: "space-between",
                 alignItems: "flex-start", gap: ".5rem" }}>
-                <span style={{ fontSize: ".88rem", color: "#e8dcc8", fontFamily: "sans-serif",
-                  fontWeight: 600, lineHeight: 1.3 }}>
-                  {place.name}
-                </span>
+                <div style={{ flex: 1 }}>
+                  <span style={{ fontSize: ".88rem", color: "#e8dcc8", fontFamily: "sans-serif",
+                    fontWeight: 600, lineHeight: 1.3 }}>
+                    {place.name}
+                  </span>
+                  {!readOnly
+                    ? <input type="time" value={place.time || ""}
+                        onChange={e => onUpdate(place.id, { time: e.target.value })}
+                        style={{ ...timeInputStyle, display: "block", marginTop: 2,
+                          color: place.time ? "#c9a84c" : "#2e4a5e" }} />
+                    : place.time
+                      ? <div style={{ fontSize: ".72rem", color: "#c9a84c", marginTop: 2 }}>{fmtTime(place.time)}</div>
+                      : null}
+                </div>
                 <div style={{ display: "flex", gap: ".5rem", flexShrink: 0, alignItems: "center" }}>
                   {place.placeId && (
                     <a href={

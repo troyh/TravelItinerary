@@ -18,7 +18,19 @@ const S = {
     fontFamily: "sans-serif" },
 };
 
-const BLANK = { agency: "", confirmation: "", pickupLocation: "", dropoffLocation: "" };
+const BLANK = { agency: "", confirmation: "", pickupLocation: "", dropoffLocation: "", time: "" };
+
+function fmtTime(hhmm) {
+  if (!hhmm) return "";
+  const [h, m] = hhmm.split(":").map(Number);
+  return `${h % 12 || 12}:${String(m).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}`;
+}
+
+const timeInputStyle = {
+  background: "none", border: "none", color: "#c9a84c",
+  fontSize: ".75rem", fontFamily: "sans-serif",
+  cursor: "pointer", padding: 0, outline: "none", colorScheme: "dark",
+};
 
 function genId() {
   return typeof crypto.randomUUID === "function"
@@ -43,6 +55,7 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
       confirmation:    draft.confirmation.trim(),
       pickupLocation:  draft.pickupLocation.trim(),
       dropoffLocation: draft.dropoffLocation.trim(),
+      time:            draft.time,
       notes:           "",
       addedAt:         new Date().toISOString(),
     });
@@ -145,6 +158,16 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
             </div>
           </div>
 
+          <div style={{ marginBottom: ".65rem" }}>
+            <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>
+              Pick-up time <span style={{ color: "#3d5060", fontStyle: "italic",
+                textTransform: "none", letterSpacing: 0 }}>(optional)</span>
+            </div>
+            <input type="time" value={draft.time}
+              onChange={e => set("time", e.target.value)}
+              style={{ ...S.input, width: 140, colorScheme: "dark" }} />
+          </div>
+
           <button type="button" onClick={handleAdd}
             onTouchEnd={e => { e.preventDefault(); handleAdd(); }}
             style={{ ...S.btnPrimary, opacity: canAdd ? 1 : 0.45 }}>
@@ -172,17 +195,26 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
                     </span>
                   )}
                 </div>
-                {/* Pickup / dropoff */}
-                {(c.pickupLocation || c.dropoffLocation) && (
-                  <div style={{ fontSize: ".78rem", color: "#8fb0cc", fontFamily: "sans-serif",
-                    marginTop: 2 }}>
-                    {c.pickupLocation && c.dropoffLocation
-                      ? `${c.pickupLocation} → ${c.dropoffLocation}`
-                      : c.pickupLocation
-                        ? `Pick-up: ${c.pickupLocation}`
-                        : `Drop-off: ${c.dropoffLocation}`}
-                  </div>
-                )}
+                {/* Pickup / dropoff + time */}
+                <div style={{ fontSize: ".78rem", color: "#8fb0cc", fontFamily: "sans-serif",
+                  marginTop: 2, display: "flex", alignItems: "center", gap: ".5rem", flexWrap: "wrap" }}>
+                  {(c.pickupLocation || c.dropoffLocation) && (
+                    <span>
+                      {c.pickupLocation && c.dropoffLocation
+                        ? `${c.pickupLocation} → ${c.dropoffLocation}`
+                        : c.pickupLocation
+                          ? `Pick-up: ${c.pickupLocation}`
+                          : `Drop-off: ${c.dropoffLocation}`}
+                    </span>
+                  )}
+                  {!readOnly
+                    ? <input type="time" value={c.time || ""}
+                        onChange={e => onUpdate(c.id, { time: e.target.value })}
+                        style={{ ...timeInputStyle, color: c.time ? "#c9a84c" : "#2e4a5e" }} />
+                    : c.time
+                      ? <span style={{ color: "#c9a84c" }}>{fmtTime(c.time)}</span>
+                      : null}
+                </div>
               </div>
               {!readOnly && (
                 <button type="button" onClick={() => onDelete(c.id)}

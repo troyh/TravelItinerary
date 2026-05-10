@@ -710,7 +710,8 @@ export default function Itinerary() {
     setSaveAsName("");
   }
 
-  function buildICSContent(daysArr, sd, ttl, highlights, notes, fileId, appBase, flights, rentalCars) {
+  function buildICSContent(daysArr, sd, ttl, highlights, notes, fileId, appBase,
+                           flights, rentalCars, savedPlaces, savedDirections, savedRoutes) {
     if (!sd || !daysArr.length) return null;
     const [sy, sm, sday] = sd.split("-").map(Number);
     const toICSDate = n => {
@@ -718,6 +719,33 @@ export default function Itinerary() {
       return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}`;
     };
     const esc = s => (s ?? "").replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\n/g, "\\n");
+    const toICSDateTime = (dateStr, hhmm) => {
+      const [h, m] = hhmm.split(":").map(Number);
+      return `${dateStr}T${String(h).padStart(2,"0")}${String(m).padStart(2,"0")}00`;
+    };
+    const addMins = (dt, mins) => {
+      const y = +dt.slice(0,4), mo = +dt.slice(4,6)-1, day = +dt.slice(6,8);
+      const h = +dt.slice(9,11), m = +dt.slice(11,13);
+      const d = new Date(y, mo, day, h, m + mins);
+      return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}` +
+             `T${String(d.getHours()).padStart(2,"0")}${String(d.getMinutes()).padStart(2,"0")}00`;
+    };
+    const ampmTo24 = str => {
+      if (!str) return null;
+      const m = str.match(/(\d+):(\d+)\s*(AM|PM)/i);
+      if (!m) return null;
+      let h = +m[1];
+      if (m[3].toUpperCase() === "PM" && h !== 12) h += 12;
+      if (m[3].toUpperCase() === "AM" && h === 12) h = 0;
+      return `${String(h).padStart(2,"0")}:${m[2]}`;
+    };
+    const parseDurMins = str => {
+      if (!str) return 60;
+      let total = 0;
+      const hm = str.match(/(\d+)\s*h/i); const mm = str.match(/(\d+)\s*m/i);
+      if (hm) total += +hm[1] * 60; if (mm) total += +mm[1];
+      return total || 60;
+    };
 
     const cal = [
       "BEGIN:VCALENDAR", "VERSION:2.0",
@@ -727,6 +755,7 @@ export default function Itinerary() {
     ];
 
     daysArr.forEach(d => {
+      const dateStr = toICSDate(d.day);
       const parts = [];
       if (d.nm > 0) parts.push(`${d.nm} NM · ~${d.hrs.toFixed(1)} hrs`);
       if (d.overnight) parts.push(`Overnight: ${d.overnight}`);
@@ -747,24 +776,124 @@ export default function Itinerary() {
         (c.pickupLocation ? `\n   Pick-up: ${c.pickupLocation}` : "") +
         (c.dropoffLocation ? `\n   Drop-off: ${c.dropoffLocation}` : "")
       ).join("\n"));
+
+      // All-day summary event for the day
       cal.push("BEGIN:VEVENT");
-      cal.push(`DTSTART;VALUE=DATE:${toICSDate(d.day)}`);
+      cal.push(`DTSTART;VALUE=DATE:${dateStr}`);
       cal.push(`DTEND;VALUE=DATE:${toICSDate(d.day + 1)}`);
       cal.push(`SUMMARY:${esc(`Day ${d.day}: ${d.leg}`)}`);
       if (d.overnight) cal.push(`LOCATION:${esc(d.overnight)}`);
       if (parts.length) cal.push(`DESCRIPTION:${esc(parts.join("\n"))}`);
-      if (fileId && appBase) {
-        cal.push(`URL:${appBase}?i=${encodeURIComponent(fileId)}&day=${d.day}`);
-      }
-      cal.push(`UID:day-${d.day}-${toICSDate(d.day)}@travelitinerary`);
+      if (fileId && appBase) cal.push(`URL:${appBase}?i=${encodeURIComponent(fileId)}&day=${d.day}`);
+      cal.push(`UID:day-${d.day}-${dateStr}@travelitinerary`);
       cal.push("END:VEVENT");
+
+      // Timed event: flights
+      fl.forEach(f => {
+        const dep24 = ampmTo24(f.departureTime);
+        const arr24 = ampmTo24(f.arrivalTime);
+        if (!dep24) return;
+        const dtStart = toICSDateTime(dateStr, dep24);
+        const dtEnd   = arr24 ? toICSDateTime(dateStr, arr24) : addMins(dtStart, 180);
+        const desc = [
+          f.airline && f.aircraft ? `${f.airline} · ${f.aircraft}` : f.airline || f.aircraft || "",
+          f.departureName && f.arrivalName ? `${f.departureName} → ${f.arrivalName}` : "",
+          f.confirmation ? `Confirmation: ${f.confirmation}` : "",
+          f.notes || "",
+        ].filter(Boolean).join("\n");
+        cal.push("BEGIN:VEVENT");
+        cal.push(`DTSTART:${dtStart}`);
+        cal.push(`DTEND:${dtEnd}`);
+        cal.push(`SUMMARY:${esc(`✈ ${f.flightNumber}: ${f.departure} → ${f.arrival}`)}`);
+        if (desc) cal.push(`DESCRIPTION:${esc(desc)}`);
+        cal.push(`UID:flight-${f.id}@travelitinerary`);
+        cal.push("END:VEVENT");
+      });
+
+      // Timed event: places
+      (savedPlaces?.[d.day] ?? []).forEach(p => {
+        if (!p.time) return;
+        const dtStart = toICSDateTime(dateStr, p.time);
+        const dtEnd   = addMins(dtStart, 60);
+        const desc = [
+          p.phone ? `Phone: ${p.phone}` : "",
+          p.website ? `Website: ${p.website}` : "",
+          p.notes || "",
+        ].filter(Boolean).join("\n");
+        cal.push("BEGIN:VEVENT");
+        cal.push(`DTSTART:${dtStart}`);
+        cal.push(`DTEND:${dtEnd}`);
+        cal.push(`SUMMARY:${esc(p.name)}`);
+        if (p.address) cal.push(`LOCATION:${esc(p.address)}`);
+        if (desc) cal.push(`DESCRIPTION:${esc(desc)}`);
+        cal.push(`UID:place-${p.id}@travelitinerary`);
+        cal.push("END:VEVENT");
+      });
+
+      // Timed event: directions
+      (savedDirections?.[d.day] ?? []).forEach(dir => {
+        if (!dir.time) return;
+        const dtStart = toICSDateTime(dateStr, dir.time);
+        const dtEnd   = addMins(dtStart, parseDurMins(dir.duration));
+        const desc = [
+          [dir.distance, dir.duration].filter(Boolean).join(" · "),
+          dir.notes || "",
+        ].filter(Boolean).join("\n");
+        cal.push("BEGIN:VEVENT");
+        cal.push(`DTSTART:${dtStart}`);
+        cal.push(`DTEND:${dtEnd}`);
+        cal.push(`SUMMARY:${esc(`${dir.origin.name} → ${dir.destination.name}`)}`);
+        cal.push(`LOCATION:${esc(dir.destination.name)}`);
+        if (desc) cal.push(`DESCRIPTION:${esc(desc)}`);
+        cal.push(`UID:dir-${dir.id}@travelitinerary`);
+        cal.push("END:VEVENT");
+      });
+
+      // Timed event: boating routes
+      (savedRoutes?.[d.day] ?? []).forEach(r => {
+        if (!r.time) return;
+        const dtStart = toICSDateTime(dateStr, r.time);
+        const dtEnd   = addMins(dtStart, Math.round((r.hrs || 0) * 60));
+        const desc = [
+          `${r.nm} NM at ${r.speedKts} kts · ~${r.hrs} hrs`,
+          r.notes || "",
+        ].filter(Boolean).join("\n");
+        cal.push("BEGIN:VEVENT");
+        cal.push(`DTSTART:${dtStart}`);
+        cal.push(`DTEND:${dtEnd}`);
+        cal.push(`SUMMARY:${esc(`🚢 ${r.name || "Boating Route"}`)}`);
+        if (desc) cal.push(`DESCRIPTION:${esc(desc)}`);
+        cal.push(`UID:route-${r.id}@travelitinerary`);
+        cal.push("END:VEVENT");
+      });
+
+      // Timed event: rental cars
+      cars.forEach(c => {
+        if (!c.time) return;
+        const dtStart = toICSDateTime(dateStr, c.time);
+        const dtEnd   = addMins(dtStart, 60);
+        const desc = [
+          c.confirmation ? `Confirmation: ${c.confirmation}` : "",
+          c.pickupLocation ? `Pick-up: ${c.pickupLocation}` : "",
+          c.dropoffLocation ? `Drop-off: ${c.dropoffLocation}` : "",
+          c.notes || "",
+        ].filter(Boolean).join("\n");
+        cal.push("BEGIN:VEVENT");
+        cal.push(`DTSTART:${dtStart}`);
+        cal.push(`DTEND:${dtEnd}`);
+        cal.push(`SUMMARY:${esc(`🚗 ${c.agency} Car Rental`)}`);
+        if (c.pickupLocation) cal.push(`LOCATION:${esc(c.pickupLocation)}`);
+        if (desc) cal.push(`DESCRIPTION:${esc(desc)}`);
+        cal.push(`UID:rental-${c.id}@travelitinerary`);
+        cal.push("END:VEVENT");
+      });
     });
     cal.push("END:VCALENDAR");
     return cal.join("\r\n");
   }
 
   function generateICS() {
-    const content = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase, savedFlights, savedRentalCars);
+    const content = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase, savedFlights, savedRentalCars, savedPlaces, savedDirections, savedRoutes);
     if (!content) return;
     const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -790,7 +919,8 @@ export default function Itinerary() {
     try {
       await saveToGitHub(data, { ...ghSettings, githubFile: currentFile, message: msg });
       const icsContent = buildICSContent(days, startDate, title, customHighlights, customNotes,
-        currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase, savedFlights, savedRentalCars);
+        currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase, savedFlights, savedRentalCars,
+        savedPlaces, savedDirections, savedRoutes);
       if (icsContent) {
         await saveToGitHub(icsContent, { ...ghSettings, githubFile: currentFile.replace(/\.json$/i, ".ics") });
       }

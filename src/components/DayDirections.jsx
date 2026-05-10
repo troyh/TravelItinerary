@@ -60,6 +60,18 @@ const S = {
   label: { fontSize: ".62rem", letterSpacing: ".1em", textTransform: "uppercase", fontFamily: "sans-serif" },
 };
 
+function fmtTime(hhmm) {
+  if (!hhmm) return "";
+  const [h, m] = hhmm.split(":").map(Number);
+  return `${h % 12 || 12}:${String(m).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}`;
+}
+
+const timeInputStyle = {
+  background: "none", border: "none", color: "#c9a84c",
+  fontSize: ".75rem", fontFamily: "sans-serif",
+  cursor: "pointer", padding: 0, outline: "none", colorScheme: "dark",
+};
+
 const borderAccent = "3px solid #5cb85c66";
 
 // ── Component ─────────────────────────────────────────────────────────────
@@ -77,6 +89,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
   const [origin,           setOrigin]           = useState(null); // { name, placeId }
   const [destination,      setDestination]      = useState(null);
   const [travelMode,       setTravelMode]       = useState("DRIVING");
+  const [departureTime,    setDepartureTime]    = useState("");
   const [fetching,         setFetching]         = useState(false);
   const [routeError,       setRouteError]       = useState(null);
 
@@ -132,6 +145,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
     setOriginQuery(""); setDestQuery("");
     setOriginPreds([]); setDestPreds([]);
     setOrigin(null); setDestination(null);
+    setDepartureTime("");
     setRouteError(null);
     originTokenRef.current = null;
     destTokenRef.current   = null;
@@ -199,6 +213,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
           destination: { name: destination.name },
           travelMode,
           ...result,
+          time:         departureTime,
           notes:        "",
           addedAt:      new Date().toISOString(),
           mapsProvider: "apple",
@@ -230,6 +245,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
                             distance:    s.distance?.text ?? "",
                             duration:    s.duration?.text ?? "",
                           })),
+          time:         departureTime,
           notes:        "",
           addedAt:      new Date().toISOString(),
           mapsProvider: "google",
@@ -355,6 +371,13 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
             ))}
           </div>
 
+          <div style={{ marginBottom: ".65rem" }}>
+            <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Depart at (optional)</div>
+            <input type="time" value={departureTime}
+              onChange={e => setDepartureTime(e.target.value)}
+              style={{ ...S.input, width: 140, colorScheme: "dark" }} />
+          </div>
+
           <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
             <button onClick={fetchDirections} disabled={!canFetch}
               style={{ ...S.btnPrimary, opacity: canFetch ? 1 : 0.45 }}>
@@ -412,10 +435,19 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
 
               {/* Summary row */}
               <div style={{ fontSize: ".75rem", color: "#4e7a9e", fontFamily: "sans-serif",
-                marginBottom: ".4rem" }}>
-                {dir.summary && <span>{dir.summary} · </span>}
-                <span>{dir.distance}</span>
-                {dir.duration && <span> · {dir.duration}</span>}
+                marginBottom: ".4rem", display: "flex", alignItems: "center", gap: ".5rem", flexWrap: "wrap" }}>
+                <span>
+                  {dir.summary && <span>{dir.summary} · </span>}
+                  <span>{dir.distance}</span>
+                  {dir.duration && <span> · {dir.duration}</span>}
+                </span>
+                {!readOnly
+                  ? <input type="time" value={dir.time || ""}
+                      onChange={e => onUpdate(dir.id, { time: e.target.value })}
+                      style={{ ...timeInputStyle, color: dir.time ? "#c9a84c" : "#2e4a5e" }} />
+                  : dir.time
+                    ? <span style={{ color: "#c9a84c" }}>{fmtTime(dir.time)}</span>
+                    : null}
               </div>
 
               {/* Steps toggle */}
