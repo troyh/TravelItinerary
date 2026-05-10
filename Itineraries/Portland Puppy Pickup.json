@@ -282,87 +282,179 @@
     ],
     "2": [
       {
-        "id": "19c3fa82-8ce9-411d-83f6-4311df8daaeb",
+        "id": "3afcae60-76f8-49af-9f19-13d08cc46c6c",
         "origin": {
-          "name": "The Nines Hotel, Portland"
+          "name": "The Nines, a Luxury Collection Hotel, Portland",
+          "placeId": "ChIJVZDfqQUKlVQRwBzGTWO9nDA"
         },
         "destination": {
-          "name": "1107 21st Ave E"
+          "name": "Luuwit View Park",
+          "placeId": "ChIJzZN7BMGjlVQRJLtLatVQNIQ"
         },
         "travelMode": "DRIVING",
-        "distance": "284.2 km",
-        "duration": "2h 49m",
-        "summary": "",
+        "distance": "9.7 mi",
+        "duration": "16 mins",
+        "summary": "I-84 E",
+        "originLat": 45.5189198,
+        "originLng": -122.6779891,
+        "destinationLat": 45.5486369,
+        "destinationLng": -122.5308442,
+        "overviewPolyline": null,
         "steps": [
           {
-            "instruction": "",
-            "distance": "",
-            "duration": ""
+            "instruction": "Head west on SW Morrison St toward SW 6th Ave",
+            "distance": "0.1 mi",
+            "duration": "1 min"
           },
           {
-            "instruction": "Turn right onto SW 14th Ave",
-            "distance": "679 m",
-            "duration": ""
+            "instruction": "Turn right onto SW Park Ave",
+            "distance": "249 ft",
+            "duration": "1 min"
           },
           {
-            "instruction": "Keep left to merge onto I-405 North toward US-30",
-            "distance": "213 m",
-            "duration": ""
+            "instruction": "Turn right at the 1st cross street onto SW Alder St",
+            "distance": "0.3 mi",
+            "duration": "2 mins"
           },
           {
-            "instruction": "Merge onto I-405 North toward I-5, US-30",
-            "distance": "91 m",
-            "duration": ""
+            "instruction": "Slight left onto SE Morrison Brg",
+            "distance": "0.3 mi",
+            "duration": "1 min"
           },
           {
-            "instruction": "Take exit 168A onto Lakeview Blvd.",
-            "distance": "280.3 km",
-            "duration": ""
+            "instruction": "Slight left onto the I-5 N/I-84 E ramp to Airport/Seattle/The Dalles",
+            "distance": "0.2 mi",
+            "duration": "1 min"
           },
           {
-            "instruction": "Turn left onto Lakeview Blvd E",
-            "distance": "225 m",
-            "duration": ""
+            "instruction": "Slight right onto the ramp to Portland Arpt",
+            "distance": "0.7 mi",
+            "duration": "1 min"
           },
           {
-            "instruction": "Keep right onto Harvard Ave E",
-            "distance": "166 m",
-            "duration": ""
+            "instruction": "Continue onto I-84 E",
+            "distance": "7.2 mi",
+            "duration": "8 mins"
           },
           {
-            "instruction": "Turn right onto E Boston St",
-            "distance": "272 m",
-            "duration": ""
+            "instruction": "Take exit 10 toward 122nd Ave",
+            "distance": "0.2 mi",
+            "duration": "1 min"
           },
           {
-            "instruction": "Turn left onto E Galer St",
-            "distance": "1.3 km",
-            "duration": ""
+            "instruction": "Turn right onto NE 122nd Ave",
+            "distance": "0.2 mi",
+            "duration": "1 min"
           },
           {
-            "instruction": "Turn right onto 19th Ave E",
-            "distance": "399 m",
-            "duration": ""
+            "instruction": "Turn right at the 1st cross street onto NE Fremont St",
+            "distance": "0.3 mi",
+            "duration": "1 min"
           },
           {
-            "instruction": "Turn left onto E Prospect St",
-            "distance": "405 m",
-            "duration": ""
-          },
-          {
-            "instruction": "Turn left",
-            "distance": "140 m",
-            "duration": ""
-          },
-          {
-            "instruction": "The destination is on your right",
-            "distance": "30 m",
-            "duration": ""
+            "instruction": "Turn left onto NE 129th AveDestination will be on the right",
+            "distance": "417 ft",
+            "duration": "1 min"
           }
         ],
         "notes": "",
-        "addedAt": "2026-05-01T06:36:17.991Z",
-        "mapsProvider": "apple"
+        "addedAt": "2026-05-10T00:06:26.800Z",
+        "mapsProvider": "google"
+      },
+      {
+        "id": "54c0b2e7-b90a-4acc-9301-1d9162f50ba1",
+        "origin": {
+          "name": "Luuwit View Park",
+          "placeId": "ChIJzZN7BMGjlVQRJLtLatVQNIQ"
+        },
+        "destination": {
+          "name": "1107 21st Avenue East",
+          "placeId": "ChIJky3RvdYUkFQR2VOlzypd3bc"
+        },
+        "travelMode": "DRIVING",
+        "distance": "177 mi",
+        "duration": "2 hours 52 mins",
+        "summary": "I-5 N",
+        "originLat": 45.5486369,
+        "originLng": -122.5308442,
+        "destinationLat": 47.628917,
+        "destinationLng": -122.3047658,
+        "overviewPolyline": null,
+        "steps": [
+          {
+            "instruction": "Head northeast toward NE Fremont St",
+            "distance": "417 ft",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto NE Fremont St",
+            "distance": "0.3 mi",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Turn right onto NE 122nd Ave",
+            "distance": "1.3 mi",
+            "duration": "3 mins"
+          },
+          {
+            "instruction": "Turn left onto NE Airport Way",
+            "distance": "0.8 mi",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Turn right to merge onto I-205 N toward SeattleEntering Washington",
+            "distance": "12.9 mi",
+            "duration": "12 mins"
+          },
+          {
+            "instruction": "Merge onto I-5 N",
+            "distance": "132 mi",
+            "duration": "1 hour 58 mins"
+          },
+          {
+            "instruction": "Keep right to stay on I-5 N",
+            "distance": "27.6 mi",
+            "duration": "27 mins"
+          },
+          {
+            "instruction": "Take exit 168A for Lakeview Blvd",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Lakeview Blvd E",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Harvard Ave E",
+            "distance": "0.2 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto E Boston St",
+            "distance": "0.4 mi",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "E Boston St turns slightly right and becomes 15th Ave E",
+            "distance": "0.4 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto E Galer St",
+            "distance": "0.4 mi",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Turn right onto 21st Ave EDestination will be on the right",
+            "distance": "0.2 mi",
+            "duration": "2 mins"
+          }
+        ],
+        "notes": "",
+        "addedAt": "2026-05-10T00:06:55.370Z",
+        "mapsProvider": "google"
       }
     ]
   },
