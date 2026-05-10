@@ -71,7 +71,8 @@
         "lng": -119.68996999999999,
         "notes": "Confirmation numbers: \nZO-AX1048-09082\nZO-AX1048-09016",
         "addedAt": "2026-05-09T22:50:20.552Z",
-        "mapsProvider": "google"
+        "mapsProvider": "google",
+        "time": "19:00"
       }
     ],
     "2": [
@@ -241,6 +242,79 @@
         ],
         "notes": "",
         "addedAt": "2026-05-09T23:38:13.664Z",
+        "mapsProvider": "google"
+      }
+    ],
+    "4": [
+      {
+        "id": "6e2d6849-c826-47cc-9866-c89a4a73a1ad",
+        "origin": {
+          "name": "Hotel Californian",
+          "placeId": "ChIJL33RqY4T6YARpZWlN590OyM"
+        },
+        "destination": {
+          "name": "SBA airport (SBA)",
+          "placeId": "ChIJJ79bfX4_6YARXEGp_YImp6A"
+        },
+        "travelMode": "DRIVING",
+        "distance": "10.5 mi",
+        "duration": "14 mins",
+        "summary": "US-101 N",
+        "originLat": 34.4133488,
+        "originLng": -119.6900779,
+        "destinationLat": 34.4193633,
+        "destinationLng": -119.8352148,
+        "overviewPolyline": null,
+        "steps": [
+          {
+            "instruction": "Head northeast on E Mason St toward Helena Ave",
+            "distance": "381 ft",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Anacapa St",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto E Yanonali St",
+            "distance": "0.2 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left onto Garden St",
+            "distance": "0.1 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn left to merge onto US-101 N",
+            "distance": "7.6 mi",
+            "duration": "7 mins"
+          },
+          {
+            "instruction": "Take exit 104B for CA-217 toward Airport/Ucsb",
+            "distance": "0.2 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Continue onto CA-217 W/Ward Memorial Blvd",
+            "distance": "1.8 mi",
+            "duration": "2 mins"
+          },
+          {
+            "instruction": "Take exit 1 for Sandspit Rd",
+            "distance": "0.3 mi",
+            "duration": "1 min"
+          },
+          {
+            "instruction": "Turn right onto Moffett PlDestination will be on the left",
+            "distance": "39 ft",
+            "duration": "1 min"
+          }
+        ],
+        "time": "16:30",
+        "notes": "",
+        "addedAt": "2026-05-10T22:44:14.441Z",
         "mapsProvider": "google"
       }
     ]
