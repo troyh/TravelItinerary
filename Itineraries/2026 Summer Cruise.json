@@ -171,8 +171,8 @@
     {
       "day": 8,
       "leg": "Desolation Sound → Campbell River (fuel) → Port Neville",
-      "nm": 98,
-      "hrs": 7.5,
+      "nm": 61,
+      "hrs": 4.1,
       "overnight": "Port Neville anchorage or Thurston Bay Marine Park",
       "tags": [
         "fuel",
@@ -266,8 +266,8 @@
     {
       "day": 12,
       "leg": "Lagoon Cove → Blind Channel Resort",
-      "nm": 55,
-      "hrs": 3.7,
+      "nm": 48.5,
+      "hrs": 3.2,
       "overnight": "Blind Channel Resort, West Thurlow Island",
       "tags": [
         "marina",
@@ -289,8 +289,8 @@
     {
       "day": 13,
       "leg": "Blind Channel → Squirrel Cove (Cortes Island)",
-      "nm": 65,
-      "hrs": 4.3,
+      "nm": 35.9,
+      "hrs": 2.4,
       "overnight": "Squirrel Cove, Cortes Island",
       "tags": [
         "anchor",
@@ -311,8 +311,8 @@
     {
       "day": 14,
       "leg": "Squirrel Cove → Montague Harbour (Galiano Island)",
-      "nm": 90,
-      "hrs": 6,
+      "nm": 96.8,
+      "hrs": 6.5,
       "overnight": "Montague Harbour Marine Provincial Park, Galiano Island",
       "tags": [
         "anchor",
@@ -383,8 +383,8 @@
     {
       "day": 17,
       "leg": "Gulf Islands → Victoria (fuel) → Seattle",
-      "nm": 108,
-      "hrs": 7.2,
+      "nm": 104.2,
+      "hrs": 6.9,
       "overnight": "Home Marina, Seattle",
       "tags": [
         "fuel",
@@ -420,7 +420,8 @@
         "speedKts": 15,
         "hrs": 4.5,
         "notes": "",
-        "addedAt": "2026-04-29T04:09:44.010Z"
+        "addedAt": "2026-04-29T04:09:44.010Z",
+        "time": "10:00"
       }
     ],
     "2": [
@@ -431,10 +432,23 @@
         "speedKts": 15,
         "hrs": 4.9,
         "notes": "",
-        "addedAt": "2026-04-30T21:09:04.138Z"
+        "addedAt": "2026-04-30T21:09:04.138Z",
+        "time": "10:00"
       }
     ],
     "3": [],
+    "4": [
+      {
+        "id": "3de9611e-5114-4759-9da2-5e70b4547e03",
+        "name": "",
+        "nm": 84,
+        "speedKts": 15,
+        "hrs": 5.6,
+        "time": "10:00",
+        "notes": "",
+        "addedAt": "2026-05-10T23:32:33.898Z"
+      }
+    ],
     "6": [
       {
         "id": "3a14e247-1d21-4e7e-a735-b7f013a04890",
@@ -444,6 +458,90 @@
         "hrs": 5,
         "notes": "",
         "addedAt": "2026-04-29T04:23:44.738Z"
+      }
+    ],
+    "8": [
+      {
+        "id": "059989af-692e-47c6-94c1-b696cefce1c6",
+        "name": "",
+        "nm": 67.3,
+        "speedKts": 15,
+        "hrs": 4.5,
+        "time": "10:00",
+        "notes": "",
+        "addedAt": "2026-05-10T23:34:19.916Z"
+      }
+    ],
+    "9": [
+      {
+        "id": "b3a1f135-6aca-489a-a408-b4e57c15ae37",
+        "name": "",
+        "nm": 29.5,
+        "speedKts": 15,
+        "hrs": 2,
+        "time": "10:00",
+        "notes": "",
+        "addedAt": "2026-05-10T23:36:30.091Z"
+      }
+    ],
+    "10": [
+      {
+        "id": "17ad7606-5bee-4b54-ba56-4ba7fd6b3e1c",
+        "name": "",
+        "nm": 21,
+        "speedKts": 15,
+        "hrs": 1.4,
+        "time": "",
+        "notes": "",
+        "addedAt": "2026-05-10T23:39:00.456Z"
+      }
+    ],
+    "12": [
+      {
+        "id": "df244fbb-2842-47fa-9125-1f006d87ecea",
+        "name": "",
+        "nm": 48.5,
+        "speedKts": 15,
+        "hrs": 3.2,
+        "time": "",
+        "notes": "",
+        "addedAt": "2026-05-10T23:39:54.556Z"
+      }
+    ],
+    "13": [
+      {
+        "id": "894e3d07-2fa9-45a0-ac01-8e0b04719401",
+        "name": "",
+        "nm": 35.9,
+        "speedKts": 15,
+        "hrs": 2.4,
+        "time": "",
+        "notes": "",
+        "addedAt": "2026-05-10T23:41:12.977Z"
+      }
+    ],
+    "14": [
+      {
+        "id": "5a3b0de6-d90f-445e-8214-8ed03188a7ad",
+        "name": "",
+        "nm": 96.8,
+        "speedKts": 15,
+        "hrs": 6.5,
+        "time": "",
+        "notes": "",
+        "addedAt": "2026-05-10T23:42:20.135Z"
+      }
+    ],
+    "17": [
+      {
+        "id": "8de874f4-8a60-4084-af97-90b3408eaf2c",
+        "name": "",
+        "nm": 104.2,
+        "speedKts": 15,
+        "hrs": 6.9,
+        "time": "",
+        "notes": "",
+        "addedAt": "2026-05-10T23:44:12.023Z"
       }
     ]
   },
