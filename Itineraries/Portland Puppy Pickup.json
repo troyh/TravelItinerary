@@ -96,7 +96,8 @@
         "category": "restaurant",
         "notes": "Booked: LangBaan for 2 on 05/15/26 Fri 8:15 PM.\nHi there, Langbaan here! \nBefore joining us, please check out our 'What to know before you go' page at https://www.langbaanportland.com/opentable. Thank you!  \n See more: https://opentable.com/l/PetfJxZbI.",
         "addedAt": "2026-05-02T17:43:12.063Z",
-        "mapsProvider": "apple"
+        "mapsProvider": "apple",
+        "time": "20:15"
       },
       {
         "id": "bb5cff4a-1fb4-4c2e-8f2d-bb389885e028",
@@ -136,7 +137,8 @@
         "lng": -122.67779709999999,
         "notes": "Confirmation: ZO-AX1045-36178\nHotel confirmation #: 98048433\n[Amex Travel](https://www.americanexpress.com/en-us/travel/my-bookings/trip-overview)",
         "addedAt": "2026-05-07T00:49:34.085Z",
-        "mapsProvider": "google"
+        "mapsProvider": "google",
+        "time": "16:00"
       }
     ],
     "2": [
@@ -163,7 +165,8 @@
         "lng": -122.53093399999999,
         "notes": "11am",
         "addedAt": "2026-05-09T19:26:35.601Z",
-        "mapsProvider": "google"
+        "mapsProvider": "google",
+        "time": "11:00"
       }
     ]
   },
@@ -277,7 +280,8 @@
         ],
         "notes": "",
         "addedAt": "2026-05-03T21:32:19.956Z",
-        "mapsProvider": "google"
+        "mapsProvider": "google",
+        "time": "10:00"
       }
     ],
     "2": [
@@ -359,7 +363,8 @@
         ],
         "notes": "",
         "addedAt": "2026-05-10T00:06:26.800Z",
-        "mapsProvider": "google"
+        "mapsProvider": "google",
+        "time": "10:30"
       },
       {
         "id": "54c0b2e7-b90a-4acc-9301-1d9162f50ba1",
@@ -454,7 +459,8 @@
         ],
         "notes": "",
         "addedAt": "2026-05-10T00:06:55.370Z",
-        "mapsProvider": "google"
+        "mapsProvider": "google",
+        "time": "12:00"
       }
     ]
   },
