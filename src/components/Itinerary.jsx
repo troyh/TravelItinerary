@@ -1188,13 +1188,6 @@ export default function Itinerary() {
                               History
                             </button>
                           )}
-                          <button onClick={toggleLock}
-                            style={{ display:"block", width:"100%", textAlign:"left",
-                              background:"none", border:"none", borderBottom:"1px solid #1e3a5230",
-                              color:"#c8daea", fontFamily:"sans-serif", fontSize:".82rem",
-                              padding:".65rem 1rem", cursor:"pointer" }}>
-                            {isLocked ? "Unlock (make editable)" : "Lock (read-only)"}
-                          </button>
                           <button onClick={handleDuplicate} disabled={menuWorking}
                             style={{ display:"block", width:"100%", textAlign:"left",
                               background:"none", border:"none", borderBottom:"1px solid #1e3a5230",
@@ -2141,6 +2134,34 @@ export default function Itinerary() {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Lock/unlock toggle — bottom of page content */}
+        {currentDb.githubToken && currentFile && currentFile !== "__local__" && (
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center",
+            gap: ".75rem", marginTop: "1.5rem", paddingTop: "1rem",
+            borderTop: "1px solid #1e3a5230" }}>
+            <span style={{ fontSize: ".72rem", fontFamily: "sans-serif", letterSpacing: ".04em",
+              minWidth: 48, textAlign: "right",
+              color: isLocked ? "#8338e8" : "#4e7a9e" }}>
+              {isLocked ? "Locked" : "Editing"}
+            </span>
+            <div onClick={toggleLock}
+              style={{ width: 44, height: 26, borderRadius: 13, cursor: "pointer",
+                background: isLocked ? "#2e3a4a" : "#2e7050", position: "relative",
+                flexShrink: 0, transition: "background 0.2s",
+                border: `1px solid ${isLocked ? "#3a4a5a" : "#3a8060"}` }}>
+              <div style={{
+                width: 20, height: 20, borderRadius: "50%", background: "white",
+                position: "absolute", top: 2, left: isLocked ? 2 : 20,
+                transition: "left 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,0.4)",
+              }} />
+            </div>
+            <span style={{ fontSize: ".72rem", fontFamily: "sans-serif", letterSpacing: ".04em",
+              minWidth: 48, color: isLocked ? "#4e7a9e" : "#3a9060" }}>
+              {isLocked ? "Unlock" : "🔒 Lock"}
+            </span>
           </div>
         )}
 
