@@ -1775,7 +1775,7 @@ export default function Itinerary() {
                       <div style={{ marginTop:"1rem", padding:".75rem 1rem", background:"#0a1a2a",
                         borderLeft:"3px solid #c9a84c66", borderRadius:"0 4px 4px 0" }}>
                         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:4 }}>
-                          <div style={{ fontSize:".62rem", color:"#c9a84c", letterSpacing:".1em", textTransform:"uppercase", fontFamily:"sans-serif" }}>Captain's Note</div>
+                          <div style={{ fontSize:".62rem", color:"#c9a84c", letterSpacing:".1em", textTransform:"uppercase", fontFamily:"sans-serif" }}>Notes</div>
                           {!isEditing && !readOnly && (
                             <button onClick={() => startEditNote(d.day, note)}
                               style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
