@@ -14,6 +14,21 @@ URL:https://troyh.github.io/TravelItinerary/?i=it-5afa99fe&day=1
 UID:day-1-20260917@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260917T155700
+DTEND:20260917T183400
+SUMMARY:✈ as610: SEA → SBA
+DESCRIPTION:Alaska Airlines · Boeing 737-800\nSeattle → Santa Barbara\nConfirmation: LCJDCP
+UID:flight-0b3af93f-42d6-468f-87e7-f9c7eeb59c4e@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260917T190000
+DTEND:20260917T200000
+SUMMARY:Hotel Californian
+LOCATION:36 State St\, Santa Barbara\, CA 93101\, USA
+DESCRIPTION:Phone: (805) 882-0100\nWebsite: https://www.hotelcalifornian.com/?utm_source=local&utm_medium=organic&utm_campaign=website_link\nConfirmation numbers: \nZO-AX1048-09082\nZO-AX1048-09016
+UID:place-1ddc2bb3-17f8-4c98-a00d-c2a26492b23d@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260918
 DTEND;VALUE=DATE:20260919
 SUMMARY:Day 2: Shopping Day
@@ -36,5 +51,20 @@ SUMMARY:Day 4: Fly to Seattle
 DESCRIPTION:\nHighlights:\n• Check out of hotel\n• Return rental car\n• Go to airport\n\nFlights:\n✈ as618: SBA → SEA · 909 mi
 URL:https://troyh.github.io/TravelItinerary/?i=it-5afa99fe&day=4
 UID:day-4-20260920@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260920T192200
+DTEND:20260920T220000
+SUMMARY:✈ as618: SBA → SEA
+DESCRIPTION:Alaska Airlines · Boeing 737-800\nSanta Barbara → Seattle
+UID:flight-485f6d92-5a66-4017-abc8-aa642756d511@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260920T163000
+DTEND:20260920T164400
+SUMMARY:Hotel Californian → SBA airport (SBA)
+LOCATION:SBA airport (SBA)
+DESCRIPTION:10.5 mi · 14 mins
+UID:dir-6e2d6849-c826-47cc-9866-c89a4a73a1ad@travelitinerary
 END:VEVENT
 END:VCALENDAR
