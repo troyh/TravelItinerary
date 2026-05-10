@@ -1346,7 +1346,7 @@ export default function Itinerary() {
 
           {/* Navigation warning */}
           {showCloseWarn && (
-            <div style={{ position: "fixed", inset: 0, background: "#00000088", zIndex: 200,
+            <div style={{ position: "fixed", inset: 0, background: "#00000088", zIndex: 2000,
               display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
               <div style={{ background: "#0d2035", border: "1px solid #2e5070", borderRadius: 8,
                 padding: "1.5rem", maxWidth: 360, width: "100%", fontFamily: "sans-serif" }}>
