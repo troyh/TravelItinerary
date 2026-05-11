@@ -30,14 +30,6 @@ DESCRIPTION:Phone: (503) 222-9996\nWebsite: https://www.marriott.com/en-us/hotel
 UID:place-1ae8c071-3cf6-43e5-be62-2fe683f9e4ee@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260515T100000
-DTEND:20260515T125300
-SUMMARY:1107 21st Avenue East → The Nines\, a Luxury Collection Hotel\, Portland
-LOCATION:The Nines\, a Luxury Collection Hotel\, Portland
-DESCRIPTION:178 mi · 2 hours 53 mins
-UID:dir-e13e941e-2087-473a-83ca-816604f1f66a@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260516
 DTEND;VALUE=DATE:20260517
 SUMMARY:Day 2: Get Puppy\, Go Home
@@ -53,13 +45,5 @@ SUMMARY:Luuwit View Park
 LOCATION:NE 127th and\, NE Fremont St\, Portland\, OR 97230\, USA
 DESCRIPTION:Phone: (503) 823-2525\nWebsite: https://www.portlandoregon.gov/parks/finder/index.cfm?action=ViewPark&PropertyID=1461\n11am
 UID:place-a59f48e4-42dc-42c4-90e8-9739ee3341a6@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260516T103000
-DTEND:20260516T104600
-SUMMARY:The Nines\, a Luxury Collection Hotel\, Portland → Luuwit View Park
-LOCATION:Luuwit View Park
-DESCRIPTION:9.7 mi · 16 mins
-UID:dir-3afcae60-76f8-49af-9f19-13d08cc46c6c@travelitinerary
 END:VEVENT
 END:VCALENDAR
