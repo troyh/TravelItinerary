@@ -1478,12 +1478,12 @@ export default function Itinerary() {
           )}
 
           {/* Overview map */}
-          <ItineraryMap days={days} savedFlights={savedFlights} savedDirections={savedDirections} savedPlaces={savedPlaces} />
+          <ItineraryMap days={days} savedFlights={savedFlights} savedDirections={savedDirections} savedPlaces={savedPlaces} savedRoutes={savedRoutes} />
 
           {/* Stats */}
           <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", marginBottom: "1.25rem" }}>
             {[
-              totalNM > 0          && { label: "Boating",  val: `${totalNM} NM` },
+              totalNM > 0          && { label: "Boating",  val: `${Math.round(totalNM)} NM` },
               totalFlightMiles > 0 && { label: "Flying",   val: `${totalFlightMiles.toLocaleString()} mi` },
               totalDrivingMiles > 0 && { label: "Driving",  val: `${totalDrivingMiles.toLocaleString()} mi` },
               { label: "Travel Days",    val: String(travelDays) },
@@ -1744,7 +1744,7 @@ export default function Itinerary() {
                     {d.tags.includes("combined-leg") && <span style={{ marginLeft:6, background:"#20c99722", color:"#20c997", fontSize:".63rem", padding:"2px 7px", borderRadius:10, fontFamily:"sans-serif", verticalAlign:"middle" }}>Combined</span>}
                   </div>
                   <div style={{ color:"#4e7a9e", fontSize:".75rem", marginTop:2, fontFamily:"sans-serif" }}>
-                    {isLayover ? "Layover" : `${d.nm} NM · ~${d.hrs.toFixed(1)} hrs @ 15 kts`}
+                    {isLayover ? "Layover" : `${d.nm} NM · ~${(() => { const h=Math.floor(d.hrs), m=Math.round((d.hrs-h)*60); return h===0?`${m}m`:m===0?`${h}h`:`${h}h ${m}m`; })()} @ 15 kts`}
                     {" · "}
                     <span style={{ fontStyle:"italic", color:"#3d6680" }}>{d.overnight}</span>
                   </div>

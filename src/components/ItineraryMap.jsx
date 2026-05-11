@@ -109,7 +109,7 @@ function markerIcon(n) {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export default function ItineraryMap({ days, savedFlights, savedDirections, savedPlaces }) {
+export default function ItineraryMap({ days, savedFlights, savedDirections, savedPlaces, savedRoutes }) {
   const mapElRef   = useRef(null);
   const leafletRef = useRef(null);
   const [open,   setOpen]   = useState(true);
@@ -246,6 +246,20 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
       });
     });
 
+    // Draw boating routes
+    Object.entries(savedRoutes ?? {}).forEach(([dayKey, routeList]) => {
+      const dayNum = parseInt(dayKey);
+      (routeList ?? []).forEach(r => {
+        if (!r.startLat || !r.startLng || !r.endLat || !r.endLng) return;
+        const pts = [[r.startLat, r.startLng], [r.endLat, r.endLng]];
+        L.polyline(pts, { color: "#c9a84c", weight: 2, opacity: 0.7, dashArray: "6,5" }).addTo(map);
+        pts.forEach(p => bounds.extend(p));
+        L.marker([r.endLat, r.endLng], { icon: markerIcon(dayNum) })
+          .bindTooltip(r.endName || `Day ${dayNum}`, { direction: "top", offset: [0, -10], className: "leaflet-tooltip-dark" })
+          .addTo(map);
+      });
+    });
+
     // Add markers
     stops.forEach((s, i) => {
       const c = coords[s.overnight];
@@ -277,7 +291,7 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
     };
   // Rebuild when open toggles or coords change
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, coords, JSON.stringify(savedFlights), JSON.stringify(savedDirections), JSON.stringify(savedPlaces)]);
+  }, [open, coords, JSON.stringify(savedFlights), JSON.stringify(savedDirections), JSON.stringify(savedPlaces), JSON.stringify(savedRoutes)]);
 
   // Don't render if fewer than 2 days have overnight locations
   if (stopsWithOvernight.length < 2) return null;

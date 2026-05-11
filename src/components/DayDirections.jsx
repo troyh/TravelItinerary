@@ -94,9 +94,10 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
   const [routeError,       setRouteError]       = useState(null);
 
   // Card state
-  const [editingId,  setEditingId]  = useState(null);
-  const [noteDraft,  setNoteDraft]  = useState("");
-  const [expandedId, setExpandedId] = useState(null);
+  const [editingId,    setEditingId]    = useState(null);
+  const [noteDraft,    setNoteDraft]    = useState("");
+  const [expandedId,   setExpandedId]   = useState(null);
+  const [editingDirId, setEditingDirId] = useState(null);
 
   const libRef         = useRef(null);
   const originTokenRef = useRef(null);
@@ -147,8 +148,25 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
     setOrigin(null); setDestination(null);
     setDepartureTime("");
     setRouteError(null);
+    setEditingDirId(null);
     originTokenRef.current = null;
     destTokenRef.current   = null;
+  }
+
+  function startEditDir(dir) {
+    setEditingDirId(dir.id);
+    setOriginQuery(dir.origin.name);
+    setDestQuery(dir.destination.name);
+    setOrigin(null);
+    setDestination(null);
+    setTravelMode(dir.travelMode);
+    setDepartureTime(dir.time || "");
+    setRouteError(null);
+    setIsAdding(true);
+    if (provider === "google" && libRef.current?.AutocompleteSessionToken) {
+      originTokenRef.current = new libRef.current.AutocompleteSessionToken();
+      destTokenRef.current   = new libRef.current.AutocompleteSessionToken();
+    }
   }
 
   function makeSuggestHandler(setQuery, setPreds, tokenRef) {
@@ -207,17 +225,18 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
         const result = await appleFetchDirections(
           libRef.current, origin._data, destination._data, travelMode
         );
-        onAdd({
-          id:          crypto.randomUUID(),
+        const appleRecord = {
+          id:          editingDirId || crypto.randomUUID(),
           origin:      { name: origin.name },
           destination: { name: destination.name },
           travelMode,
           ...result,
           time:         departureTime,
-          notes:        "",
-          addedAt:      new Date().toISOString(),
+          notes:        editingDirId ? (directions.find(d => d.id === editingDirId)?.notes ?? "") : "",
+          addedAt:      editingDirId ? (directions.find(d => d.id === editingDirId)?.addedAt ?? new Date().toISOString()) : new Date().toISOString(),
           mapsProvider: "apple",
-        });
+        };
+        editingDirId ? onUpdate(editingDirId, appleRecord) : onAdd(appleRecord);
       } else {
         const { DirectionsService, TravelMode } = libRef.current;
         const result = await new DirectionsService().route({
@@ -227,8 +246,8 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
         });
         const leg   = result.routes[0].legs[0];
         const route = result.routes[0];
-        onAdd({
-          id:             crypto.randomUUID(),
+        const googleRecord = {
+          id:             editingDirId || crypto.randomUUID(),
           origin:         { name: origin.name, placeId: origin._data?.placePrediction?.placeId },
           destination:    { name: destination.name, placeId: destination._data?.placePrediction?.placeId },
           travelMode,
@@ -246,10 +265,11 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
                             duration:    s.duration?.text ?? "",
                           })),
           time:         departureTime,
-          notes:        "",
-          addedAt:      new Date().toISOString(),
+          notes:        editingDirId ? (directions.find(d => d.id === editingDirId)?.notes ?? "") : "",
+          addedAt:      editingDirId ? (directions.find(d => d.id === editingDirId)?.addedAt ?? new Date().toISOString()) : new Date().toISOString(),
           mapsProvider: "google",
-        });
+        };
+        editingDirId ? onUpdate(editingDirId, googleRecord) : onAdd(googleRecord);
       }
       resetForm();
     } catch {
@@ -335,6 +355,13 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
       {isAdding && (
         <div style={{ background: "#0a1a2a", borderLeft: borderAccent, padding: ".75rem 1rem" }}>
 
+          {editingDirId && (
+            <div style={{ fontSize: ".62rem", color: "#c9a84c", letterSpacing: ".1em",
+              textTransform: "uppercase", fontFamily: "sans-serif", marginBottom: ".5rem" }}>
+              Editing direction
+            </div>
+          )}
+
           {/* From */}
           <div style={{ marginBottom: ".5rem" }}>
             <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>From</div>
@@ -381,7 +408,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
           <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
             <button onClick={fetchDirections} disabled={!canFetch}
               style={{ ...S.btnPrimary, opacity: canFetch ? 1 : 0.45 }}>
-              {fetching ? "Getting directions…" : "Get Directions"}
+              {fetching ? "Getting directions…" : editingDirId ? "Update Directions" : "Get Directions"}
             </button>
             {routeError && (
               <span style={{ fontSize: ".72rem", color: "#e87878", fontFamily: "sans-serif" }}>
@@ -424,11 +451,18 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
                     Maps ↗
                   </a>
                   {!readOnly && (
-                    <button onClick={() => onDelete(dir.id)}
-                      style={{ background: "none", border: "none", color: "#3d6050",
-                        cursor: "pointer", fontSize: ".85rem", lineHeight: 1, padding: 0 }}>
-                      ×
-                    </button>
+                    <>
+                      <button onClick={() => startEditDir(dir)}
+                        style={{ background: "none", border: "none", color: "#4e7a9e",
+                          cursor: "pointer", fontSize: ".7rem", fontFamily: "sans-serif", padding: 0 }}>
+                        Edit
+                      </button>
+                      <button onClick={() => onDelete(dir.id)}
+                        style={{ background: "none", border: "none", color: "#3d6050",
+                          cursor: "pointer", fontSize: ".85rem", lineHeight: 1, padding: 0 }}>
+                        ×
+                      </button>
+                    </>
                   )}
                 </div>
               </div>

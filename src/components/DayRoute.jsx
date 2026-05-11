@@ -1,5 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import NoteMarkdown from "./NoteMarkdown.jsx";
+import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
+import { loadMapKit, appleAutocomplete, appleFetchPlaceDetails,
+         getStoredProviderSettings } from "../lib/mapkit.js";
+
+// ── Module-level singletons ────────────────────────────────────────────────
+let routePlacesPromise = null;
+let routeApplePromise  = null;
+
+function getStoredMapsKey() {
+  try { const s = localStorage.getItem("travelSettings"); return (s ? JSON.parse(s) : {}).googleMapsKey ?? ""; }
+  catch { return ""; }
+}
+function loadRoutePlaces() {
+  if (!routePlacesPromise) {
+    const key = getStoredMapsKey();
+    try { setOptions({ key, version: "weekly" }); } catch {}
+    routePlacesPromise = key ? importLibrary("places") : Promise.reject(new Error("no-key"));
+  }
+  return routePlacesPromise;
+}
+function loadRouteApple() {
+  if (!routeApplePromise) {
+    const { appleMapKitToken } = getStoredProviderSettings();
+    routeApplePromise = loadMapKit(appleMapKitToken);
+  }
+  return routeApplePromise;
+}
 
 const borderAccent = "3px solid #c9a84c66";
 
@@ -17,7 +44,17 @@ const S = {
     fontFamily: "sans-serif" },
 };
 
-const BLANK = { name: "", nm: "", speedKts: 15, time: "" };
+const BLANK = { name: "", nm: "", speedKts: 15, time: "",
+                startName: "", startLat: null, startLng: null,
+                endName: "",   endLat: null,   endLng: null };
+
+function fmtHrs(hrs) {
+  const h = Math.floor(hrs);
+  const m = Math.round((hrs - h) * 60);
+  if (h === 0) return `${m}m`;
+  if (m === 0) return `${h}h`;
+  return `${h}h ${m}m`;
+}
 
 function fmtTime(hhmm) {
   if (!hhmm) return "";
@@ -32,12 +69,35 @@ const timeInputStyle = {
 };
 
 export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToDay, readOnly = false }) {
-  const [isAdding,  setIsAdding]  = useState(false);
-  const [draft,     setDraft]     = useState(BLANK);
-  const [editingId, setEditingId] = useState(null);
-  const [noteDraft, setNoteDraft] = useState("");
+  const [isAdding,       setIsAdding]       = useState(false);
+  const [draft,          setDraft]          = useState(BLANK);
+  const [editingId,      setEditingId]      = useState(null);
+  const [noteDraft,      setNoteDraft]      = useState("");
+  const [editingRouteId, setEditingRouteId] = useState(null);
+  const [editDraft,      setEditDraft]      = useState(BLANK);
+  const setE = (k, v) => setEditDraft(p => ({ ...p, [k]: v }));
 
   const set = (k, v) => setDraft(p => ({ ...p, [k]: v }));
+
+  // Location search state
+  const [mapsLib,     setMapsLib]     = useState(null);
+  const [startQuery,  setStartQuery]  = useState("");
+  const [endQuery,    setEndQuery]    = useState("");
+  const [startPreds,  setStartPreds]  = useState([]);
+  const [endPreds,    setEndPreds]    = useState([]);
+  const [startCoords, setStartCoords] = useState(null);
+  const [endCoords,   setEndCoords]   = useState(null);
+  const debStart = useRef(null);
+  const debEnd   = useRef(null);
+
+  useEffect(() => {
+    const { provider, appleMapKitToken, googleMapsKey } = getStoredProviderSettings();
+    if (provider === "apple" && appleMapKitToken) {
+      loadRouteApple().then(mk => setMapsLib({ provider: "apple", mk })).catch(() => {});
+    } else if (googleMapsKey) {
+      loadRoutePlaces().then(lib => setMapsLib({ provider: "google", lib })).catch(() => {});
+    }
+  }, []);
 
   const computedHrs = draft.nm && draft.speedKts
     ? Math.round((parseFloat(draft.nm) / parseFloat(draft.speedKts)) * 10) / 10
@@ -48,27 +108,82 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
       ? crypto.randomUUID()
       : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
+  function makeHandler(setQuery, setPreds, setCoords, debRef) {
+    return function(value) {
+      setQuery(value);
+      setCoords(null);
+      setPreds([]);
+      if (!value.trim() || !mapsLib) return;
+      clearTimeout(debRef.current);
+      debRef.current = setTimeout(async () => {
+        try {
+          if (mapsLib.provider === "apple") {
+            setPreds(await appleAutocomplete(mapsLib.mk, value, null));
+          } else {
+            const { AutocompleteSuggestion } = mapsLib.lib;
+            const { suggestions } = await AutocompleteSuggestion.fetchAutocompleteSuggestions({ input: value });
+            setPreds(suggestions.filter(s => s.placePrediction).slice(0, 5).map(s => ({
+              name: s.placePrediction.mainText.text,
+              subtitle: s.placePrediction.secondaryText?.text ?? "",
+              _data: s,
+            })));
+          }
+        } catch {}
+      }, 350);
+    };
+  }
+
+  async function selectPred(pred, setQuery, setPreds, setCoords) {
+    setQuery(pred.name);
+    setPreds([]);
+    try {
+      let lat, lng;
+      if (mapsLib.provider === "apple") {
+        const details = await appleFetchPlaceDetails(mapsLib.mk, pred._data);
+        lat = details.lat ?? null; lng = details.lng ?? null;
+      } else {
+        const place = pred._data.placePrediction.toPlace();
+        await place.fetchFields({ fields: ["location"] });
+        lat = place.location?.lat() ?? null;
+        lng = place.location?.lng() ?? null;
+      }
+      setCoords({ name: pred.name, lat, lng });
+    } catch {}
+  }
+
   function handleAdd() {
     const nm = parseFloat(draft.nm);
     if (!nm || nm <= 0) return;
     const speedKts = parseFloat(draft.speedKts) || 15;
     onAdd({
-      id:       genId(),
-      name:     draft.name.trim(),
-      nm:       Math.round(nm * 10) / 10,
+      id:        genId(),
+      name:      draft.name.trim(),
+      nm:        Math.round(nm * 10) / 10,
       speedKts,
-      hrs:      Math.round((nm / speedKts) * 10) / 10,
-      time:     draft.time,
-      notes:    "",
-      addedAt:  new Date().toISOString(),
+      hrs:       Math.round((nm / speedKts) * 10) / 10,
+      time:      draft.time,
+      startName: startCoords?.name ?? "",
+      startLat:  startCoords?.lat ?? null,
+      startLng:  startCoords?.lng ?? null,
+      endName:   endCoords?.name ?? "",
+      endLat:    endCoords?.lat ?? null,
+      endLng:    endCoords?.lng ?? null,
+      notes:     "",
+      addedAt:   new Date().toISOString(),
     });
     setIsAdding(false);
     setDraft(BLANK);
+    setStartQuery(""); setEndQuery("");
+    setStartCoords(null); setEndCoords(null);
+    setStartPreds([]); setEndPreds([]);
   }
 
   function handleCancel() {
     setIsAdding(false);
     setDraft(BLANK);
+    setStartQuery(""); setEndQuery("");
+    setStartCoords(null); setEndCoords(null);
+    setStartPreds([]); setEndPreds([]);
   }
 
   if (readOnly && routes.length === 0) return null;
@@ -142,6 +257,52 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
                 style={{ ...S.input, width: "100%", colorScheme: "dark" }} />
             </div>
           </div>
+          {/* Location search — only when maps API is loaded */}
+          {mapsLib && (
+            <div style={{ marginBottom: ".5rem" }}>
+              {[
+                { label: "From", query: startQuery, preds: startPreds, coords: startCoords,
+                  setQ: setStartQuery, setP: setStartPreds, setC: setStartCoords, deb: debStart },
+                { label: "To",   query: endQuery,   preds: endPreds,   coords: endCoords,
+                  setQ: setEndQuery,   setP: setEndPreds,   setC: setEndCoords,   deb: debEnd   },
+              ].map(({ label, query, preds, coords, setQ, setP, setC, deb }) => (
+                <div key={label} style={{ marginBottom: ".4rem" }}>
+                  <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>
+                    {label} <span style={{ color: "#3d5060", fontStyle: "italic",
+                      textTransform: "none", letterSpacing: 0 }}>(optional)</span>
+                  </div>
+                  <input value={query}
+                    onChange={e => makeHandler(setQ, setP, setC, deb)(e.target.value)}
+                    placeholder="Search for a location…"
+                    style={{ ...S.input, width: "100%",
+                      borderColor: coords ? "#c9a84c66" : "#2e5070" }} />
+                  {coords && (
+                    <div style={{ fontSize: ".68rem", color: "#c9a84c", fontFamily: "sans-serif",
+                      marginTop: 2 }}>
+                      ✓ {coords.name}
+                    </div>
+                  )}
+                  {preds.length > 0 && (
+                    <div style={{ border: "1px solid #2e5070", borderRadius: 4,
+                      background: "#0d1f33", overflow: "hidden", marginTop: ".25rem" }}>
+                      {preds.map((pred, i) => (
+                        <div key={i} onClick={() => selectPred(pred, setQ, setP, setC)}
+                          style={{ padding: ".4rem .65rem", cursor: "pointer",
+                            borderBottom: i < preds.length - 1 ? "1px solid #1e3a5230" : "none",
+                            fontFamily: "sans-serif" }}
+                          onMouseEnter={e => e.currentTarget.style.background = "#1a3352"}
+                          onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                          <div style={{ fontSize: ".8rem", color: "#e8dcc8" }}>{pred.name}</div>
+                          {pred.subtitle && <div style={{ fontSize: ".7rem", color: "#4e7a9e", marginTop: 1 }}>{pred.subtitle}</div>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
           <div style={{ display: "flex", alignItems: "center", gap: ".75rem" }}>
             <button type="button"
               onClick={handleAdd}
@@ -152,7 +313,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
             </button>
             {computedHrs !== null && (
               <span style={{ fontSize: ".78rem", color: "#c9a84c", fontFamily: "sans-serif" }}>
-                ~{computedHrs} hrs at {draft.speedKts} kts
+                ~{fmtHrs(computedHrs)} at {draft.speedKts} kts
               </span>
             )}
           </div>
@@ -172,43 +333,150 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
                 🚢 {route.name || "Unnamed Route"}
               </span>
               {!readOnly && (
-                <button type="button" onClick={() => onDelete(route.id)}
-                  style={{ background: "none", border: "none", color: "#5a4a20",
-                    cursor: "pointer", fontSize: ".85rem", lineHeight: 1, padding: 0,
-                    flexShrink: 0 }}>
-                  ×
-                </button>
+                <div style={{ display: "flex", gap: ".4rem", flexShrink: 0, alignItems: "center" }}>
+                  <button type="button"
+                    onClick={() => {
+                      setEditingRouteId(route.id);
+                      setEditDraft({ name: route.name, nm: String(route.nm), speedKts: String(route.speedKts), time: route.time || "" });
+                      setStartQuery(route.startName || ""); setEndQuery(route.endName || "");
+                      setStartCoords(route.startLat ? { name: route.startName, lat: route.startLat, lng: route.startLng } : null);
+                      setEndCoords(route.endLat   ? { name: route.endName,   lat: route.endLat,   lng: route.endLng   } : null);
+                      setStartPreds([]); setEndPreds([]);
+                    }}
+                    style={{ background: "none", border: "none", color: "#4e7a9e",
+                      cursor: "pointer", fontSize: ".7rem", fontFamily: "sans-serif", padding: 0 }}>
+                    Edit
+                  </button>
+                  <button type="button" onClick={() => onDelete(route.id)}
+                    style={{ background: "none", border: "none", color: "#5a4a20",
+                      cursor: "pointer", fontSize: ".85rem", lineHeight: 1, padding: 0 }}>
+                    ×
+                  </button>
+                </div>
               )}
             </div>
 
-            {/* Stats row */}
-            <div style={{ fontSize: ".75rem", color: "#4e7a9e", fontFamily: "sans-serif",
-              marginBottom: ".4rem", display: "flex", alignItems: "center", gap: ".5rem", flexWrap: "wrap" }}>
-              <span>{route.nm} NM · ~{route.hrs} hrs at {route.speedKts} kts</span>
-              {!readOnly
-                ? <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-                    <input type="time" value={route.time || ""}
-                      onChange={e => onUpdate(route.id, { time: e.target.value })}
-                      style={{ ...timeInputStyle, color: route.time ? "#c9a84c" : "#2e4a5e" }} />
-                    {route.time && (
-                      <button type="button" onClick={() => onUpdate(route.id, { time: "" })}
-                        style={{ background: "none", border: "none", color: "#2e4a5e",
-                          cursor: "pointer", fontSize: ".75rem", padding: "0 2px", lineHeight: 1 }}>
-                        ×
-                      </button>
-                    )}
+            {editingRouteId === route.id ? (
+              /* Inline edit form */
+              <div style={{ marginTop: ".5rem" }}>
+                <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap", marginBottom: ".5rem" }}>
+                  <div style={{ flex: 2, minWidth: 140 }}>
+                    <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Route Name</div>
+                    <input value={editDraft.name} onChange={e => setE("name", e.target.value)}
+                      style={{ ...S.input, width: "100%" }} />
                   </div>
-                : route.time
-                  ? <span style={{ color: "#c9a84c" }}>{fmtTime(route.time)}</span>
-                  : null}
-            </div>
+                  <div style={{ width: 80 }}>
+                    <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Distance</div>
+                    <input type="text" inputMode="decimal" value={editDraft.nm}
+                      onChange={e => setE("nm", e.target.value)} placeholder="NM"
+                      style={{ ...S.input, width: "100%" }} />
+                  </div>
+                  <div style={{ width: 80 }}>
+                    <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Speed</div>
+                    <input type="text" inputMode="decimal" value={editDraft.speedKts}
+                      onChange={e => setE("speedKts", e.target.value)} placeholder="kts"
+                      style={{ ...S.input, width: "100%" }} />
+                  </div>
+                  <div style={{ width: 90 }}>
+                    <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Depart</div>
+                    <input type="time" value={editDraft.time} onChange={e => setE("time", e.target.value)}
+                      style={{ ...S.input, width: "100%", colorScheme: "dark" }} />
+                  </div>
+                </div>
+                {(() => { const nm = parseFloat(editDraft.nm); const spd = parseFloat(editDraft.speedKts); const h = nm > 0 && spd > 0 ? Math.round(nm/spd*10)/10 : null; return h ? <span style={{ fontSize:".78rem", color:"#c9a84c", fontFamily:"sans-serif" }}>~{fmtHrs(h)} at {editDraft.speedKts} kts</span> : null; })()}
 
-            {/* Use these values */}
-            <button type="button" onClick={() => onApplyToDay({ nm: route.nm, hrs: route.hrs })}
-              style={{ ...S.btnGhost, fontSize: ".68rem", padding: ".2rem .55rem",
-                marginBottom: ".45rem" }}>
-              Use these values
-            </button>
+                {/* Location search in edit form */}
+                {mapsLib && (
+                  <div style={{ marginTop: ".5rem" }}>
+                    {[
+                      { label: "From", query: startQuery, preds: startPreds, coords: startCoords,
+                        setQ: setStartQuery, setP: setStartPreds, setC: setStartCoords, deb: debStart },
+                      { label: "To",   query: endQuery,   preds: endPreds,   coords: endCoords,
+                        setQ: setEndQuery,   setP: setEndPreds,   setC: setEndCoords,   deb: debEnd   },
+                    ].map(({ label, query, preds, coords, setQ, setP, setC, deb }) => (
+                      <div key={label} style={{ marginBottom: ".4rem" }}>
+                        <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>{label}</div>
+                        <input value={query} onChange={e => makeHandler(setQ, setP, setC, deb)(e.target.value)}
+                          placeholder="Search for a location…"
+                          style={{ ...S.input, width: "100%", borderColor: coords ? "#c9a84c66" : "#2e5070" }} />
+                        {coords && <div style={{ fontSize: ".68rem", color: "#c9a84c", fontFamily: "sans-serif", marginTop: 2 }}>✓ {coords.name}</div>}
+                        {preds.length > 0 && (
+                          <div style={{ border: "1px solid #2e5070", borderRadius: 4, background: "#0d1f33", overflow: "hidden", marginTop: ".25rem" }}>
+                            {preds.map((pred, i) => (
+                              <div key={i} onClick={() => selectPred(pred, setQ, setP, setC)}
+                                style={{ padding: ".4rem .65rem", cursor: "pointer",
+                                  borderBottom: i < preds.length - 1 ? "1px solid #1e3a5230" : "none", fontFamily: "sans-serif" }}
+                                onMouseEnter={e => e.currentTarget.style.background = "#1a3352"}
+                                onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                                <div style={{ fontSize: ".8rem", color: "#e8dcc8" }}>{pred.name}</div>
+                                {pred.subtitle && <div style={{ fontSize: ".7rem", color: "#4e7a9e", marginTop: 1 }}>{pred.subtitle}</div>}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div style={{ display: "flex", gap: ".4rem", marginTop: ".5rem" }}>
+                  <button type="button" onClick={() => {
+                    const nm = parseFloat(editDraft.nm);
+                    if (!nm || nm <= 0) return;
+                    const speedKts = parseFloat(editDraft.speedKts) || 15;
+                    onUpdate(route.id, {
+                      name: editDraft.name.trim(), nm: Math.round(nm*10)/10, speedKts, hrs: Math.round(nm/speedKts*10)/10, time: editDraft.time,
+                      startName: startCoords?.name ?? route.startName ?? "", startLat: startCoords?.lat ?? route.startLat ?? null, startLng: startCoords?.lng ?? route.startLng ?? null,
+                      endName:   endCoords?.name   ?? route.endName   ?? "", endLat:   endCoords?.lat   ?? route.endLat   ?? null, endLng:   endCoords?.lng   ?? route.endLng   ?? null,
+                    });
+                    setEditingRouteId(null);
+                    setStartQuery(""); setEndQuery(""); setStartCoords(null); setEndCoords(null);
+                  }} style={S.btnPrimary}>Save</button>
+                  <button type="button" onClick={() => { setEditingRouteId(null); setStartQuery(""); setEndQuery(""); setStartCoords(null); setEndCoords(null); }} style={S.btnGhost}>Cancel</button>
+                </div>
+              </div>
+            ) : (
+              <>
+                {/* Stats row */}
+                <div style={{ fontSize: ".75rem", color: "#4e7a9e", fontFamily: "sans-serif",
+                  marginBottom: ".4rem", display: "flex", alignItems: "center", gap: ".5rem", flexWrap: "wrap" }}>
+                  <span>{route.nm} NM · ~{fmtHrs(route.hrs)} at {route.speedKts} kts</span>
+                  {!readOnly
+                    ? <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+                        <input type="time" value={route.time || ""}
+                          onChange={e => onUpdate(route.id, { time: e.target.value })}
+                          style={{ ...timeInputStyle, color: route.time ? "#c9a84c" : "#2e4a5e" }} />
+                        {route.time && (
+                          <button type="button" onClick={() => onUpdate(route.id, { time: "" })}
+                            style={{ background: "none", border: "none", color: "#2e4a5e",
+                              cursor: "pointer", fontSize: ".75rem", padding: "0 2px", lineHeight: 1 }}>
+                            ×
+                          </button>
+                        )}
+                      </div>
+                    : route.time
+                      ? <span style={{ color: "#c9a84c" }}>{fmtTime(route.time)}</span>
+                      : null}
+                </div>
+
+                {/* Location display */}
+                {(route.startName || route.endName) && (
+                  <div style={{ fontSize: ".72rem", color: "#8fb0cc", fontFamily: "sans-serif",
+                    marginBottom: ".35rem" }}>
+                    {route.startName && route.endName
+                      ? `${route.startName} → ${route.endName}`
+                      : route.startName || route.endName}
+                  </div>
+                )}
+
+                {/* Use these values */}
+                <button type="button" onClick={() => onApplyToDay({ nm: route.nm, hrs: route.hrs })}
+                  style={{ ...S.btnGhost, fontSize: ".68rem", padding: ".2rem .55rem",
+                    marginBottom: ".45rem" }}>
+                  Use these values
+                </button>
+              </>
+            )}
 
             {/* Notes inline edit */}
             {editingId === route.id && !readOnly ? (
