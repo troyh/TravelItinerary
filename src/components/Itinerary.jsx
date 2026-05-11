@@ -189,7 +189,16 @@ export default function Itinerary() {
           ...todoLines(itineraryNotes || ""),
           ...days.flatMap(d => todoLines((customNotes[d.day] !== undefined ? customNotes[d.day] : d.note) || "")),
         ];
-        meta[`${currentDbId}:${currentFile}`] = { title, startDate, dayCount: days.length, locations, todos };
+        let drivingKm = 0;
+        Object.values(savedDirections).forEach(dirs => (dirs ?? []).forEach(d => {
+          const km = d.distance?.match(/^([\d.]+)\s*km/i);
+          const mi = d.distance?.match(/^([\d.]+)\s*mi/i);
+          const m  = d.distance?.match(/^(\d+)\s*m\b/i);
+          if (km) drivingKm += parseFloat(km[1]);
+          else if (mi) drivingKm += parseFloat(mi[1]) * 1.60934;
+          else if (m)  drivingKm += parseFloat(m[1]) / 1000;
+        }));
+        meta[`${currentDbId}:${currentFile}`] = { title, startDate, dayCount: days.length, locations, todos, drivingKm: drivingKm > 0 ? Math.round(drivingKm) : null };
         localStorage.setItem("itineraryMetadata", JSON.stringify(meta));
       } catch {}
     }
@@ -471,15 +480,14 @@ export default function Itinerary() {
 
   function startEditCore(dayNum, d) {
     setEditingCoreDay(dayNum);
-    setCoreDraft({ leg: d.leg, overnight: d.overnight, nm: d.nm, hrs: d.hrs });
+    setCoreDraft({ leg: d.leg });
     setEditingNoteDay(null);
   }
 
   function saveCore(dayNum) {
     setDays(prev => prev.map(d =>
       d.day === dayNum
-        ? { ...d, leg: coreDraft.leg.trim() || d.leg, overnight: coreDraft.overnight,
-               nm: Number(coreDraft.nm) || 0, hrs: Number(coreDraft.hrs) || 0 }
+        ? { ...d, leg: coreDraft.leg.trim() || d.leg }
         : d
     ));
     setEditingCoreDay(null);
@@ -1744,7 +1752,25 @@ export default function Itinerary() {
                     {d.tags.includes("combined-leg") && <span style={{ marginLeft:6, background:"#20c99722", color:"#20c997", fontSize:".63rem", padding:"2px 7px", borderRadius:10, fontFamily:"sans-serif", verticalAlign:"middle" }}>Combined</span>}
                   </div>
                   <div style={{ color:"#4e7a9e", fontSize:".75rem", marginTop:2, fontFamily:"sans-serif" }}>
-                    {isLayover ? "Layover" : `${d.nm} NM · ~${(() => { const h=Math.floor(d.hrs), m=Math.round((d.hrs-h)*60); return h===0?`${m}m`:m===0?`${h}h`:`${h}h ${m}m`; })()} @ 15 kts`}
+                    {(() => {
+                      const parts = [];
+                      if (!isLayover) parts.push(`${d.nm} NM · ~${(() => { const h=Math.floor(d.hrs), m=Math.round((d.hrs-h)*60); return h===0?`${m}m`:m===0?`${h}h`:`${h}h ${m}m`; })()}`);
+                      let dKm = 0;
+                      (savedDirections[d.day] ?? []).forEach(dir => {
+                        const km = dir.distance?.match(/^([\d.]+)\s*km/i);
+                        const mi = dir.distance?.match(/^([\d.]+)\s*mi/i);
+                        const mo = dir.distance?.match(/^(\d+)\s*m\b/i);
+                        if (km) dKm += parseFloat(km[1]);
+                        else if (mi) dKm += parseFloat(mi[1]) * 1.60934;
+                        else if (mo) dKm += parseFloat(mo[1]) / 1000;
+                      });
+                      if (dKm > 0) {
+                        const useMi = settings.distanceUnit === "mi";
+                        const val = useMi ? Math.round(dKm * 0.621371) : Math.round(dKm);
+                        parts.push(`${val} ${useMi ? "mi" : "km"} driving`);
+                      }
+                      return parts.join(" · ") || "Layover";
+                    })()}
                     {" · "}
                     <span style={{ fontStyle:"italic", color:"#3d6680" }}>{d.overnight}</span>
                   </div>
@@ -1782,46 +1808,12 @@ export default function Itinerary() {
                         textTransform:"uppercase", fontFamily:"sans-serif", marginBottom:".65rem" }}>
                         Edit Day
                       </div>
-                      <div style={{ display:"flex", flexDirection:"column", gap:".5rem" }}>
-                        <div>
-                          <div style={{ fontSize:".62rem", color:"#6b8fa8", letterSpacing:".08em", textTransform:"uppercase", fontFamily:"sans-serif", marginBottom:3 }}>Route / Leg</div>
-                          <input autoFocus value={coreDraft.leg}
-                            onChange={e => setCoreDraft(p => ({ ...p, leg: e.target.value }))}
-                            onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if ((e.metaKey||e.ctrlKey) && e.key === "Enter") saveCore(d.day); }}
-                            style={{ width:"100%", background:"#0d1f33", border:"1px solid #2e5070", color:"#e8dcc8",
-                              borderRadius:4, padding:".4rem .65rem", fontSize:".85rem", fontFamily:"Georgia,serif",
-                              outline:"none", boxSizing:"border-box" }} />
-                        </div>
-                        <div>
-                          <div style={{ fontSize:".62rem", color:"#6b8fa8", letterSpacing:".08em", textTransform:"uppercase", fontFamily:"sans-serif", marginBottom:3 }}>Overnight / Anchorage</div>
-                          <input value={coreDraft.overnight}
-                            onChange={e => setCoreDraft(p => ({ ...p, overnight: e.target.value }))}
-                            onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if ((e.metaKey||e.ctrlKey) && e.key === "Enter") saveCore(d.day); }}
-                            style={{ width:"100%", background:"#0d1f33", border:"1px solid #2e5070", color:"#e8dcc8",
-                              borderRadius:4, padding:".4rem .65rem", fontSize:".82rem", fontFamily:"sans-serif",
-                              outline:"none", boxSizing:"border-box" }} />
-                        </div>
-                        <div style={{ display:"flex", gap:".75rem" }}>
-                          <div style={{ flex:1 }}>
-                            <div style={{ fontSize:".62rem", color:"#6b8fa8", letterSpacing:".08em", textTransform:"uppercase", fontFamily:"sans-serif", marginBottom:3 }}>Distance (NM)</div>
-                            <input type="number" min="0" step="1" value={coreDraft.nm}
-                              onChange={e => setCoreDraft(p => ({ ...p, nm: e.target.value }))}
-                              onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if ((e.metaKey||e.ctrlKey) && e.key === "Enter") saveCore(d.day); }}
-                              style={{ width:"100%", background:"#0d1f33", border:"1px solid #2e5070", color:"#e8dcc8",
-                                borderRadius:4, padding:".4rem .65rem", fontSize:".82rem", fontFamily:"sans-serif",
-                                outline:"none", boxSizing:"border-box" }} />
-                          </div>
-                          <div style={{ flex:1 }}>
-                            <div style={{ fontSize:".62rem", color:"#6b8fa8", letterSpacing:".08em", textTransform:"uppercase", fontFamily:"sans-serif", marginBottom:3 }}>Hours @ 15 kts</div>
-                            <input type="number" min="0" step="0.1" value={coreDraft.hrs}
-                              onChange={e => setCoreDraft(p => ({ ...p, hrs: e.target.value }))}
-                              onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if ((e.metaKey||e.ctrlKey) && e.key === "Enter") saveCore(d.day); }}
-                              style={{ width:"100%", background:"#0d1f33", border:"1px solid #2e5070", color:"#e8dcc8",
-                                borderRadius:4, padding:".4rem .65rem", fontSize:".82rem", fontFamily:"sans-serif",
-                                outline:"none", boxSizing:"border-box" }} />
-                          </div>
-                        </div>
-                      </div>
+                      <input autoFocus value={coreDraft.leg}
+                        onChange={e => setCoreDraft(p => ({ ...p, leg: e.target.value }))}
+                        onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if ((e.metaKey||e.ctrlKey) && e.key === "Enter") saveCore(d.day); }}
+                        style={{ width:"100%", background:"#0d1f33", border:"1px solid #2e5070", color:"#e8dcc8",
+                          borderRadius:4, padding:".4rem .65rem", fontSize:".85rem", fontFamily:"Georgia,serif",
+                          outline:"none", boxSizing:"border-box", marginBottom:".65rem" }} />
                       <div style={{ display:"flex", gap:".5rem", marginTop:".65rem" }}>
                         <button onClick={() => saveCore(d.day)}
                           style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
@@ -1840,7 +1832,7 @@ export default function Itinerary() {
                       <button onClick={() => startEditCore(d.day, d)}
                         style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
                           fontSize:".7rem", fontFamily:"sans-serif", padding:0 }}>
-                        Edit leg / overnight / distance
+                        Edit day title
                       </button>
                     </div>
                   ) : null}

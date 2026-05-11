@@ -259,6 +259,9 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
           destinationLat: leg.end_location.lat(),
           destinationLng: leg.end_location.lng(),
           overviewPolyline: route.overview_polyline?.points ?? null,
+          routePath:      route.overview_path?.length
+            ? route.overview_path.map(p => [p.lat(), p.lng()])
+            : null,
           steps:          leg.steps.map(s => ({
                             instruction: stripHtml(s.instructions),
                             distance:    s.distance?.text ?? "",

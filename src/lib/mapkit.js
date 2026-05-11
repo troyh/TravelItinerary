@@ -121,6 +121,25 @@ export async function appleFetchDirections(mk, originData, destData, travelMode)
         return;
       }
       const route = data.routes[0];
+
+      function extractCoords(pts) {
+        const out = [];
+        for (const coord of (pts ?? [])) {
+          const lat = typeof coord.latitude  === "function" ? coord.latitude()  : coord.latitude;
+          const lng = typeof coord.longitude === "function" ? coord.longitude() : coord.longitude;
+          if (lat != null && lng != null) out.push([lat, lng]);
+        }
+        return out;
+      }
+
+      // Prefer step-level paths (forward-compatible); fall back to route.path (deprecated)
+      let routePath = [];
+      for (const step of (route.steps ?? [])) {
+        routePath = routePath.concat(extractCoords(step.path?.points ?? step.path));
+      }
+      if (routePath.length < 2) {
+        routePath = extractCoords(route.path?.points ?? route.path);
+      }
       resolve({
         distance:       formatDistance(route.distance),
         duration:       formatDuration(route.expectedTravelTime),
@@ -129,6 +148,7 @@ export async function appleFetchDirections(mk, originData, destData, travelMode)
         originLng:      originCoord.longitude,
         destinationLat: destCoord.latitude,
         destinationLng: destCoord.longitude,
+        routePath:      routePath.length >= 2 ? routePath : null,
         steps: (route.steps ?? []).map(s => ({
           instruction: s.instructions ?? "",
           distance:    formatDistance(s.distance),

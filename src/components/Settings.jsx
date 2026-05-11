@@ -104,6 +104,7 @@ export default function Settings({ settings, onSave, onClose }) {
     aeroDataBoxKey:   settings.aeroDataBoxKey   ?? "",
     anthropicKey:     settings.anthropicKey     ?? "",
     claudeModel:      settings.claudeModel      ?? "claude-sonnet-4-6",
+    distanceUnit:     settings.distanceUnit     ?? "km",
   });
   const [showAnthropicKey, setShowAnthropicKey] = useState(false);
   const set = (k, v) => setDraft(p => ({ ...p, [k]: v }));
@@ -194,6 +195,19 @@ export default function Settings({ settings, onSave, onClose }) {
               </div>
             </div>
           )}
+
+          {/* Distance units */}
+          <div>
+            <div style={S.label}>Driving Distance Units</div>
+            <div style={{ display: "flex", gap: ".4rem", marginTop: 3 }}>
+              {[{ key: "km", label: "Kilometers" }, { key: "mi", label: "Miles" }].map(u => (
+                <button key={u.key} onClick={() => set("distanceUnit", u.key)}
+                  style={draft.distanceUnit === u.key ? S.btnPrimary : S.btnGhost}>
+                  {u.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* AeroDataBox */}
           <div>

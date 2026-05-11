@@ -175,12 +175,22 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
             data.notes?.[d.day] !== undefined ? data.notes[d.day] : d.note
           )),
         ];
+        let drivingKm = 0;
+        Object.values(data.directions ?? {}).forEach(dirs => (dirs ?? []).forEach(d => {
+          const km = d.distance?.match(/^([\d.]+)\s*km/i);
+          const mi = d.distance?.match(/^([\d.]+)\s*mi/i);
+          const m  = d.distance?.match(/^(\d+)\s*m\b/i);
+          if (km) drivingKm += parseFloat(km[1]);
+          else if (mi) drivingKm += parseFloat(mi[1]) * 1.60934;
+          else if (m)  drivingKm += parseFloat(m[1]) / 1000;
+        }));
         updates[key] = {
-          title:     data.title || null,
-          startDate: data.startDate,
-          dayCount:  data.days?.length ?? 0,
-          locations: overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
-                   : overnights[0] ?? legs[0] ?? null,
+          title:      data.title || null,
+          startDate:  data.startDate,
+          dayCount:   data.days?.length ?? 0,
+          locations:  overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
+                    : overnights[0] ?? legs[0] ?? null,
+          drivingKm:  drivingKm > 0 ? Math.round(drivingKm) : null,
           todos,
         };
       }
@@ -273,6 +283,11 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
         parts.push(`${d.dayCount} day${d.dayCount !== 1 ? "s" : ""}`);
       }
       if (d?.locations) parts.push(d.locations);
+      if (d?.drivingKm) {
+        const useMi = settings.distanceUnit === "mi";
+        const val = useMi ? Math.round(d.drivingKm * 0.621371) : d.drivingKm;
+        parts.push(`${val} ${useMi ? "mi" : "km"} driving`);
+      }
       return parts.join(" · ") || null;
     })();
 

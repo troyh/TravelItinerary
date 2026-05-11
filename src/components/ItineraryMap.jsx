@@ -224,10 +224,25 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
           }).addTo(map);
         }
       } else {
-        // Ground travel — straight line
-        L.polyline([[fromC.lat, fromC.lng], [toC.lat, toC.lng]], {
-          color: "#4e7a9e", weight: 2, opacity: 0.6,
-        }).addTo(map);
+        // Skip straight line if a boating route with GPS coords covers this leg
+        const legRoutes = [
+          ...(savedRoutes?.[from.day] ?? []),
+          ...(savedRoutes?.[to.day]   ?? []),
+        ];
+        const hasGpsRoute = legRoutes.some(r => r.startLat && r.startLng && r.endLat && r.endLng);
+        const legDirs = [
+          ...(savedDirections?.[from.day] ?? []),
+          ...(savedDirections?.[to.day]   ?? []),
+        ];
+        const hasGpsDir = legDirs.some(d =>
+          d.overviewPolyline || d.routePath?.length >= 2 ||
+          (d.originLat && d.originLng && d.destinationLat && d.destinationLng)
+        );
+        if (!hasGpsRoute && !hasGpsDir) {
+          L.polyline([[fromC.lat, fromC.lng], [toC.lat, toC.lng]], {
+            color: "#4e7a9e", weight: 2, opacity: 0.6,
+          }).addTo(map);
+        }
       }
     }
 
@@ -238,6 +253,9 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
           const pts = decodePolyline(dir.overviewPolyline);
           L.polyline(pts, { color: "#43a047", weight: 3, opacity: 0.75 }).addTo(map);
           pts.forEach(p => bounds.extend(p));
+        } else if (dir.routePath?.length >= 2) {
+          L.polyline(dir.routePath, { color: "#43a047", weight: 3, opacity: 0.75 }).addTo(map);
+          dir.routePath.forEach(p => bounds.extend(p));
         } else if (dir.originLat && dir.originLng && dir.destinationLat && dir.destinationLng) {
           const pts = [[dir.originLat, dir.originLng], [dir.destinationLat, dir.destinationLng]];
           L.polyline(pts, { color: "#43a047", weight: 3, opacity: 0.75 }).addTo(map);
