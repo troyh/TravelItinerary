@@ -147,9 +147,10 @@ export default function Itinerary() {
     catch { return new Set(); }
   });
   const inputRef          = useRef(null);
-  const syncTimerRef      = useRef(null);
-  const dirtyRef          = useRef(false);
-  const skipNextLoadRef   = useRef(false);
+  const syncTimerRef       = useRef(null);
+  const dirtyRef           = useRef(false);
+  const skipNextLoadRef    = useRef(false);
+  const saveImmediatelyRef = useRef(false);
 
   const databases     = settings.databases ?? [];
   const currentDb     = databases.find(db => db.id === currentDbId) ?? databases[0] ?? {};
@@ -415,11 +416,9 @@ export default function Itinerary() {
   }
 
   function addDirection(dayNum, dir) {
-    saveImmediatelyRef.current = true;
     setSavedDirections(prev => ({ ...prev, [dayNum]: [...(prev[dayNum] ?? []), dir] }));
   }
   function updateDirection(dayNum, id, updates) {
-    saveImmediatelyRef.current = true;
     setSavedDirections(prev => ({
       ...prev,
       [dayNum]: (prev[dayNum] ?? []).map(d => d.id === id ? { ...d, ...updates } : d),
@@ -1961,6 +1960,7 @@ export default function Itinerary() {
                     onUpdate={(id, updates) => updateDirection(d.day, id, updates)}
                     onDelete={id => deleteDirection(d.day, id)}
                     readOnly={readOnly}
+                    distanceUnit={settings.distanceUnit ?? "km"}
                   />
 
                   {/* Boating Routes */}

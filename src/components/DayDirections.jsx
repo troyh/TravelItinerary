@@ -75,7 +75,16 @@ const timeInputStyle = {
 const borderAccent = "3px solid #5cb85c66";
 
 // ── Component ─────────────────────────────────────────────────────────────
-export default function DayDirections({ directions, onAdd, onUpdate, onDelete, readOnly = false }) {
+function convertDistance(distStr, unit) {
+  if (!distStr || unit !== "mi") return distStr;
+  const km = distStr.match(/^([\d.]+)\s*km/i);
+  const m  = distStr.match(/^(\d+)\s*m\b/i);
+  if (km) return `${(parseFloat(km[1]) * 0.621371).toFixed(1)} mi`;
+  if (m)  return `${Math.round(parseFloat(m[1]) * 0.000621371 * 10) / 10} mi`;
+  return distStr;
+}
+
+export default function DayDirections({ directions, onAdd, onUpdate, onDelete, readOnly = false, distanceUnit = "km" }) {
   const { provider } = getStoredProviderSettings();
   const [apiReady,  setApiReady]  = useState(false);
   const [apiError,  setApiError]  = useState(null);
@@ -157,8 +166,10 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
     setEditingDirId(dir.id);
     setOriginQuery(dir.origin.name);
     setDestQuery(dir.destination.name);
-    setOrigin(null);
-    setDestination(null);
+    // Pre-populate so button stays enabled if user only changes one field;
+    // typing in the input clears _data and forces re-selection for that field
+    setOrigin({ name: dir.origin.name, _data: null });
+    setDestination({ name: dir.destination.name, _data: null });
     setTravelMode(dir.travelMode);
     setDepartureTime(dir.time || "");
     setRouteError(null);
@@ -222,8 +233,12 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
     setRouteError(null);
     try {
       if (provider === "apple") {
+        // Use _data if available (freshly selected from autocomplete), else fall back to name string
         const result = await appleFetchDirections(
-          libRef.current, origin._data, destination._data, travelMode
+          libRef.current,
+          origin._data ?? origin.name,
+          destination._data ?? destination.name,
+          travelMode
         );
         const appleRecord = {
           id:          editingDirId || crypto.randomUUID(),
@@ -239,9 +254,15 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
         editingDirId ? onUpdate(editingDirId, appleRecord) : onAdd(appleRecord);
       } else {
         const { DirectionsService, TravelMode } = libRef.current;
+        const originParam      = origin._data?.placePrediction?.placeId
+          ? { placeId: origin._data.placePrediction.placeId }
+          : { query: origin.name };
+        const destinationParam = destination._data?.placePrediction?.placeId
+          ? { placeId: destination._data.placePrediction.placeId }
+          : { query: destination.name };
         const result = await new DirectionsService().route({
-          origin:      { placeId: origin._data?.placePrediction?.placeId },
-          destination: { placeId: destination._data?.placePrediction?.placeId },
+          origin:      originParam,
+          destination: destinationParam,
           travelMode:  TravelMode[travelMode],
         });
         const leg   = result.routes[0].legs[0];
@@ -475,7 +496,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
                 marginBottom: ".4rem", display: "flex", alignItems: "center", gap: ".5rem", flexWrap: "wrap" }}>
                 <span>
                   {dir.summary && <span>{dir.summary} · </span>}
-                  <span>{dir.distance}</span>
+                  <span>{convertDistance(dir.distance, distanceUnit)}</span>
                   {dir.duration && <span> · {dir.duration}</span>}
                 </span>
                 {!readOnly
@@ -513,7 +534,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
                           {step.instruction}
                           {(step.distance || step.duration) && (
                             <span style={{ color: "#4e7a9e", marginLeft: ".4rem" }}>
-                              {[step.distance, step.duration].filter(Boolean).join(" · ")}
+                              {[convertDistance(step.distance, distanceUnit), step.duration].filter(Boolean).join(" · ")}
                             </span>
                           )}
                         </li>

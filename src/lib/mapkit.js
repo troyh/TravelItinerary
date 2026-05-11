@@ -94,8 +94,12 @@ export function detectAppleCategory(appleCategory) {
 }
 
 function resolveToCoordinate(mk, autocompleteResult) {
+  // Combine all display lines for a specific query (e.g. "1107 21st Ave E, Seattle, WA")
+  const query = autocompleteResult?.displayLines
+    ? autocompleteResult.displayLines.filter(Boolean).join(", ")
+    : autocompleteResult;
   return new Promise((resolve, reject) => {
-    new mk.Search().search(autocompleteResult, (err, data) => {
+    new mk.Search().search(query, (err, data) => {
       if (err || !data?.places?.length) {
         reject(err || new Error("no-place"));
         return;
