@@ -80,6 +80,13 @@ URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=6
 UID:day-6-20260707@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260707T100000
+DTEND:20260707T150000
+SUMMARY:🚢 Princess Louisa Inlet—Desolation Sound
+DESCRIPTION:75.7 NM at 15 kts · ~5 hrs
+UID:route-3a14e247-1d21-4e7e-a735-b7f013a04890@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260708
 DTEND;VALUE=DATE:20260709
 SUMMARY:Day 7: Desolation Sound — Layover
@@ -130,6 +137,13 @@ URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=10
 UID:day-10-20260711@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260711T100000
+DTEND:20260711T112400
+SUMMARY:🚢 Boating Route
+DESCRIPTION:21 NM at 15 kts · ~1.4 hrs
+UID:route-17ad7606-5bee-4b54-ba56-4ba7fd6b3e1c@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260712
 DTEND;VALUE=DATE:20260713
 SUMMARY:Day 11: Broughton Islands — Layover
@@ -148,6 +162,13 @@ URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=12
 UID:day-12-20260713@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260713T100000
+DTEND:20260713T131200
+SUMMARY:🚢 Boating Route
+DESCRIPTION:48.5 NM at 15 kts · ~3.2 hrs
+UID:route-df244fbb-2842-47fa-9125-1f006d87ecea@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260714
 DTEND;VALUE=DATE:20260715
 SUMMARY:Day 13: Blind Channel → Squirrel Cove (Cortes Island)
@@ -157,6 +178,13 @@ URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=13
 UID:day-13-20260714@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260714T100000
+DTEND:20260714T122400
+SUMMARY:🚢 Boating Route
+DESCRIPTION:35.9 NM at 15 kts · ~2.4 hrs
+UID:route-894e3d07-2fa9-45a0-ac01-8e0b04719401@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260715
 DTEND;VALUE=DATE:20260716
 SUMMARY:Day 14: Squirrel Cove → Montague Harbour (Galiano Island)
@@ -164,6 +192,13 @@ LOCATION:Montague Harbour Marine Provincial Park\, Galiano Island
 DESCRIPTION:96.8 NM · ~6.5 hrs\nOvernight: Montague Harbour Marine Provincial Park\, Galiano Island\n\nHighlights:\n• South through the Discovery Islands and upper Gulf Islands\n• Transit Active Pass carefully — BC Ferries run constantly and have right of way\n• Montague Harbour: one of BC's most beautiful marine park anchorages\, famous for its shell beach\n• Walk the Montague Harbour trails to the shell middens and headland views\n• Hummingbird Pub on Galiano Island for a relaxed family dinner ashore\n\nNote: Active Pass: narrow channel between Galiano and Mayne Islands with heavy BC Ferries traffic. Reduce speed\, hug the correct side\, and give ferries wide berth.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=14
 UID:day-14-20260715@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260715T100000
+DTEND:20260715T163000
+SUMMARY:🚢 Boating Route
+DESCRIPTION:96.8 NM at 15 kts · ~6.5 hrs
+UID:route-5a3b0de6-d90f-445e-8214-8ed03188a7ad@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260716
@@ -191,5 +226,12 @@ LOCATION:Home Marina\, Seattle
 DESCRIPTION:104.2 NM · ~6.9 hrs\nOvernight: Home Marina\, Seattle\n\nHighlights:\n• Depart Gulf Islands in the morning — easy run south to Victoria via Haro Strait\n• Fuel top-off at Victoria Harbour before the crossing (optional but recommended)\n• Victoria Fisherman's Wharf: final Canadian lunch — outdoor fish & chips\, harbour seals at the dock\n• Clear US Customs via CBP ROAM app before entering US waters — passports ready for all aboard\n• Haro Strait crossing: aim to cross before 2pm to stay ahead of afternoon northwest wind\n• Optional: brief stop at Roche Harbor (San Juan Islands) to break the final leg\n\nNote: Slightly over the usual 100 NM preference\, but Victoria breaks it naturally into two segments. Register everyone on the CBP ROAM app before leaving Victoria. Shilshole or Lake Union via the locks for Seattle landfall.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=17
 UID:day-17-20260718@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260718T100000
+DTEND:20260718T165400
+SUMMARY:🚢 Boating Route
+DESCRIPTION:104.2 NM at 15 kts · ~6.9 hrs
+UID:route-8de874f4-8a60-4084-af97-90b3408eaf2c@travelitinerary
 END:VEVENT
 END:VCALENDAR
