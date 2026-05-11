@@ -421,7 +421,13 @@
         "hrs": 4.5,
         "notes": "",
         "addedAt": "2026-04-29T04:09:44.010Z",
-        "time": "10:00"
+        "time": "10:00",
+        "startName": "Elliott Bay Marina Inc",
+        "startLat": 47.630139199999995,
+        "startLng": -122.3915098,
+        "endName": "Victoria",
+        "endLat": 48.4284207,
+        "endLng": -123.36564440000001
       }
     ],
     "2": [
@@ -433,7 +439,13 @@
         "hrs": 4.9,
         "notes": "",
         "addedAt": "2026-04-30T21:09:04.138Z",
-        "time": "10:00"
+        "time": "10:00",
+        "startName": "Victoria",
+        "startLat": 48.4284207,
+        "startLng": -123.36564440000001,
+        "endName": "Vancouver",
+        "endLat": 49.2827291,
+        "endLng": -123.1207375
       }
     ],
     "3": [],
@@ -446,7 +458,13 @@
         "hrs": 5.6,
         "time": "10:00",
         "notes": "",
-        "addedAt": "2026-05-10T23:32:33.898Z"
+        "addedAt": "2026-05-10T23:32:33.898Z",
+        "startName": "Vancouver",
+        "startLat": 49.2827291,
+        "startLng": -123.1207375,
+        "endName": "Princess Louisa Inlet",
+        "endLat": 50.181170099999996,
+        "endLng": -123.8133618
       }
     ],
     "6": [
@@ -457,7 +475,14 @@
         "speedKts": 15,
         "hrs": 5,
         "notes": "",
-        "addedAt": "2026-04-29T04:23:44.738Z"
+        "addedAt": "2026-04-29T04:23:44.738Z",
+        "time": "",
+        "startName": "Princess Louisa Inlet",
+        "startLat": 50.181170099999996,
+        "startLng": -123.8133618,
+        "endName": "Desolation Sound",
+        "endLat": 50,
+        "endLng": -124.875
       }
     ],
     "8": [
@@ -469,7 +494,13 @@
         "hrs": 4.5,
         "time": "10:00",
         "notes": "",
-        "addedAt": "2026-05-10T23:34:19.916Z"
+        "addedAt": "2026-05-10T23:34:19.916Z",
+        "startName": "Desolation Sound",
+        "startLat": 50,
+        "startLng": -124.875,
+        "endName": "Port Neville",
+        "endLat": 50.4929341,
+        "endLng": -126.0858154
       }
     ],
     "9": [
@@ -481,7 +512,13 @@
         "hrs": 2,
         "time": "10:00",
         "notes": "",
-        "addedAt": "2026-05-10T23:36:30.091Z"
+        "addedAt": "2026-05-10T23:36:30.091Z",
+        "startName": "Port Neville",
+        "startLat": 50.4929341,
+        "startLng": -126.0858154,
+        "endName": "Telegraph Cove",
+        "endLat": 50.549245899999995,
+        "endLng": -126.832251
       }
     ],
     "10": [
@@ -493,7 +530,13 @@
         "hrs": 1.4,
         "time": "",
         "notes": "",
-        "addedAt": "2026-05-10T23:39:00.456Z"
+        "addedAt": "2026-05-10T23:39:00.456Z",
+        "startName": "Telegraph Cove",
+        "startLat": 50.549245899999995,
+        "startLng": -126.832251,
+        "endName": "Lagoon Cove Marina",
+        "endLat": 50.5986633,
+        "endLng": -126.31379690000001
       }
     ],
     "12": [
@@ -505,7 +548,13 @@
         "hrs": 3.2,
         "time": "",
         "notes": "",
-        "addedAt": "2026-05-10T23:39:54.556Z"
+        "addedAt": "2026-05-10T23:39:54.556Z",
+        "startName": "Lagoon Cove Marina",
+        "startLat": 50.5986633,
+        "startLng": -126.31379690000001,
+        "endName": "Blind Channel Resort",
+        "endLat": 50.413444500000004,
+        "endLng": -125.50205989999999
       }
     ],
     "13": [
@@ -517,7 +566,13 @@
         "hrs": 2.4,
         "time": "",
         "notes": "",
-        "addedAt": "2026-05-10T23:41:12.977Z"
+        "addedAt": "2026-05-10T23:41:12.977Z",
+        "startName": "Blind Channel Resort",
+        "startLat": 50.413444500000004,
+        "startLng": -125.50205989999999,
+        "endName": "Squirrel Cove",
+        "endLat": 50.116667,
+        "endLng": -124.91666699999999
       }
     ],
     "14": [
@@ -529,7 +584,13 @@
         "hrs": 6.5,
         "time": "",
         "notes": "",
-        "addedAt": "2026-05-10T23:42:20.135Z"
+        "addedAt": "2026-05-10T23:42:20.135Z",
+        "startName": "Squirrel Cove",
+        "startLat": 50.116667,
+        "startLng": -124.91666699999999,
+        "endName": "Montague Harbour",
+        "endLat": 48.8924435,
+        "endLng": -123.38941319999999
       }
     ],
     "17": [
@@ -541,7 +602,13 @@
         "hrs": 6.9,
         "time": "",
         "notes": "",
-        "addedAt": "2026-05-10T23:44:12.023Z"
+        "addedAt": "2026-05-10T23:44:12.023Z",
+        "startName": "Ganges",
+        "startLat": 48.854425899999995,
+        "startLng": -123.50050719999999,
+        "endName": "Elliott Bay Marina Inc",
+        "endLat": 47.630139199999995,
+        "endLng": -122.3915098
       }
     ]
   },
