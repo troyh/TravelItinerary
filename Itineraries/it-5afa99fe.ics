@@ -59,12 +59,4 @@ SUMMARY:✈ as618: SBA → SEA
 DESCRIPTION:Alaska Airlines · Boeing 737-800\nSanta Barbara → Seattle
 UID:flight-485f6d92-5a66-4017-abc8-aa642756d511@travelitinerary
 END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260920T163000
-DTEND:20260920T164400
-SUMMARY:Hotel Californian → SBA airport (SBA)
-LOCATION:SBA airport (SBA)
-DESCRIPTION:10.5 mi · 14 mins
-UID:dir-6e2d6849-c826-47cc-9866-c89a4a73a1ad@travelitinerary
-END:VEVENT
 END:VCALENDAR
