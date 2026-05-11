@@ -240,7 +240,7 @@
           {
             "instruction": "Keep right to stay on I-5 S",
             "distance": "132 mi",
-            "duration": "1 hour 59 mins"
+            "duration": "2 hours 0 mins"
           },
           {
             "instruction": "Keep left to stay on I-5 S, follow signs for Vancouver/PortlandEntering Oregon",
@@ -367,13 +367,13 @@
         "time": "10:30"
       },
       {
-        "id": "54c0b2e7-b90a-4acc-9301-1d9162f50ba1",
+        "id": "4ad2763c-089d-4b79-b2b3-8321fb1597b1",
         "origin": {
           "name": "Luuwit View Park",
           "placeId": "ChIJzZN7BMGjlVQRJLtLatVQNIQ"
         },
         "destination": {
-          "name": "1107 21st Avenue East",
+          "name": "1107 21st Ave E",
           "placeId": "ChIJky3RvdYUkFQR2VOlzypd3bc"
         },
         "travelMode": "DRIVING",
@@ -457,10 +457,10 @@
             "duration": "2 mins"
           }
         ],
+        "time": "",
         "notes": "",
-        "addedAt": "2026-05-10T00:06:55.370Z",
-        "mapsProvider": "google",
-        "time": "12:00"
+        "addedAt": "2026-05-11T00:52:35.486Z",
+        "mapsProvider": "google"
       }
     ]
   },
