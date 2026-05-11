@@ -55,4 +55,22 @@ LOCATION:NE 127th and\, NE Fremont St\, Portland\, OR 97230\, USA
 DESCRIPTION:Phone: (503) 823-2525\nWebsite: https://www.portlandoregon.gov/parks/finder/index.cfm?action=ViewPark&PropertyID=1461\n11am
 UID:place-a59f48e4-42dc-42c4-90e8-9739ee3341a6@travelitinerary
 END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260516T103000
+DTEND:20260516T104600
+SUMMARY:The Nines Hotel\, Portland → Luuwit View Park
+LOCATION:Luuwit View Park
+DESCRIPTION:15.8 km · 16 min
+URL:https://maps.apple.com/?saddr=The%20Nines%20Hotel%2C%20Portland&daddr=Luuwit%20View%20Park&dirflg=d
+UID:dir-8c52a80f-5255-4c34-95fd-357d4600aa60@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260516T113000
+DTEND:20260516T141200
+SUMMARY:Luuwit View Park → 1107 21st Ave E
+LOCATION:1107 21st Ave E
+DESCRIPTION:284.1 km · 2h 42m
+URL:https://maps.apple.com/?saddr=Luuwit%20View%20Park&daddr=1107%2021st%20Ave%20E&dirflg=d
+UID:dir-1efa534a-ccbd-4b0c-b169-07d63bf39607@travelitinerary
+END:VEVENT
 END:VCALENDAR
