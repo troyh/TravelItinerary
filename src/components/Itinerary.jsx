@@ -415,9 +415,11 @@ export default function Itinerary() {
   }
 
   function addDirection(dayNum, dir) {
+    saveImmediatelyRef.current = true;
     setSavedDirections(prev => ({ ...prev, [dayNum]: [...(prev[dayNum] ?? []), dir] }));
   }
   function updateDirection(dayNum, id, updates) {
+    saveImmediatelyRef.current = true;
     setSavedDirections(prev => ({
       ...prev,
       [dayNum]: (prev[dayNum] ?? []).map(d => d.id === id ? { ...d, ...updates } : d),
@@ -590,7 +592,8 @@ export default function Itinerary() {
   }
 
   function handleClose() {
-    clearTimeout(syncTimerRef.current);
+    // Don't cancel the pending save — let it complete in the background
+    // so any unsaved changes (e.g. direction times) are not lost
     setCurrentFile(null);
     localStorage.removeItem("travelCurrentFile");
     localStorage.removeItem("travelItinerary");
@@ -847,12 +850,17 @@ export default function Itinerary() {
           [dir.distance, dir.duration].filter(Boolean).join(" · "),
           dir.notes || "",
         ].filter(Boolean).join("\n");
+        const TMODE = { DRIVING: "driving", WALKING: "walking", BICYCLING: "bicycling", TRANSIT: "transit" };
+        const mapsUrl = (dir.mapsProvider ?? "google") === "apple"
+          ? `https://maps.apple.com/?saddr=${encodeURIComponent(dir.origin.name)}&daddr=${encodeURIComponent(dir.destination.name)}&dirflg=${dir.travelMode === "WALKING" ? "w" : "d"}`
+          : `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(dir.origin.name)}&destination=${encodeURIComponent(dir.destination.name)}&travelmode=${TMODE[dir.travelMode] ?? "driving"}`;
         cal.push("BEGIN:VEVENT");
         cal.push(`DTSTART:${dtStart}`);
         cal.push(`DTEND:${dtEnd}`);
         cal.push(`SUMMARY:${esc(`${dir.origin.name} → ${dir.destination.name}`)}`);
         cal.push(`LOCATION:${esc(dir.destination.name)}`);
         if (desc) cal.push(`DESCRIPTION:${esc(desc)}`);
+        cal.push(`URL:${mapsUrl}`);
         cal.push(`UID:dir-${dir.id}@travelitinerary`);
         cal.push("END:VEVENT");
       });
