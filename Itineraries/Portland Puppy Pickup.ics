@@ -30,8 +30,8 @@ DESCRIPTION:Phone: (503) 222-9996\nWebsite: https://www.marriott.com/en-us/hotel
 UID:place-1ae8c071-3cf6-43e5-be62-2fe683f9e4ee@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260515T100000
-DTEND:20260515T124700
+DTSTART:20260515T101000
+DTEND:20260515T125700
 SUMMARY:1107 21st Ave E → The Nines\, a Luxury Collection Hotel\, Portland
 LOCATION:The Nines\, a Luxury Collection Hotel\, Portland
 DESCRIPTION:283.4 km · 2h 47m
