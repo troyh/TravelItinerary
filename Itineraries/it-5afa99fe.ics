@@ -29,6 +29,15 @@ DESCRIPTION:Phone: (805) 882-0100\nWebsite: https://www.hotelcalifornian.com/?ut
 UID:place-1ddc2bb3-17f8-4c98-a00d-c2a26492b23d@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260917T190000
+DTEND:20260917T191500
+SUMMARY:Santa Barbara Airport - SBA → Hotel Californian
+LOCATION:Hotel Californian
+DESCRIPTION:17.7 km · 15 min
+URL:https://maps.apple.com/?saddr=Santa%20Barbara%20Airport%20-%20SBA&daddr=Hotel%20Californian&dirflg=d
+UID:dir-20cfd69a-6549-4c22-bd7e-0667c4934836@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260918
 DTEND;VALUE=DATE:20260919
 SUMMARY:Day 2: Shopping Day
