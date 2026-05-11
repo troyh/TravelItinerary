@@ -406,7 +406,120 @@
       "note": "Slightly over the usual 100 NM preference, but Victoria breaks it naturally into two segments. Register everyone on the CBP ROAM app before leaving Victoria. Shilshole or Lake Union via the locks for Seattle landfall."
     }
   ],
-  "places": {},
+  "places": {
+    "9": [
+      {
+        "id": "2f42371b-258c-4d0f-9155-38df5d20e31e",
+        "name": "Telegraph Cove Historic Boardwalk",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "activity",
+        "notes": "Stroll the preserved 1920s cannery boardwalk with original buildings, museums, and gift shops. A unique step back into BC's fishing history.",
+        "addedAt": "2026-05-11T00:41:06.780Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "5e47e75c-72bc-4587-b278-2824297668a3",
+        "name": "Whale Interpretive Centre",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "activity",
+        "notes": "Learn about orcas, humpbacks, and other marine mammals in these waters. Exhibits cover local whaling history and modern conservation efforts.",
+        "addedAt": "2026-05-11T00:41:06.780Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "0232ec7d-d534-48f3-8df1-09a34493e2fd",
+        "name": "Telegraph Cove Marina Restaurant/Pub",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "restaurant",
+        "notes": "Waterfront dining with fresh seafood and views of the boardwalk. Popular spot for locals and cruisers.",
+        "addedAt": "2026-05-11T00:41:06.780Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "66c55f9d-fde5-495c-9933-1da97a315c9d",
+        "name": "Whale Watching Tour (morning departure)",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "activity",
+        "notes": "July is peak season for orca sightings in Broughton Strait. Multiple operators offer 4–6 hour guided excursions from the cove.",
+        "addedAt": "2026-05-11T00:41:06.780Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "32029a94-78ef-4566-b415-4c91f9705504",
+        "name": "Telegraph Cove Marina",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "marina",
+        "notes": "Full-service facility with fuel, water, and provisioning. Great base for exploring the North Island's marine habitat.",
+        "addedAt": "2026-05-11T00:41:06.780Z",
+        "mapsProvider": null
+      }
+    ],
+    "10": [
+      {
+        "id": "665d5f2e-476e-4e0a-9297-7bab3f06e16b",
+        "name": "Lagoon Cove Marina",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "marina",
+        "notes": "Protected anchorage on East Cracroft Island with good holding and stunning wilderness scenery. Excellent base for exploring northern Vancouver Island's remote inlets.",
+        "addedAt": "2026-05-11T00:42:41.183Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "c62e55f6-7326-42f7-a41c-ca93b9f23261",
+        "name": "Broughton Strait Wildlife Viewing",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "activity",
+        "notes": "Prime orca and humpback whale watching area during summer months. The nutrient-rich waters attract marine mammals and seabirds throughout July.",
+        "addedAt": "2026-05-11T00:42:41.183Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "c4d76baa-5235-4354-993f-49b5a4663dee",
+        "name": "Kwakwaka'wakw Cultural Sites",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "activity",
+        "notes": "Explore Indigenous heritage and historic village sites in the area. Telegraph Cove nearby has cultural museums and displays of First Nations history.",
+        "addedAt": "2026-05-11T00:42:41.183Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "3fa72254-532c-454a-90c8-184d97468f86",
+        "name": "Remote Hiking & Kayaking Trails",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "activity",
+        "notes": "Access pristine temperate rainforest and coastal paddling from the cove. Day trips to nearby inlets offer solitude and untouched natural beauty.",
+        "addedAt": "2026-05-11T00:42:41.183Z",
+        "mapsProvider": null
+      }
+    ]
+  },
   "directions": {
     "1": [],
     "2": []
@@ -614,7 +727,19 @@
   },
   "flights": {},
   "rentalCars": {},
-  "highlights": {},
+  "highlights": {
+    "9": [
+      "Peak whale-watching season—orcas and humpbacks actively feed in nearby Broughton Strait",
+      "Authentic 1920s cannery village atmosphere; one of BC's best-preserved maritime heritage sites",
+      "Remote Inside Passage location offering pristine wilderness and solitude"
+    ],
+    "10": [
+      "Exceptional marine wildlife viewing—some of BC's best orca encounter rates in July",
+      "Pristine, sheltered anchorage in a true wilderness setting with minimal crowds",
+      "Gateway to explore remote fjords and First Nations cultural heritage",
+      "Ideal for kayaking, hiking, and nature photography in old-growth forests"
+    ]
+  },
   "notes": {
     "4": "Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window.\n\nTODO: Figure out if I’m okay for stern-tying\nTODO: Is the dock there still under construction?"
   },
