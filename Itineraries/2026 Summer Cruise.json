@@ -527,11 +527,11 @@
   "routes": {
     "1": [
       {
-        "id": "b9e7f286-81aa-4b3a-91b4-757384ba2e32",
+        "id": "d3ed97e3-f331-4201-8fce-434df0c73b7f",
         "name": "",
-        "nm": 0,
+        "nm": 68.7,
         "speedKts": 15,
-        "hrs": 0,
+        "hrs": 4.6,
         "time": "",
         "startName": "Elliott Bay",
         "startLat": 47.6048242,
@@ -539,10 +539,75 @@
         "endName": "Victoria BC Cruise Ship Dock",
         "endLat": 48.4165675,
         "endLng": -123.3899256,
-        "gpx": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<gpx version=\"1.1\" creator=\"autoroute\"\n  xmlns=\"http://www.topografix.com/GPX/1/1\"\n  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n  xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd\">\n  <metadata>\n    <name>47.6048, -122.3668 to 48.4166, -123.3899</name>\n    <time>2026-05-12T05:30:15.409Z</time>\n    <desc>68.7 nm · 16 waypoints</desc>\n  </metadata>\n  <rte>\n    <name>47.6048, -122.3668 to 48.4166, -123.3899</name>\n    <rtept lat=\"47.600824\" lon=\"-122.369926\">\n      <name>1</name>\n    </rtept>\n    <rtept lat=\"47.616824\" lon=\"-122.385926\">\n      <name>2</name>\n    </rtept>\n    <rtept lat=\"47.624824\" lon=\"-122.409926\">\n      <name>3</name>\n    </rtept>\n    <rtept lat=\"47.656824\" lon=\"-122.441926\">\n      <name>4</name>\n    </rtept>\n    <rtept lat=\"47.752824\" lon=\"-122.441926\">\n      <name>5</name>\n    </rtept>\n    <rtept lat=\"47.912824\" lon=\"-122.513926\">\n      <name>6</name>\n    </rtept>\n    <rtept lat=\"48.048824\" lon=\"-122.649926\">\n      <name>7</name>\n    </rtept>\n    <rtept lat=\"48.104824\" lon=\"-122.681926\">\n      <name>8</name>\n    </rtept>\n    <rtept lat=\"48.208824\" lon=\"-122.785926\">\n      <name>9</name>\n    </rtept>\n    <rtept lat=\"48.288824\" lon=\"-123.017926\">\n      <name>10</name>\n    </rtept>\n    <rtept lat=\"48.288824\" lon=\"-123.041926\">\n      <name>11</name>\n    </rtept>\n    <rtept lat=\"48.304824\" lon=\"-123.073926\">\n      <name>12</name>\n    </rtept>\n    <rtept lat=\"48.328824\" lon=\"-123.161926\">\n      <name>13</name>\n    </rtept>\n    <rtept lat=\"48.400824\" lon=\"-123.361926\">\n      <name>14</name>\n    </rtept>\n    <rtept lat=\"48.400824\" lon=\"-123.385926\">\n      <name>15</name>\n    </rtept>\n    <rtept lat=\"48.408824\" lon=\"-123.393926\">\n      <name>16</name>\n    </rtept>\n  </rte>\n</gpx>",
-        "routePath": null,
+        "gpx": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<gpx version=\"1.1\" creator=\"autoroute\"\n  xmlns=\"http://www.topografix.com/GPX/1/1\"\n  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n  xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd\">\n  <metadata>\n    <name>47.6048, -122.3668 to 48.4166, -123.3899</name>\n    <time>2026-05-12T05:34:58.189Z</time>\n    <desc>68.7 nm · 16 waypoints</desc>\n  </metadata>\n  <rte>\n    <name>47.6048, -122.3668 to 48.4166, -123.3899</name>\n    <rtept lat=\"47.600824\" lon=\"-122.369926\">\n      <name>1</name>\n    </rtept>\n    <rtept lat=\"47.616824\" lon=\"-122.385926\">\n      <name>2</name>\n    </rtept>\n    <rtept lat=\"47.624824\" lon=\"-122.409926\">\n      <name>3</name>\n    </rtept>\n    <rtept lat=\"47.656824\" lon=\"-122.441926\">\n      <name>4</name>\n    </rtept>\n    <rtept lat=\"47.752824\" lon=\"-122.441926\">\n      <name>5</name>\n    </rtept>\n    <rtept lat=\"47.912824\" lon=\"-122.513926\">\n      <name>6</name>\n    </rtept>\n    <rtept lat=\"48.048824\" lon=\"-122.649926\">\n      <name>7</name>\n    </rtept>\n    <rtept lat=\"48.104824\" lon=\"-122.681926\">\n      <name>8</name>\n    </rtept>\n    <rtept lat=\"48.208824\" lon=\"-122.785926\">\n      <name>9</name>\n    </rtept>\n    <rtept lat=\"48.288824\" lon=\"-123.017926\">\n      <name>10</name>\n    </rtept>\n    <rtept lat=\"48.288824\" lon=\"-123.041926\">\n      <name>11</name>\n    </rtept>\n    <rtept lat=\"48.304824\" lon=\"-123.073926\">\n      <name>12</name>\n    </rtept>\n    <rtept lat=\"48.328824\" lon=\"-123.161926\">\n      <name>13</name>\n    </rtept>\n    <rtept lat=\"48.400824\" lon=\"-123.361926\">\n      <name>14</name>\n    </rtept>\n    <rtept lat=\"48.400824\" lon=\"-123.385926\">\n      <name>15</name>\n    </rtept>\n    <rtept lat=\"48.408824\" lon=\"-123.393926\">\n      <name>16</name>\n    </rtept>\n  </rte>\n</gpx>",
+        "routePath": [
+          [
+            47.600824,
+            -122.369926
+          ],
+          [
+            47.616824,
+            -122.385926
+          ],
+          [
+            47.624824,
+            -122.409926
+          ],
+          [
+            47.656824,
+            -122.441926
+          ],
+          [
+            47.752824,
+            -122.441926
+          ],
+          [
+            47.912824,
+            -122.513926
+          ],
+          [
+            48.048824,
+            -122.649926
+          ],
+          [
+            48.104824,
+            -122.681926
+          ],
+          [
+            48.208824,
+            -122.785926
+          ],
+          [
+            48.288824,
+            -123.017926
+          ],
+          [
+            48.288824,
+            -123.041926
+          ],
+          [
+            48.304824,
+            -123.073926
+          ],
+          [
+            48.328824,
+            -123.161926
+          ],
+          [
+            48.400824,
+            -123.361926
+          ],
+          [
+            48.400824,
+            -123.385926
+          ],
+          [
+            48.408824,
+            -123.393926
+          ]
+        ],
         "notes": "",
-        "addedAt": "2026-05-12T05:30:07.833Z"
+        "addedAt": "2026-05-12T05:34:50.341Z"
       }
     ],
     "2": [
@@ -710,20 +775,119 @@
     ],
     "17": [
       {
-        "id": "8de874f4-8a60-4084-af97-90b3408eaf2c",
+        "id": "86c10cd9-42d3-4d30-9858-111daf7b5933",
         "name": "",
-        "nm": 104.2,
+        "nm": 93.6,
         "speedKts": 15,
-        "hrs": 6.9,
-        "time": "10:00",
-        "notes": "",
-        "addedAt": "2026-05-10T23:44:12.023Z",
+        "hrs": 6.2,
+        "time": "",
         "startName": "Ganges",
-        "startLat": 48.854425899999995,
-        "startLng": -123.50050719999999,
-        "endName": "Elliott Bay Marina Inc",
-        "endLat": 47.630139199999995,
-        "endLng": -122.3915098
+        "startLat": 48.85436,
+        "startLng": -123.502621,
+        "endName": "Elliott Bay",
+        "endLat": 47.6048242,
+        "endLng": -122.3668262,
+        "gpx": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<gpx version=\"1.1\" creator=\"autoroute\"\n  xmlns=\"http://www.topografix.com/GPX/1/1\"\n  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n  xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd\">\n  <metadata>\n    <name>48.8544, -123.5026 to 47.6048, -122.3668</name>\n    <time>2026-05-12T05:39:51.967Z</time>\n    <desc>93.6 nm · 24 waypoints</desc>\n  </metadata>\n  <rte>\n    <name>48.8544, -123.5026 to 47.6048, -122.3668</name>\n    <rtept lat=\"48.888824\" lon=\"-123.482621\">\n      <name>1</name>\n    </rtept>\n    <rtept lat=\"48.888824\" lon=\"-123.442621\">\n      <name>2</name>\n    </rtept>\n    <rtept lat=\"48.840824\" lon=\"-123.354621\">\n      <name>3</name>\n    </rtept>\n    <rtept lat=\"48.824824\" lon=\"-123.338621\">\n      <name>4</name>\n    </rtept>\n    <rtept lat=\"48.776824\" lon=\"-123.330621\">\n      <name>5</name>\n    </rtept>\n    <rtept lat=\"48.696824\" lon=\"-123.250621\">\n      <name>6</name>\n    </rtept>\n    <rtept lat=\"48.672824\" lon=\"-123.242621\">\n      <name>7</name>\n    </rtept>\n    <rtept lat=\"48.640824\" lon=\"-123.210621\">\n      <name>8</name>\n    </rtept>\n    <rtept lat=\"48.584824\" lon=\"-123.210621\">\n      <name>9</name>\n    </rtept>\n    <rtept lat=\"48.552824\" lon=\"-123.178621\">\n      <name>10</name>\n    </rtept>\n    <rtept lat=\"48.520824\" lon=\"-123.170621\">\n      <name>11</name>\n    </rtept>\n    <rtept lat=\"48.208824\" lon=\"-122.858621\">\n      <name>12</name>\n    </rtept>\n    <rtept lat=\"48.184824\" lon=\"-122.802621\">\n      <name>13</name>\n    </rtept>\n    <rtept lat=\"48.168824\" lon=\"-122.786621\">\n      <name>14</name>\n    </rtept>\n    <rtept lat=\"48.112824\" lon=\"-122.682621\">\n      <name>15</name>\n    </rtept>\n    <rtept lat=\"48.048824\" lon=\"-122.618621\">\n      <name>16</name>\n    </rtept>\n    <rtept lat=\"48.032824\" lon=\"-122.618621\">\n      <name>17</name>\n    </rtept>\n    <rtept lat=\"47.888824\" lon=\"-122.482621\">\n      <name>18</name>\n    </rtept>\n    <rtept lat=\"47.768824\" lon=\"-122.434621\">\n      <name>19</name>\n    </rtept>\n    <rtept lat=\"47.696824\" lon=\"-122.434621\">\n      <name>20</name>\n    </rtept>\n    <rtept lat=\"47.688824\" lon=\"-122.442621\">\n      <name>21</name>\n    </rtept>\n    <rtept lat=\"47.656824\" lon=\"-122.442621\">\n      <name>22</name>\n    </rtept>\n    <rtept lat=\"47.608824\" lon=\"-122.394621\">\n      <name>23</name>\n    </rtept>\n    <rtept lat=\"47.600824\" lon=\"-122.370621\">\n      <name>24</name>\n    </rtept>\n  </rte>\n</gpx>",
+        "routePath": [
+          [
+            48.888824,
+            -123.482621
+          ],
+          [
+            48.888824,
+            -123.442621
+          ],
+          [
+            48.840824,
+            -123.354621
+          ],
+          [
+            48.824824,
+            -123.338621
+          ],
+          [
+            48.776824,
+            -123.330621
+          ],
+          [
+            48.696824,
+            -123.250621
+          ],
+          [
+            48.672824,
+            -123.242621
+          ],
+          [
+            48.640824,
+            -123.210621
+          ],
+          [
+            48.584824,
+            -123.210621
+          ],
+          [
+            48.552824,
+            -123.178621
+          ],
+          [
+            48.520824,
+            -123.170621
+          ],
+          [
+            48.208824,
+            -122.858621
+          ],
+          [
+            48.184824,
+            -122.802621
+          ],
+          [
+            48.168824,
+            -122.786621
+          ],
+          [
+            48.112824,
+            -122.682621
+          ],
+          [
+            48.048824,
+            -122.618621
+          ],
+          [
+            48.032824,
+            -122.618621
+          ],
+          [
+            47.888824,
+            -122.482621
+          ],
+          [
+            47.768824,
+            -122.434621
+          ],
+          [
+            47.696824,
+            -122.434621
+          ],
+          [
+            47.688824,
+            -122.442621
+          ],
+          [
+            47.656824,
+            -122.442621
+          ],
+          [
+            47.608824,
+            -122.394621
+          ],
+          [
+            47.600824,
+            -122.370621
+          ]
+        ],
+        "notes": "",
+        "addedAt": "2026-05-12T05:39:42.752Z"
       }
     ]
   },
