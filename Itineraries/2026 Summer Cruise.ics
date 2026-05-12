@@ -14,13 +14,6 @@ URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=1
 UID:day-1-20260702@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260702T100000
-DTEND:20260702T143000
-SUMMARY:🚢 EBM-Victoria
-DESCRIPTION:67.2 NM at 15 kts · ~4.5 hrs
-UID:route-8ced442b-3122-4c12-a8b0-051ce0d9dd9a@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260703
 DTEND;VALUE=DATE:20260704
 SUMMARY:Day 2: Victoria → Salt Spring Island → Vancouver
