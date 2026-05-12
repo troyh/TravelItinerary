@@ -541,6 +541,24 @@
         "endName": "Victoria",
         "endLat": 48.4284207,
         "endLng": -123.36564440000001
+      },
+      {
+        "id": "b9e7f286-81aa-4b3a-91b4-757384ba2e32",
+        "name": "",
+        "nm": 0,
+        "speedKts": 15,
+        "hrs": 0,
+        "time": "",
+        "startName": "Elliott Bay",
+        "startLat": 47.6048242,
+        "startLng": -122.3668262,
+        "endName": "Victoria BC Cruise Ship Dock",
+        "endLat": 48.4165675,
+        "endLng": -123.3899256,
+        "gpx": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<gpx version=\"1.1\" creator=\"autoroute\"\n  xmlns=\"http://www.topografix.com/GPX/1/1\"\n  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n  xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd\">\n  <metadata>\n    <name>47.6048, -122.3668 to 48.4166, -123.3899</name>\n    <time>2026-05-12T05:30:15.409Z</time>\n    <desc>68.7 nm · 16 waypoints</desc>\n  </metadata>\n  <rte>\n    <name>47.6048, -122.3668 to 48.4166, -123.3899</name>\n    <rtept lat=\"47.600824\" lon=\"-122.369926\">\n      <name>1</name>\n    </rtept>\n    <rtept lat=\"47.616824\" lon=\"-122.385926\">\n      <name>2</name>\n    </rtept>\n    <rtept lat=\"47.624824\" lon=\"-122.409926\">\n      <name>3</name>\n    </rtept>\n    <rtept lat=\"47.656824\" lon=\"-122.441926\">\n      <name>4</name>\n    </rtept>\n    <rtept lat=\"47.752824\" lon=\"-122.441926\">\n      <name>5</name>\n    </rtept>\n    <rtept lat=\"47.912824\" lon=\"-122.513926\">\n      <name>6</name>\n    </rtept>\n    <rtept lat=\"48.048824\" lon=\"-122.649926\">\n      <name>7</name>\n    </rtept>\n    <rtept lat=\"48.104824\" lon=\"-122.681926\">\n      <name>8</name>\n    </rtept>\n    <rtept lat=\"48.208824\" lon=\"-122.785926\">\n      <name>9</name>\n    </rtept>\n    <rtept lat=\"48.288824\" lon=\"-123.017926\">\n      <name>10</name>\n    </rtept>\n    <rtept lat=\"48.288824\" lon=\"-123.041926\">\n      <name>11</name>\n    </rtept>\n    <rtept lat=\"48.304824\" lon=\"-123.073926\">\n      <name>12</name>\n    </rtept>\n    <rtept lat=\"48.328824\" lon=\"-123.161926\">\n      <name>13</name>\n    </rtept>\n    <rtept lat=\"48.400824\" lon=\"-123.361926\">\n      <name>14</name>\n    </rtept>\n    <rtept lat=\"48.400824\" lon=\"-123.385926\">\n      <name>15</name>\n    </rtept>\n    <rtept lat=\"48.408824\" lon=\"-123.393926\">\n      <name>16</name>\n    </rtept>\n  </rte>\n</gpx>",
+        "routePath": null,
+        "notes": "",
+        "addedAt": "2026-05-12T05:30:07.833Z"
       }
     ],
     "2": [
