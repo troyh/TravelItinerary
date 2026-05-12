@@ -220,11 +220,4 @@ DESCRIPTION:104.2 NM · ~6.9 hrs\nOvernight: Home Marina\, Seattle\n\nHighlights
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=17
 UID:day-17-20260718@travelitinerary
 END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260718T100000
-DTEND:20260718T165400
-SUMMARY:🚢 Boating Route
-DESCRIPTION:104.2 NM at 15 kts · ~6.9 hrs
-UID:route-8de874f4-8a60-4084-af97-90b3408eaf2c@travelitinerary
-END:VEVENT
 END:VCALENDAR
