@@ -1971,6 +1971,7 @@ export default function Itinerary() {
                     onDelete={id => deleteRoute(d.day, id)}
                     onApplyToDay={updates => updateDayFields(d.day, updates)}
                     readOnly={readOnly}
+                    routeServerUrl={settings.routeServerUrl ?? "https://waypoint.troyhakala.com"}
                   />
 
                   {/* Flights */}

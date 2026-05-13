@@ -105,6 +105,7 @@ export default function Settings({ settings, onSave, onClose }) {
     anthropicKey:     settings.anthropicKey     ?? "",
     claudeModel:      settings.claudeModel      ?? "claude-sonnet-4-6",
     distanceUnit:     settings.distanceUnit     ?? "km",
+    routeServerUrl:   settings.routeServerUrl   ?? "https://waypoint.troyhakala.com",
   });
   const [showAnthropicKey, setShowAnthropicKey] = useState(false);
   const set = (k, v) => setDraft(p => ({ ...p, [k]: v }));
@@ -206,6 +207,19 @@ export default function Settings({ settings, onSave, onClose }) {
                   {u.label}
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Boating Route Server */}
+          <div>
+            <div style={S.label}>
+              Boating Route Server <span style={{ color: "#3d5060", fontStyle: "italic" }}>(optional)</span>
+            </div>
+            <input value={draft.routeServerUrl} onChange={e => set("routeServerUrl", e.target.value)}
+              placeholder="https://waypoint.troyhakala.com" style={S.input} />
+            <div style={{ fontSize: ".68rem", color: "#3d5060", fontFamily: "sans-serif",
+              fontStyle: "italic", marginTop: 4 }}>
+              Fetches water-aware GPX routes when start/end coordinates are set.
             </div>
           </div>
 

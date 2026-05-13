@@ -48,6 +48,53 @@ const BLANK = { name: "", nm: "", speedKts: 15, time: "",
                 startName: "", startLat: null, startLng: null,
                 endName: "",   endLat: null,   endLng: null };
 
+function gpxPathToNM(path) {
+  const R = 3440.065; // Earth radius in nautical miles
+  let total = 0;
+  for (let i = 1; i < path.length; i++) {
+    const [lat1, lon1] = path[i - 1], [lat2, lon2] = path[i];
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+    total += 2 * R * Math.asin(Math.sqrt(a));
+  }
+  return Math.round(total * 10) / 10;
+}
+
+async function fetchGpxRoute(serverUrl, startLat, startLng, endLat, endLng) {
+  const res = await fetch(`${serverUrl.replace(/\/$/, "")}/route`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ start: `${startLat}, ${startLng}`, end: `${endLat}, ${endLng}` }),
+  });
+  if (!res.ok) throw new Error(`Route server: ${res.status}`);
+  return res.text();
+}
+
+function parseGpxToPath(gpxText) {
+  try {
+    const doc = new DOMParser().parseFromString(gpxText, "text/xml");
+    // getElementsByTagName is namespace-agnostic; try trkpt, then rtept, then wpt
+    let els = doc.getElementsByTagName("trkpt");
+    if (!els.length) els = doc.getElementsByTagName("rtept");
+    if (!els.length) els = doc.getElementsByTagName("wpt");
+    const pts = Array.from(els).map(pt => [
+      parseFloat(pt.getAttribute("lat")),
+      parseFloat(pt.getAttribute("lon")),
+    ]).filter(([lat, lon]) => !isNaN(lat) && !isNaN(lon));
+    return pts.length >= 2 ? pts : null;
+  } catch { return null; }
+}
+
+function downloadGpx(gpxText, name) {
+  const blob = new Blob([gpxText], { type: "application/gpx+xml" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = `${name || "route"}.gpx`;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
 function fmtHrs(hrs) {
   const h = Math.floor(hrs);
   const m = Math.round((hrs - h) * 60);
@@ -68,8 +115,9 @@ const timeInputStyle = {
   cursor: "pointer", padding: 0, outline: "none", colorScheme: "dark",
 };
 
-export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToDay, readOnly = false }) {
+export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToDay, readOnly = false, routeServerUrl = "" }) {
   const [isAdding,       setIsAdding]       = useState(false);
+  const [fetchingRoute,  setFetchingRoute]  = useState(false);
   const [draft,          setDraft]          = useState(BLANK);
   const [editingId,      setEditingId]      = useState(null);
   const [noteDraft,      setNoteDraft]      = useState("");
@@ -102,6 +150,10 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
   const computedHrs = draft.nm && draft.speedKts
     ? Math.round((parseFloat(draft.nm) / parseFloat(draft.speedKts)) * 10) / 10
     : null;
+
+  // Can add if NM is set, OR if coordinates + route server are available (NM computed from GPX)
+  const hasCoords = !!(startCoords?.lat && endCoords?.lat);
+  const canAddRoute = (parseFloat(draft.nm) > 0) || (hasCoords && !!routeServerUrl);
 
   const genId = () =>
     typeof crypto.randomUUID === "function"
@@ -151,11 +203,11 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
     } catch {}
   }
 
-  function handleAdd() {
-    const nm = parseFloat(draft.nm);
-    if (!nm || nm <= 0) return;
+  async function handleAdd() {
+    if (!canAddRoute) return;
+    let nm = parseFloat(draft.nm) || 0;
     const speedKts = parseFloat(draft.speedKts) || 15;
-    onAdd({
+    const record = {
       id:        genId(),
       name:      draft.name.trim(),
       nm:        Math.round(nm * 10) / 10,
@@ -168,9 +220,27 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
       endName:   endCoords?.name ?? "",
       endLat:    endCoords?.lat ?? null,
       endLng:    endCoords?.lng ?? null,
+      routePath: null,
       notes:     "",
       addedAt:   new Date().toISOString(),
-    });
+    };
+    if (routeServerUrl && record.startLat && record.endLat) {
+      setFetchingRoute(true);
+      try {
+        const gpxText = await fetchGpxRoute(routeServerUrl, record.startLat, record.startLng, record.endLat, record.endLng);
+        record.routePath = parseGpxToPath(gpxText);
+        // Compute NM from GPX if not manually entered
+        if (!nm && record.routePath) {
+          const computedNM = gpxPathToNM(record.routePath);
+          if (computedNM > 0) {
+            record.nm  = computedNM;
+            record.hrs = Math.round(computedNM / speedKts * 10) / 10;
+          }
+        }
+      } catch { /* fall back to straight line */ }
+      setFetchingRoute(false);
+    }
+    onAdd(record);
     setIsAdding(false);
     setDraft(BLANK);
     setStartQuery(""); setEndQuery("");
@@ -307,9 +377,9 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
             <button type="button"
               onClick={handleAdd}
               onTouchEnd={e => { e.preventDefault(); handleAdd(); }}
-              style={{ ...S.btnPrimary,
-                opacity: (!draft.nm || parseFloat(draft.nm) <= 0) ? 0.45 : 1 }}>
-              Add
+              disabled={!canAddRoute || fetchingRoute}
+              style={{ ...S.btnPrimary, opacity: (!canAddRoute || fetchingRoute) ? 0.45 : 1 }}>
+              {fetchingRoute ? "Getting route…" : "Add"}
             </button>
             {computedHrs !== null && (
               <span style={{ fontSize: ".78rem", color: "#c9a84c", fontFamily: "sans-serif" }}>
@@ -420,18 +490,35 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
                 )}
 
                 <div style={{ display: "flex", gap: ".4rem", marginTop: ".5rem" }}>
-                  <button type="button" onClick={() => {
+                  <button type="button" onClick={async () => {
                     const nm = parseFloat(editDraft.nm);
                     if (!nm || nm <= 0) return;
                     const speedKts = parseFloat(editDraft.speedKts) || 15;
-                    onUpdate(route.id, {
+                    const sLat = startCoords?.lat ?? route.startLat ?? null;
+                    const sLng = startCoords?.lng ?? route.startLng ?? null;
+                    const eLat = endCoords?.lat   ?? route.endLat   ?? null;
+                    const eLng = endCoords?.lng   ?? route.endLng   ?? null;
+                    const updates = {
                       name: editDraft.name.trim(), nm: Math.round(nm*10)/10, speedKts, hrs: Math.round(nm/speedKts*10)/10, time: editDraft.time,
-                      startName: startCoords?.name ?? route.startName ?? "", startLat: startCoords?.lat ?? route.startLat ?? null, startLng: startCoords?.lng ?? route.startLng ?? null,
-                      endName:   endCoords?.name   ?? route.endName   ?? "", endLat:   endCoords?.lat   ?? route.endLat   ?? null, endLng:   endCoords?.lng   ?? route.endLng   ?? null,
-                    });
+                      startName: startCoords?.name ?? route.startName ?? "", startLat: sLat, startLng: sLng,
+                      endName:   endCoords?.name   ?? route.endName   ?? "", endLat:   eLat, endLng:   eLng,
+                      routePath: route.routePath ?? null,
+                    };
+                    if (routeServerUrl && sLat && eLat) {
+                      setFetchingRoute(true);
+                      try {
+                        const gpxText = await fetchGpxRoute(routeServerUrl, sLat, sLng, eLat, eLng);
+                        updates.routePath = parseGpxToPath(gpxText);
+                      } catch {}
+                      setFetchingRoute(false);
+                    }
+                    onUpdate(route.id, updates);
                     setEditingRouteId(null);
                     setStartQuery(""); setEndQuery(""); setStartCoords(null); setEndCoords(null);
-                  }} style={S.btnPrimary}>Save</button>
+                  }} disabled={fetchingRoute}
+                  style={{ ...S.btnPrimary, opacity: fetchingRoute ? 0.45 : 1 }}>
+                    {fetchingRoute ? "Getting route…" : "Save"}
+                  </button>
                   <button type="button" onClick={() => { setEditingRouteId(null); setStartQuery(""); setEndQuery(""); setStartCoords(null); setEndCoords(null); }} style={S.btnGhost}>Cancel</button>
                 </div>
               </div>
@@ -469,12 +556,23 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
                   </div>
                 )}
 
-                {/* Use these values */}
-                <button type="button" onClick={() => onApplyToDay({ nm: route.nm, hrs: route.hrs })}
-                  style={{ ...S.btnGhost, fontSize: ".68rem", padding: ".2rem .55rem",
-                    marginBottom: ".45rem" }}>
-                  Use these values
-                </button>
+                {/* Use these values + Download GPX */}
+                <div style={{ display: "flex", gap: ".4rem", marginBottom: ".45rem", flexWrap: "wrap" }}>
+                  <button type="button" onClick={() => onApplyToDay({ nm: route.nm, hrs: route.hrs })}
+                    style={{ ...S.btnGhost, fontSize: ".68rem", padding: ".2rem .55rem" }}>
+                    Use these values
+                  </button>
+                  {routeServerUrl && route.startLat && route.endLat && (
+                    <button type="button" onClick={async () => {
+                      try {
+                        const gpxText = await fetchGpxRoute(routeServerUrl, route.startLat, route.startLng, route.endLat, route.endLng);
+                        downloadGpx(gpxText, route.name);
+                      } catch { alert("Could not fetch route from server."); }
+                    }} style={{ ...S.btnGhost, fontSize: ".68rem", padding: ".2rem .55rem" }}>
+                      Download GPX
+                    </button>
+                  )}
+                </div>
               </>
             )}
 

@@ -269,8 +269,10 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
       const dayNum = parseInt(dayKey);
       (routeList ?? []).forEach(r => {
         if (!r.startLat || !r.startLng || !r.endLat || !r.endLng) return;
-        const pts = [[r.startLat, r.startLng], [r.endLat, r.endLng]];
-        L.polyline(pts, { color: "#c9a84c", weight: 2, opacity: 0.7, dashArray: "6,5" }).addTo(map);
+        const hasGpx = r.routePath?.length >= 2;
+        const pts = hasGpx ? r.routePath : [[r.startLat, r.startLng], [r.endLat, r.endLng]];
+        L.polyline(pts, { color: "#c9a84c", weight: 2, opacity: 0.7,
+          dashArray: hasGpx ? null : "6,5" }).addTo(map);
         pts.forEach(p => bounds.extend(p));
         L.marker([r.endLat, r.endLng], { icon: markerIcon(dayNum) })
           .bindTooltip(r.endName || `Day ${dayNum}`, { direction: "top", offset: [0, -10], className: "leaflet-tooltip-dark" })
