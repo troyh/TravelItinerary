@@ -161,16 +161,9 @@ DTSTART;VALUE=DATE:20260715
 DTEND;VALUE=DATE:20260716
 SUMMARY:Day 14: Squirrel Cove → Montague Harbour (Galiano Island)
 LOCATION:Montague Harbour Marine Provincial Park\, Galiano Island
-DESCRIPTION:96.8 NM · ~6.5 hrs\nOvernight: Montague Harbour Marine Provincial Park\, Galiano Island\n\nHighlights:\n• South through the Discovery Islands and upper Gulf Islands\n• Transit Active Pass carefully — BC Ferries run constantly and have right of way\n• Montague Harbour: one of BC's most beautiful marine park anchorages\, famous for its shell beach\n• Walk the Montague Harbour trails to the shell middens and headland views\n• Hummingbird Pub on Galiano Island for a relaxed family dinner ashore\n\nNote: Active Pass: narrow channel between Galiano and Mayne Islands with heavy BC Ferries traffic. Reduce speed\, hug the correct side\, and give ferries wide berth.
+DESCRIPTION:139.4 NM · ~9.3 hrs\nOvernight: Montague Harbour Marine Provincial Park\, Galiano Island\n\nHighlights:\n• South through the Discovery Islands and upper Gulf Islands\n• Transit Active Pass carefully — BC Ferries run constantly and have right of way\n• Montague Harbour: one of BC's most beautiful marine park anchorages\, famous for its shell beach\n• Walk the Montague Harbour trails to the shell middens and headland views\n• Hummingbird Pub on Galiano Island for a relaxed family dinner ashore\n\nNote: Active Pass: narrow channel between Galiano and Mayne Islands with heavy BC Ferries traffic. Reduce speed\, hug the correct side\, and give ferries wide berth.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=14
 UID:day-14-20260715@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260715T100000
-DTEND:20260715T163000
-SUMMARY:🚢 Boating Route
-DESCRIPTION:96.8 NM at 15 kts · ~6.5 hrs
-UID:route-5a3b0de6-d90f-445e-8214-8ed03188a7ad@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260716
