@@ -943,6 +943,14 @@ export default function Itinerary() {
       dirtyRef.current = false;
       setShowCommitForm(false);
       setCommitDraft("");
+      // Reload from GitHub after commit to keep localStorage in sync with what was actually saved
+      try {
+        const fresh = await loadFromGitHub({ ...ghSettings, githubFile: currentFile });
+        if (fresh) {
+          applyData(fresh);
+          localStorage.setItem("travelItinerary", JSON.stringify(fresh));
+        }
+      } catch {} // non-fatal — UI already shows committed state
     } catch (err) {
       setSyncStatus(err.message === "conflict" ? "conflict" : "error");
       setSyncError(err.message);
