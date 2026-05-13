@@ -23,13 +23,6 @@ URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=2
 UID:day-2-20260703@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260703T100000
-DTEND:20260703T145400
-SUMMARY:🚢 Boating Route
-DESCRIPTION:73.4 NM at 15 kts · ~4.9 hrs
-UID:route-1777583344138-s1l2aapj7u@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260704
 DTEND;VALUE=DATE:20260705
 SUMMARY:Day 3: Vancouver — Layover
@@ -43,16 +36,9 @@ DTSTART;VALUE=DATE:20260705
 DTEND;VALUE=DATE:20260706
 SUMMARY:Day 4: Vancouver → Princess Louisa Inlet
 LOCATION:Princess Louisa Marine Provincial Park (anchor / stern-tie)
-DESCRIPTION:95 NM · ~6.3 hrs\nOvernight: Princess Louisa Marine Provincial Park (anchor / stern-tie)\n\nHighlights:\n• Depart Vancouver early — Howe Sound is glassy in the morning before sea breeze fills in\n• North up the Strait of Georgia via Malaspina Strait into Jervis Inlet\n• Jervis Inlet is one of the great fjords of BC — 800m deep\, walls rising to snow\, waterfalls everywhere\n• Time your arrival at Malibu Rapids to the exact slack using XTide\, Navionics\, or the CHS app\n• Anchor inside Princess Louisa Marine Provincial Park — stern-tie rings at the park dock near Chatterbox Falls\n\nNote: Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window.\n\nTODO: Figure out if I’m okay for stern-tying\nTODO: Is the dock there still under construction?
+DESCRIPTION:Overnight: Princess Louisa Marine Provincial Park (anchor / stern-tie)\n\nHighlights:\n• Depart Vancouver early — Howe Sound is glassy in the morning before sea breeze fills in\n• North up the Strait of Georgia via Malaspina Strait into Jervis Inlet\n• Jervis Inlet is one of the great fjords of BC — 800m deep\, walls rising to snow\, waterfalls everywhere\n• Time your arrival at Malibu Rapids to the exact slack using XTide\, Navionics\, or the CHS app\n• Anchor inside Princess Louisa Marine Provincial Park — stern-tie rings at the park dock near Chatterbox Falls\n\nNote: Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window.\n\nTODO: Figure out if I’m okay for stern-tying\nTODO: Is the dock there still under construction?
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=4
 UID:day-4-20260705@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260705T100000
-DTEND:20260705T153600
-SUMMARY:🚢 Boating Route
-DESCRIPTION:84 NM at 15 kts · ~5.6 hrs
-UID:route-3de9611e-5114-4759-9da2-5e70b4547e03@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260706
@@ -71,13 +57,6 @@ LOCATION:Prideaux Haven\, Desolation Sound Marine Park
 DESCRIPTION:75.7 NM · ~5.0 hrs\nOvernight: Prideaux Haven\, Desolation Sound Marine Park\n\nHighlights:\n• Exit Malibu at slack tide\, then north through Agamemnon Channel\n• Optional Powell River stopover: bakery\, fuel top-off\, provisions if needed\n• Desolation Sound has the warmest sea water north of Mexico — July temps hit 24°C (75°F)\n• Prideaux Haven: a maze of islets and coves with stern-tie rings throughout the marine park\n• Kayak the labyrinth in the evening light — among BC's finest anchorages\n\nNote: Prideaux fills fast in July — arrive by early afternoon. Tenedos Bay (adjacent) is an excellent overflow anchorage.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=6
 UID:day-6-20260707@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260707T100000
-DTEND:20260707T150000
-SUMMARY:🚢 Princess Louisa Inlet—Desolation Sound
-DESCRIPTION:75.7 NM at 15 kts · ~5 hrs
-UID:route-3a14e247-1d21-4e7e-a735-b7f013a04890@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260708
