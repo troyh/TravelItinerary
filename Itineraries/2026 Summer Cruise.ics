@@ -77,13 +77,6 @@ URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=8
 UID:day-8-20260709@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260709T100000
-DTEND:20260709T143000
-SUMMARY:🚢 Boating Route
-DESCRIPTION:67.3 NM at 15 kts · ~4.5 hrs
-UID:route-059989af-692e-47c6-94c1-b696cefce1c6@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260710
 DTEND;VALUE=DATE:20260711
 SUMMARY:Day 9: Port Neville → Telegraph Cove
@@ -91,13 +84,6 @@ LOCATION:Telegraph Cove Marina or nearby anchorage
 DESCRIPTION:57 NM · ~3.8 hrs\nOvernight: Telegraph Cove Marina or nearby anchorage\n\nHighlights:\n• Easy run through Johnstone Strait — one of the world's premier orca corridors\n• July is peak resident orca season — scan constantly\, pods are frequently sighted\n• Humpbacks\, minkes\, Steller sea lions\, and Dall's porpoises common throughout Johnstone Strait\n• Telegraph Cove: charming historic boardwalk fishing village\, great for a walk and lunch ashore\n• Stubbs Island Whale Watching runs expert-guided orca tours from the dock if you want a guaranteed experience\n• Peak whale-watching season—orcas and humpbacks actively feed in nearby Broughton Strait\n• Authentic 1920s cannery village atmosphere\; one of BC's best-preserved maritime heritage sites\n• Remote Inside Passage location offering pristine wilderness and solitude\n\nNote: Relaxed day after yesterday's long push. Take your time through Johnstone Strait — the orca viewing here is as good as it gets on the BC coast.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=9
 UID:day-9-20260710@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260710T100000
-DTEND:20260710T120000
-SUMMARY:🚢 Boating Route
-DESCRIPTION:29.5 NM at 15 kts · ~2 hrs
-UID:route-b3a1f135-6aca-489a-a408-b4e57c15ae37@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260711
