@@ -6525,6 +6525,94 @@
         "notes": "",
         "addedAt": "2026-05-11T00:57:05.580Z",
         "mapsProvider": "apple"
+      },
+      {
+        "id": "671a5e5a-1e19-409f-8e4b-08880ddc8de0",
+        "origin": {
+          "name": "1107 21st Ave E"
+        },
+        "destination": {
+          "name": "The Nines Hotel, Portland"
+        },
+        "travelMode": "DRIVING",
+        "distance": "286.9 km",
+        "duration": "2h 55m",
+        "summary": "",
+        "originLat": 47.6289379,
+        "originLng": -122.3051289,
+        "destinationLat": 45.5191731,
+        "destinationLng": -122.6779321,
+        "steps": [
+          {
+            "instruction": "",
+            "distance": "",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn left onto E Prospect St",
+            "distance": "30 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn left onto 22nd Ave E",
+            "distance": "139 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn right onto E Crescent Dr",
+            "distance": "505 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn left onto 24th Ave E",
+            "distance": "184 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn left to merge onto SR-520 W",
+            "distance": "1.4 km",
+            "duration": ""
+          },
+          {
+            "instruction": "Keep left on I-5 South toward Portland",
+            "distance": "1.1 km",
+            "duration": ""
+          },
+          {
+            "instruction": "Keep left on I-5 S toward Salem",
+            "distance": "278.6 km",
+            "duration": ""
+          },
+          {
+            "instruction": "Take exit 300B toward US-26 East, OR-99E East",
+            "distance": "2.9 km",
+            "duration": ""
+          },
+          {
+            "instruction": "Keep right onto Morrison St. toward City Center",
+            "distance": "680 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn left onto SW Third Ave",
+            "distance": "846 m",
+            "duration": ""
+          },
+          {
+            "instruction": "Turn right onto SW Morrison St",
+            "distance": "159 m",
+            "duration": ""
+          },
+          {
+            "instruction": "The destination is on your right",
+            "distance": "211 m",
+            "duration": ""
+          }
+        ],
+        "time": "",
+        "notes": "",
+        "addedAt": "2026-05-14T16:12:39.922Z",
+        "mapsProvider": "apple"
       }
     ],
     "2": [
