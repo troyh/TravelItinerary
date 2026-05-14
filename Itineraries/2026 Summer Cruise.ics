@@ -18,7 +18,7 @@ DTSTART;VALUE=DATE:20260703
 DTEND;VALUE=DATE:20260704
 SUMMARY:Day 2: Victoria → Salt Spring Island → Vancouver
 LOCATION:False Creek Fisherman's Wharf or Granville Island Marina
-DESCRIPTION:73.4 NM · ~4.9 hrs\nOvernight: False Creek Fisherman's Wharf or Granville Island Marina\n\nHighlights:\n• Short 28 NM run from Victoria to Ganges Harbour\, Salt Spring Island\n• Ganges Saturday Market (April–October): 2–3 hrs ashore\, local produce\, artisan food and crafts\n• Quick dinghy or paddleboard of Ganges Harbour before the afternoon push north\n• 55 NM to False Creek — arrive Vancouver mid/late afternoon\n• Fuel at False Creek Fuel Dock\; major provisioning at Granville Island Public Market\n\nNote: Depart Salt Spring by 1:30–2pm to arrive Vancouver before evening. If you time it for a Saturday\, the Ganges market is not to be missed.
+DESCRIPTION:72.3 NM · ~4.8 hrs\nOvernight: False Creek Fisherman's Wharf or Granville Island Marina\n\nHighlights:\n• Short 28 NM run from Victoria to Ganges Harbour\, Salt Spring Island\n• Ganges Saturday Market (April–October): 2–3 hrs ashore\, local produce\, artisan food and crafts\n• Quick dinghy or paddleboard of Ganges Harbour before the afternoon push north\n• 55 NM to False Creek — arrive Vancouver mid/late afternoon\n• Fuel at False Creek Fuel Dock\; major provisioning at Granville Island Public Market\n\nNote: Depart Salt Spring by 1:30–2pm to arrive Vancouver before evening. If you time it for a Saturday\, the Ganges market is not to be missed.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=2
 UID:day-2-20260703@travelitinerary
 END:VEVENT
@@ -54,7 +54,7 @@ DTSTART;VALUE=DATE:20260707
 DTEND;VALUE=DATE:20260708
 SUMMARY:Day 6: Princess Louisa → Prideaux Haven (Desolation Sound)
 LOCATION:Prideaux Haven\, Desolation Sound Marine Park
-DESCRIPTION:75.7 NM · ~5.0 hrs\nOvernight: Prideaux Haven\, Desolation Sound Marine Park\n\nHighlights:\n• Exit Malibu at slack tide\, then north through Agamemnon Channel\n• Optional Powell River stopover: bakery\, fuel top-off\, provisions if needed\n• Desolation Sound has the warmest sea water north of Mexico — July temps hit 24°C (75°F)\n• Prideaux Haven: a maze of islets and coves with stern-tie rings throughout the marine park\n• Kayak the labyrinth in the evening light — among BC's finest anchorages\n\nNote: Prideaux fills fast in July — arrive by early afternoon. Tenedos Bay (adjacent) is an excellent overflow anchorage.
+DESCRIPTION:81.5 NM · ~5.4 hrs\nOvernight: Prideaux Haven\, Desolation Sound Marine Park\n\nHighlights:\n• Exit Malibu at slack tide\, then north through Agamemnon Channel\n• Optional Powell River stopover: bakery\, fuel top-off\, provisions if needed\n• Desolation Sound has the warmest sea water north of Mexico — July temps hit 24°C (75°F)\n• Prideaux Haven: a maze of islets and coves with stern-tie rings throughout the marine park\n• Kayak the labyrinth in the evening light — among BC's finest anchorages\n\nNote: Prideaux fills fast in July — arrive by early afternoon. Tenedos Bay (adjacent) is an excellent overflow anchorage.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=6
 UID:day-6-20260707@travelitinerary
 END:VEVENT
@@ -107,13 +107,6 @@ LOCATION:Lagoon Cove Marina\, East Cracroft Island
 DESCRIPTION:38 NM · ~2.5 hrs\nOvernight: Lagoon Cove Marina\, East Cracroft Island\n\nHighlights:\n• Short run — arrive Lagoon Cove by late morning\, get settled before the afternoon action\n• Fuel at Lagoon Cove Marina — one of the most beloved stops in the Pacific Northwest\n• Explore the Broughton Archipelago by kayak or dinghy from the marina — countless channels to explore\n• Orca sightings are frequent in this area in July — ask Kelly & Dan for current reports\n• Book Knight Inlet grizzly tour for tomorrow if you haven't already\n• Exceptional marine wildlife viewing—some of BC's best orca encounter rates in July\n• Pristine\, sheltered anchorage in a true wilderness setting with minimal crowds\n• Gateway to explore remote fjords and First Nations cultural heritage\n• Ideal for kayaking\, hiking\, and nature photography in old-growth forests\n\nNote: Arriving early gives you the afternoon to explore and get oriented. Tonight: Kelly & Dan's famous prawn potluck — they supply the prawns\, you bring an appetizer. Unmissable.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=10
 UID:day-10-20260711@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260711T100000
-DTEND:20260711T112400
-SUMMARY:🚢 Boating Route
-DESCRIPTION:21 NM at 15 kts · ~1.4 hrs
-UID:route-17ad7606-5bee-4b54-ba56-4ba7fd6b3e1c@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260712
