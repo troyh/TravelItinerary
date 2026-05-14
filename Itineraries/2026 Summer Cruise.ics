@@ -129,13 +129,6 @@ URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=13
 UID:day-13-20260714@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260714T100000
-DTEND:20260714T122400
-SUMMARY:🚢 Boating Route
-DESCRIPTION:35.9 NM at 15 kts · ~2.4 hrs
-UID:route-894e3d07-2fa9-45a0-ac01-8e0b04719401@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260715
 DTEND;VALUE=DATE:20260716
 SUMMARY:Day 14: Squirrel Cove → Montague Harbour (Galiano Island)
