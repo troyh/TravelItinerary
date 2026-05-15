@@ -2,8 +2,8 @@
   "days": [
     {
       "leg": "Eagle Harbor",
-      "nm": 0,
-      "hrs": 0,
+      "nm": 31.4,
+      "hrs": 2.1,
       "overnight": "",
       "tags": [
         "layover"
@@ -87,11 +87,151 @@
         "notes": "",
         "addedAt": "2026-05-15T06:17:12.820Z",
         "mapsProvider": "apple"
+      },
+      {
+        "id": "83a0d152-e357-41fc-9cdf-154a096b04f3",
+        "name": "Olympia Farmer's Market",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "provisioning",
+        "notes": "Located near downtown, open Saturdays year-round. Stock up on fresh local produce, artisan goods, and prepared foods for your boat.",
+        "addedAt": "2026-05-15T06:19:13.359Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "fd083e1c-1eb6-4d28-af08-fbec9dc96594",
+        "name": "Percival Landing Marina & Waterfront Park",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "marina",
+        "notes": "Downtown Olympia's main public marina with easy walking access to restaurants, shops, and the State Capitol building.",
+        "addedAt": "2026-05-15T06:19:13.359Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "04618a5c-1058-450c-baac-9f6519be5c93",
+        "name": "Olympia Artesian Well & Capitol Building Grounds",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "activity",
+        "notes": "Free historic landmark and scenic Capitol campus just steps from the waterfront. Great for a short walk and photos of the impressive dome.",
+        "addedAt": "2026-05-15T06:19:13.359Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "33c6c62d-3e46-4459-8acf-bbda7074033c",
+        "name": "Budd Bay Café & Local Restaurants",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "restaurant",
+        "notes": "Waterfront dining within walking distance of marinas; try local seafood and Pacific Northwest cuisine.",
+        "addedAt": "2026-05-15T06:19:13.359Z",
+        "mapsProvider": null
+      },
+      {
+        "id": "323547c0-05cc-4509-b1c8-4222679201c3",
+        "name": "Priest Point Park",
+        "address": "",
+        "phone": "",
+        "website": "",
+        "placeId": "",
+        "category": "activity",
+        "notes": "Beautiful 168-acre park north of downtown with hiking trails, picnic areas, and native forest just a short drive from the marina.",
+        "addedAt": "2026-05-15T06:19:13.359Z",
+        "mapsProvider": null
       }
     ]
   },
   "directions": {},
   "routes": {
+    "1": [
+      {
+        "id": "b70fe2c9-549a-465f-a7ec-9dcf40103ab2",
+        "name": "",
+        "nm": 31.4,
+        "speedKts": 15,
+        "hrs": 2.1,
+        "time": "",
+        "startName": "Elliott Bay Marina",
+        "startLat": 47.6302997,
+        "startLng": -122.3914826,
+        "endName": "Eagle Harbor",
+        "endLat": 48.103026,
+        "endLng": -122.5965472,
+        "routePath": [
+          [
+            47.628,
+            -122.392
+          ],
+          [
+            47.628,
+            -122.404
+          ],
+          [
+            47.66,
+            -122.44
+          ],
+          [
+            47.692,
+            -122.44
+          ],
+          [
+            47.784,
+            -122.48
+          ],
+          [
+            47.816,
+            -122.48
+          ],
+          [
+            47.836,
+            -122.5
+          ],
+          [
+            47.88,
+            -122.508
+          ],
+          [
+            47.9,
+            -122.524
+          ],
+          [
+            47.912,
+            -122.52
+          ],
+          [
+            47.928,
+            -122.536
+          ],
+          [
+            47.98,
+            -122.556
+          ],
+          [
+            48.032,
+            -122.612
+          ],
+          [
+            48.084,
+            -122.616
+          ],
+          [
+            48.104,
+            -122.604
+          ]
+        ],
+        "notes": "",
+        "addedAt": "2026-05-15T06:20:31.942Z"
+      }
+    ],
     "4": [
       {
         "id": "3fe145b4-0c3f-4cc2-bd08-66d262b42de5",
@@ -204,7 +344,12 @@
   "flights": {},
   "rentalCars": {},
   "highlights": {
-    "1": []
+    "1": [],
+    "4": [
+      "May is perfect timing—spring blooms in Capitol grounds and Priest Point Park",
+      "Downtown Olympia is highly walkable from Percival Landing; no car needed for core attractions",
+      "Fresh local seafood and farm-to-table dining options abundant throughout the waterfront district"
+    ]
   },
   "notes": {},
   "startDate": "2026-05-19",
