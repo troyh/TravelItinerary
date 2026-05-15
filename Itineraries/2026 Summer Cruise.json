@@ -217,8 +217,8 @@
     {
       "day": 10,
       "leg": "Telegraph Cove → Broughtons / Lagoon Cove",
-      "nm": 257.7,
-      "hrs": 17.2,
+      "nm": 38,
+      "hrs": 2.5,
       "overnight": "Lagoon Cove Marina, East Cracroft Island",
       "tags": [
         "fuel",
@@ -617,24 +617,20 @@
         "speedKts": 15,
         "hrs": 4.8,
         "time": "",
-        "startName": "Victoria, BC",
-        "startLat": 48.4284756,
-        "startLng": -123.3670221,
+        "startName": "Victoria BC Cruise Ship Dock",
+        "startLat": 48.4165675,
+        "startLng": -123.3899256,
         "endName": "Vancouver, BC",
         "endLat": 49.2604134,
         "endLng": -123.1139456,
         "routePath": [
           [
-            48.408,
-            -123.38
+            48.412,
+            -123.388
           ],
           [
-            48.4,
-            -123.316
-          ],
-          [
-            48.392,
-            -123.308
+            48.404,
+            -123.376
           ],
           [
             48.396,
@@ -892,25 +888,25 @@
     ],
     "6": [
       {
-        "id": "2aa02d77-5b47-45f1-ab61-189a591cd862",
+        "id": "0d0a2e5a-5b8a-4d62-859a-c23338e5c6d6",
         "name": "",
-        "nm": 80.6,
+        "nm": 81.5,
         "speedKts": 15,
         "hrs": 5.4,
         "time": "",
-        "startName": "Princess Louisa Inlet",
-        "startLat": 50.1853206,
-        "startLng": -123.8019316,
+        "startName": "Malibu Rapids",
+        "startLat": 50.1641417,
+        "startLng": -123.8497139,
         "endName": "Prideaux Haven",
         "endLat": 50.1416119,
         "endLng": -124.6824265,
         "routePath": [
           [
-            50.148,
-            -123.832
+            50.16,
+            -123.852
           ],
           [
-            50.116,
+            50.108,
             -123.8
           ],
           [
@@ -942,8 +938,12 @@
             -123.9
           ],
           [
-            49.824,
-            -123.92
+            49.848,
+            -123.916
+          ],
+          [
+            49.828,
+            -123.916
           ],
           [
             49.82,
@@ -1027,7 +1027,7 @@
           ]
         ],
         "notes": "",
-        "addedAt": "2026-05-15T02:26:26.048Z"
+        "addedAt": "2026-05-13T05:00:49.640Z"
       }
     ],
     "8": [
@@ -1222,23 +1222,6 @@
         ],
         "notes": "",
         "addedAt": "2026-05-14T04:07:49.046Z"
-      },
-      {
-        "id": "253d7738-2451-4b5c-baf1-91fdb0757a88",
-        "name": "",
-        "nm": 0,
-        "speedKts": 15,
-        "hrs": 0,
-        "time": "",
-        "startName": "Milly Island",
-        "startLat": 50.4819487,
-        "startLng": -126.0972161,
-        "endName": "Telegraph Cove",
-        "endLat": 48.464659,
-        "endLng": -123.2800756,
-        "routePath": null,
-        "notes": "",
-        "addedAt": "2026-05-15T02:28:22.887Z"
       }
     ],
     "10": [
@@ -1721,156 +1704,92 @@
         "speedKts": 15,
         "hrs": 6.9,
         "time": "",
-        "startName": "Mamquam Blind Channel",
-        "startLat": 49.6890078,
-        "startLng": -123.1564186,
+        "startName": "Edsall Islets",
+        "startLat": 50.4324187,
+        "startLng": -125.5003515,
         "endName": "Squirrel Cove",
         "endLat": 50.1325644,
         "endLng": -124.91703,
         "routePath": [
           [
-            49.68,
-            -123.16
+            50.428,
+            -125.5
           ],
           [
-            49.68,
-            -123.2
+            50.408,
+            -125.496
           ],
           [
-            49.636,
-            -123.244
+            50.4,
+            -125.504
           ],
           [
-            49.612,
-            -123.244
+            50.396,
+            -125.54
           ],
           [
-            49.564,
-            -123.28
+            50.376,
+            -125.556
           ],
           [
-            49.52,
-            -123.28
+            50.36,
+            -125.54
           ],
           [
-            49.484,
-            -123.312
+            50.352,
+            -125.516
           ],
           [
-            49.448,
-            -123.312
+            50.34,
+            -125.444
           ],
           [
-            49.44,
-            -123.32
+            50.3,
+            -125.404
           ],
           [
-            49.428,
-            -123.36
+            50.264,
+            -125.376
           ],
           [
-            49.428,
-            -123.46
+            50.224,
+            -125.372
           ],
           [
-            49.388,
-            -123.5
+            50.212,
+            -125.36
           ],
           [
-            49.38,
-            -123.524
+            50.132,
+            -125.352
           ],
           [
-            49.384,
-            -123.556
+            50.124,
+            -125.344
           ],
           [
-            49.4,
-            -123.572
-          ],
-          [
-            49.412,
-            -123.644
-          ],
-          [
-            49.432,
-            -123.684
-          ],
-          [
-            49.432,
-            -123.724
-          ],
-          [
-            49.448,
-            -123.74
-          ],
-          [
-            49.448,
-            -123.816
-          ],
-          [
-            49.46,
-            -123.832
-          ],
-          [
-            49.46,
-            -123.964
-          ],
-          [
-            49.5,
-            -124.016
-          ],
-          [
-            49.664,
-            -124.18
-          ],
-          [
-            49.668,
-            -124.204
-          ],
-          [
-            49.736,
-            -124.272
-          ],
-          [
-            49.764,
-            -124.324
-          ],
-          [
-            49.764,
-            -124.42
-          ],
-          [
-            49.792,
-            -124.48
-          ],
-          [
-            49.8,
-            -124.528
-          ],
-          [
-            49.912,
-            -124.644
-          ],
-          [
-            49.944,
-            -124.724
-          ],
-          [
-            49.988,
-            -124.784
+            50.124,
+            -125.32
           ],
           [
             49.992,
-            -124.808
+            -125.192
           ],
           [
-            50.004,
-            -124.824
+            49.992,
+            -125.168
           ],
           [
-            50.044,
-            -124.848
+            50.008,
+            -125.144
+          ],
+          [
+            50.012,
+            -124.928
+          ],
+          [
+            50.064,
+            -124.872
           ],
           [
             50.096,
@@ -2128,8 +2047,8 @@
   "notes": {
     "4": "Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window.\n\nTODO: Figure out if I’m okay for stern-tying\nTODO: Is the dock there still under construction?"
   },
-  "startDate": "2026-07-02",
+  "startDate": "2026-07-20",
   "title": "Canada Cruise 2026🇨🇦",
   "subtitle": "Our Summer 2026 Cruise to the Broughton Islands and back",
-  "itineraryNotes": "TODO: Get Canada DTOPS pass sticker\nTODO: Buy [SYC pass](https://www.seattleyachtclub.org/group/pages/annual-outstation-pass) for outstations "
+  "itineraryNotes": "TODO: Get Canada DTOPS pass sticker\nTODO: Buy [SYC pass](https://www.seattleyachtclub.org/group/pages/annual-outstation-pass) for outstations, but may not be necessary as the PBM committee is recommending that PBM moorage holders be exempt this year. "
 }
