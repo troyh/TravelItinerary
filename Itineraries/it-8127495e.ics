@@ -8,6 +8,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260519
 DTEND;VALUE=DATE:20260520
 SUMMARY:Day 1: Eagle Harbor
+DESCRIPTION:31.4 NM · ~2.1 hrs
 URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=1
 UID:day-1-20260519@travelitinerary
 END:VEVENT
@@ -29,7 +30,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260522
 DTEND;VALUE=DATE:20260523
 SUMMARY:Day 4: Olympia
-DESCRIPTION:47.9 NM · ~3.2 hrs
+DESCRIPTION:47.9 NM · ~3.2 hrs\n\nHighlights:\n• May is perfect timing—spring blooms in Capitol grounds and Priest Point Park\n• Downtown Olympia is highly walkable from Percival Landing\; no car needed for core attractions\n• Fresh local seafood and farm-to-table dining options abundant throughout the waterfront district
 URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=4
 UID:day-4-20260522@travelitinerary
 END:VEVENT
