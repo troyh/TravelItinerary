@@ -44,8 +44,8 @@
     },
     {
       "leg": "Olympia",
-      "nm": 0,
-      "hrs": 0,
+      "nm": 47.9,
+      "hrs": 3.2,
       "overnight": "",
       "tags": [
         "layover"
@@ -71,7 +71,25 @@
       "day": 5
     }
   ],
-  "places": {},
+  "places": {
+    "4": [
+      {
+        "id": "4c3bbbdb-c824-4d45-9df9-1267d19e298c",
+        "name": "Percival Landing Park",
+        "address": "217 Thurston Ave NW, Olympia, WA 98501, United States",
+        "phone": "",
+        "website": "",
+        "placeId": "ll:47.0467914,-122.9037952",
+        "category": "activity",
+        "lat": 47.0467914,
+        "lng": -122.9037952,
+        "time": "",
+        "notes": "",
+        "addedAt": "2026-05-15T06:17:12.820Z",
+        "mapsProvider": "apple"
+      }
+    ]
+  },
   "directions": {},
   "routes": {
     "4": [
