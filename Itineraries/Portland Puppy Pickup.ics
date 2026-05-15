@@ -30,6 +30,15 @@ DESCRIPTION:Phone: (503) 222-9996\nWebsite: https://www.marriott.com/en-us/hotel
 UID:place-1ae8c071-3cf6-43e5-be62-2fe683f9e4ee@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260515T220000
+DTEND:20260516T005200
+SUMMARY:1107 21st Ave E → The Nines Hotel\, Portland
+LOCATION:The Nines Hotel\, Portland
+DESCRIPTION:282.9 km · 2h 52m\n[Google Maps](https://www.google.com/maps/dir/?api=1&origin=1107%2021st%20Ave%20E&destination=The%20Nines%2C%20a%20Luxury%20Collection%20Hotel%2C%20Portland&travelmode=driving)\n\nStop at [PetSmart in Vancouver](https://maps.apple/p/JhGDviQckR1PU0) on the way
+URL:https://maps.apple.com/?saddr=1107%2021st%20Ave%20E&daddr=The%20Nines%20Hotel%2C%20Portland&dirflg=d
+UID:dir-3335ece3-7cac-4cc1-936b-35d59baa5156@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260516
 DTEND;VALUE=DATE:20260517
 SUMMARY:Day 2: Get Puppy\, Go Home
