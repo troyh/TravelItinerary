@@ -491,13 +491,14 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
 
                 <div style={{ display: "flex", gap: ".4rem", marginTop: ".5rem" }}>
                   <button type="button" onClick={async () => {
-                    const nm = parseFloat(editDraft.nm);
-                    if (!nm || nm <= 0) return;
+                    let nm = parseFloat(editDraft.nm) || 0;
                     const speedKts = parseFloat(editDraft.speedKts) || 15;
                     const sLat = startCoords?.lat ?? route.startLat ?? null;
                     const sLng = startCoords?.lng ?? route.startLng ?? null;
                     const eLat = endCoords?.lat   ?? route.endLat   ?? null;
                     const eLng = endCoords?.lng   ?? route.endLng   ?? null;
+                    const hasEditCoords = !!(sLat && eLat);
+                    if (!nm && !hasEditCoords) return; // need either NM or coords
                     const updates = {
                       name: editDraft.name.trim(), nm: Math.round(nm*10)/10, speedKts, hrs: Math.round(nm/speedKts*10)/10, time: editDraft.time,
                       startName: startCoords?.name ?? route.startName ?? "", startLat: sLat, startLng: sLng,
@@ -509,8 +510,19 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
                       try {
                         const gpxText = await fetchGpxRoute(routeServerUrl, sLat, sLng, eLat, eLng);
                         updates.routePath = parseGpxToPath(gpxText);
+                        if (!nm && updates.routePath) {
+                          const computedNM = gpxPathToNM(updates.routePath);
+                          if (computedNM > 0) {
+                            updates.nm  = computedNM;
+                            updates.hrs = Math.round(computedNM / speedKts * 10) / 10;
+                          }
+                        }
                       } catch {}
                       setFetchingRoute(false);
+                    }
+                    if (nm > 0 && !updates.nm) {
+                      updates.nm  = Math.round(nm * 10) / 10;
+                      updates.hrs = Math.round(nm / speedKts * 10) / 10;
                     }
                     onUpdate(route.id, updates);
                     setEditingRouteId(null);

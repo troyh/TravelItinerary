@@ -112,7 +112,12 @@ function markerIcon(n) {
 export default function ItineraryMap({ days, savedFlights, savedDirections, savedPlaces, savedRoutes }) {
   const mapElRef   = useRef(null);
   const leafletRef = useRef(null);
-  const [open,   setOpen]   = useState(true);
+  const dragRef    = useRef(null);  // { startY, startH }
+  const [open,      setOpen]      = useState(true);
+  const [mapHeight, setMapHeight] = useState(() => {
+    const h = parseInt(localStorage.getItem("mapHeight"));
+    return h > 0 ? h : 260;
+  });
   const [coords, setCoords] = useState({});       // { key: { lat, lng } }
   const [geocoding, setGeocoding] = useState(false);
 
@@ -154,6 +159,24 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
     }).finally(() => setGeocoding(false));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [days.map(d => d.overnight).join("|"), placeAddressesToGeocode.join("|")]);
+
+  // Inject dark theme styles for Leaflet tooltips and popups (once)
+  useEffect(() => {
+    if (document.getElementById("leaflet-dark-styles")) return;
+    const s = document.createElement("style");
+    s.id = "leaflet-dark-styles";
+    s.textContent = `
+      .leaflet-tooltip-dark { background:#0d1f33; border:1px solid #2e5070; color:#e8dcc8;
+        font-family:sans-serif; font-size:.75rem; padding:3px 8px; border-radius:4px; box-shadow:none; }
+      .leaflet-tooltip-dark::before { display:none; }
+      .leaflet-popup-dark .leaflet-popup-content-wrapper { background:#0d1f33;
+        border:1px solid #2e5070; color:#e8dcc8; font-family:sans-serif;
+        font-size:.78rem; line-height:1.5; border-radius:6px; box-shadow:0 2px 8px #00000066; }
+      .leaflet-popup-dark .leaflet-popup-tip { background:#0d1f33; }
+      .leaflet-popup-dark .leaflet-popup-close-button { color:#4e7a9e; }
+    `;
+    document.head.appendChild(s);
+  }, []);
 
   // Build / rebuild Leaflet map whenever coords or open changes
   useEffect(() => {
@@ -271,8 +294,18 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
         if (!r.startLat || !r.startLng || !r.endLat || !r.endLng) return;
         const hasGpx = r.routePath?.length >= 2;
         const pts = hasGpx ? r.routePath : [[r.startLat, r.startLng], [r.endLat, r.endLng]];
-        L.polyline(pts, { color: "#c9a84c", weight: 2, opacity: 0.7,
-          dashArray: hasGpx ? null : "6,5" }).addTo(map);
+        const routeLabel = [
+          r.name || `Day ${dayNum} route`,
+          r.startName && r.endName ? `${r.startName} → ${r.endName}` : null,
+          r.nm > 0 ? `${r.nm} NM` : null,
+          r.hrs > 0 ? `~${(() => { const h=Math.floor(r.hrs),m=Math.round((r.hrs-h)*60); return h===0?`${m}m`:m===0?`${h}h`:`${h}h ${m}m`; })()}` : null,
+          r.time ? `Departs ${(() => { const [h,m]=r.time.split(':').map(Number); return `${h%12||12}:${String(m).padStart(2,'0')} ${h<12?'AM':'PM'}`; })()}` : null,
+        ].filter(Boolean).join('<br>');
+
+        L.polyline(pts, { color: "#c9a84c", weight: 4, opacity: 0.7,
+          dashArray: hasGpx ? null : "6,5" })
+          .bindPopup(routeLabel, { className: "leaflet-popup-dark" })
+          .addTo(map);
         pts.forEach(p => bounds.extend(p));
         L.marker([r.endLat, r.endLng], { icon: markerIcon(dayNum) })
           .bindTooltip(r.endName || `Day ${dayNum}`, { direction: "top", offset: [0, -10], className: "leaflet-tooltip-dark" })
@@ -311,7 +344,7 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
     };
   // Rebuild when open toggles or coords change
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, coords, JSON.stringify(savedFlights), JSON.stringify(savedDirections), JSON.stringify(savedPlaces), JSON.stringify(savedRoutes)]);
+  }, [open, mapHeight, coords, JSON.stringify(savedFlights), JSON.stringify(savedDirections), JSON.stringify(savedPlaces), JSON.stringify(savedRoutes)]);
 
   // Don't render if fewer than 2 days have overnight locations
   if (stopsWithOvernight.length < 2) return null;
@@ -348,13 +381,41 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
       <div
         ref={mapElRef}
         style={{
-          height: 260,
+          height: mapHeight,
           borderLeft: "3px solid #4e7a9e44",
-          borderBottom: open ? "1px solid #1e3a52" : "none",
           display: open ? "block" : "none",
           background: "#0b1929",
         }}
       />
+
+      {/* Drag handle to resize */}
+      {open && (
+        <div
+          onPointerDown={e => {
+            e.preventDefault();
+            dragRef.current = { startY: e.clientY, startH: mapHeight };
+            const onMove = ev => {
+              const delta = ev.clientY - dragRef.current.startY;
+              const newH = Math.max(100, Math.min(700, dragRef.current.startH + delta));
+              setMapHeight(newH);
+              try { localStorage.setItem("mapHeight", String(Math.round(newH))); } catch {}
+            };
+            const onUp = () => {
+              window.removeEventListener("pointermove", onMove);
+              window.removeEventListener("pointerup", onUp);
+              if (leafletRef.current) leafletRef.current.invalidateSize();
+            };
+            window.addEventListener("pointermove", onMove);
+            window.addEventListener("pointerup", onUp);
+          }}
+          style={{ height: 6, borderLeft: "3px solid #4e7a9e44",
+            borderBottom: "1px solid #1e3a52",
+            background: "linear-gradient(#1e3a5200, #4e7a9e33)",
+            cursor: "ns-resize", touchAction: "none",
+            display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ width: 32, height: 2, borderRadius: 1, background: "#4e7a9e66" }} />
+        </div>
+      )}
     </div>
   );
 }
