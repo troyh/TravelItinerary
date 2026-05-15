@@ -29,6 +29,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260522
 DTEND;VALUE=DATE:20260523
 SUMMARY:Day 4: Olympia
+DESCRIPTION:47.9 NM · ~3.2 hrs
 URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=4
 UID:day-4-20260522@travelitinerary
 END:VEVENT
