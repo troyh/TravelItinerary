@@ -1,0 +1,64 @@
+{
+  "days": [
+    {
+      "leg": "Fly to UCSB",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 1
+    },
+    {
+      "leg": "Orientation Day 1",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 2
+    },
+    {
+      "leg": "Orientation Day 2",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "day": 3
+    }
+  ],
+  "places": {},
+  "directions": {},
+  "routes": {},
+  "flights": {},
+  "rentalCars": {},
+  "highlights": {
+    "3": [
+      "Attend events",
+      "Fly home"
+    ]
+  },
+  "notes": {
+    "1": "TODO: get airfare July 12-14\nTODO: get hotel"
+  },
+  "startDate": "2026-07-12",
+  "title": "UCSB Orientation",
+  "subtitle": "",
+  "itineraryNotes": "TODO: get rental car, can be a fun car"
+}
