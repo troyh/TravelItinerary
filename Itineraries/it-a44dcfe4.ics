@@ -1,0 +1,30 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//UCSB Orientation//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:UCSB Orientation
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260712
+DTEND;VALUE=DATE:20260713
+SUMMARY:Day 1: Fly to UCSB
+DESCRIPTION:\nNote: TODO: get airfare July 12-14\nTODO: get hotel
+URL:https://troyh.github.io/TravelItinerary/?i=it-a44dcfe4&day=1
+UID:day-1-20260712@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260713
+DTEND;VALUE=DATE:20260714
+SUMMARY:Day 2: Orientation Day 1
+URL:https://troyh.github.io/TravelItinerary/?i=it-a44dcfe4&day=2
+UID:day-2-20260713@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260714
+DTEND;VALUE=DATE:20260715
+SUMMARY:Day 3: Orientation Day 2
+DESCRIPTION:\nHighlights:\n• Attend events\n• Fly home
+URL:https://troyh.github.io/TravelItinerary/?i=it-a44dcfe4&day=3
+UID:day-3-20260714@travelitinerary
+END:VEVENT
+END:VCALENDAR
