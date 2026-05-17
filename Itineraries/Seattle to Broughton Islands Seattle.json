@@ -1,4 +1,9 @@
 {
+  "startDate": "2026-05-07",
+  "openDay": 7,
+  "title": "Seattle → Broughton Islands → Seattle",
+  "subtitle": "",
+  "itineraryNotes": "My overall itinerary notes",
   "days": [
     {
       "day": 1,
@@ -20,7 +25,122 @@
         "Dinner in downtown Victoria — Fishhook or The Tapa Bar are standouts",
         "Anchor in Oak Bay for a quiet night away from Inner Harbour ferry traffic"
       ],
-      "note": "Depart early — US/Canada customs by water can involve a wait. Passports for everyone aboard."
+      "note": "Depart early — US/Canada customs by water can involve a wait. Passports for everyone aboard.",
+      "places": [],
+      "directions": [
+        {
+          "id": "ad8c7560-243c-4b8b-8e57-bc942a322860",
+          "origin": {
+            "name": "1107 21st Avenue East",
+            "placeId": "ChIJky3RvdYUkFQR2VOlzypd3bc"
+          },
+          "destination": {
+            "name": "Hotel Benson",
+            "placeId": "ChIJ57TiBwQKlVQRg7zsX28-9_A"
+          },
+          "travelMode": "DRIVING",
+          "distance": "178 mi",
+          "duration": "2 hours 53 mins",
+          "summary": "I-5 S",
+          "steps": [
+            {
+              "instruction": "Head north on 21st Ave E toward E Highland Dr",
+              "distance": "0.1 mi",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Turn right at the 1st cross street onto E Highland Dr",
+              "distance": "299 ft",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Turn left onto 22nd Ave E",
+              "distance": "0.2 mi",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "At the traffic circle, take the 1st exit onto E Crescent Dr",
+              "distance": "0.1 mi",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Turn left onto 24th Ave E",
+              "distance": "0.7 mi",
+              "duration": "2 mins"
+            },
+            {
+              "instruction": "Slight left onto E Montlake Pl E",
+              "distance": "0.2 mi",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Turn left to merge onto WA-520 W",
+              "distance": "0.7 mi",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Merge onto I-5 S via the ramp to Portland",
+              "distance": "26.6 mi",
+              "duration": "26 mins"
+            },
+            {
+              "instruction": "Keep right to stay on I-5 S",
+              "distance": "1.1 mi",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Keep right to stay on I-5 S",
+              "distance": "132 mi",
+              "duration": "2 hours 0 mins"
+            },
+            {
+              "instruction": "Keep left to stay on I-5 S, follow signs for Vancouver/PortlandEntering Oregon",
+              "distance": "13.0 mi",
+              "duration": "13 mins"
+            },
+            {
+              "instruction": "Take exit 302B for I-405/US-30 W toward Beaverton/St. Helens",
+              "distance": "0.6 mi",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Continue onto I-405 S/US-30 W",
+              "distance": "0.5 mi",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Keep left to continue on I-405 S, follow signs for US-26 W/City Ctr/Beaverton/Glisan St/Everett St",
+              "distance": "0.6 mi",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Take exit 2A for Couch St toward Burnside St",
+              "distance": "0.2 mi",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Continue onto NW 15th Ave",
+              "distance": "253 ft",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Turn left onto W Burnside St",
+              "distance": "0.4 mi",
+              "duration": "2 mins"
+            },
+            {
+              "instruction": "Turn right onto SW BroadwayDestination will be on the right",
+              "distance": "482 ft",
+              "duration": "1 min"
+            }
+          ],
+          "notes": "",
+          "addedAt": "2026-04-28T22:16:27.553Z"
+        }
+      ],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 2,
@@ -45,7 +165,102 @@
         "55 NM to False Creek — arrive Vancouver mid/late afternoon",
         "Fuel at False Creek Fuel Dock; major provisioning at Granville Island Public Market"
       ],
-      "note": "Depart Salt Spring by 1:30–2pm to arrive Vancouver before evening. If you time it for a Saturday, the Ganges market is not to be missed."
+      "note": "Depart Salt Spring by 1:30–2pm to arrive Vancouver before evening. If you time it for a Saturday, the Ganges market is not to be missed.",
+      "places": [],
+      "directions": [
+        {
+          "id": "aaead5f2-c0db-4ffa-b032-82e246bdd054",
+          "origin": {
+            "name": "Hotel Benson",
+            "placeId": "ChIJ57TiBwQKlVQRg7zsX28-9_A"
+          },
+          "destination": {
+            "name": "1107 21st Ave E",
+            "placeId": "ChIJky3RvdYUkFQR2VOlzypd3bc"
+          },
+          "travelMode": "DRIVING",
+          "distance": "176 mi",
+          "duration": "2 hours 51 mins",
+          "summary": "I-5 N",
+          "steps": [
+            {
+              "instruction": "Head west on SW Oak St toward SW Park Ave",
+              "distance": "0.1 mi",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Turn right onto SW 10th Ave",
+              "distance": "75 ft",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Turn left at the 1st cross street onto W Burnside St",
+              "distance": "0.2 mi",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Turn right (signs for I-405 N/US-30 N)",
+              "distance": "292 ft",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Merge onto I-405 N via the ramp to US-30 W/I-5 N",
+              "distance": "1.3 mi",
+              "duration": "2 mins"
+            },
+            {
+              "instruction": "Take the exit onto I-5 NEntering Washington",
+              "distance": "145 mi",
+              "duration": "2 hours 12 mins"
+            },
+            {
+              "instruction": "Keep right to stay on I-5 N",
+              "distance": "27.6 mi",
+              "duration": "27 mins"
+            },
+            {
+              "instruction": "Take exit 168A for Lakeview Blvd",
+              "distance": "0.1 mi",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Turn left onto Lakeview Blvd E",
+              "distance": "0.1 mi",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Turn right onto Harvard Ave E",
+              "distance": "0.2 mi",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Turn right onto E Boston St",
+              "distance": "0.4 mi",
+              "duration": "2 mins"
+            },
+            {
+              "instruction": "E Boston St turns slightly right and becomes 15th Ave E",
+              "distance": "0.4 mi",
+              "duration": "1 min"
+            },
+            {
+              "instruction": "Turn left onto E Galer St",
+              "distance": "0.4 mi",
+              "duration": "2 mins"
+            },
+            {
+              "instruction": "Turn right onto 21st Ave EDestination will be on the right",
+              "distance": "0.2 mi",
+              "duration": "2 mins"
+            }
+          ],
+          "notes": "",
+          "addedAt": "2026-04-28T22:15:48.244Z"
+        }
+      ],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 3,
@@ -69,7 +284,12 @@
         "Dinner: Hawksworth, Ancora Waterfront Dining, or water taxi to Lonsdale Quay",
         "Confirm Malibu Rapids slack window for Day 4 arrival"
       ],
-      "note": "Use today to nail down Malibu Rapids timing. Plan your Day 4 departure from Vancouver to arrive exactly at the slack window — not the other way around."
+      "note": "Use today to nail down Malibu Rapids timing. Plan your Day 4 departure from Vancouver to arrive exactly at the slack window — not the other way around.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 4,
@@ -93,7 +313,12 @@
         "Time your arrival at Malibu Rapids to the exact slack using XTide, Navionics, or the CHS app",
         "Anchor inside Princess Louisa Marine Provincial Park — stern-tie rings at the park dock near Chatterbox Falls"
       ],
-      "note": "Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window."
+      "note": "Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 5,
@@ -117,7 +342,12 @@
         "Wildlife: black bears on the shoreline, bald eagles overhead, seals common",
         "Sundowners in the cockpit watching waterfalls — this is the highlight of the whole trip"
       ],
-      "note": "One of the most spectacular anchorages in the world. Fully protected from swell. Don't rush it."
+      "note": "One of the most spectacular anchorages in the world. Fully protected from swell. Don't rush it.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 6,
@@ -142,7 +372,12 @@
         "Prideaux Haven: a maze of islets and coves with stern-tie rings throughout the marine park",
         "Kayak the labyrinth in the evening light — among BC's finest anchorages"
       ],
-      "note": "Prideaux fills fast in July — arrive by early afternoon. Tenedos Bay (adjacent) is an excellent overflow anchorage."
+      "note": "Prideaux fills fast in July — arrive by early afternoon. Tenedos Bay (adjacent) is an excellent overflow anchorage.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 7,
@@ -166,7 +401,12 @@
         "Day trip to Laura Cove or Grace Harbour by dinghy",
         "Best stargazing of the trip — minimal light pollution, long July twilight gives way to a spectacular sky"
       ],
-      "note": "This layover is well earned. Desolation Sound gets its name from a gloomy 1792 survey — ignore that. In July it's the warmest, most beautiful anchorage on the BC coast."
+      "note": "This layover is well earned. Desolation Sound gets its name from a gloomy 1792 survey — ignore that. In July it's the warmest, most beautiful anchorage on the BC coast.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 8,
@@ -190,7 +430,12 @@
         "Once through the Narrows, the worst is behind you — beautiful Johnstone Strait opens up",
         "Port Neville: remote, peaceful anchorage at the mouth of a long inlet — excellent crabbing and prawning"
       ],
-      "note": "This is a coordinated day: depart Desolation early, fuel Campbell River at ~10:30am, Seymour Narrows at slack midday, anchor Port Neville by mid-afternoon. At 15 kts this is ~7.5 hrs total but the Narrows wait may be built in. Brief lunch at Campbell River fuel dock."
+      "note": "This is a coordinated day: depart Desolation early, fuel Campbell River at ~10:30am, Seymour Narrows at slack midday, anchor Port Neville by mid-afternoon. At 15 kts this is ~7.5 hrs total but the Narrows wait may be built in. Brief lunch at Campbell River fuel dock.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 9,
@@ -212,7 +457,12 @@
         "Telegraph Cove: charming historic boardwalk fishing village, great for a walk and lunch ashore",
         "Stubbs Island Whale Watching runs expert-guided orca tours from the dock if you want a guaranteed experience"
       ],
-      "note": "Relaxed day after yesterday's long push. Take your time through Johnstone Strait — the orca viewing here is as good as it gets on the BC coast."
+      "note": "Relaxed day after yesterday's long push. Take your time through Johnstone Strait — the orca viewing here is as good as it gets on the BC coast.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 10,
@@ -237,7 +487,12 @@
         "Orca sightings are frequent in this area in July — ask Kelly & Dan for current reports",
         "Book Knight Inlet grizzly tour for tomorrow if you haven't already"
       ],
-      "note": "Arriving early gives you the afternoon to explore and get oriented. Tonight: Kelly & Dan's famous prawn potluck — they supply the prawns, you bring an appetizer. Unmissable."
+      "note": "Arriving early gives you the afternoon to explore and get oriented. Tonight: Kelly & Dan's famous prawn potluck — they supply the prawns, you bring an appetizer. Unmissable.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 11,
@@ -261,7 +516,12 @@
         "Fish for lingcod, rockfish, and salmon in the channels around East Cracroft Island",
         "Explore Echo Bay — Pierre's floating post office, a slice of remote BC character"
       ],
-      "note": "Book Knight Inlet Lodge or Tide Rip Grizzly Tours in advance — this is a genuine bucket-list experience. Seeing a grizzly from the water in its natural habitat with the kids is unforgettable."
+      "note": "Book Knight Inlet Lodge or Tide Rip Grizzly Tours in advance — this is a genuine bucket-list experience. Seeing a grizzly from the water in its natural habitat with the kids is unforgettable.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 12,
@@ -284,7 +544,12 @@
         "Hiking trails directly from the dock: old-growth forest, panoramic viewpoints",
         "Well-stocked general store — last good provisioning point before the south run"
       ],
-      "note": "Call ahead on VHF 66A to reserve a slip — Blind Channel fills up in summer. Easy run today; enjoy the slow pace."
+      "note": "Call ahead on VHF 66A to reserve a slip — Blind Channel fills up in summer. Easy run today; enjoy the slow pace.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 13,
@@ -306,7 +571,12 @@
         "Kayak the inner lagoon at high tide — a gorgeous hidden basin accessible through a narrow passage",
         "Fish for coho salmon returning through this corridor in July"
       ],
-      "note": "Gentle re-entry to the southern waters. The lagoon inside Squirrel Cove is one of those hidden BC gems — explore it by kayak or dinghy at high tide."
+      "note": "Gentle re-entry to the southern waters. The lagoon inside Squirrel Cove is one of those hidden BC gems — explore it by kayak or dinghy at high tide.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 14,
@@ -329,7 +599,12 @@
         "Walk the Montague Harbour trails to the shell middens and headland views",
         "Hummingbird Pub on Galiano Island for a relaxed family dinner ashore"
       ],
-      "note": "Active Pass: narrow channel between Galiano and Mayne Islands with heavy BC Ferries traffic. Reduce speed, hug the correct side, and give ferries wide berth."
+      "note": "Active Pass: narrow channel between Galiano and Mayne Islands with heavy BC Ferries traffic. Reduce speed, hug the correct side, and give ferries wide berth.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 15,
@@ -354,7 +629,12 @@
         "Dinghy to the Montague Harbour village: small café, general store, easy island pace",
         "Afternoon swim off the shell beach — warm, shallow, ideal for kids"
       ],
-      "note": "First full Gulf Islands decompression day. No agenda required."
+      "note": "First full Gulf Islands decompression day. No agenda required.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 16,
@@ -378,7 +658,12 @@
         "Beachcomb, fish from the swim step, paddle at sunset — full unstructured family day",
         "Move anchorages mid-day if the mood strikes"
       ],
-      "note": "Second Gulf Islands layover. No agenda — use it however the family wants. Salt Spring Ganges is excellent if anyone wants shops or a proper meal ashore."
+      "note": "Second Gulf Islands layover. No agenda — use it however the family wants. Salt Spring Ganges is excellent if anyone wants shops or a proper meal ashore.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 17,
@@ -403,219 +688,12 @@
         "Haro Strait crossing: aim to cross before 2pm to stay ahead of afternoon northwest wind",
         "Optional: brief stop at Roche Harbor (San Juan Islands) to break the final leg"
       ],
-      "note": "Slightly over the usual 100 NM preference, but Victoria breaks it naturally into two segments. Register everyone on the CBP ROAM app before leaving Victoria. Shilshole or Lake Union via the locks for Seattle landfall."
+      "note": "Slightly over the usual 100 NM preference, but Victoria breaks it naturally into two segments. Register everyone on the CBP ROAM app before leaving Victoria. Shilshole or Lake Union via the locks for Seattle landfall.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     }
-  ],
-  "places": {},
-  "directions": {
-    "1": [
-      {
-        "id": "ad8c7560-243c-4b8b-8e57-bc942a322860",
-        "origin": {
-          "name": "1107 21st Avenue East",
-          "placeId": "ChIJky3RvdYUkFQR2VOlzypd3bc"
-        },
-        "destination": {
-          "name": "Hotel Benson",
-          "placeId": "ChIJ57TiBwQKlVQRg7zsX28-9_A"
-        },
-        "travelMode": "DRIVING",
-        "distance": "178 mi",
-        "duration": "2 hours 53 mins",
-        "summary": "I-5 S",
-        "steps": [
-          {
-            "instruction": "Head north on 21st Ave E toward E Highland Dr",
-            "distance": "0.1 mi",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Turn right at the 1st cross street onto E Highland Dr",
-            "distance": "299 ft",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Turn left onto 22nd Ave E",
-            "distance": "0.2 mi",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "At the traffic circle, take the 1st exit onto E Crescent Dr",
-            "distance": "0.1 mi",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Turn left onto 24th Ave E",
-            "distance": "0.7 mi",
-            "duration": "2 mins"
-          },
-          {
-            "instruction": "Slight left onto E Montlake Pl E",
-            "distance": "0.2 mi",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Turn left to merge onto WA-520 W",
-            "distance": "0.7 mi",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Merge onto I-5 S via the ramp to Portland",
-            "distance": "26.6 mi",
-            "duration": "26 mins"
-          },
-          {
-            "instruction": "Keep right to stay on I-5 S",
-            "distance": "1.1 mi",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Keep right to stay on I-5 S",
-            "distance": "132 mi",
-            "duration": "2 hours 0 mins"
-          },
-          {
-            "instruction": "Keep left to stay on I-5 S, follow signs for Vancouver/PortlandEntering Oregon",
-            "distance": "13.0 mi",
-            "duration": "13 mins"
-          },
-          {
-            "instruction": "Take exit 302B for I-405/US-30 W toward Beaverton/St. Helens",
-            "distance": "0.6 mi",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Continue onto I-405 S/US-30 W",
-            "distance": "0.5 mi",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Keep left to continue on I-405 S, follow signs for US-26 W/City Ctr/Beaverton/Glisan St/Everett St",
-            "distance": "0.6 mi",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Take exit 2A for Couch St toward Burnside St",
-            "distance": "0.2 mi",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Continue onto NW 15th Ave",
-            "distance": "253 ft",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Turn left onto W Burnside St",
-            "distance": "0.4 mi",
-            "duration": "2 mins"
-          },
-          {
-            "instruction": "Turn right onto SW BroadwayDestination will be on the right",
-            "distance": "482 ft",
-            "duration": "1 min"
-          }
-        ],
-        "notes": "",
-        "addedAt": "2026-04-28T22:16:27.553Z"
-      }
-    ],
-    "2": [
-      {
-        "id": "aaead5f2-c0db-4ffa-b032-82e246bdd054",
-        "origin": {
-          "name": "Hotel Benson",
-          "placeId": "ChIJ57TiBwQKlVQRg7zsX28-9_A"
-        },
-        "destination": {
-          "name": "1107 21st Ave E",
-          "placeId": "ChIJky3RvdYUkFQR2VOlzypd3bc"
-        },
-        "travelMode": "DRIVING",
-        "distance": "176 mi",
-        "duration": "2 hours 51 mins",
-        "summary": "I-5 N",
-        "steps": [
-          {
-            "instruction": "Head west on SW Oak St toward SW Park Ave",
-            "distance": "0.1 mi",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Turn right onto SW 10th Ave",
-            "distance": "75 ft",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Turn left at the 1st cross street onto W Burnside St",
-            "distance": "0.2 mi",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Turn right (signs for I-405 N/US-30 N)",
-            "distance": "292 ft",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Merge onto I-405 N via the ramp to US-30 W/I-5 N",
-            "distance": "1.3 mi",
-            "duration": "2 mins"
-          },
-          {
-            "instruction": "Take the exit onto I-5 NEntering Washington",
-            "distance": "145 mi",
-            "duration": "2 hours 12 mins"
-          },
-          {
-            "instruction": "Keep right to stay on I-5 N",
-            "distance": "27.6 mi",
-            "duration": "27 mins"
-          },
-          {
-            "instruction": "Take exit 168A for Lakeview Blvd",
-            "distance": "0.1 mi",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Turn left onto Lakeview Blvd E",
-            "distance": "0.1 mi",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Turn right onto Harvard Ave E",
-            "distance": "0.2 mi",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Turn right onto E Boston St",
-            "distance": "0.4 mi",
-            "duration": "2 mins"
-          },
-          {
-            "instruction": "E Boston St turns slightly right and becomes 15th Ave E",
-            "distance": "0.4 mi",
-            "duration": "1 min"
-          },
-          {
-            "instruction": "Turn left onto E Galer St",
-            "distance": "0.4 mi",
-            "duration": "2 mins"
-          },
-          {
-            "instruction": "Turn right onto 21st Ave EDestination will be on the right",
-            "distance": "0.2 mi",
-            "duration": "2 mins"
-          }
-        ],
-        "notes": "",
-        "addedAt": "2026-04-28T22:15:48.244Z"
-      }
-    ]
-  },
-  "highlights": {},
-  "notes": {},
-  "startDate": "2026-05-07",
-  "openDay": 7,
-  "title": "Seattle → Broughton Islands → Seattle",
-  "subtitle": "",
-  "itineraryNotes": "My overall itinerary notes"
+  ]
 }
