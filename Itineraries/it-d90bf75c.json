@@ -5,17 +5,134 @@
   "itineraryNotes": "???",
   "days": [
     {
-      "day": 1,
+      "leg": "Budd Inlet → Nisqually Reach → Carr Inlet",
+      "overnight": "Gig Harbor, WA",
+      "nm": 0,
+      "hrs": 0,
+      "tags": [],
+      "highlights": [
+        "Explore the charming waterfront town of Gig Harbor with boutique shops and galleries",
+        "Cruise past the dramatic sandstone cliffs and protected beaches of Carr Inlet",
+        "Anchor near McNeil Island for scenic views and historical perspectives"
+      ],
+      "note": "",
+      "places": [
+        {
+          "id": "f39e8a31-2631-4152-b11b-315b5e340a20",
+          "name": "Gig Harbor Waterfront",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "accommodation",
+          "notes": "Charming protected harbor with modern marina facilities, guest moorage, and excellent shore-side amenities.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "38882b75-3b9c-40d3-b5ed-fd565458b64b",
+          "name": "Matsutake Restaurant",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "restaurant",
+          "notes": "Award-winning Japanese cuisine in downtown Gig Harbor with fresh local seafood and water views.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "f858247d-57a0-4d60-8d1d-558467ef3f55",
+          "name": "Gig Harbor Maritime Museum",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "Learn about the region's fishing and maritime heritage through exhibits and local history displays.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "919fe81f-eb96-4941-8fe3-5392e7dd1fb4",
+          "name": "Carr Inlet Anchorages",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "Scenic protected waters surrounded by wildlife and dramatic shoreline geology, ideal for exploring by dinghy.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        }
+      ],
+      "directions": [],
+      "routes": [
+        {
+          "id": "078e5fac-25a6-40e7-a00b-675f41534873",
+          "name": "",
+          "nm": 10.5,
+          "speedKts": 15,
+          "hrs": 0.7,
+          "time": "",
+          "startName": "Gig Harbor, WA",
+          "startLat": 47.3293755,
+          "startLng": -122.5808901,
+          "endName": "McNeil Island",
+          "endLat": 47.2079436,
+          "endLng": -122.6807781,
+          "routePath": [
+            [
+              47.324,
+              -122.572
+            ],
+            [
+              47.296,
+              -122.544
+            ],
+            [
+              47.284,
+              -122.544
+            ],
+            [
+              47.232,
+              -122.584
+            ],
+            [
+              47.216,
+              -122.6
+            ],
+            [
+              47.224,
+              -122.62
+            ],
+            [
+              47.224,
+              -122.66
+            ],
+            [
+              47.216,
+              -122.664
+            ]
+          ],
+          "notes": "",
+          "addedAt": "2026-05-15T06:38:44.436Z"
+        }
+      ],
+      "flights": [],
+      "rentalCars": []
+    },
+    {
       "leg": "Olympia → Budd Inlet",
       "overnight": "Olympia, WA",
       "nm": 28.2,
       "hrs": 1.9,
+      "tags": [],
       "highlights": [
         "Depart from Olympia's waterfront and cruise through Budd Inlet with views of forested shorelines",
         "Spot bald eagles, seals, and local marine wildlife in their natural habitat",
         "Enjoy calm June waters perfect for photography and wildlife observation"
       ],
-      "tags": [],
       "note": "",
       "places": [
         {
@@ -156,136 +273,16 @@
       "rentalCars": []
     },
     {
-      "day": 2,
-      "leg": "Budd Inlet → Nisqually Reach → Carr Inlet",
-      "overnight": "Gig Harbor, WA",
-      "nm": 0,
-      "hrs": 0,
-      "highlights": [
-        "Explore the charming waterfront town of Gig Harbor with boutique shops and galleries",
-        "Cruise past the dramatic sandstone cliffs and protected beaches of Carr Inlet",
-        "Anchor near McNeil Island for scenic views and historical perspectives"
-      ],
-      "tags": [],
-      "note": "",
-      "places": [
-        {
-          "id": "f39e8a31-2631-4152-b11b-315b5e340a20",
-          "name": "Gig Harbor Waterfront",
-          "address": "",
-          "phone": "",
-          "website": "",
-          "placeId": "",
-          "category": "accommodation",
-          "notes": "Charming protected harbor with modern marina facilities, guest moorage, and excellent shore-side amenities.",
-          "addedAt": "2026-05-15T06:28:47.554Z",
-          "mapsProvider": null
-        },
-        {
-          "id": "38882b75-3b9c-40d3-b5ed-fd565458b64b",
-          "name": "Matsutake Restaurant",
-          "address": "",
-          "phone": "",
-          "website": "",
-          "placeId": "",
-          "category": "restaurant",
-          "notes": "Award-winning Japanese cuisine in downtown Gig Harbor with fresh local seafood and water views.",
-          "addedAt": "2026-05-15T06:28:47.554Z",
-          "mapsProvider": null
-        },
-        {
-          "id": "f858247d-57a0-4d60-8d1d-558467ef3f55",
-          "name": "Gig Harbor Maritime Museum",
-          "address": "",
-          "phone": "",
-          "website": "",
-          "placeId": "",
-          "category": "activity",
-          "notes": "Learn about the region's fishing and maritime heritage through exhibits and local history displays.",
-          "addedAt": "2026-05-15T06:28:47.554Z",
-          "mapsProvider": null
-        },
-        {
-          "id": "919fe81f-eb96-4941-8fe3-5392e7dd1fb4",
-          "name": "Carr Inlet Anchorages",
-          "address": "",
-          "phone": "",
-          "website": "",
-          "placeId": "",
-          "category": "activity",
-          "notes": "Scenic protected waters surrounded by wildlife and dramatic shoreline geology, ideal for exploring by dinghy.",
-          "addedAt": "2026-05-15T06:28:47.554Z",
-          "mapsProvider": null
-        }
-      ],
-      "directions": [],
-      "routes": [
-        {
-          "id": "078e5fac-25a6-40e7-a00b-675f41534873",
-          "name": "",
-          "nm": 10.5,
-          "speedKts": 15,
-          "hrs": 0.7,
-          "time": "",
-          "startName": "Gig Harbor, WA",
-          "startLat": 47.3293755,
-          "startLng": -122.5808901,
-          "endName": "McNeil Island",
-          "endLat": 47.2079436,
-          "endLng": -122.6807781,
-          "routePath": [
-            [
-              47.324,
-              -122.572
-            ],
-            [
-              47.296,
-              -122.544
-            ],
-            [
-              47.284,
-              -122.544
-            ],
-            [
-              47.232,
-              -122.584
-            ],
-            [
-              47.216,
-              -122.6
-            ],
-            [
-              47.224,
-              -122.62
-            ],
-            [
-              47.224,
-              -122.66
-            ],
-            [
-              47.216,
-              -122.664
-            ]
-          ],
-          "notes": "",
-          "addedAt": "2026-05-15T06:38:44.436Z"
-        }
-      ],
-      "flights": [],
-      "rentalCars": []
-    },
-    {
-      "day": 3,
       "leg": "Carr Inlet → Olympia",
       "overnight": "Olympia, WA",
       "nm": 0,
       "hrs": 0,
+      "tags": [],
       "highlights": [
         "Visit scenic overlooks at multiple points along the return route",
         "Experience the maritime culture and small-town charm of South Puget Sound",
         "Witness sunset views over the water as you return to Olympia"
       ],
-      "tags": [],
       "note": "",
       "places": [
         {
@@ -354,7 +351,6 @@
       "tideWarning": false,
       "highlights": [],
       "note": "",
-      "day": 4,
       "places": [],
       "directions": [],
       "routes": [
