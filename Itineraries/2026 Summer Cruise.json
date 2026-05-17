@@ -1,4 +1,8 @@
 {
+  "startDate": "2026-07-02",
+  "title": "Canada Cruise 2026🇨🇦",
+  "subtitle": "Our Summer 2026 Cruise to the Broughton Islands and back",
+  "itineraryNotes": "TODO: Get Canada DTOPS pass sticker\nTODO: Buy [SYC pass](https://www.seattleyachtclub.org/group/pages/annual-outstation-pass) for outstations \n",
   "days": [
     {
       "day": 1,
@@ -20,7 +24,95 @@
         "Dinner in downtown Victoria — Fishhook or The Tapa Bar are standouts",
         "Anchor in Oak Bay for a quiet night away from Inner Harbour ferry traffic"
       ],
-      "note": "Depart early — US/Canada customs by water can involve a wait. Passports for everyone aboard."
+      "note": "Depart early — US/Canada customs by water can involve a wait. Passports for everyone aboard.",
+      "places": [],
+      "directions": [],
+      "routes": [
+        {
+          "id": "ffbbd44b-83f4-446e-8401-8998a74a7841",
+          "name": "",
+          "nm": 68.7,
+          "speedKts": 15,
+          "hrs": 4.6,
+          "time": "",
+          "startName": "Elliott Bay",
+          "startLat": 47.6048242,
+          "startLng": -122.3668262,
+          "endName": "Victoria BC Cruise Ship Dock",
+          "endLat": 48.4165675,
+          "endLng": -123.3899256,
+          "routePath": [
+            [
+              47.600824,
+              -122.369926
+            ],
+            [
+              47.616824,
+              -122.385926
+            ],
+            [
+              47.624824,
+              -122.409926
+            ],
+            [
+              47.656824,
+              -122.441926
+            ],
+            [
+              47.752824,
+              -122.441926
+            ],
+            [
+              47.912824,
+              -122.513926
+            ],
+            [
+              48.048824,
+              -122.649926
+            ],
+            [
+              48.104824,
+              -122.681926
+            ],
+            [
+              48.208824,
+              -122.785926
+            ],
+            [
+              48.288824,
+              -123.017926
+            ],
+            [
+              48.288824,
+              -123.041926
+            ],
+            [
+              48.304824,
+              -123.073926
+            ],
+            [
+              48.328824,
+              -123.161926
+            ],
+            [
+              48.400824,
+              -123.361926
+            ],
+            [
+              48.400824,
+              -123.385926
+            ],
+            [
+              48.408824,
+              -123.393926
+            ]
+          ],
+          "notes": "",
+          "addedAt": "2026-05-13T04:44:47.032Z"
+        }
+      ],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 2,
@@ -45,7 +137,123 @@
         "55 NM to False Creek — arrive Vancouver mid/late afternoon",
         "Fuel at False Creek Fuel Dock; major provisioning at Granville Island Public Market"
       ],
-      "note": "Depart Salt Spring by 1:30–2pm to arrive Vancouver before evening. If you time it for a Saturday, the Ganges market is not to be missed."
+      "note": "Depart Salt Spring by 1:30–2pm to arrive Vancouver before evening. If you time it for a Saturday, the Ganges market is not to be missed.",
+      "places": [],
+      "directions": [],
+      "routes": [
+        {
+          "id": "3388d1dc-7360-47e8-871c-4746acd79c8b",
+          "name": "",
+          "nm": 72.3,
+          "speedKts": 15,
+          "hrs": 4.8,
+          "time": "",
+          "startName": "Victoria, BC",
+          "startLat": 48.4284756,
+          "startLng": -123.3670221,
+          "endName": "Vancouver, BC",
+          "endLat": 49.2604134,
+          "endLng": -123.1139456,
+          "routePath": [
+            [
+              48.408,
+              -123.38
+            ],
+            [
+              48.4,
+              -123.316
+            ],
+            [
+              48.392,
+              -123.308
+            ],
+            [
+              48.396,
+              -123.3
+            ],
+            [
+              48.452,
+              -123.26
+            ],
+            [
+              48.556,
+              -123.26
+            ],
+            [
+              48.628,
+              -123.188
+            ],
+            [
+              48.632,
+              -123.104
+            ],
+            [
+              48.72,
+              -123.104
+            ],
+            [
+              48.788,
+              -123.036
+            ],
+            [
+              48.876,
+              -123.036
+            ],
+            [
+              49.016,
+              -123.176
+            ],
+            [
+              49.056,
+              -123.176
+            ],
+            [
+              49.112,
+              -123.232
+            ],
+            [
+              49.2,
+              -123.232
+            ],
+            [
+              49.212,
+              -123.244
+            ],
+            [
+              49.24,
+              -123.248
+            ],
+            [
+              49.26,
+              -123.268
+            ],
+            [
+              49.268,
+              -123.268
+            ],
+            [
+              49.316,
+              -123.216
+            ],
+            [
+              49.316,
+              -123.14
+            ],
+            [
+              49.304,
+              -123.116
+            ],
+            [
+              49.292,
+              -123.112
+            ]
+          ],
+          "notes": "",
+          "addedAt": "2026-05-13T04:50:40.930Z"
+        }
+      ],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 3,
@@ -69,7 +277,12 @@
         "Dinner: Hawksworth, Ancora Waterfront Dining, or water taxi to Lonsdale Quay",
         "Confirm Malibu Rapids slack window for Day 4 arrival"
       ],
-      "note": "Use today to nail down Malibu Rapids timing. Plan your Day 4 departure from Vancouver to arrive exactly at the slack window — not the other way around."
+      "note": "Use today to nail down Malibu Rapids timing. Plan your Day 4 departure from Vancouver to arrive exactly at the slack window — not the other way around.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 4,
@@ -93,7 +306,179 @@
         "Time your arrival at Malibu Rapids to the exact slack using XTide, Navionics, or the CHS app",
         "Anchor inside Princess Louisa Marine Provincial Park — stern-tie rings at the park dock near Chatterbox Falls"
       ],
-      "note": "Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window."
+      "note": "Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window.\n\nTODO: Figure out if I’m okay for stern-tying\nTODO: Is the dock there still under construction?",
+      "places": [],
+      "directions": [],
+      "routes": [
+        {
+          "id": "dbd45f11-9989-4b6f-ac88-9c92eae8af59",
+          "name": "",
+          "nm": 88.3,
+          "speedKts": 15,
+          "hrs": 5.9,
+          "time": "",
+          "startName": "Vancouver, BC",
+          "startLat": 49.2604134,
+          "startLng": -123.1139456,
+          "endName": "Malibu Rapids",
+          "endLat": 50.1641417,
+          "endLng": -123.8497139,
+          "routePath": [
+            [
+              49.292,
+              -123.112
+            ],
+            [
+              49.308,
+              -123.12
+            ],
+            [
+              49.324,
+              -123.156
+            ],
+            [
+              49.332,
+              -123.428
+            ],
+            [
+              49.352,
+              -123.448
+            ],
+            [
+              49.356,
+              -123.492
+            ],
+            [
+              49.38,
+              -123.516
+            ],
+            [
+              49.38,
+              -123.544
+            ],
+            [
+              49.4,
+              -123.572
+            ],
+            [
+              49.412,
+              -123.644
+            ],
+            [
+              49.432,
+              -123.684
+            ],
+            [
+              49.432,
+              -123.724
+            ],
+            [
+              49.448,
+              -123.74
+            ],
+            [
+              49.448,
+              -123.816
+            ],
+            [
+              49.46,
+              -123.832
+            ],
+            [
+              49.46,
+              -123.964
+            ],
+            [
+              49.472,
+              -123.984
+            ],
+            [
+              49.488,
+              -123.992
+            ],
+            [
+              49.528,
+              -123.988
+            ],
+            [
+              49.624,
+              -124.076
+            ],
+            [
+              49.68,
+              -124.08
+            ],
+            [
+              49.72,
+              -124.048
+            ],
+            [
+              49.732,
+              -124.048
+            ],
+            [
+              49.76,
+              -124.02
+            ],
+            [
+              49.76,
+              -124.004
+            ],
+            [
+              49.776,
+              -123.972
+            ],
+            [
+              49.828,
+              -123.916
+            ],
+            [
+              49.848,
+              -123.916
+            ],
+            [
+              49.88,
+              -123.9
+            ],
+            [
+              49.94,
+              -123.968
+            ],
+            [
+              49.96,
+              -123.98
+            ],
+            [
+              49.98,
+              -123.98
+            ],
+            [
+              50.016,
+              -123.944
+            ],
+            [
+              50.052,
+              -123.844
+            ],
+            [
+              50.092,
+              -123.8
+            ],
+            [
+              50.14,
+              -123.844
+            ],
+            [
+              50.16,
+              -123.852
+            ]
+          ],
+          "notes": "",
+          "addedAt": "2026-05-13T04:59:40.324Z"
+        }
+      ],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 5,
@@ -117,7 +502,12 @@
         "Wildlife: black bears on the shoreline, bald eagles overhead, seals common",
         "Sundowners in the cockpit watching waterfalls — this is the highlight of the whole trip"
       ],
-      "note": "One of the most spectacular anchorages in the world. Fully protected from swell. Don't rush it."
+      "note": "One of the most spectacular anchorages in the world. Fully protected from swell. Don't rush it.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 6,
@@ -142,7 +532,151 @@
         "Prideaux Haven: a maze of islets and coves with stern-tie rings throughout the marine park",
         "Kayak the labyrinth in the evening light — among BC's finest anchorages"
       ],
-      "note": "Prideaux fills fast in July — arrive by early afternoon. Tenedos Bay (adjacent) is an excellent overflow anchorage."
+      "note": "Prideaux fills fast in July — arrive by early afternoon. Tenedos Bay (adjacent) is an excellent overflow anchorage.",
+      "places": [],
+      "directions": [],
+      "routes": [
+        {
+          "id": "2aa02d77-5b47-45f1-ab61-189a591cd862",
+          "name": "",
+          "nm": 80.6,
+          "speedKts": 15,
+          "hrs": 5.4,
+          "time": "",
+          "startName": "Princess Louisa Inlet",
+          "startLat": 50.1853206,
+          "startLng": -123.8019316,
+          "endName": "Prideaux Haven",
+          "endLat": 50.1416119,
+          "endLng": -124.6824265,
+          "routePath": [
+            [
+              50.148,
+              -123.832
+            ],
+            [
+              50.116,
+              -123.8
+            ],
+            [
+              50.092,
+              -123.8
+            ],
+            [
+              50.052,
+              -123.844
+            ],
+            [
+              50.016,
+              -123.944
+            ],
+            [
+              49.98,
+              -123.98
+            ],
+            [
+              49.96,
+              -123.98
+            ],
+            [
+              49.94,
+              -123.968
+            ],
+            [
+              49.88,
+              -123.9
+            ],
+            [
+              49.824,
+              -123.92
+            ],
+            [
+              49.82,
+              -123.94
+            ],
+            [
+              49.8,
+              -123.964
+            ],
+            [
+              49.8,
+              -124.076
+            ],
+            [
+              49.776,
+              -124.132
+            ],
+            [
+              49.772,
+              -124.232
+            ],
+            [
+              49.736,
+              -124.268
+            ],
+            [
+              49.736,
+              -124.28
+            ],
+            [
+              49.764,
+              -124.324
+            ],
+            [
+              49.764,
+              -124.42
+            ],
+            [
+              49.792,
+              -124.48
+            ],
+            [
+              49.8,
+              -124.528
+            ],
+            [
+              49.912,
+              -124.644
+            ],
+            [
+              49.944,
+              -124.724
+            ],
+            [
+              49.988,
+              -124.784
+            ],
+            [
+              49.992,
+              -124.808
+            ],
+            [
+              50.004,
+              -124.824
+            ],
+            [
+              50.064,
+              -124.848
+            ],
+            [
+              50.128,
+              -124.784
+            ],
+            [
+              50.148,
+              -124.728
+            ],
+            [
+              50.148,
+              -124.688
+            ]
+          ],
+          "notes": "",
+          "addedAt": "2026-05-15T02:26:26.048Z"
+        }
+      ],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 7,
@@ -166,7 +700,12 @@
         "Day trip to Laura Cove or Grace Harbour by dinghy",
         "Best stargazing of the trip — minimal light pollution, long July twilight gives way to a spectacular sky"
       ],
-      "note": "This layover is well earned. Desolation Sound gets its name from a gloomy 1792 survey — ignore that. In July it's the warmest, most beautiful anchorage on the BC coast."
+      "note": "This layover is well earned. Desolation Sound gets its name from a gloomy 1792 survey — ignore that. In July it's the warmest, most beautiful anchorage on the BC coast.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 8,
@@ -190,7 +729,135 @@
         "Once through the Narrows, the worst is behind you — beautiful Johnstone Strait opens up",
         "Port Neville: remote, peaceful anchorage at the mouth of a long inlet — excellent crabbing and prawning"
       ],
-      "note": "This is a coordinated day: depart Desolation early, fuel Campbell River at ~10:30am, Seymour Narrows at slack midday, anchor Port Neville by mid-afternoon. At 15 kts this is ~7.5 hrs total but the Narrows wait may be built in. Brief lunch at Campbell River fuel dock."
+      "note": "This is a coordinated day: depart Desolation early, fuel Campbell River at ~10:30am, Seymour Narrows at slack midday, anchor Port Neville by mid-afternoon. At 15 kts this is ~7.5 hrs total but the Narrows wait may be built in. Brief lunch at Campbell River fuel dock.",
+      "places": [],
+      "directions": [],
+      "routes": [
+        {
+          "id": "7362ce51-b03e-40ee-a96d-d947b279c0ab",
+          "name": "",
+          "nm": 69.6,
+          "speedKts": 15,
+          "hrs": 4.6,
+          "time": "",
+          "startName": "Desolation Sound",
+          "startLat": 50.1182242,
+          "startLng": -124.7842299,
+          "endName": "Port Neville",
+          "endLat": 50.5244336,
+          "endLng": -126.0176838,
+          "routePath": [
+            [
+              50.12,
+              -124.784
+            ],
+            [
+              50.12,
+              -124.796
+            ],
+            [
+              50.076,
+              -124.84
+            ],
+            [
+              50.076,
+              -124.86
+            ],
+            [
+              50.012,
+              -124.928
+            ],
+            [
+              50.008,
+              -125.144
+            ],
+            [
+              49.992,
+              -125.168
+            ],
+            [
+              49.992,
+              -125.192
+            ],
+            [
+              50.124,
+              -125.32
+            ],
+            [
+              50.124,
+              -125.344
+            ],
+            [
+              50.132,
+              -125.352
+            ],
+            [
+              50.212,
+              -125.36
+            ],
+            [
+              50.224,
+              -125.372
+            ],
+            [
+              50.264,
+              -125.376
+            ],
+            [
+              50.336,
+              -125.44
+            ],
+            [
+              50.344,
+              -125.52
+            ],
+            [
+              50.372,
+              -125.572
+            ],
+            [
+              50.372,
+              -125.748
+            ],
+            [
+              50.376,
+              -125.776
+            ],
+            [
+              50.388,
+              -125.792
+            ],
+            [
+              50.388,
+              -125.868
+            ],
+            [
+              50.408,
+              -125.9
+            ],
+            [
+              50.412,
+              -125.936
+            ],
+            [
+              50.436,
+              -125.98
+            ],
+            [
+              50.452,
+              -125.996
+            ],
+            [
+              50.488,
+              -126.008
+            ]
+          ],
+          "notes": "",
+          "addedAt": "2026-05-13T05:02:00.912Z"
+        }
+      ],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 9,
@@ -206,13 +873,120 @@
       "fuelStop": false,
       "tideWarning": false,
       "highlights": [
-        "Easy run through Johnstone Strait — one of the world's premier orca corridors",
-        "July is peak resident orca season — scan constantly, pods are frequently sighted",
-        "Humpbacks, minkes, Steller sea lions, and Dall's porpoises common throughout Johnstone Strait",
-        "Telegraph Cove: charming historic boardwalk fishing village, great for a walk and lunch ashore",
-        "Stubbs Island Whale Watching runs expert-guided orca tours from the dock if you want a guaranteed experience"
+        "Peak whale-watching season—orcas and humpbacks actively feed in nearby Broughton Strait",
+        "Authentic 1920s cannery village atmosphere; one of BC's best-preserved maritime heritage sites",
+        "Remote Inside Passage location offering pristine wilderness and solitude"
       ],
-      "note": "Relaxed day after yesterday's long push. Take your time through Johnstone Strait — the orca viewing here is as good as it gets on the BC coast."
+      "note": "Relaxed day after yesterday's long push. Take your time through Johnstone Strait — the orca viewing here is as good as it gets on the BC coast.",
+      "places": [
+        {
+          "id": "2f42371b-258c-4d0f-9155-38df5d20e31e",
+          "name": "Telegraph Cove Historic Boardwalk",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "Stroll the preserved 1920s cannery boardwalk with original buildings, museums, and gift shops. A unique step back into BC's fishing history.",
+          "addedAt": "2026-05-11T00:41:06.780Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "5e47e75c-72bc-4587-b278-2824297668a3",
+          "name": "Whale Interpretive Centre",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "Learn about orcas, humpbacks, and other marine mammals in these waters. Exhibits cover local whaling history and modern conservation efforts.",
+          "addedAt": "2026-05-11T00:41:06.780Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "0232ec7d-d534-48f3-8df1-09a34493e2fd",
+          "name": "Telegraph Cove Marina Restaurant/Pub",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "restaurant",
+          "notes": "Waterfront dining with fresh seafood and views of the boardwalk. Popular spot for locals and cruisers.",
+          "addedAt": "2026-05-11T00:41:06.780Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "66c55f9d-fde5-495c-9933-1da97a315c9d",
+          "name": "Whale Watching Tour (morning departure)",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "July is peak season for orca sightings in Broughton Strait. Multiple operators offer 4–6 hour guided excursions from the cove.",
+          "addedAt": "2026-05-11T00:41:06.780Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "32029a94-78ef-4566-b415-4c91f9705504",
+          "name": "Telegraph Cove Marina",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "marina",
+          "notes": "Full-service facility with fuel, water, and provisioning. Great base for exploring the North Island's marine habitat.",
+          "addedAt": "2026-05-11T00:41:06.780Z",
+          "mapsProvider": null
+        }
+      ],
+      "directions": [],
+      "routes": [
+        {
+          "id": "253d7738-2451-4b5c-baf1-91fdb0757a88",
+          "name": "",
+          "nm": 29,
+          "speedKts": 15,
+          "hrs": 1.9,
+          "time": "",
+          "startName": "Milly Island",
+          "startLat": 50.4819487,
+          "startLng": -126.0972161,
+          "endName": "Ella Point",
+          "endLat": 50.55029,
+          "endLng": -126.82729,
+          "routePath": [
+            [
+              50.476,
+              -126.096
+            ],
+            [
+              50.476,
+              -126.296
+            ],
+            [
+              50.488,
+              -126.352
+            ],
+            [
+              50.492,
+              -126.608
+            ],
+            [
+              50.52,
+              -126.676
+            ],
+            [
+              50.556,
+              -126.828
+            ]
+          ],
+          "notes": "",
+          "addedAt": "2026-05-15T02:28:22.887Z"
+        }
+      ],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 10,
@@ -231,13 +1005,365 @@
       "fuelLabel": "Fuel Stop #3",
       "tideWarning": false,
       "highlights": [
-        "Short run — arrive Lagoon Cove by late morning, get settled before the afternoon action",
-        "Fuel at Lagoon Cove Marina — one of the most beloved stops in the Pacific Northwest",
-        "Explore the Broughton Archipelago by kayak or dinghy from the marina — countless channels to explore",
-        "Orca sightings are frequent in this area in July — ask Kelly & Dan for current reports",
-        "Book Knight Inlet grizzly tour for tomorrow if you haven't already"
+        "Exceptional marine wildlife viewing—some of BC's best orca encounter rates in July",
+        "Pristine, sheltered anchorage in a true wilderness setting with minimal crowds",
+        "Gateway to explore remote fjords and First Nations cultural heritage",
+        "Ideal for kayaking, hiking, and nature photography in old-growth forests"
       ],
-      "note": "Arriving early gives you the afternoon to explore and get oriented. Tonight: Kelly & Dan's famous prawn potluck — they supply the prawns, you bring an appetizer. Unmissable."
+      "note": "Arriving early gives you the afternoon to explore and get oriented. Tonight: Kelly & Dan's famous prawn potluck — they supply the prawns, you bring an appetizer. Unmissable.",
+      "places": [
+        {
+          "id": "665d5f2e-476e-4e0a-9297-7bab3f06e16b",
+          "name": "Lagoon Cove Marina",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "marina",
+          "notes": "Protected anchorage on East Cracroft Island with good holding and stunning wilderness scenery. Excellent base for exploring northern Vancouver Island's remote inlets.",
+          "addedAt": "2026-05-11T00:42:41.183Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "c62e55f6-7326-42f7-a41c-ca93b9f23261",
+          "name": "Broughton Strait Wildlife Viewing",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "Prime orca and humpback whale watching area during summer months. The nutrient-rich waters attract marine mammals and seabirds throughout July.",
+          "addedAt": "2026-05-11T00:42:41.183Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "c4d76baa-5235-4354-993f-49b5a4663dee",
+          "name": "Kwakwaka'wakw Cultural Sites",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "Explore Indigenous heritage and historic village sites in the area. Telegraph Cove nearby has cultural museums and displays of First Nations history.",
+          "addedAt": "2026-05-11T00:42:41.183Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "3fa72254-532c-454a-90c8-184d97468f86",
+          "name": "Remote Hiking & Kayaking Trails",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "Access pristine temperate rainforest and coastal paddling from the cove. Day trips to nearby inlets offer solitude and untouched natural beauty.",
+          "addedAt": "2026-05-11T00:42:41.183Z",
+          "mapsProvider": null
+        }
+      ],
+      "directions": [],
+      "routes": [
+        {
+          "id": "e06758e3-335d-42f0-86bc-d7cb737e696e",
+          "name": "",
+          "nm": 257.7,
+          "speedKts": 15,
+          "hrs": 17.2,
+          "time": "",
+          "startName": "Telegraph Cove",
+          "startLat": 48.464659,
+          "startLng": -123.2800756,
+          "endName": "Lagoon Cove",
+          "endLat": 50.5988905,
+          "endLng": -126.317367,
+          "routePath": [
+            [
+              48.468,
+              -123.276
+            ],
+            [
+              48.552,
+              -123.276
+            ],
+            [
+              48.632,
+              -123.344
+            ],
+            [
+              48.76,
+              -123.348
+            ],
+            [
+              48.8,
+              -123.388
+            ],
+            [
+              48.844,
+              -123.412
+            ],
+            [
+              48.94,
+              -123.508
+            ],
+            [
+              48.94,
+              -123.52
+            ],
+            [
+              48.964,
+              -123.56
+            ],
+            [
+              48.996,
+              -123.592
+            ],
+            [
+              49.068,
+              -123.592
+            ],
+            [
+              49.144,
+              -123.664
+            ],
+            [
+              49.664,
+              -124.184
+            ],
+            [
+              49.668,
+              -124.204
+            ],
+            [
+              49.736,
+              -124.272
+            ],
+            [
+              49.764,
+              -124.324
+            ],
+            [
+              49.764,
+              -124.42
+            ],
+            [
+              49.792,
+              -124.48
+            ],
+            [
+              49.8,
+              -124.528
+            ],
+            [
+              49.912,
+              -124.644
+            ],
+            [
+              49.932,
+              -124.7
+            ],
+            [
+              49.96,
+              -124.744
+            ],
+            [
+              49.96,
+              -124.916
+            ],
+            [
+              49.992,
+              -124.96
+            ],
+            [
+              49.992,
+              -125.192
+            ],
+            [
+              50.124,
+              -125.32
+            ],
+            [
+              50.124,
+              -125.344
+            ],
+            [
+              50.132,
+              -125.352
+            ],
+            [
+              50.212,
+              -125.36
+            ],
+            [
+              50.224,
+              -125.372
+            ],
+            [
+              50.264,
+              -125.376
+            ],
+            [
+              50.34,
+              -125.444
+            ],
+            [
+              50.352,
+              -125.516
+            ],
+            [
+              50.372,
+              -125.552
+            ],
+            [
+              50.372,
+              -125.748
+            ],
+            [
+              50.376,
+              -125.776
+            ],
+            [
+              50.388,
+              -125.792
+            ],
+            [
+              50.388,
+              -125.868
+            ],
+            [
+              50.408,
+              -125.9
+            ],
+            [
+              50.412,
+              -125.936
+            ],
+            [
+              50.436,
+              -125.98
+            ],
+            [
+              50.468,
+              -126.012
+            ],
+            [
+              50.472,
+              -126.036
+            ],
+            [
+              50.48,
+              -126.156
+            ],
+            [
+              50.488,
+              -126.164
+            ],
+            [
+              50.508,
+              -126.28
+            ],
+            [
+              50.516,
+              -126.584
+            ],
+            [
+              50.524,
+              -126.628
+            ],
+            [
+              50.54,
+              -126.648
+            ],
+            [
+              50.544,
+              -126.68
+            ],
+            [
+              50.56,
+              -126.684
+            ],
+            [
+              50.62,
+              -126.744
+            ],
+            [
+              50.74,
+              -126.744
+            ],
+            [
+              50.78,
+              -126.7
+            ],
+            [
+              50.776,
+              -126.536
+            ],
+            [
+              50.808,
+              -126.504
+            ],
+            [
+              50.812,
+              -126.444
+            ],
+            [
+              50.84,
+              -126.348
+            ],
+            [
+              50.84,
+              -126.264
+            ],
+            [
+              50.828,
+              -126.252
+            ],
+            [
+              50.828,
+              -126.228
+            ],
+            [
+              50.804,
+              -126.204
+            ],
+            [
+              50.776,
+              -126.192
+            ],
+            [
+              50.776,
+              -126.172
+            ],
+            [
+              50.756,
+              -126.152
+            ],
+            [
+              50.74,
+              -126.152
+            ],
+            [
+              50.716,
+              -126.216
+            ],
+            [
+              50.652,
+              -126.268
+            ],
+            [
+              50.632,
+              -126.304
+            ],
+            [
+              50.616,
+              -126.3
+            ]
+          ],
+          "notes": "",
+          "addedAt": "2026-05-13T05:04:10.960Z"
+        }
+      ],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 11,
@@ -261,7 +1387,12 @@
         "Fish for lingcod, rockfish, and salmon in the channels around East Cracroft Island",
         "Explore Echo Bay — Pierre's floating post office, a slice of remote BC character"
       ],
-      "note": "Book Knight Inlet Lodge or Tide Rip Grizzly Tours in advance — this is a genuine bucket-list experience. Seeing a grizzly from the water in its natural habitat with the kids is unforgettable."
+      "note": "Book Knight Inlet Lodge or Tide Rip Grizzly Tours in advance — this is a genuine bucket-list experience. Seeing a grizzly from the water in its natural habitat with the kids is unforgettable.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 12,
@@ -284,7 +1415,183 @@
         "Hiking trails directly from the dock: old-growth forest, panoramic viewpoints",
         "Well-stocked general store — last good provisioning point before the south run"
       ],
-      "note": "Call ahead on VHF 66A to reserve a slip — Blind Channel fills up in summer. Easy run today; enjoy the slow pace."
+      "note": "Call ahead on VHF 66A to reserve a slip — Blind Channel fills up in summer. Easy run today; enjoy the slow pace.",
+      "places": [],
+      "directions": [],
+      "routes": [
+        {
+          "id": "df244fbb-2842-47fa-9125-1f006d87ecea",
+          "name": "",
+          "nm": 48.5,
+          "speedKts": 15,
+          "hrs": 3.2,
+          "time": "10:00",
+          "notes": "",
+          "addedAt": "2026-05-10T23:39:54.556Z",
+          "startName": "Lagoon Cove Marina",
+          "startLat": 50.5986633,
+          "startLng": -126.31379690000001,
+          "endName": "Blind Channel Resort",
+          "endLat": 50.413444500000004,
+          "endLng": -125.50205989999999,
+          "routePath": [
+            [
+              50.616,
+              -126.3
+            ],
+            [
+              50.632,
+              -126.304
+            ],
+            [
+              50.652,
+              -126.268
+            ],
+            [
+              50.72,
+              -126.212
+            ],
+            [
+              50.74,
+              -126.152
+            ],
+            [
+              50.756,
+              -126.152
+            ],
+            [
+              50.776,
+              -126.172
+            ],
+            [
+              50.776,
+              -126.192
+            ],
+            [
+              50.804,
+              -126.204
+            ],
+            [
+              50.828,
+              -126.228
+            ],
+            [
+              50.828,
+              -126.252
+            ],
+            [
+              50.84,
+              -126.264
+            ],
+            [
+              50.84,
+              -126.348
+            ],
+            [
+              50.812,
+              -126.444
+            ],
+            [
+              50.808,
+              -126.504
+            ],
+            [
+              50.776,
+              -126.536
+            ],
+            [
+              50.78,
+              -126.7
+            ],
+            [
+              50.772,
+              -126.712
+            ],
+            [
+              50.74,
+              -126.744
+            ],
+            [
+              50.62,
+              -126.744
+            ],
+            [
+              50.56,
+              -126.684
+            ],
+            [
+              50.544,
+              -126.68
+            ],
+            [
+              50.54,
+              -126.648
+            ],
+            [
+              50.524,
+              -126.628
+            ],
+            [
+              50.516,
+              -126.584
+            ],
+            [
+              50.508,
+              -126.28
+            ],
+            [
+              50.488,
+              -126.164
+            ],
+            [
+              50.48,
+              -126.156
+            ],
+            [
+              50.468,
+              -126.012
+            ],
+            [
+              50.436,
+              -125.98
+            ],
+            [
+              50.412,
+              -125.936
+            ],
+            [
+              50.408,
+              -125.9
+            ],
+            [
+              50.388,
+              -125.868
+            ],
+            [
+              50.388,
+              -125.792
+            ],
+            [
+              50.376,
+              -125.776
+            ],
+            [
+              50.372,
+              -125.748
+            ],
+            [
+              50.372,
+              -125.592
+            ],
+            [
+              50.404,
+              -125.5
+            ]
+          ]
+        }
+      ],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 13,
@@ -306,7 +1613,187 @@
         "Kayak the inner lagoon at high tide — a gorgeous hidden basin accessible through a narrow passage",
         "Fish for coho salmon returning through this corridor in July"
       ],
-      "note": "Gentle re-entry to the southern waters. The lagoon inside Squirrel Cove is one of those hidden BC gems — explore it by kayak or dinghy at high tide."
+      "note": "Gentle re-entry to the southern waters. The lagoon inside Squirrel Cove is one of those hidden BC gems — explore it by kayak or dinghy at high tide.",
+      "places": [],
+      "directions": [],
+      "routes": [
+        {
+          "id": "3c35c525-576e-4bff-a31d-b8f135481fca",
+          "name": "",
+          "nm": 103,
+          "speedKts": 15,
+          "hrs": 6.9,
+          "time": "",
+          "startName": "Mamquam Blind Channel",
+          "startLat": 49.6890078,
+          "startLng": -123.1564186,
+          "endName": "Squirrel Cove",
+          "endLat": 50.1325644,
+          "endLng": -124.91703,
+          "routePath": [
+            [
+              49.68,
+              -123.16
+            ],
+            [
+              49.68,
+              -123.2
+            ],
+            [
+              49.636,
+              -123.244
+            ],
+            [
+              49.612,
+              -123.244
+            ],
+            [
+              49.564,
+              -123.28
+            ],
+            [
+              49.52,
+              -123.28
+            ],
+            [
+              49.484,
+              -123.312
+            ],
+            [
+              49.448,
+              -123.312
+            ],
+            [
+              49.44,
+              -123.32
+            ],
+            [
+              49.428,
+              -123.36
+            ],
+            [
+              49.428,
+              -123.46
+            ],
+            [
+              49.388,
+              -123.5
+            ],
+            [
+              49.38,
+              -123.524
+            ],
+            [
+              49.384,
+              -123.556
+            ],
+            [
+              49.4,
+              -123.572
+            ],
+            [
+              49.412,
+              -123.644
+            ],
+            [
+              49.432,
+              -123.684
+            ],
+            [
+              49.432,
+              -123.724
+            ],
+            [
+              49.448,
+              -123.74
+            ],
+            [
+              49.448,
+              -123.816
+            ],
+            [
+              49.46,
+              -123.832
+            ],
+            [
+              49.46,
+              -123.964
+            ],
+            [
+              49.5,
+              -124.016
+            ],
+            [
+              49.664,
+              -124.18
+            ],
+            [
+              49.668,
+              -124.204
+            ],
+            [
+              49.736,
+              -124.272
+            ],
+            [
+              49.764,
+              -124.324
+            ],
+            [
+              49.764,
+              -124.42
+            ],
+            [
+              49.792,
+              -124.48
+            ],
+            [
+              49.8,
+              -124.528
+            ],
+            [
+              49.912,
+              -124.644
+            ],
+            [
+              49.944,
+              -124.724
+            ],
+            [
+              49.988,
+              -124.784
+            ],
+            [
+              49.992,
+              -124.808
+            ],
+            [
+              50.004,
+              -124.824
+            ],
+            [
+              50.044,
+              -124.848
+            ],
+            [
+              50.096,
+              -124.9
+            ],
+            [
+              50.112,
+              -124.9
+            ],
+            [
+              50.124,
+              -124.916
+            ]
+          ],
+          "notes": "",
+          "addedAt": "2026-05-14T04:09:57.021Z"
+        }
+      ],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 14,
@@ -329,7 +1816,111 @@
         "Walk the Montague Harbour trails to the shell middens and headland views",
         "Hummingbird Pub on Galiano Island for a relaxed family dinner ashore"
       ],
-      "note": "Active Pass: narrow channel between Galiano and Mayne Islands with heavy BC Ferries traffic. Reduce speed, hug the correct side, and give ferries wide berth."
+      "note": "Active Pass: narrow channel between Galiano and Mayne Islands with heavy BC Ferries traffic. Reduce speed, hug the correct side, and give ferries wide berth.",
+      "places": [],
+      "directions": [],
+      "routes": [
+        {
+          "id": "24ff0e3d-a968-4fc2-939e-1902b882f80f",
+          "name": "",
+          "nm": 139.4,
+          "speedKts": 15,
+          "hrs": 9.3,
+          "time": "",
+          "startName": "Squirrel Cove",
+          "startLat": 50.1325644,
+          "startLng": -124.91703,
+          "endName": "Montague Harbour",
+          "endLat": 48.8914111,
+          "endLng": -123.3978415,
+          "routePath": [
+            [
+              50.124,
+              -124.916
+            ],
+            [
+              50.052,
+              -124.84
+            ],
+            [
+              50.008,
+              -124.828
+            ],
+            [
+              49.96,
+              -124.78
+            ],
+            [
+              49.956,
+              -124.764
+            ],
+            [
+              49.872,
+              -124.68
+            ],
+            [
+              49.844,
+              -124.68
+            ],
+            [
+              49.808,
+              -124.644
+            ],
+            [
+              49.736,
+              -124.64
+            ],
+            [
+              49.38,
+              -124.288
+            ],
+            [
+              49.352,
+              -124.176
+            ],
+            [
+              49.332,
+              -124.156
+            ],
+            [
+              49.332,
+              -124.108
+            ],
+            [
+              49.296,
+              -124
+            ],
+            [
+              49.228,
+              -123.824
+            ],
+            [
+              49.164,
+              -123.684
+            ],
+            [
+              49.068,
+              -123.592
+            ],
+            [
+              48.996,
+              -123.592
+            ],
+            [
+              48.908,
+              -123.504
+            ],
+            [
+              48.876,
+              -123.408
+            ]
+          ],
+          "notes": "",
+          "addedAt": "2026-05-13T05:05:09.960Z"
+        }
+      ],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 15,
@@ -354,7 +1945,12 @@
         "Dinghy to the Montague Harbour village: small café, general store, easy island pace",
         "Afternoon swim off the shell beach — warm, shallow, ideal for kids"
       ],
-      "note": "First full Gulf Islands decompression day. No agenda required."
+      "note": "First full Gulf Islands decompression day. No agenda required.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 16,
@@ -378,7 +1974,12 @@
         "Beachcomb, fish from the swim step, paddle at sunset — full unstructured family day",
         "Move anchorages mid-day if the mood strikes"
       ],
-      "note": "Second Gulf Islands layover. No agenda — use it however the family wants. Salt Spring Ganges is excellent if anyone wants shops or a proper meal ashore."
+      "note": "Second Gulf Islands layover. No agenda — use it however the family wants. Salt Spring Ganges is excellent if anyone wants shops or a proper meal ashore.",
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 17,
@@ -403,1690 +2004,131 @@
         "Haro Strait crossing: aim to cross before 2pm to stay ahead of afternoon northwest wind",
         "Optional: brief stop at Roche Harbor (San Juan Islands) to break the final leg"
       ],
-      "note": "Slightly over the usual 100 NM preference, but Victoria breaks it naturally into two segments. Register everyone on the CBP ROAM app before leaving Victoria. Shilshole or Lake Union via the locks for Seattle landfall."
+      "note": "Slightly over the usual 100 NM preference, but Victoria breaks it naturally into two segments. Register everyone on the CBP ROAM app before leaving Victoria. Shilshole or Lake Union via the locks for Seattle landfall.",
+      "places": [],
+      "directions": [],
+      "routes": [
+        {
+          "id": "ec0aff69-4fd1-44dc-a676-29a3858a61f5",
+          "name": "",
+          "nm": 92,
+          "speedKts": 15,
+          "hrs": 6.1,
+          "time": "",
+          "startName": "Ganges",
+          "startLat": 48.85436,
+          "startLng": -123.502621,
+          "endName": "Elliott Bay Marina",
+          "endLat": 47.6302997,
+          "endLng": -122.3914826,
+          "routePath": [
+            [
+              48.8903,
+              -123.482621
+            ],
+            [
+              48.8903,
+              -123.450621
+            ],
+            [
+              48.8343,
+              -123.346621
+            ],
+            [
+              48.8263,
+              -123.338621
+            ],
+            [
+              48.7783,
+              -123.330621
+            ],
+            [
+              48.6983,
+              -123.250621
+            ],
+            [
+              48.6823,
+              -123.250621
+            ],
+            [
+              48.6423,
+              -123.210621
+            ],
+            [
+              48.5863,
+              -123.210621
+            ],
+            [
+              48.5543,
+              -123.178621
+            ],
+            [
+              48.5223,
+              -123.170621
+            ],
+            [
+              48.2023,
+              -122.850621
+            ],
+            [
+              48.1863,
+              -122.810621
+            ],
+            [
+              48.1223,
+              -122.714621
+            ],
+            [
+              48.1143,
+              -122.690621
+            ],
+            [
+              48.0423,
+              -122.618621
+            ],
+            [
+              48.0263,
+              -122.618621
+            ],
+            [
+              47.9143,
+              -122.506621
+            ],
+            [
+              47.8343,
+              -122.482621
+            ],
+            [
+              47.7303,
+              -122.434621
+            ],
+            [
+              47.6823,
+              -122.434621
+            ],
+            [
+              47.6743,
+              -122.442621
+            ],
+            [
+              47.6583,
+              -122.442621
+            ],
+            [
+              47.6183,
+              -122.402621
+            ],
+            [
+              47.6183,
+              -122.394621
+            ]
+          ],
+          "notes": "",
+          "addedAt": "2026-05-13T05:07:35.572Z"
+        }
+      ],
+      "flights": [],
+      "rentalCars": []
     }
-  ],
-  "places": {
-    "9": [
-      {
-        "id": "2f42371b-258c-4d0f-9155-38df5d20e31e",
-        "name": "Telegraph Cove Historic Boardwalk",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "activity",
-        "notes": "Stroll the preserved 1920s cannery boardwalk with original buildings, museums, and gift shops. A unique step back into BC's fishing history.",
-        "addedAt": "2026-05-11T00:41:06.780Z",
-        "mapsProvider": null
-      },
-      {
-        "id": "5e47e75c-72bc-4587-b278-2824297668a3",
-        "name": "Whale Interpretive Centre",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "activity",
-        "notes": "Learn about orcas, humpbacks, and other marine mammals in these waters. Exhibits cover local whaling history and modern conservation efforts.",
-        "addedAt": "2026-05-11T00:41:06.780Z",
-        "mapsProvider": null
-      },
-      {
-        "id": "0232ec7d-d534-48f3-8df1-09a34493e2fd",
-        "name": "Telegraph Cove Marina Restaurant/Pub",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "restaurant",
-        "notes": "Waterfront dining with fresh seafood and views of the boardwalk. Popular spot for locals and cruisers.",
-        "addedAt": "2026-05-11T00:41:06.780Z",
-        "mapsProvider": null
-      },
-      {
-        "id": "66c55f9d-fde5-495c-9933-1da97a315c9d",
-        "name": "Whale Watching Tour (morning departure)",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "activity",
-        "notes": "July is peak season for orca sightings in Broughton Strait. Multiple operators offer 4–6 hour guided excursions from the cove.",
-        "addedAt": "2026-05-11T00:41:06.780Z",
-        "mapsProvider": null
-      },
-      {
-        "id": "32029a94-78ef-4566-b415-4c91f9705504",
-        "name": "Telegraph Cove Marina",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "marina",
-        "notes": "Full-service facility with fuel, water, and provisioning. Great base for exploring the North Island's marine habitat.",
-        "addedAt": "2026-05-11T00:41:06.780Z",
-        "mapsProvider": null
-      }
-    ],
-    "10": [
-      {
-        "id": "665d5f2e-476e-4e0a-9297-7bab3f06e16b",
-        "name": "Lagoon Cove Marina",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "marina",
-        "notes": "Protected anchorage on East Cracroft Island with good holding and stunning wilderness scenery. Excellent base for exploring northern Vancouver Island's remote inlets.",
-        "addedAt": "2026-05-11T00:42:41.183Z",
-        "mapsProvider": null
-      },
-      {
-        "id": "c62e55f6-7326-42f7-a41c-ca93b9f23261",
-        "name": "Broughton Strait Wildlife Viewing",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "activity",
-        "notes": "Prime orca and humpback whale watching area during summer months. The nutrient-rich waters attract marine mammals and seabirds throughout July.",
-        "addedAt": "2026-05-11T00:42:41.183Z",
-        "mapsProvider": null
-      },
-      {
-        "id": "c4d76baa-5235-4354-993f-49b5a4663dee",
-        "name": "Kwakwaka'wakw Cultural Sites",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "activity",
-        "notes": "Explore Indigenous heritage and historic village sites in the area. Telegraph Cove nearby has cultural museums and displays of First Nations history.",
-        "addedAt": "2026-05-11T00:42:41.183Z",
-        "mapsProvider": null
-      },
-      {
-        "id": "3fa72254-532c-454a-90c8-184d97468f86",
-        "name": "Remote Hiking & Kayaking Trails",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "activity",
-        "notes": "Access pristine temperate rainforest and coastal paddling from the cove. Day trips to nearby inlets offer solitude and untouched natural beauty.",
-        "addedAt": "2026-05-11T00:42:41.183Z",
-        "mapsProvider": null
-      }
-    ]
-  },
-  "directions": {
-    "1": [],
-    "2": []
-  },
-  "routes": {
-    "1": [
-      {
-        "id": "ffbbd44b-83f4-446e-8401-8998a74a7841",
-        "name": "",
-        "nm": 68.7,
-        "speedKts": 15,
-        "hrs": 4.6,
-        "time": "",
-        "startName": "Elliott Bay",
-        "startLat": 47.6048242,
-        "startLng": -122.3668262,
-        "endName": "Victoria BC Cruise Ship Dock",
-        "endLat": 48.4165675,
-        "endLng": -123.3899256,
-        "routePath": [
-          [
-            47.600824,
-            -122.369926
-          ],
-          [
-            47.616824,
-            -122.385926
-          ],
-          [
-            47.624824,
-            -122.409926
-          ],
-          [
-            47.656824,
-            -122.441926
-          ],
-          [
-            47.752824,
-            -122.441926
-          ],
-          [
-            47.912824,
-            -122.513926
-          ],
-          [
-            48.048824,
-            -122.649926
-          ],
-          [
-            48.104824,
-            -122.681926
-          ],
-          [
-            48.208824,
-            -122.785926
-          ],
-          [
-            48.288824,
-            -123.017926
-          ],
-          [
-            48.288824,
-            -123.041926
-          ],
-          [
-            48.304824,
-            -123.073926
-          ],
-          [
-            48.328824,
-            -123.161926
-          ],
-          [
-            48.400824,
-            -123.361926
-          ],
-          [
-            48.400824,
-            -123.385926
-          ],
-          [
-            48.408824,
-            -123.393926
-          ]
-        ],
-        "notes": "",
-        "addedAt": "2026-05-13T04:44:47.032Z"
-      }
-    ],
-    "2": [
-      {
-        "id": "3388d1dc-7360-47e8-871c-4746acd79c8b",
-        "name": "",
-        "nm": 72.3,
-        "speedKts": 15,
-        "hrs": 4.8,
-        "time": "",
-        "startName": "Victoria, BC",
-        "startLat": 48.4284756,
-        "startLng": -123.3670221,
-        "endName": "Vancouver, BC",
-        "endLat": 49.2604134,
-        "endLng": -123.1139456,
-        "routePath": [
-          [
-            48.408,
-            -123.38
-          ],
-          [
-            48.4,
-            -123.316
-          ],
-          [
-            48.392,
-            -123.308
-          ],
-          [
-            48.396,
-            -123.3
-          ],
-          [
-            48.452,
-            -123.26
-          ],
-          [
-            48.556,
-            -123.26
-          ],
-          [
-            48.628,
-            -123.188
-          ],
-          [
-            48.632,
-            -123.104
-          ],
-          [
-            48.72,
-            -123.104
-          ],
-          [
-            48.788,
-            -123.036
-          ],
-          [
-            48.876,
-            -123.036
-          ],
-          [
-            49.016,
-            -123.176
-          ],
-          [
-            49.056,
-            -123.176
-          ],
-          [
-            49.112,
-            -123.232
-          ],
-          [
-            49.2,
-            -123.232
-          ],
-          [
-            49.212,
-            -123.244
-          ],
-          [
-            49.24,
-            -123.248
-          ],
-          [
-            49.26,
-            -123.268
-          ],
-          [
-            49.268,
-            -123.268
-          ],
-          [
-            49.316,
-            -123.216
-          ],
-          [
-            49.316,
-            -123.14
-          ],
-          [
-            49.304,
-            -123.116
-          ],
-          [
-            49.292,
-            -123.112
-          ]
-        ],
-        "notes": "",
-        "addedAt": "2026-05-13T04:50:40.930Z"
-      }
-    ],
-    "3": [],
-    "4": [
-      {
-        "id": "dbd45f11-9989-4b6f-ac88-9c92eae8af59",
-        "name": "",
-        "nm": 88.3,
-        "speedKts": 15,
-        "hrs": 5.9,
-        "time": "",
-        "startName": "Vancouver, BC",
-        "startLat": 49.2604134,
-        "startLng": -123.1139456,
-        "endName": "Malibu Rapids",
-        "endLat": 50.1641417,
-        "endLng": -123.8497139,
-        "routePath": [
-          [
-            49.292,
-            -123.112
-          ],
-          [
-            49.308,
-            -123.12
-          ],
-          [
-            49.324,
-            -123.156
-          ],
-          [
-            49.332,
-            -123.428
-          ],
-          [
-            49.352,
-            -123.448
-          ],
-          [
-            49.356,
-            -123.492
-          ],
-          [
-            49.38,
-            -123.516
-          ],
-          [
-            49.38,
-            -123.544
-          ],
-          [
-            49.4,
-            -123.572
-          ],
-          [
-            49.412,
-            -123.644
-          ],
-          [
-            49.432,
-            -123.684
-          ],
-          [
-            49.432,
-            -123.724
-          ],
-          [
-            49.448,
-            -123.74
-          ],
-          [
-            49.448,
-            -123.816
-          ],
-          [
-            49.46,
-            -123.832
-          ],
-          [
-            49.46,
-            -123.964
-          ],
-          [
-            49.472,
-            -123.984
-          ],
-          [
-            49.488,
-            -123.992
-          ],
-          [
-            49.528,
-            -123.988
-          ],
-          [
-            49.624,
-            -124.076
-          ],
-          [
-            49.68,
-            -124.08
-          ],
-          [
-            49.72,
-            -124.048
-          ],
-          [
-            49.732,
-            -124.048
-          ],
-          [
-            49.76,
-            -124.02
-          ],
-          [
-            49.76,
-            -124.004
-          ],
-          [
-            49.776,
-            -123.972
-          ],
-          [
-            49.828,
-            -123.916
-          ],
-          [
-            49.848,
-            -123.916
-          ],
-          [
-            49.88,
-            -123.9
-          ],
-          [
-            49.94,
-            -123.968
-          ],
-          [
-            49.96,
-            -123.98
-          ],
-          [
-            49.98,
-            -123.98
-          ],
-          [
-            50.016,
-            -123.944
-          ],
-          [
-            50.052,
-            -123.844
-          ],
-          [
-            50.092,
-            -123.8
-          ],
-          [
-            50.14,
-            -123.844
-          ],
-          [
-            50.16,
-            -123.852
-          ]
-        ],
-        "notes": "",
-        "addedAt": "2026-05-13T04:59:40.324Z"
-      }
-    ],
-    "6": [
-      {
-        "id": "2aa02d77-5b47-45f1-ab61-189a591cd862",
-        "name": "",
-        "nm": 80.6,
-        "speedKts": 15,
-        "hrs": 5.4,
-        "time": "",
-        "startName": "Princess Louisa Inlet",
-        "startLat": 50.1853206,
-        "startLng": -123.8019316,
-        "endName": "Prideaux Haven",
-        "endLat": 50.1416119,
-        "endLng": -124.6824265,
-        "routePath": [
-          [
-            50.148,
-            -123.832
-          ],
-          [
-            50.116,
-            -123.8
-          ],
-          [
-            50.092,
-            -123.8
-          ],
-          [
-            50.052,
-            -123.844
-          ],
-          [
-            50.016,
-            -123.944
-          ],
-          [
-            49.98,
-            -123.98
-          ],
-          [
-            49.96,
-            -123.98
-          ],
-          [
-            49.94,
-            -123.968
-          ],
-          [
-            49.88,
-            -123.9
-          ],
-          [
-            49.824,
-            -123.92
-          ],
-          [
-            49.82,
-            -123.94
-          ],
-          [
-            49.8,
-            -123.964
-          ],
-          [
-            49.8,
-            -124.076
-          ],
-          [
-            49.776,
-            -124.132
-          ],
-          [
-            49.772,
-            -124.232
-          ],
-          [
-            49.736,
-            -124.268
-          ],
-          [
-            49.736,
-            -124.28
-          ],
-          [
-            49.764,
-            -124.324
-          ],
-          [
-            49.764,
-            -124.42
-          ],
-          [
-            49.792,
-            -124.48
-          ],
-          [
-            49.8,
-            -124.528
-          ],
-          [
-            49.912,
-            -124.644
-          ],
-          [
-            49.944,
-            -124.724
-          ],
-          [
-            49.988,
-            -124.784
-          ],
-          [
-            49.992,
-            -124.808
-          ],
-          [
-            50.004,
-            -124.824
-          ],
-          [
-            50.064,
-            -124.848
-          ],
-          [
-            50.128,
-            -124.784
-          ],
-          [
-            50.148,
-            -124.728
-          ],
-          [
-            50.148,
-            -124.688
-          ]
-        ],
-        "notes": "",
-        "addedAt": "2026-05-15T02:26:26.048Z"
-      }
-    ],
-    "8": [
-      {
-        "id": "7362ce51-b03e-40ee-a96d-d947b279c0ab",
-        "name": "",
-        "nm": 69.6,
-        "speedKts": 15,
-        "hrs": 4.6,
-        "time": "",
-        "startName": "Desolation Sound",
-        "startLat": 50.1182242,
-        "startLng": -124.7842299,
-        "endName": "Port Neville",
-        "endLat": 50.5244336,
-        "endLng": -126.0176838,
-        "routePath": [
-          [
-            50.12,
-            -124.784
-          ],
-          [
-            50.12,
-            -124.796
-          ],
-          [
-            50.076,
-            -124.84
-          ],
-          [
-            50.076,
-            -124.86
-          ],
-          [
-            50.012,
-            -124.928
-          ],
-          [
-            50.008,
-            -125.144
-          ],
-          [
-            49.992,
-            -125.168
-          ],
-          [
-            49.992,
-            -125.192
-          ],
-          [
-            50.124,
-            -125.32
-          ],
-          [
-            50.124,
-            -125.344
-          ],
-          [
-            50.132,
-            -125.352
-          ],
-          [
-            50.212,
-            -125.36
-          ],
-          [
-            50.224,
-            -125.372
-          ],
-          [
-            50.264,
-            -125.376
-          ],
-          [
-            50.336,
-            -125.44
-          ],
-          [
-            50.344,
-            -125.52
-          ],
-          [
-            50.372,
-            -125.572
-          ],
-          [
-            50.372,
-            -125.748
-          ],
-          [
-            50.376,
-            -125.776
-          ],
-          [
-            50.388,
-            -125.792
-          ],
-          [
-            50.388,
-            -125.868
-          ],
-          [
-            50.408,
-            -125.9
-          ],
-          [
-            50.412,
-            -125.936
-          ],
-          [
-            50.436,
-            -125.98
-          ],
-          [
-            50.452,
-            -125.996
-          ],
-          [
-            50.488,
-            -126.008
-          ]
-        ],
-        "notes": "",
-        "addedAt": "2026-05-13T05:02:00.912Z"
-      }
-    ],
-    "9": [
-      {
-        "id": "253d7738-2451-4b5c-baf1-91fdb0757a88",
-        "name": "",
-        "nm": 29,
-        "speedKts": 15,
-        "hrs": 1.9,
-        "time": "",
-        "startName": "Milly Island",
-        "startLat": 50.4819487,
-        "startLng": -126.0972161,
-        "endName": "Ella Point",
-        "endLat": 50.55029,
-        "endLng": -126.82729,
-        "routePath": [
-          [
-            50.476,
-            -126.096
-          ],
-          [
-            50.476,
-            -126.296
-          ],
-          [
-            50.488,
-            -126.352
-          ],
-          [
-            50.492,
-            -126.608
-          ],
-          [
-            50.52,
-            -126.676
-          ],
-          [
-            50.556,
-            -126.828
-          ]
-        ],
-        "notes": "",
-        "addedAt": "2026-05-15T02:28:22.887Z"
-      }
-    ],
-    "10": [
-      {
-        "id": "e06758e3-335d-42f0-86bc-d7cb737e696e",
-        "name": "",
-        "nm": 257.7,
-        "speedKts": 15,
-        "hrs": 17.2,
-        "time": "",
-        "startName": "Telegraph Cove",
-        "startLat": 48.464659,
-        "startLng": -123.2800756,
-        "endName": "Lagoon Cove",
-        "endLat": 50.5988905,
-        "endLng": -126.317367,
-        "routePath": [
-          [
-            48.468,
-            -123.276
-          ],
-          [
-            48.552,
-            -123.276
-          ],
-          [
-            48.632,
-            -123.344
-          ],
-          [
-            48.76,
-            -123.348
-          ],
-          [
-            48.8,
-            -123.388
-          ],
-          [
-            48.844,
-            -123.412
-          ],
-          [
-            48.94,
-            -123.508
-          ],
-          [
-            48.94,
-            -123.52
-          ],
-          [
-            48.964,
-            -123.56
-          ],
-          [
-            48.996,
-            -123.592
-          ],
-          [
-            49.068,
-            -123.592
-          ],
-          [
-            49.144,
-            -123.664
-          ],
-          [
-            49.664,
-            -124.184
-          ],
-          [
-            49.668,
-            -124.204
-          ],
-          [
-            49.736,
-            -124.272
-          ],
-          [
-            49.764,
-            -124.324
-          ],
-          [
-            49.764,
-            -124.42
-          ],
-          [
-            49.792,
-            -124.48
-          ],
-          [
-            49.8,
-            -124.528
-          ],
-          [
-            49.912,
-            -124.644
-          ],
-          [
-            49.932,
-            -124.7
-          ],
-          [
-            49.96,
-            -124.744
-          ],
-          [
-            49.96,
-            -124.916
-          ],
-          [
-            49.992,
-            -124.96
-          ],
-          [
-            49.992,
-            -125.192
-          ],
-          [
-            50.124,
-            -125.32
-          ],
-          [
-            50.124,
-            -125.344
-          ],
-          [
-            50.132,
-            -125.352
-          ],
-          [
-            50.212,
-            -125.36
-          ],
-          [
-            50.224,
-            -125.372
-          ],
-          [
-            50.264,
-            -125.376
-          ],
-          [
-            50.34,
-            -125.444
-          ],
-          [
-            50.352,
-            -125.516
-          ],
-          [
-            50.372,
-            -125.552
-          ],
-          [
-            50.372,
-            -125.748
-          ],
-          [
-            50.376,
-            -125.776
-          ],
-          [
-            50.388,
-            -125.792
-          ],
-          [
-            50.388,
-            -125.868
-          ],
-          [
-            50.408,
-            -125.9
-          ],
-          [
-            50.412,
-            -125.936
-          ],
-          [
-            50.436,
-            -125.98
-          ],
-          [
-            50.468,
-            -126.012
-          ],
-          [
-            50.472,
-            -126.036
-          ],
-          [
-            50.48,
-            -126.156
-          ],
-          [
-            50.488,
-            -126.164
-          ],
-          [
-            50.508,
-            -126.28
-          ],
-          [
-            50.516,
-            -126.584
-          ],
-          [
-            50.524,
-            -126.628
-          ],
-          [
-            50.54,
-            -126.648
-          ],
-          [
-            50.544,
-            -126.68
-          ],
-          [
-            50.56,
-            -126.684
-          ],
-          [
-            50.62,
-            -126.744
-          ],
-          [
-            50.74,
-            -126.744
-          ],
-          [
-            50.78,
-            -126.7
-          ],
-          [
-            50.776,
-            -126.536
-          ],
-          [
-            50.808,
-            -126.504
-          ],
-          [
-            50.812,
-            -126.444
-          ],
-          [
-            50.84,
-            -126.348
-          ],
-          [
-            50.84,
-            -126.264
-          ],
-          [
-            50.828,
-            -126.252
-          ],
-          [
-            50.828,
-            -126.228
-          ],
-          [
-            50.804,
-            -126.204
-          ],
-          [
-            50.776,
-            -126.192
-          ],
-          [
-            50.776,
-            -126.172
-          ],
-          [
-            50.756,
-            -126.152
-          ],
-          [
-            50.74,
-            -126.152
-          ],
-          [
-            50.716,
-            -126.216
-          ],
-          [
-            50.652,
-            -126.268
-          ],
-          [
-            50.632,
-            -126.304
-          ],
-          [
-            50.616,
-            -126.3
-          ]
-        ],
-        "notes": "",
-        "addedAt": "2026-05-13T05:04:10.960Z"
-      }
-    ],
-    "12": [
-      {
-        "id": "df244fbb-2842-47fa-9125-1f006d87ecea",
-        "name": "",
-        "nm": 48.5,
-        "speedKts": 15,
-        "hrs": 3.2,
-        "time": "10:00",
-        "notes": "",
-        "addedAt": "2026-05-10T23:39:54.556Z",
-        "startName": "Lagoon Cove Marina",
-        "startLat": 50.5986633,
-        "startLng": -126.31379690000001,
-        "endName": "Blind Channel Resort",
-        "endLat": 50.413444500000004,
-        "endLng": -125.50205989999999,
-        "routePath": [
-          [
-            50.616,
-            -126.3
-          ],
-          [
-            50.632,
-            -126.304
-          ],
-          [
-            50.652,
-            -126.268
-          ],
-          [
-            50.72,
-            -126.212
-          ],
-          [
-            50.74,
-            -126.152
-          ],
-          [
-            50.756,
-            -126.152
-          ],
-          [
-            50.776,
-            -126.172
-          ],
-          [
-            50.776,
-            -126.192
-          ],
-          [
-            50.804,
-            -126.204
-          ],
-          [
-            50.828,
-            -126.228
-          ],
-          [
-            50.828,
-            -126.252
-          ],
-          [
-            50.84,
-            -126.264
-          ],
-          [
-            50.84,
-            -126.348
-          ],
-          [
-            50.812,
-            -126.444
-          ],
-          [
-            50.808,
-            -126.504
-          ],
-          [
-            50.776,
-            -126.536
-          ],
-          [
-            50.78,
-            -126.7
-          ],
-          [
-            50.772,
-            -126.712
-          ],
-          [
-            50.74,
-            -126.744
-          ],
-          [
-            50.62,
-            -126.744
-          ],
-          [
-            50.56,
-            -126.684
-          ],
-          [
-            50.544,
-            -126.68
-          ],
-          [
-            50.54,
-            -126.648
-          ],
-          [
-            50.524,
-            -126.628
-          ],
-          [
-            50.516,
-            -126.584
-          ],
-          [
-            50.508,
-            -126.28
-          ],
-          [
-            50.488,
-            -126.164
-          ],
-          [
-            50.48,
-            -126.156
-          ],
-          [
-            50.468,
-            -126.012
-          ],
-          [
-            50.436,
-            -125.98
-          ],
-          [
-            50.412,
-            -125.936
-          ],
-          [
-            50.408,
-            -125.9
-          ],
-          [
-            50.388,
-            -125.868
-          ],
-          [
-            50.388,
-            -125.792
-          ],
-          [
-            50.376,
-            -125.776
-          ],
-          [
-            50.372,
-            -125.748
-          ],
-          [
-            50.372,
-            -125.592
-          ],
-          [
-            50.404,
-            -125.5
-          ]
-        ]
-      }
-    ],
-    "13": [
-      {
-        "id": "3c35c525-576e-4bff-a31d-b8f135481fca",
-        "name": "",
-        "nm": 103,
-        "speedKts": 15,
-        "hrs": 6.9,
-        "time": "",
-        "startName": "Mamquam Blind Channel",
-        "startLat": 49.6890078,
-        "startLng": -123.1564186,
-        "endName": "Squirrel Cove",
-        "endLat": 50.1325644,
-        "endLng": -124.91703,
-        "routePath": [
-          [
-            49.68,
-            -123.16
-          ],
-          [
-            49.68,
-            -123.2
-          ],
-          [
-            49.636,
-            -123.244
-          ],
-          [
-            49.612,
-            -123.244
-          ],
-          [
-            49.564,
-            -123.28
-          ],
-          [
-            49.52,
-            -123.28
-          ],
-          [
-            49.484,
-            -123.312
-          ],
-          [
-            49.448,
-            -123.312
-          ],
-          [
-            49.44,
-            -123.32
-          ],
-          [
-            49.428,
-            -123.36
-          ],
-          [
-            49.428,
-            -123.46
-          ],
-          [
-            49.388,
-            -123.5
-          ],
-          [
-            49.38,
-            -123.524
-          ],
-          [
-            49.384,
-            -123.556
-          ],
-          [
-            49.4,
-            -123.572
-          ],
-          [
-            49.412,
-            -123.644
-          ],
-          [
-            49.432,
-            -123.684
-          ],
-          [
-            49.432,
-            -123.724
-          ],
-          [
-            49.448,
-            -123.74
-          ],
-          [
-            49.448,
-            -123.816
-          ],
-          [
-            49.46,
-            -123.832
-          ],
-          [
-            49.46,
-            -123.964
-          ],
-          [
-            49.5,
-            -124.016
-          ],
-          [
-            49.664,
-            -124.18
-          ],
-          [
-            49.668,
-            -124.204
-          ],
-          [
-            49.736,
-            -124.272
-          ],
-          [
-            49.764,
-            -124.324
-          ],
-          [
-            49.764,
-            -124.42
-          ],
-          [
-            49.792,
-            -124.48
-          ],
-          [
-            49.8,
-            -124.528
-          ],
-          [
-            49.912,
-            -124.644
-          ],
-          [
-            49.944,
-            -124.724
-          ],
-          [
-            49.988,
-            -124.784
-          ],
-          [
-            49.992,
-            -124.808
-          ],
-          [
-            50.004,
-            -124.824
-          ],
-          [
-            50.044,
-            -124.848
-          ],
-          [
-            50.096,
-            -124.9
-          ],
-          [
-            50.112,
-            -124.9
-          ],
-          [
-            50.124,
-            -124.916
-          ]
-        ],
-        "notes": "",
-        "addedAt": "2026-05-14T04:09:57.021Z"
-      }
-    ],
-    "14": [
-      {
-        "id": "24ff0e3d-a968-4fc2-939e-1902b882f80f",
-        "name": "",
-        "nm": 139.4,
-        "speedKts": 15,
-        "hrs": 9.3,
-        "time": "",
-        "startName": "Squirrel Cove",
-        "startLat": 50.1325644,
-        "startLng": -124.91703,
-        "endName": "Montague Harbour",
-        "endLat": 48.8914111,
-        "endLng": -123.3978415,
-        "routePath": [
-          [
-            50.124,
-            -124.916
-          ],
-          [
-            50.052,
-            -124.84
-          ],
-          [
-            50.008,
-            -124.828
-          ],
-          [
-            49.96,
-            -124.78
-          ],
-          [
-            49.956,
-            -124.764
-          ],
-          [
-            49.872,
-            -124.68
-          ],
-          [
-            49.844,
-            -124.68
-          ],
-          [
-            49.808,
-            -124.644
-          ],
-          [
-            49.736,
-            -124.64
-          ],
-          [
-            49.38,
-            -124.288
-          ],
-          [
-            49.352,
-            -124.176
-          ],
-          [
-            49.332,
-            -124.156
-          ],
-          [
-            49.332,
-            -124.108
-          ],
-          [
-            49.296,
-            -124
-          ],
-          [
-            49.228,
-            -123.824
-          ],
-          [
-            49.164,
-            -123.684
-          ],
-          [
-            49.068,
-            -123.592
-          ],
-          [
-            48.996,
-            -123.592
-          ],
-          [
-            48.908,
-            -123.504
-          ],
-          [
-            48.876,
-            -123.408
-          ]
-        ],
-        "notes": "",
-        "addedAt": "2026-05-13T05:05:09.960Z"
-      }
-    ],
-    "17": [
-      {
-        "id": "ec0aff69-4fd1-44dc-a676-29a3858a61f5",
-        "name": "",
-        "nm": 92,
-        "speedKts": 15,
-        "hrs": 6.1,
-        "time": "",
-        "startName": "Ganges",
-        "startLat": 48.85436,
-        "startLng": -123.502621,
-        "endName": "Elliott Bay Marina",
-        "endLat": 47.6302997,
-        "endLng": -122.3914826,
-        "routePath": [
-          [
-            48.8903,
-            -123.482621
-          ],
-          [
-            48.8903,
-            -123.450621
-          ],
-          [
-            48.8343,
-            -123.346621
-          ],
-          [
-            48.8263,
-            -123.338621
-          ],
-          [
-            48.7783,
-            -123.330621
-          ],
-          [
-            48.6983,
-            -123.250621
-          ],
-          [
-            48.6823,
-            -123.250621
-          ],
-          [
-            48.6423,
-            -123.210621
-          ],
-          [
-            48.5863,
-            -123.210621
-          ],
-          [
-            48.5543,
-            -123.178621
-          ],
-          [
-            48.5223,
-            -123.170621
-          ],
-          [
-            48.2023,
-            -122.850621
-          ],
-          [
-            48.1863,
-            -122.810621
-          ],
-          [
-            48.1223,
-            -122.714621
-          ],
-          [
-            48.1143,
-            -122.690621
-          ],
-          [
-            48.0423,
-            -122.618621
-          ],
-          [
-            48.0263,
-            -122.618621
-          ],
-          [
-            47.9143,
-            -122.506621
-          ],
-          [
-            47.8343,
-            -122.482621
-          ],
-          [
-            47.7303,
-            -122.434621
-          ],
-          [
-            47.6823,
-            -122.434621
-          ],
-          [
-            47.6743,
-            -122.442621
-          ],
-          [
-            47.6583,
-            -122.442621
-          ],
-          [
-            47.6183,
-            -122.402621
-          ],
-          [
-            47.6183,
-            -122.394621
-          ]
-        ],
-        "notes": "",
-        "addedAt": "2026-05-13T05:07:35.572Z"
-      }
-    ]
-  },
-  "flights": {},
-  "rentalCars": {},
-  "highlights": {
-    "9": [
-      "Peak whale-watching season—orcas and humpbacks actively feed in nearby Broughton Strait",
-      "Authentic 1920s cannery village atmosphere; one of BC's best-preserved maritime heritage sites",
-      "Remote Inside Passage location offering pristine wilderness and solitude"
-    ],
-    "10": [
-      "Exceptional marine wildlife viewing—some of BC's best orca encounter rates in July",
-      "Pristine, sheltered anchorage in a true wilderness setting with minimal crowds",
-      "Gateway to explore remote fjords and First Nations cultural heritage",
-      "Ideal for kayaking, hiking, and nature photography in old-growth forests"
-    ]
-  },
-  "notes": {
-    "4": "Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window.\n\nTODO: Figure out if I’m okay for stern-tying\nTODO: Is the dock there still under construction?"
-  },
-  "startDate": "2026-07-02",
-  "title": "Canada Cruise 2026🇨🇦",
-  "subtitle": "Our Summer 2026 Cruise to the Broughton Islands and back",
-  "itineraryNotes": "TODO: Get Canada DTOPS pass sticker\nTODO: Buy [SYC pass](https://www.seattleyachtclub.org/group/pages/annual-outstation-pass) for outstations "
+  ]
 }
