@@ -74,156 +74,6 @@
       "rentalCars": []
     },
     {
-      "leg": "Olympia → Budd Inlet",
-      "overnight": "Olympia, WA",
-      "nm": 28.2,
-      "hrs": 1.9,
-      "tags": [],
-      "highlights": [
-        "Depart from Olympia's waterfront and cruise through Budd Inlet with views of forested shorelines",
-        "Spot bald eagles, seals, and local marine wildlife in their natural habitat",
-        "Enjoy calm June waters perfect for photography and wildlife observation"
-      ],
-      "note": "",
-      "places": [
-        {
-          "id": "fcd91150-b6c2-4bcb-b492-0d4621c8b166",
-          "name": "Olympia Waterfront Marina",
-          "address": "",
-          "phone": "",
-          "website": "",
-          "placeId": "",
-          "category": "accommodation",
-          "notes": "Full-service marina with fuel, water, and provisions for departing cruisers. Great starting point for Puget Sound exploration.",
-          "addedAt": "2026-05-15T06:28:47.554Z",
-          "mapsProvider": null
-        },
-        {
-          "id": "78accd23-b8fc-4b49-81f3-0736ff086cbb",
-          "name": "Budd Inlet Scenic Anchorages",
-          "address": "",
-          "phone": "",
-          "website": "",
-          "placeId": "",
-          "category": "activity",
-          "notes": "Protected waters ideal for first night with excellent eagle-watching and peaceful natural surroundings.",
-          "addedAt": "2026-05-15T06:28:47.554Z",
-          "mapsProvider": null
-        },
-        {
-          "id": "17feee2c-4ae6-41fa-bb6f-d3b5ddb73194",
-          "name": "The Waterwheel Cafe",
-          "address": "",
-          "phone": "",
-          "website": "",
-          "placeId": "",
-          "category": "restaurant",
-          "notes": "Casual waterfront dining in Olympia with fresh seafood and local ingredients, perfect for provisioning before departure.",
-          "addedAt": "2026-05-15T06:28:47.554Z",
-          "mapsProvider": null
-        },
-        {
-          "id": "24300b37-4bf4-4e87-8e4b-65a51f5cb384",
-          "name": "Capitol Lake Park",
-          "address": "",
-          "phone": "",
-          "website": "",
-          "placeId": "",
-          "category": "activity",
-          "notes": "Scenic starting point with walking trails and views of the Capitol building reflected in the water.",
-          "addedAt": "2026-05-15T06:28:47.554Z",
-          "mapsProvider": null
-        }
-      ],
-      "directions": [],
-      "routes": [
-        {
-          "id": "f099cacb-3760-4573-a39c-91095484df9b",
-          "name": "",
-          "nm": 28.2,
-          "speedKts": 15,
-          "hrs": 1.9,
-          "time": "",
-          "startName": "Olympia, WA",
-          "startLat": 47.0458042,
-          "startLng": -122.8885607,
-          "endName": "Gig Harbor, WA",
-          "endLat": 47.3293755,
-          "endLng": -122.5808901,
-          "routePath": [
-            [
-              47.064,
-              -122.9
-            ],
-            [
-              47.068,
-              -122.908
-            ],
-            [
-              47.14,
-              -122.912
-            ],
-            [
-              47.16,
-              -122.892
-            ],
-            [
-              47.16,
-              -122.872
-            ],
-            [
-              47.18,
-              -122.848
-            ],
-            [
-              47.18,
-              -122.788
-            ],
-            [
-              47.164,
-              -122.772
-            ],
-            [
-              47.164,
-              -122.76
-            ],
-            [
-              47.192,
-              -122.732
-            ],
-            [
-              47.188,
-              -122.664
-            ],
-            [
-              47.192,
-              -122.648
-            ],
-            [
-              47.216,
-              -122.624
-            ],
-            [
-              47.216,
-              -122.6
-            ],
-            [
-              47.284,
-              -122.544
-            ],
-            [
-              47.324,
-              -122.572
-            ]
-          ],
-          "notes": "",
-          "addedAt": "2026-05-15T06:36:10.782Z"
-        }
-      ],
-      "flights": [],
-      "rentalCars": []
-    },
-    {
       "leg": "Budd Inlet → Nisqually Reach → Carr Inlet",
       "overnight": "Gig Harbor, WA",
       "nm": 0,
@@ -405,6 +255,156 @@
       ],
       "directions": [],
       "routes": [],
+      "flights": [],
+      "rentalCars": []
+    },
+    {
+      "leg": "Olympia → Budd Inlet",
+      "overnight": "Olympia, WA",
+      "nm": 28.2,
+      "hrs": 1.9,
+      "tags": [],
+      "highlights": [
+        "Depart from Olympia's waterfront and cruise through Budd Inlet with views of forested shorelines",
+        "Spot bald eagles, seals, and local marine wildlife in their natural habitat",
+        "Enjoy calm June waters perfect for photography and wildlife observation"
+      ],
+      "note": "",
+      "places": [
+        {
+          "id": "fcd91150-b6c2-4bcb-b492-0d4621c8b166",
+          "name": "Olympia Waterfront Marina",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "accommodation",
+          "notes": "Full-service marina with fuel, water, and provisions for departing cruisers. Great starting point for Puget Sound exploration.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "78accd23-b8fc-4b49-81f3-0736ff086cbb",
+          "name": "Budd Inlet Scenic Anchorages",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "Protected waters ideal for first night with excellent eagle-watching and peaceful natural surroundings.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "17feee2c-4ae6-41fa-bb6f-d3b5ddb73194",
+          "name": "The Waterwheel Cafe",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "restaurant",
+          "notes": "Casual waterfront dining in Olympia with fresh seafood and local ingredients, perfect for provisioning before departure.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "24300b37-4bf4-4e87-8e4b-65a51f5cb384",
+          "name": "Capitol Lake Park",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "Scenic starting point with walking trails and views of the Capitol building reflected in the water.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        }
+      ],
+      "directions": [],
+      "routes": [
+        {
+          "id": "f099cacb-3760-4573-a39c-91095484df9b",
+          "name": "",
+          "nm": 28.2,
+          "speedKts": 15,
+          "hrs": 1.9,
+          "time": "",
+          "startName": "Olympia, WA",
+          "startLat": 47.0458042,
+          "startLng": -122.8885607,
+          "endName": "Gig Harbor, WA",
+          "endLat": 47.3293755,
+          "endLng": -122.5808901,
+          "routePath": [
+            [
+              47.064,
+              -122.9
+            ],
+            [
+              47.068,
+              -122.908
+            ],
+            [
+              47.14,
+              -122.912
+            ],
+            [
+              47.16,
+              -122.892
+            ],
+            [
+              47.16,
+              -122.872
+            ],
+            [
+              47.18,
+              -122.848
+            ],
+            [
+              47.18,
+              -122.788
+            ],
+            [
+              47.164,
+              -122.772
+            ],
+            [
+              47.164,
+              -122.76
+            ],
+            [
+              47.192,
+              -122.732
+            ],
+            [
+              47.188,
+              -122.664
+            ],
+            [
+              47.192,
+              -122.648
+            ],
+            [
+              47.216,
+              -122.624
+            ],
+            [
+              47.216,
+              -122.6
+            ],
+            [
+              47.284,
+              -122.544
+            ],
+            [
+              47.324,
+              -122.572
+            ]
+          ],
+          "notes": "",
+          "addedAt": "2026-05-15T06:36:10.782Z"
+        }
+      ],
       "flights": [],
       "rentalCars": []
     }
