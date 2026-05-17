@@ -115,7 +115,7 @@ const timeInputStyle = {
   cursor: "pointer", padding: 0, outline: "none", colorScheme: "dark",
 };
 
-export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToDay, readOnly = false, routeServerUrl = "" }) {
+export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly = false, routeServerUrl = "" }) {
   const [isAdding,       setIsAdding]       = useState(false);
   const [fetchingRoute,  setFetchingRoute]  = useState(false);
   const [draft,          setDraft]          = useState(BLANK);
@@ -568,13 +568,9 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
                   </div>
                 )}
 
-                {/* Use these values + Download GPX */}
-                <div style={{ display: "flex", gap: ".4rem", marginBottom: ".45rem", flexWrap: "wrap" }}>
-                  <button type="button" onClick={() => onApplyToDay({ nm: route.nm, hrs: route.hrs })}
-                    style={{ ...S.btnGhost, fontSize: ".68rem", padding: ".2rem .55rem" }}>
-                    Use these values
-                  </button>
-                  {routeServerUrl && route.startLat && route.endLat && (
+                {/* Download GPX */}
+                {routeServerUrl && route.startLat && route.endLat && (
+                  <div style={{ marginBottom: ".45rem" }}>
                     <button type="button" onClick={async () => {
                       try {
                         const gpxText = await fetchGpxRoute(routeServerUrl, route.startLat, route.startLng, route.endLat, route.endLng);
@@ -583,8 +579,8 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, onApplyToD
                     }} style={{ ...S.btnGhost, fontSize: ".68rem", padding: ".2rem .55rem" }}>
                       Download GPX
                     </button>
-                  )}
-                </div>
+                  </div>
+                )}
               </>
             )}
 

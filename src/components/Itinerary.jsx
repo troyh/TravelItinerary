@@ -854,7 +854,11 @@ export default function Itinerary() {
     daysArr.forEach(d => {
       const dateStr = toICSDate(d.day);
       const parts = [];
-      if (d.nm > 0) parts.push(`${d.nm} NM · ~${d.hrs.toFixed(1)} hrs`);
+      const _rNm = (savedRoutes?.[d.day] ?? []).reduce((s, r) => s + (r.nm || 0), 0);
+      const _rHrs = (savedRoutes?.[d.day] ?? []).reduce((s, r) => s + (r.hrs || 0), 0);
+      const _nm = _rNm > 0 ? _rNm : d.nm;
+      const _hrs = _rHrs > 0 ? _rHrs : d.hrs;
+      if (_nm > 0) parts.push(`${_nm} NM · ~${_hrs.toFixed(1)} hrs`);
       if (d.overnight) parts.push(`Overnight: ${d.overnight}`);
       const hl = [...(d.highlights ?? []), ...(highlights[d.day] ?? [])];
       if (hl.length) parts.push("\nHighlights:\n" + hl.map(h => `• ${h}`).join("\n"));
@@ -1127,9 +1131,12 @@ export default function Itinerary() {
     return `${fmtShort(start)} – ${fmtFull(end)}`;
   })();
 
-  const totalNM  = days.reduce((s, d) => s + d.nm, 0);
+  const effNm  = d => { const rn = (savedRoutes[d.day] ?? []).reduce((s, r) => s + (r.nm  || 0), 0); return rn > 0 ? rn : d.nm; };
+  const effHrs = d => { const rh = (savedRoutes[d.day] ?? []).reduce((s, r) => s + (r.hrs || 0), 0); return rh > 0 ? rh : d.hrs; };
+
+  const totalNM  = days.reduce((s, d) => s + effNm(d), 0);
   const travelDays = days.filter(d =>
-    d.nm > 0 ||
+    effNm(d) > 0 ||
     (savedFlights[d.day] ?? []).length > 0 ||
     (savedDirections[d.day] ?? []).length > 0
   ).length;
@@ -1731,7 +1738,7 @@ export default function Itinerary() {
           {/* Day-strip */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
             {days.map(d => {
-              const lay  = d.nm === 0;
+              const lay  = effNm(d) === 0;
               const fuel = d.fuelStop;
               const tide = d.tideWarning;
               const bg   = tide ? "#5c1a1a" : fuel ? "#5c3010" : lay ? "#1a3d1a" : "#1e3a52";
@@ -1827,7 +1834,7 @@ export default function Itinerary() {
         {activeTab === "itinerary" && (<>
         {days.map(d => {
           const isOpen    = openDay === d.day;
-          const isLayover = d.nm === 0;
+          const isLayover = effNm(d) === 0;
           const dayInfo   = getDayDate(d.day);
           return (
             <div key={d.day} style={{
@@ -1860,7 +1867,7 @@ export default function Itinerary() {
                   <div style={{ color:"#4e7a9e", fontSize:".75rem", marginTop:2, fontFamily:"sans-serif" }}>
                     {(() => {
                       const parts = [];
-                      if (!isLayover) parts.push(`${d.nm} NM · ~${(() => { const h=Math.floor(d.hrs), m=Math.round((d.hrs-h)*60); return h===0?`${m}m`:m===0?`${h}h`:`${h}h ${m}m`; })()}`);
+                      if (!isLayover) { const nm=effNm(d), hrs=effHrs(d); parts.push(`${nm} NM · ~${(() => { const h=Math.floor(hrs), m=Math.round((hrs-h)*60); return h===0?`${m}m`:m===0?`${h}h`:`${h}h ${m}m`; })()} `); }
                       let dKm = 0;
                       (savedDirections[d.day] ?? []).forEach(dir => {
                         const km = dir.distance?.match(/^([\d.]+)\s*km/i);
@@ -2068,7 +2075,6 @@ export default function Itinerary() {
                     onAdd={route => addRoute(d.day, route)}
                     onUpdate={(id, updates) => updateRoute(d.day, id, updates)}
                     onDelete={id => deleteRoute(d.day, id)}
-                    onApplyToDay={updates => updateDayFields(d.day, updates)}
                     readOnly={readOnly}
                     routeServerUrl={settings.routeServerUrl ?? "https://waypoint.troyhakala.com"}
                   />
