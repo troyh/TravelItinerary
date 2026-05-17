@@ -8,7 +8,8 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260519
 DTEND;VALUE=DATE:20260520
 SUMMARY:Day 1: Eagle Harbor
-DESCRIPTION:31.4 NM · ~2.1 hrs
+LOCATION:Seattle\, WA
+DESCRIPTION:31.4 NM · ~2.1 hrs\nOvernight: Seattle\, WA
 URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=1
 UID:day-1-20260519@travelitinerary
 END:VEVENT
