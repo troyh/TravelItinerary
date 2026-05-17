@@ -14,7 +14,6 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "day": 1,
       "highlights": [],
       "note": "TODO: get airfare July 12-14\nTODO: get hotel",
       "places": [],
@@ -33,9 +32,8 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "day": 2,
       "highlights": [],
-      "note": "",
+      "note": "Check-in 7:30-9:10am",
       "places": [],
       "directions": [],
       "routes": [],
@@ -52,7 +50,6 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "day": 3,
       "highlights": [
         "Attend events",
         "Fly home"
