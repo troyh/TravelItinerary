@@ -16,6 +16,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260713
 DTEND;VALUE=DATE:20260714
 SUMMARY:Day 2: Orientation Day 1
+DESCRIPTION:\nNote: Check-in 7:30-9:10am
 URL:https://troyh.github.io/TravelItinerary/?i=it-a44dcfe4&day=2
 UID:day-2-20260713@travelitinerary
 END:VEVENT
