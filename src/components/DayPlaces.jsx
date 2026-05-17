@@ -33,11 +33,11 @@ function loadAppleMaps() {
 // ── Constants ────────────────────────────────────────────────────────────────
 export const CATEGORIES = [
   { key: "restaurant",    label: "Restaurants",      color: "#e83870" },
-  { key: "marina",        label: "Marinas & Fuel",   color: "#4a9eff" },
+  { key: "marina",        label: "Marinas & Fuel",   color: "#2563eb" },
   { key: "accommodation", label: "Hotels & Lodging", color: "#8338e8" },
   { key: "provisioning",  label: "Provisioning",     color: "#38a8e8" },
-  { key: "activity",      label: "Activities",       color: "#5cb85c" },
-  { key: "other",         label: "Other",            color: "#6b8fa8" },
+  { key: "activity",      label: "Activities",       color: "#16a34a" },
+  { key: "other",         label: "Other",            color: "#5c6470" },
 ];
 
 // Location bias: central Salish Sea / Victoria BC
@@ -61,8 +61,8 @@ function fmtTime(hhmm) {
 }
 
 const timeInputStyle = {
-  background: "none", border: "none", color: "#c9a84c",
-  fontSize: ".75rem", fontFamily: "sans-serif",
+  background: "none", border: "none", color: "#0b3d6b",
+  fontSize: ".75rem", fontFamily: "inherit",
   cursor: "pointer", padding: 0, outline: "none", colorScheme: "dark",
 };
 
@@ -238,17 +238,17 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
 
   // ── Style tokens ──────────────────────────────────────────────────────────
   const S = {
-    input: { width: "100%", background: "#0a1a2a", border: "1px solid #2e5070", color: "#e8dcc8",
-      borderRadius: 4, padding: ".4rem .65rem", fontSize: ".82rem", fontFamily: "sans-serif",
+    input: { width: "100%", background: "#f0f4f8", border: "1px solid #2e5070", color: "#0e1014",
+      borderRadius: 4, padding: ".4rem .65rem", fontSize: ".82rem", fontFamily: "inherit",
       outline: "none", boxSizing: "border-box" },
-    btnPrimary: { background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
-      borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
+    btnPrimary: { background: "#e8f1f9", border: "1px solid #2e5070", color: "#0b3d6b",
+      borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "inherit",
       cursor: "pointer", whiteSpace: "nowrap" },
-    btnGhost: { background: "none", border: "1px solid #2e3a4a", color: "#4e7a9e",
-      borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
+    btnGhost: { background: "none", border: "1px solid #2e3a4a", color: "#6b7a8a",
+      borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "inherit",
       cursor: "pointer", whiteSpace: "nowrap" },
     sectionLabel: { fontSize: ".62rem", letterSpacing: ".1em", textTransform: "uppercase",
-      fontFamily: "sans-serif" },
+      fontFamily: "inherit" },
   };
 
   const borderAccent = "3px solid #4a9eff66";
@@ -260,13 +260,13 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
     <div style={{ marginTop: "1rem" }}>
       {/* ── Section header ── */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: ".75rem 1rem", background: "#0a1a2a", borderLeft: borderAccent,
+        padding: ".75rem 1rem", background: "#f0f4f8", borderLeft: borderAccent,
         borderRadius: "0 4px 0 0" }}>
         <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
-          <span style={{ ...S.sectionLabel, color: "#4a9eff" }}>Places</span>
+          <span style={{ ...S.sectionLabel, color: "#2563eb" }}>Places</span>
           {places.length > 0 && (
-            <span style={{ background: "#4a9eff22", color: "#4a9eff", border: "1px solid #4a9eff44",
-              borderRadius: 10, padding: "1px 7px", fontSize: ".6rem", fontFamily: "sans-serif" }}>
+            <span style={{ background: "rgba(37,99,235,0.08)", color: "#2563eb", border: "1px solid #4a9eff44",
+              borderRadius: 10, padding: "1px 7px", fontSize: ".6rem", fontFamily: "inherit" }}>
               {places.length}
             </span>
           )}
@@ -288,8 +288,8 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
 
       {/* ── API error banner ── */}
       {apiError && (
-        <div style={{ padding: ".6rem 1rem", background: "#0a1a2a", borderLeft: borderAccent,
-          fontSize: ".75rem", color: "#4e7a9e", fontFamily: "sans-serif" }}>
+        <div style={{ padding: ".6rem 1rem", background: "#f0f4f8", borderLeft: borderAccent,
+          fontSize: ".75rem", color: "#6b7a8a", fontFamily: "inherit" }}>
           {apiError === "missing-key"
             ? provider === "apple"
               ? "Configure your Apple MapKit JS token in Settings (⚙) to enable place search."
@@ -302,7 +302,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
 
       {/* ── Search panel ── */}
       {isSearching && (
-        <div style={{ background: "#0a1a2a", borderLeft: borderAccent, padding: ".75rem 1rem" }}>
+        <div style={{ background: "#f0f4f8", borderLeft: borderAccent, padding: ".75rem 1rem" }}>
           <input
             autoFocus
             value={searchQuery}
@@ -315,19 +315,19 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
           {/* Predictions dropdown */}
           {(predictions.length > 0 || loadingPredictions) && (
             <div style={{ marginTop: ".35rem", border: "1px solid #2e5070", borderRadius: 4,
-              background: "#0d1f33", overflow: "hidden" }}>
+              background: "#f8f9fb", overflow: "hidden" }}>
               {loadingPredictions && predictions.length === 0 && (
-                <div style={{ padding: ".5rem .75rem", fontSize: ".78rem", color: "#4e7a9e",
-                  fontFamily: "sans-serif" }}>Searching…</div>
+                <div style={{ padding: ".5rem .75rem", fontSize: ".78rem", color: "#6b7a8a",
+                  fontFamily: "inherit" }}>Searching…</div>
               )}
               {predictions.map((pred, i) => (
                 <div key={i} onClick={() => selectPrediction(pred)}
                   style={{ padding: ".5rem .75rem", cursor: "pointer",
-                    borderBottom: "1px solid #1e3a5230", fontFamily: "sans-serif" }}
-                  onMouseEnter={e => e.currentTarget.style.background = "#1a3352"}
+                    borderBottom: "1px solid #1e3a5230", fontFamily: "inherit" }}
+                  onMouseEnter={e => e.currentTarget.style.background = "#e8f1f9"}
                   onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-                  <div style={{ fontSize: ".83rem", color: "#e8dcc8" }}>{pred.name}</div>
-                  <div style={{ fontSize: ".72rem", color: "#4e7a9e", marginTop: 1 }}>{pred.subtitle}</div>
+                  <div style={{ fontSize: ".83rem", color: "#0e1014" }}>{pred.name}</div>
+                  <div style={{ fontSize: ".72rem", color: "#6b7a8a", marginTop: 1 }}>{pred.subtitle}</div>
                 </div>
               ))}
             </div>
@@ -338,13 +338,13 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
             <div style={{ marginTop: ".75rem", display: "flex", flexDirection: "column", gap: ".5rem" }}>
               <div style={{ display: "flex", gap: ".5rem" }}>
                 <div style={{ flex: 1 }}>
-                  <div style={{ ...S.sectionLabel, color: "#6b8fa8", marginBottom: 3 }}>Name</div>
+                  <div style={{ ...S.sectionLabel, color: "#5c6470", marginBottom: 3 }}>Name</div>
                   <input value={pendingPlace.name}
                     onChange={e => setPendingPlace(p => ({ ...p, name: e.target.value }))}
                     style={S.input} />
                 </div>
                 <div style={{ width: 160 }}>
-                  <div style={{ ...S.sectionLabel, color: "#6b8fa8", marginBottom: 3 }}>Category</div>
+                  <div style={{ ...S.sectionLabel, color: "#5c6470", marginBottom: 3 }}>Category</div>
                   <select value={pendingPlace.category}
                     onChange={e => setPendingPlace(p => ({ ...p, category: e.target.value }))}
                     style={{ ...S.input, cursor: "pointer" }}>
@@ -354,14 +354,14 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
               </div>
 
               <div>
-                <div style={{ ...S.sectionLabel, color: "#6b8fa8", marginBottom: 3 }}>Address</div>
-                <div style={{ fontSize: ".78rem", color: "#6b8fa8", fontFamily: "sans-serif",
-                  padding: ".35rem .65rem", background: "#071218", borderRadius: 4,
+                <div style={{ ...S.sectionLabel, color: "#5c6470", marginBottom: 3 }}>Address</div>
+                <div style={{ fontSize: ".78rem", color: "#5c6470", fontFamily: "inherit",
+                  padding: ".35rem .65rem", background: "#f0f4f8", borderRadius: 4,
                   border: "1px solid #1e3040" }}>
                   {pendingPlace.address || "—"}
                 </div>
                 {provider === "apple" && (
-                  <div style={{ fontSize: ".68rem", color: "#3d5060", fontFamily: "sans-serif",
+                  <div style={{ fontSize: ".68rem", color: "#9ba1ac", fontFamily: "inherit",
                     fontStyle: "italic", marginTop: 4 }}>
                     Phone and website not available from Apple Maps — add manually in notes.
                   </div>
@@ -369,14 +369,14 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
               </div>
 
               <div>
-                <div style={{ ...S.sectionLabel, color: "#6b8fa8", marginBottom: 3 }}>Time (optional)</div>
+                <div style={{ ...S.sectionLabel, color: "#5c6470", marginBottom: 3 }}>Time (optional)</div>
                 <input type="time" value={pendingPlace.time || ""}
                   onChange={e => setPendingPlace(p => ({ ...p, time: e.target.value }))}
                   style={{ ...S.input, width: 140, colorScheme: "dark" }} />
               </div>
 
               <div>
-                <div style={{ ...S.sectionLabel, color: "#6b8fa8", marginBottom: 3 }}>Notes</div>
+                <div style={{ ...S.sectionLabel, color: "#5c6470", marginBottom: 3 }}>Notes</div>
                 <textarea value={pendingPlace.notes}
                   onChange={e => setPendingPlace(p => ({ ...p, notes: e.target.value }))}
                   placeholder="Reservation confirmation, hours, contact details…"
@@ -397,7 +397,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
       {places.length > 0 && usedCategoryKeys.length > 1 && (
         <div style={{ display: "flex", flexWrap: "wrap", gap: 5, padding: ".5rem 1rem",
           background: "#071520", borderLeft: borderAccent }}>
-          {[{ key: "all", label: "All", color: "#6b8fa8" },
+          {[{ key: "all", label: "All", color: "#5c6470" },
             ...CATEGORIES.filter(c => usedCategoryKeys.includes(c.key))
           ].map(c => (
             <button key={c.key} onClick={() => setActiveFilter(c.key)}
@@ -405,7 +405,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
                 border: `1px solid ${activeFilter === c.key ? c.color : c.color + "44"}`,
                 color: activeFilter === c.key ? c.color : c.color + "99",
                 borderRadius: 10, padding: "2px 9px", fontSize: ".62rem", letterSpacing: ".07em",
-                fontFamily: "sans-serif", cursor: "pointer", textTransform: "uppercase" }}>
+                fontFamily: "inherit", cursor: "pointer", textTransform: "uppercase" }}>
               {c.label}
             </button>
           ))}
@@ -414,7 +414,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
 
       {/* ── Saved places grouped by category ── */}
       {visibleCategories.map(cat => (
-        <div key={cat.key} style={{ borderLeft: borderAccent, background: "#0a1a2a" }}>
+        <div key={cat.key} style={{ borderLeft: borderAccent, background: "#f0f4f8" }}>
           <div style={{ ...S.sectionLabel, color: cat.color, padding: ".45rem 1rem .3rem",
             display: "flex", alignItems: "center", gap: ".4rem" }}>
             <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%",
@@ -431,7 +431,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
               <div style={{ display: "flex", justifyContent: "space-between",
                 alignItems: "flex-start", gap: ".5rem" }}>
                 <div style={{ flex: 1 }}>
-                  <span style={{ fontSize: ".88rem", color: "#e8dcc8", fontFamily: "sans-serif",
+                  <span style={{ fontSize: ".88rem", color: "#0e1014", fontFamily: "inherit",
                     fontWeight: 600, lineHeight: 1.3 }}>
                     {place.name}
                   </span>
@@ -439,17 +439,17 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
                     ? <div style={{ display: "flex", alignItems: "center", gap: 2, marginTop: 2 }}>
                         <input type="time" value={place.time || ""}
                           onChange={e => onUpdate(place.id, { time: e.target.value })}
-                          style={{ ...timeInputStyle, color: place.time ? "#c9a84c" : "#2e4a5e" }} />
+                          style={{ ...timeInputStyle, color: place.time ? "#0b3d6b" : "#9ba1ac" }} />
                         {place.time && (
                           <button type="button" onClick={() => onUpdate(place.id, { time: "" })}
-                            style={{ background: "none", border: "none", color: "#2e4a5e",
+                            style={{ background: "none", border: "none", color: "#9ba1ac",
                               cursor: "pointer", fontSize: ".75rem", padding: "0 2px", lineHeight: 1 }}>
                             ×
                           </button>
                         )}
                       </div>
                     : place.time
-                      ? <div style={{ fontSize: ".72rem", color: "#c9a84c", marginTop: 2 }}>{fmtTime(place.time)}</div>
+                      ? <div style={{ fontSize: ".72rem", color: "#0b3d6b", marginTop: 2 }}>{fmtTime(place.time)}</div>
                       : null}
                 </div>
                 <div style={{ display: "flex", gap: ".5rem", flexShrink: 0, alignItems: "center" }}>
@@ -460,14 +460,14 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
                           : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)}&query_place_id=${encodeURIComponent(place.placeId)}`
                       }
                       target="_blank" rel="noopener noreferrer"
-                      style={{ fontSize: ".7rem", color: "#4a9eff", fontFamily: "sans-serif",
+                      style={{ fontSize: ".7rem", color: "#2563eb", fontFamily: "inherit",
                         textDecoration: "none" }}>
                       Maps ↗
                     </a>
                   )}
                   {!readOnly && (
                     <button onClick={() => onDelete(place.id)}
-                      style={{ background: "none", border: "none", color: "#3d5060",
+                      style={{ background: "none", border: "none", color: "#9ba1ac",
                         cursor: "pointer", fontSize: ".85rem", lineHeight: 1, padding: 0 }}>
                       ×
                     </button>
@@ -476,7 +476,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
               </div>
 
               {place.address && (
-                <div style={{ fontSize: ".75rem", color: "#4e7a9e", fontFamily: "sans-serif",
+                <div style={{ fontSize: ".75rem", color: "#6b7a8a", fontFamily: "inherit",
                   marginTop: 2 }}>
                   {place.address}
                 </div>
@@ -486,14 +486,14 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
                 marginTop: place.phone || place.website ? 4 : 0 }}>
                 {place.phone && (
                   <a href={`tel:${place.phone}`}
-                    style={{ fontSize: ".75rem", color: "#6b8fa8", fontFamily: "sans-serif",
+                    style={{ fontSize: ".75rem", color: "#5c6470", fontFamily: "inherit",
                       textDecoration: "none" }}>
                     {place.phone}
                   </a>
                 )}
                 {place.website && (
                   <a href={place.website} target="_blank" rel="noopener noreferrer"
-                    style={{ fontSize: ".75rem", color: "#6b8fa8", fontFamily: "sans-serif",
+                    style={{ fontSize: ".75rem", color: "#5c6470", fontFamily: "inherit",
                       textDecoration: "none", overflow: "hidden", textOverflow: "ellipsis",
                       whiteSpace: "nowrap", maxWidth: 260 }}>
                     {place.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
@@ -525,7 +525,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
                   style={{ marginTop: ".45rem", cursor: readOnly ? "default" : "pointer" }}>
                   {place.notes
                     ? <NoteMarkdown>{place.notes}</NoteMarkdown>
-                    : !readOnly && <span style={{ fontSize:".8rem", color:"#2e4a5e", fontFamily:"sans-serif", fontStyle:"italic" }}>Add notes…</span>}
+                    : !readOnly && <span style={{ fontSize:".8rem", color:"#9ba1ac", fontFamily:"inherit", fontStyle:"italic" }}>Add notes…</span>}
                 </div>
               )}
             </div>
@@ -535,7 +535,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
 
       {/* Bottom cap */}
       {(places.length > 0 || isSearching || apiError) && (
-        <div style={{ height: 1, background: "#4a9eff22", borderLeft: borderAccent }} />
+        <div style={{ height: 1, background: "rgba(37,99,235,0.08)", borderLeft: borderAccent }} />
       )}
     </div>
   );

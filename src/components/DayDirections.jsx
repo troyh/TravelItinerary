@@ -48,16 +48,16 @@ function stripHtml(html) { return html.replace(/<[^>]+>/g, ""); }
 
 // ── Style tokens ──────────────────────────────────────────────────────────
 const S = {
-  input: { width: "100%", background: "#0a1a2a", border: "1px solid #2e5070", color: "#e8dcc8",
-    borderRadius: 4, padding: ".4rem .65rem", fontSize: ".82rem", fontFamily: "sans-serif",
+  input: { width: "100%", background: "#f0f4f8", border: "1px solid #2e5070", color: "#0e1014",
+    borderRadius: 4, padding: ".4rem .65rem", fontSize: ".82rem", fontFamily: "inherit",
     outline: "none", boxSizing: "border-box" },
-  btnPrimary: { background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
-    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
+  btnPrimary: { background: "#e8f1f9", border: "1px solid #2e5070", color: "#0b3d6b",
+    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "inherit",
     cursor: "pointer", whiteSpace: "nowrap" },
-  btnGhost: { background: "none", border: "1px solid #2e3a4a", color: "#4e7a9e",
-    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
+  btnGhost: { background: "none", border: "1px solid #2e3a4a", color: "#6b7a8a",
+    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "inherit",
     cursor: "pointer", whiteSpace: "nowrap" },
-  label: { fontSize: ".62rem", letterSpacing: ".1em", textTransform: "uppercase", fontFamily: "sans-serif" },
+  label: { fontSize: ".62rem", letterSpacing: ".1em", textTransform: "uppercase", fontFamily: "inherit" },
 };
 
 function fmtTime(hhmm) {
@@ -67,8 +67,8 @@ function fmtTime(hhmm) {
 }
 
 const timeInputStyle = {
-  background: "none", border: "none", color: "#c9a84c",
-  fontSize: ".75rem", fontFamily: "sans-serif",
+  background: "none", border: "none", color: "#0b3d6b",
+  fontSize: ".75rem", fontFamily: "inherit",
   cursor: "pointer", padding: 0, outline: "none", colorScheme: "dark",
 };
 
@@ -313,16 +313,16 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
     if (!preds.length) return null;
     return (
       <div style={{ marginTop: ".3rem", border: "1px solid #2e5070", borderRadius: 4,
-        background: "#0d1f33", overflow: "hidden" }}>
+        background: "#f8f9fb", overflow: "hidden" }}>
         {preds.map((pred, i) => (
           <div key={i} onClick={() => onSelect(pred)}
             style={{ padding: ".45rem .65rem", cursor: "pointer",
               borderBottom: i < preds.length - 1 ? "1px solid #1e3a5230" : "none",
-              fontFamily: "sans-serif" }}
-            onMouseEnter={e => e.currentTarget.style.background = "#1a3352"}
+              fontFamily: "inherit" }}
+            onMouseEnter={e => e.currentTarget.style.background = "#e8f1f9"}
             onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-            <div style={{ fontSize: ".82rem", color: "#e8dcc8" }}>{pred.name}</div>
-            <div style={{ fontSize: ".72rem", color: "#4e7a9e", marginTop: 1 }}>{pred.subtitle}</div>
+            <div style={{ fontSize: ".82rem", color: "#0e1014" }}>{pred.name}</div>
+            <div style={{ fontSize: ".72rem", color: "#6b7a8a", marginTop: 1 }}>{pred.subtitle}</div>
           </div>
         ))}
       </div>
@@ -335,13 +335,13 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
 
       {/* Section header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: ".75rem 1rem", background: "#0a1a2a", borderLeft: borderAccent,
+        padding: ".75rem 1rem", background: "#f0f4f8", borderLeft: borderAccent,
         borderRadius: "0 4px 0 0" }}>
         <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
-          <span style={{ ...S.label, color: "#5cb85c" }}>Directions</span>
+          <span style={{ ...S.label, color: "#16a34a" }}>Directions</span>
           {directions.length > 0 && (
-            <span style={{ background: "#5cb85c22", color: "#5cb85c", border: "1px solid #5cb85c44",
-              borderRadius: 10, padding: "1px 7px", fontSize: ".6rem", fontFamily: "sans-serif" }}>
+            <span style={{ background: "#5cb85c22", color: "#16a34a", border: "1px solid #5cb85c44",
+              borderRadius: 10, padding: "1px 7px", fontSize: ".6rem", fontFamily: "inherit" }}>
               {directions.length}
             </span>
           )}
@@ -363,8 +363,8 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
 
       {/* API error */}
       {apiError && (
-        <div style={{ padding: ".6rem 1rem", background: "#0a1a2a", borderLeft: borderAccent,
-          fontSize: ".75rem", color: "#4e7a9e", fontFamily: "sans-serif" }}>
+        <div style={{ padding: ".6rem 1rem", background: "#f0f4f8", borderLeft: borderAccent,
+          fontSize: ".75rem", color: "#6b7a8a", fontFamily: "inherit" }}>
           {apiError === "missing-key"
             ? provider === "apple"
               ? "Configure your Apple MapKit JS token in Settings (⚙) to add directions."
@@ -377,34 +377,34 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
 
       {/* Add form */}
       {isAdding && (
-        <div style={{ background: "#0a1a2a", borderLeft: borderAccent, padding: ".75rem 1rem" }}>
+        <div style={{ background: "#f0f4f8", borderLeft: borderAccent, padding: ".75rem 1rem" }}>
 
           {editingDirId && (
-            <div style={{ fontSize: ".62rem", color: "#c9a84c", letterSpacing: ".1em",
-              textTransform: "uppercase", fontFamily: "sans-serif", marginBottom: ".5rem" }}>
+            <div style={{ fontSize: ".62rem", color: "#0b3d6b", letterSpacing: ".1em",
+              textTransform: "uppercase", fontFamily: "inherit", marginBottom: ".5rem" }}>
               Editing direction
             </div>
           )}
 
           {/* From */}
           <div style={{ marginBottom: ".5rem" }}>
-            <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>From</div>
+            <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>From</div>
             <input autoFocus value={originQuery}
               onChange={e => { setOrigin(null); handleOriginInput(e.target.value); }}
               onKeyDown={e => e.key === "Escape" && resetForm()}
               placeholder="Starting location…"
-              style={{ ...S.input, borderColor: origin ? "#5cb85c66" : "#2e5070" }} />
+              style={{ ...S.input, borderColor: origin ? "#5cb85c66" : "#e2e5ea" }} />
             <Predictions preds={originPreds} onSelect={selectOrigin} />
           </div>
 
           {/* To */}
           <div style={{ marginBottom: ".65rem" }}>
-            <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>To</div>
+            <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>To</div>
             <input value={destQuery}
               onChange={e => { setDestination(null); handleDestInput(e.target.value); }}
               onKeyDown={e => e.key === "Escape" && resetForm()}
               placeholder="Destination…"
-              style={{ ...S.input, borderColor: destination ? "#5cb85c66" : "#2e5070" }} />
+              style={{ ...S.input, borderColor: destination ? "#5cb85c66" : "#e2e5ea" }} />
             <Predictions preds={destPreds} onSelect={selectDest} />
           </div>
 
@@ -412,18 +412,18 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
           <div style={{ display: "flex", gap: ".35rem", marginBottom: ".75rem", flexWrap: "wrap" }}>
             {(provider === "apple" ? APPLE_MODES : MODES).map(m => (
               <button key={m.key} onClick={() => setTravelMode(m.key)}
-                style={{ background: travelMode === m.key ? "#1a3352" : "none",
-                  border: `1px solid ${travelMode === m.key ? "#5cb85c66" : "#2e3a4a"}`,
-                  color: travelMode === m.key ? "#5cb85c" : "#4e7a9e",
+                style={{ background: travelMode === m.key ? "#e8f1f9" : "none",
+                  border: `1px solid ${travelMode === m.key ? "#5cb85c66" : "#e2e5ea"}`,
+                  color: travelMode === m.key ? "#16a34a" : "#6b7a8a",
                   borderRadius: 4, padding: ".25rem .65rem", fontSize: ".72rem",
-                  fontFamily: "sans-serif", cursor: "pointer" }}>
+                  fontFamily: "inherit", cursor: "pointer" }}>
                 {m.label}
               </button>
             ))}
           </div>
 
           <div style={{ marginBottom: ".65rem" }}>
-            <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Depart at (optional)</div>
+            <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>Depart at (optional)</div>
             <input type="time" value={departureTime}
               onChange={e => setDepartureTime(e.target.value)}
               style={{ ...S.input, width: 140, colorScheme: "dark" }} />
@@ -435,7 +435,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
               {fetching ? "Getting directions…" : editingDirId ? "Update Directions" : "Get Directions"}
             </button>
             {routeError && (
-              <span style={{ fontSize: ".72rem", color: "#e87878", fontFamily: "sans-serif" }}>
+              <span style={{ fontSize: ".72rem", color: "#dc2626", fontFamily: "inherit" }}>
                 {routeError}
               </span>
             )}
@@ -455,30 +455,30 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
         const isExpanded = expandedId === dir.id;
 
         return (
-          <div key={dir.id} style={{ borderLeft: borderAccent, background: "#0a1a2a" }}>
+          <div key={dir.id} style={{ borderLeft: borderAccent, background: "#f0f4f8" }}>
             <div style={{ padding: ".65rem 1rem", borderTop: "1px solid #1e3a5230" }}>
 
               {/* Header row */}
               <div style={{ display: "flex", justifyContent: "space-between",
                 alignItems: "flex-start", gap: ".5rem", marginBottom: ".3rem" }}>
-                <span style={{ fontSize: ".85rem", color: "#e8dcc8", fontFamily: "sans-serif",
+                <span style={{ fontSize: ".85rem", color: "#0e1014", fontFamily: "inherit",
                   fontWeight: 600, lineHeight: 1.3, flex: 1 }}>
                   {modeLabel} &nbsp;
-                  <span style={{ fontWeight: 400, color: "#c8daea" }}>
+                  <span style={{ fontWeight: 400, color: "#0e1014" }}>
                     {dir.origin.name} → {dir.destination.name}
                   </span>
                 </span>
                 <div style={{ display: "flex", gap: ".5rem", flexShrink: 0, alignItems: "center" }}>
                   <a href={mapsUrl} target="_blank" rel="noopener noreferrer"
-                    style={{ fontSize: ".7rem", color: "#5cb85c", fontFamily: "sans-serif",
+                    style={{ fontSize: ".7rem", color: "#16a34a", fontFamily: "inherit",
                       textDecoration: "none" }}>
                     Maps ↗
                   </a>
                   {!readOnly && (
                     <>
                       <button onClick={() => startEditDir(dir)}
-                        style={{ background: "none", border: "none", color: "#4e7a9e",
-                          cursor: "pointer", fontSize: ".7rem", fontFamily: "sans-serif", padding: 0 }}>
+                        style={{ background: "none", border: "none", color: "#6b7a8a",
+                          cursor: "pointer", fontSize: ".7rem", fontFamily: "inherit", padding: 0 }}>
                         Edit
                       </button>
                       <button onClick={() => onDelete(dir.id)}
@@ -492,7 +492,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
               </div>
 
               {/* Summary row */}
-              <div style={{ fontSize: ".75rem", color: "#4e7a9e", fontFamily: "sans-serif",
+              <div style={{ fontSize: ".75rem", color: "#6b7a8a", fontFamily: "inherit",
                 marginBottom: ".4rem", display: "flex", alignItems: "center", gap: ".5rem", flexWrap: "wrap" }}>
                 <span>
                   {dir.summary && <span>{dir.summary} · </span>}
@@ -503,7 +503,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
                   ? <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
                       <input type="time" value={dir.time || ""}
                         onChange={e => onUpdate(dir.id, { time: e.target.value })}
-                        style={{ ...timeInputStyle, color: dir.time ? "#c9a84c" : "#2e4a5e" }} />
+                        style={{ ...timeInputStyle, color: dir.time ? "#0b3d6b" : "#2e4a5e" }} />
                       {dir.time && (
                         <button type="button" onClick={() => onUpdate(dir.id, { time: "" })}
                           style={{ background: "none", border: "none", color: "#2e4a5e",
@@ -513,7 +513,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
                       )}
                     </div>
                   : dir.time
-                    ? <span style={{ color: "#c9a84c" }}>{fmtTime(dir.time)}</span>
+                    ? <span style={{ color: "#0b3d6b" }}>{fmtTime(dir.time)}</span>
                     : null}
               </div>
 
@@ -521,19 +521,19 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
               {dir.steps?.length > 0 && (
                 <>
                   <button onClick={() => setExpandedId(isExpanded ? null : dir.id)}
-                    style={{ background: "none", border: "none", color: "#4e7a9e",
-                      cursor: "pointer", fontSize: ".72rem", fontFamily: "sans-serif",
+                    style={{ background: "none", border: "none", color: "#6b7a8a",
+                      cursor: "pointer", fontSize: ".72rem", fontFamily: "inherit",
                       padding: 0, marginBottom: isExpanded ? ".5rem" : ".35rem" }}>
                     {isExpanded ? "Hide steps ▴" : `Show steps ▾ (${dir.steps.length})`}
                   </button>
                   {isExpanded && (
                     <ol style={{ margin: "0 0 .4rem", padding: "0 0 0 1.25rem" }}>
                       {dir.steps.map((step, i) => (
-                        <li key={i} style={{ fontSize: ".75rem", color: "#8fb0cc",
-                          fontFamily: "sans-serif", lineHeight: 1.5, marginBottom: ".2rem" }}>
+                        <li key={i} style={{ fontSize: ".75rem", color: "#5c6470",
+                          fontFamily: "inherit", lineHeight: 1.5, marginBottom: ".2rem" }}>
                           {step.instruction}
                           {(step.distance || step.duration) && (
-                            <span style={{ color: "#4e7a9e", marginLeft: ".4rem" }}>
+                            <span style={{ color: "#6b7a8a", marginLeft: ".4rem" }}>
                               {[convertDistance(step.distance, distanceUnit), step.duration].filter(Boolean).join(" · ")}
                             </span>
                           )}
@@ -567,7 +567,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
                   style={{ marginTop: ".35rem", cursor: readOnly ? "default" : "pointer" }}>
                   {dir.notes
                     ? <NoteMarkdown>{dir.notes}</NoteMarkdown>
-                    : !readOnly && <span style={{ fontSize:".78rem", color:"#2e4a5e", fontFamily:"sans-serif", fontStyle:"italic" }}>Add notes…</span>}
+                    : !readOnly && <span style={{ fontSize:".78rem", color:"#2e4a5e", fontFamily:"inherit", fontStyle:"italic" }}>Add notes…</span>}
                 </div>
               )}
             </div>

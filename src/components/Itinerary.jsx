@@ -1182,8 +1182,8 @@ export default function Itinerary() {
   if (urlLoad?.status === "loading") {
     return (
       <div style={{ display:"flex", justifyContent:"center", alignItems:"center",
-        minHeight:"100vh", background:"#0b1929", color:"#6b8fa8",
-        fontFamily:"sans-serif", fontSize:".9rem" }}>
+        minHeight:"100vh", background:"#ffffff", color:"#5c6470",
+        fontFamily:"inherit", fontSize:".9rem" }}>
         Loading…
       </div>
     );
@@ -1193,11 +1193,11 @@ export default function Itinerary() {
     const name = urlLoad.file.replace(/^.*\//, "").replace(/\.json$/i, "");
     return (
       <div style={{ display:"flex", flexDirection:"column", justifyContent:"center",
-        alignItems:"center", minHeight:"100vh", background:"#0b1929",
-        fontFamily:"sans-serif", gap:"1rem", padding:"2rem" }}>
-        <div style={{ fontSize:".62rem", color:"#c9a84c", letterSpacing:".2em",
+        alignItems:"center", minHeight:"100vh", background:"#ffffff",
+        fontFamily:"inherit", gap:"1rem", padding:"2rem" }}>
+        <div style={{ fontSize:".62rem", color:"#0b3d6b", letterSpacing:".2em",
           textTransform:"uppercase" }}>Not Found</div>
-        <div style={{ fontSize:"1.1rem", color:"#8fb0cc", textAlign:"center" }}>
+        <div style={{ fontSize:"1.1rem", color:"#5c6470", textAlign:"center" }}>
           "{name}" doesn't exist.
         </div>
         <button onClick={() => {
@@ -1206,9 +1206,9 @@ export default function Itinerary() {
             history.replaceState(null, "", url);
             setUrlLoad(null);
           }}
-          style={{ background:"none", border:"1px solid #2e5070", color:"#4e7a9e",
+          style={{ background:"none", border:"1px solid #2e5070", color:"#6b7a8a",
             borderRadius:4, padding:".5rem 1.25rem", fontSize:".82rem",
-            fontFamily:"sans-serif", cursor:"pointer" }}>
+            fontFamily:"inherit", cursor:"pointer" }}>
           ← All Itineraries
         </button>
       </div>
@@ -1229,57 +1229,57 @@ export default function Itinerary() {
   }
 
   return (
-    <div style={{ fontFamily: "Georgia, 'Times New Roman', serif", background: "#0b1929", minHeight: "100vh", color: "#e8dcc8" }}>
+    <div style={{ fontFamily: "inherit", background: "#ffffff", minHeight: "100vh", color: "#0e1014" }}>
 
       {/* ── HEADER ── */}
-      <div style={{ background: "linear-gradient(135deg,#0b1929 0%,#112a44 50%,#0b1929 100%)", borderBottom: "1px solid #c9a84c33", padding: "2.5rem 2rem 2rem" }}>
+      <div style={{ background: "#ffffff", borderBottom: "1px solid #e2e5ea", padding: "1rem 2rem" }}>
         <div style={{ maxWidth: 820, margin: "0 auto" }}>
           {/* Subtitle row: back button + file name + sync status + settings gear */}
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:".5rem" }}>
             <div style={{ display:"flex", alignItems:"center", gap:".75rem" }}>
               <button onClick={handleCloseRequest}
-                style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
-                  fontSize:".7rem", fontFamily:"sans-serif", padding:0 }}>
+                style={{ background:"none", border:"none", color:"#6b7a8a", cursor:"pointer",
+                  fontSize:".7rem", fontFamily:"inherit", padding:0 }}>
                 ← All Itineraries
               </button>
-              <span style={{ color:"#2e4a5e", fontSize:".7rem", fontFamily:"sans-serif" }}>·</span>
-              <div style={{ fontSize:".7rem", color:"#c9a84c", fontFamily:"sans-serif",
+              <span style={{ color:"#9ba1ac", fontSize:".7rem", fontFamily:"inherit" }}>·</span>
+              <div style={{ fontSize:".7rem", color:"#0b3d6b", fontFamily:"inherit",
                 letterSpacing: dateRange ? ".03em" : ".15em",
                 textTransform: dateRange ? "none" : "uppercase" }}>
                 {dateRange
                   ? <>{dateRange} <span style={{ opacity:.6 }}>· {days.length} days</span></>
                   : <>{days.length} Days</>}
                 {currentFile === "__local__" &&
-                  <span style={{ color:"#e8a838", marginLeft:".5rem" }}>· Local only</span>}
+                  <span style={{ color:"#d97706", marginLeft:".5rem" }}>· Local only</span>}
               </div>
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:".75rem" }}>
               {syncStatus !== "idle" && (() => {
                 const map = {
-                  loading:  ["Loading…",        "#6b8fa8"],
-                  saving:   ["Saving…",          "#e8a838"],
-                  saved:    ["● Synced",         "#5cb85c"],
-                  synced:   ["● Synced",         "#5cb85c"],
-                  unsaved:  ["● Unsaved",        "#e8a838"],
-                  offline:  ["Offline",          "#4e7a9e"],
-                  error:    ["⚠ Error",          "#e87878"],
-                  conflict: ["⚠ Conflict",       "#e87878"],
+                  loading:  ["Loading…",        "#5c6470"],
+                  saving:   ["Saving…",          "#d97706"],
+                  saved:    ["● Synced",         "#16a34a"],
+                  synced:   ["● Synced",         "#16a34a"],
+                  unsaved:  ["● Unsaved",        "#d97706"],
+                  offline:  ["Offline",          "#6b7a8a"],
+                  error:    ["⚠ Error",          "#dc2626"],
+                  conflict: ["⚠ Conflict",       "#dc2626"],
                 };
-                const [label, color] = map[syncStatus] ?? ["", "#6b8fa8"];
+                const [label, color] = map[syncStatus] ?? ["", "#5c6470"];
                 const canCommit = ghSettings.githubToken && effectiveRepo && syncStatus !== "saving";
                 const showCommit = ["unsaved", "error", "conflict"].includes(syncStatus) && canCommit;
                 return (
                   <div style={{ display:"flex", alignItems:"center", gap:".4rem" }}>
-                    <span style={{ fontSize:".62rem", color, fontFamily:"sans-serif" }}
+                    <span style={{ fontSize:".62rem", color, fontFamily:"inherit" }}
                       title={syncError || undefined}>
                       {label}{syncError && syncStatus === "error" ? ` — ${syncError}` : ""}
                     </span>
                     {showCommit && (
                       <button onClick={() => setShowCommitForm(p => !p)}
-                        style={{ background: showCommitForm ? "#1a3352" : "none",
-                          border:"1px solid #2e5070", color:"#c9a84c",
+                        style={{ background: showCommitForm ? "#f0f4f8" : "none",
+                          border:"1px solid #2e5070", color:"#0b3d6b",
                           borderRadius:3, padding:".15rem .5rem", fontSize:".62rem",
-                          fontFamily:"sans-serif", cursor:"pointer", whiteSpace:"nowrap" }}>
+                          fontFamily:"inherit", cursor:"pointer", whiteSpace:"nowrap" }}>
                         Commit{showCommitForm ? " ▲" : "…"}
                       </button>
                     )}
@@ -1290,21 +1290,21 @@ export default function Itinerary() {
                 <div style={{ position: "relative" }}>
                   <button onClick={() => { setShowMenu(p => !p); setShowSettings(false); setShowHistory(false); setConfirmDelete(false); }}
                     title="More options"
-                    style={{ background:"none", border:"none", color: showMenu ? "#c9a84c" : "#6b8fa8",
+                    style={{ background:"none", border:"none", color: showMenu ? "#0b3d6b" : "#5c6470",
                       cursor:"pointer", fontSize:"1rem", padding:0, lineHeight:1, letterSpacing:".05em" }}>
                     ···
                   </button>
                   {showMenu && (
                     <div style={{ position:"absolute", right:0, top:"1.6rem", zIndex:100,
-                      background:"#0d2035", border:"1px solid #2e5070", borderRadius:6,
-                      minWidth:140, boxShadow:"0 4px 16px #00000066", overflow:"hidden" }}>
+                      background:"#ffffff", border:"1px solid #e2e5ea", borderRadius:6,
+                      minWidth:140, boxShadow:"0 4px 20px rgba(0,0,0,0.1)", overflow:"hidden" }}>
                       {!confirmDelete ? (
                         <>
                           {ghSettings.githubToken && (
                             <button onClick={() => { setShowHistory(p => !p); setShowMenu(false); }}
                               style={{ display:"block", width:"100%", textAlign:"left",
                                 background:"none", border:"none", borderBottom:"1px solid #1e3a5230",
-                                color: showHistory ? "#c9a84c" : "#c8daea", fontFamily:"sans-serif", fontSize:".82rem",
+                                color: showHistory ? "#0b3d6b" : "#0e1014", fontFamily:"inherit", fontSize:".82rem",
                                 padding:".65rem 1rem", cursor:"pointer" }}>
                               History
                             </button>
@@ -1312,7 +1312,7 @@ export default function Itinerary() {
                           <button onClick={handleDuplicate} disabled={menuWorking}
                             style={{ display:"block", width:"100%", textAlign:"left",
                               background:"none", border:"none", borderBottom:"1px solid #1e3a5230",
-                              color:"#c8daea", fontFamily:"sans-serif", fontSize:".82rem",
+                              color:"#0e1014", fontFamily:"inherit", fontSize:".82rem",
                               padding:".65rem 1rem", cursor:"pointer", opacity: menuWorking ? 0.5 : 1 }}>
                             {menuWorking ? "Duplicating…" : "Duplicate"}
                           </button>
@@ -1321,7 +1321,7 @@ export default function Itinerary() {
                               <button onClick={() => setMoveToDbId("pick")} disabled={menuWorking}
                                 style={{ display:"block", width:"100%", textAlign:"left",
                                   background:"none", border:"none",
-                                  color:"#c8daea", fontFamily:"sans-serif", fontSize:".82rem",
+                                  color:"#0e1014", fontFamily:"inherit", fontSize:".82rem",
                                   padding:".65rem 1rem", cursor:"pointer", opacity: menuWorking ? 0.5 : 1 }}>
                                 Move to…
                               </button>
@@ -1329,20 +1329,20 @@ export default function Itinerary() {
                           )}
                           {databases.length > 1 && moveToDbId === "pick" && (
                             <div style={{ padding:".5rem 1rem", borderBottom:"1px solid #1e3a5230" }}>
-                              <div style={{ fontSize:".72rem", color:"#6b8fa8", fontFamily:"sans-serif", marginBottom:".4rem" }}>Move to:</div>
+                              <div style={{ fontSize:".72rem", color:"#5c6470", fontFamily:"inherit", marginBottom:".4rem" }}>Move to:</div>
                               <div style={{ display:"flex", flexDirection:"column", gap:".25rem" }}>
                                 {databases.filter(d => d.id !== currentDbId).map(d => (
                                   <button key={d.id} onClick={() => handleMoveItinerary(d.id)} disabled={menuWorking}
-                                    style={{ background:"none", border:"1px solid #2e5070", color:"#c8daea",
+                                    style={{ background:"none", border:"1px solid #2e5070", color:"#0e1014",
                                       borderRadius:4, padding:".3rem .75rem", fontSize:".75rem",
-                                      fontFamily:"sans-serif", cursor:"pointer", textAlign:"left",
+                                      fontFamily:"inherit", cursor:"pointer", textAlign:"left",
                                       opacity: menuWorking ? 0.5 : 1 }}>
                                     {menuWorking ? "Moving…" : (d.label || d.githubRepo || "Database")}
                                   </button>
                                 ))}
                                 <button onClick={() => setMoveToDbId(null)} disabled={menuWorking}
-                                  style={{ background:"none", border:"none", color:"#3d5060",
-                                    fontFamily:"sans-serif", fontSize:".72rem", cursor:"pointer",
+                                  style={{ background:"none", border:"none", color:"#9ba1ac",
+                                    fontFamily:"inherit", fontSize:".72rem", cursor:"pointer",
                                     textAlign:"left", padding:".2rem 0" }}>
                                   Cancel
                                 </button>
@@ -1352,29 +1352,29 @@ export default function Itinerary() {
                           <button onClick={() => setConfirmDelete(true)} disabled={menuWorking}
                             style={{ display:"block", width:"100%", textAlign:"left",
                               background:"none", border:"none",
-                              color:"#e87878", fontFamily:"sans-serif", fontSize:".82rem",
+                              color:"#dc2626", fontFamily:"inherit", fontSize:".82rem",
                               padding:".65rem 1rem", cursor:"pointer", opacity: menuWorking ? 0.5 : 1 }}>
                             Delete
                           </button>
                         </>
                       ) : (
                         <div style={{ padding:".65rem 1rem" }}>
-                          <div style={{ fontSize:".75rem", color:"#e8a838", fontFamily:"sans-serif",
+                          <div style={{ fontSize:".75rem", color:"#d97706", fontFamily:"inherit",
                             marginBottom:".5rem" }}>
                             Delete this itinerary?
                           </div>
                           <div style={{ display:"flex", gap:".4rem" }}>
                             <button onClick={handleDeleteItinerary} disabled={menuWorking}
-                              style={{ background:"#3a0a0a", border:"1px solid #dc354566",
-                                color:"#e87878", borderRadius:4, padding:".3rem .6rem",
-                                fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer",
+                              style={{ background:"#fef2f2", border:"1px solid #dc354566",
+                                color:"#dc2626", borderRadius:4, padding:".3rem .6rem",
+                                fontSize:".72rem", fontFamily:"inherit", cursor:"pointer",
                                 opacity: menuWorking ? 0.5 : 1 }}>
                               {menuWorking ? "Deleting…" : "Yes, delete"}
                             </button>
                             <button onClick={() => setConfirmDelete(false)} disabled={menuWorking}
                               style={{ background:"none", border:"1px solid #2e3a4a",
-                                color:"#4e7a9e", borderRadius:4, padding:".3rem .6rem",
-                                fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                                color:"#6b7a8a", borderRadius:4, padding:".3rem .6rem",
+                                fontSize:".72rem", fontFamily:"inherit", cursor:"pointer" }}>
                               Cancel
                             </button>
                           </div>
@@ -1388,13 +1388,13 @@ export default function Itinerary() {
                 <button
                   onClick={() => navigator.share({ title, url: window.location.href })}
                   title="Share itinerary"
-                  style={{ background:"none", border:"none", color:"#6b8fa8",
+                  style={{ background:"none", border:"none", color:"#5c6470",
                     cursor:"pointer", fontSize:".95rem", padding:0, lineHeight:1 }}>
                   ⬆
                 </button>
               )}
               <button onClick={() => { setShowSettings(p => !p); setShowHistory(false); setShowMenu(false); }} title="Settings"
-                style={{ background:"none", border:"none", color: showSettings ? "#c9a84c" : "#6b8fa8",
+                style={{ background:"none", border:"none", color: showSettings ? "#0b3d6b" : "#5c6470",
                   cursor:"pointer", fontSize:"1rem", padding:0, lineHeight:1 }}>
                 ⚙
               </button>
@@ -1423,10 +1423,10 @@ export default function Itinerary() {
 
           {/* Commit form */}
           {showCommitForm && (
-            <div style={{ margin: ".75rem 0 1rem", padding: ".75rem 1rem", background: "#0a1a2a",
+            <div style={{ margin: ".75rem 0 1rem", padding: ".75rem 1rem", background: "#f0f4f8",
               border: "1px solid #2e5070", borderRadius: 6 }}>
-              <div style={{ fontSize: ".62rem", color: "#c9a84c", letterSpacing: ".1em",
-                textTransform: "uppercase", fontFamily: "sans-serif", marginBottom: ".6rem" }}>
+              <div style={{ fontSize: ".62rem", color: "#0b3d6b", letterSpacing: ".1em",
+                textTransform: "uppercase", fontFamily: "inherit", marginBottom: ".6rem" }}>
                 Commit to GitHub
               </div>
               <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
@@ -1439,60 +1439,60 @@ export default function Itinerary() {
                     if (e.key === "Escape") { setShowCommitForm(false); setCommitDraft(""); }
                   }}
                   placeholder="Commit message (optional)"
-                  style={{ flex: 1, minWidth: 180, background: "#0d1f33", border: "1px solid #2e5070",
-                    color: "#e8dcc8", borderRadius: 4, padding: ".35rem .65rem",
-                    fontSize: ".82rem", fontFamily: "sans-serif", outline: "none" }}
+                  style={{ flex: 1, minWidth: 180, background: "#ffffff", border: "1px solid #e2e5ea",
+                    color: "#0e1014", borderRadius: 4, padding: ".35rem .65rem",
+                    fontSize: ".82rem", fontFamily: "inherit", outline: "none" }}
                 />
                 <button onClick={() => handleCommit(commitDraft)}
                   disabled={syncStatus === "saving"}
-                  style={{ background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
+                  style={{ background: "#f0f4f8", border: "1px solid #2e5070", color: "#0b3d6b",
                     borderRadius: 4, padding: ".35rem .85rem", fontSize: ".75rem",
-                    fontFamily: "sans-serif", cursor: "pointer", whiteSpace: "nowrap",
+                    fontFamily: "inherit", cursor: "pointer", whiteSpace: "nowrap",
                     opacity: syncStatus === "saving" ? 0.5 : 1 }}>
                   {syncStatus === "saving" ? "Committing…" : "Commit"}
                 </button>
                 <button onClick={() => { setShowCommitForm(false); setCommitDraft(""); }}
-                  style={{ background: "none", border: "1px solid #2e3a4a", color: "#4e7a9e",
+                  style={{ background: "none", border: "1px solid #2e3a4a", color: "#6b7a8a",
                     borderRadius: 4, padding: ".35rem .85rem", fontSize: ".75rem",
-                    fontFamily: "sans-serif", cursor: "pointer" }}>
+                    fontFamily: "inherit", cursor: "pointer" }}>
                   Cancel
                 </button>
               </div>
               {syncError && (
-                <div style={{ marginTop: ".5rem", fontSize: ".72rem", color: "#e87878",
-                  fontFamily: "sans-serif" }}>{syncError}</div>
+                <div style={{ marginTop: ".5rem", fontSize: ".72rem", color: "#dc2626",
+                  fontFamily: "inherit" }}>{syncError}</div>
               )}
             </div>
           )}
 
           {/* Navigation warning */}
           {showCloseWarn && (
-            <div style={{ position: "fixed", inset: 0, background: "#00000088", zIndex: 2000,
+            <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 2000,
               display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
-              <div style={{ background: "#0d2035", border: "1px solid #2e5070", borderRadius: 8,
-                padding: "1.5rem", maxWidth: 360, width: "100%", fontFamily: "sans-serif" }}>
-                <div style={{ fontSize: ".88rem", color: "#e8dcc8", marginBottom: ".75rem",
+              <div style={{ background: "#ffffff", border: "1px solid #e2e5ea", borderRadius: 8,
+                padding: "1.5rem", maxWidth: 360, width: "100%", fontFamily: "inherit" }}>
+                <div style={{ fontSize: ".88rem", color: "#0e1014", marginBottom: ".75rem",
                   fontWeight: 500 }}>
                   Uncommitted changes
                 </div>
-                <div style={{ fontSize: ".78rem", color: "#8fb0cc", marginBottom: "1.25rem",
+                <div style={{ fontSize: ".78rem", color: "#5c6470", marginBottom: "1.25rem",
                   lineHeight: 1.5 }}>
                   You have local changes that haven't been committed to GitHub. They're saved in
                   your browser but will be lost if you clear your data.
                 </div>
                 <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
                   <button onClick={() => { setShowCloseWarn(false); setShowCommitForm(true); }}
-                    style={{ background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
+                    style={{ background: "#f0f4f8", border: "1px solid #2e5070", color: "#0b3d6b",
                       borderRadius: 4, padding: ".4rem .9rem", fontSize: ".78rem", cursor: "pointer" }}>
                     Commit now
                   </button>
                   <button onClick={() => { setShowCloseWarn(false); handleClose(); }}
-                    style={{ background: "none", border: "1px solid #2e3a4a", color: "#4e7a9e",
+                    style={{ background: "none", border: "1px solid #2e3a4a", color: "#6b7a8a",
                       borderRadius: 4, padding: ".4rem .9rem", fontSize: ".78rem", cursor: "pointer" }}>
                     Leave anyway
                   </button>
                   <button onClick={() => setShowCloseWarn(false)}
-                    style={{ background: "none", border: "none", color: "#3d5060",
+                    style={{ background: "none", border: "none", color: "#9ba1ac",
                       fontSize: ".78rem", cursor: "pointer", padding: ".4rem .5rem" }}>
                     Cancel
                   </button>
@@ -1504,9 +1504,9 @@ export default function Itinerary() {
           {/* Save-to-GitHub banner (local session only) */}
           {currentFile === "__local__" && (
             <div style={{ margin: ".75rem 0 1rem", padding: ".75rem 1rem",
-              background: "#1a1800", border: "1px solid #e8a83844", borderRadius: 6,
+              background: "#fffbeb", border: "1px solid #e8a83844", borderRadius: 6,
               display: "flex", alignItems: "center", gap: ".75rem", flexWrap: "wrap" }}>
-              <span style={{ fontSize: ".78rem", color: "#e8a838", fontFamily: "sans-serif",
+              <span style={{ fontSize: ".78rem", color: "#d97706", fontFamily: "inherit",
                 flexShrink: 0 }}>
                 Not saved to GitHub yet.
               </span>
@@ -1515,16 +1515,16 @@ export default function Itinerary() {
                 onChange={e => setSaveAsName(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && handleSaveAs()}
                 placeholder="Itinerary name…"
-                style={{ flex: 1, minWidth: 160, background: "#0d1f33", border: "1px solid #2e5070",
-                  color: "#e8dcc8", borderRadius: 4, padding: ".35rem .65rem",
-                  fontSize: ".82rem", fontFamily: "sans-serif", outline: "none" }}
+                style={{ flex: 1, minWidth: 160, background: "#ffffff", border: "1px solid #e2e5ea",
+                  color: "#0e1014", borderRadius: 4, padding: ".35rem .65rem",
+                  fontSize: ".82rem", fontFamily: "inherit", outline: "none" }}
               />
               <button onClick={handleSaveAs}
                 disabled={!ghSettings.githubToken || !effectiveRepo}
                 title={(!ghSettings.githubToken || !effectiveRepo) ? "Configure GitHub in Settings ⚙ first" : ""}
-                style={{ background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
+                style={{ background: "#f0f4f8", border: "1px solid #2e5070", color: "#0b3d6b",
                   borderRadius: 4, padding: ".35rem .85rem", fontSize: ".75rem",
-                  fontFamily: "sans-serif", cursor: "pointer", whiteSpace: "nowrap",
+                  fontFamily: "inherit", cursor: "pointer", whiteSpace: "nowrap",
                   opacity: (!ghSettings.githubToken || !effectiveRepo) ? 0.45 : 1 }}>
                 Save to GitHub
               </button>
@@ -1543,9 +1543,9 @@ export default function Itinerary() {
                     setEditingHeader(false);
                   }
                 }}
-                style={{ width:"100%", background:"#112a44", border:"1px solid #2e5070", color:"#f5edd8",
+                style={{ width:"100%", background:"#f0f4f8", border:"1px solid #2e5070", color:"#0e1014",
                   borderRadius:4, padding:".45rem .75rem", fontSize:"clamp(1.2rem,3vw,1.8rem)",
-                  fontFamily:"Georgia,serif", fontWeight:400, letterSpacing:"-.02em",
+                  fontFamily:"inherit", fontWeight:400, letterSpacing:"-.02em",
                   outline:"none", boxSizing:"border-box", marginBottom:".5rem" }} />
               <input value={headerDraft.subtitle}
                 onChange={e => setHeaderDraft(p => ({ ...p, subtitle: e.target.value }))}
@@ -1558,19 +1558,19 @@ export default function Itinerary() {
                   }
                 }}
                 placeholder="Subtitle / tagline (optional)"
-                style={{ width:"100%", background:"#112a44", border:"1px solid #2e5070", color:"#9ab8d4",
+                style={{ width:"100%", background:"#f0f4f8", border:"1px solid #2e5070", color:"#9ba1ac",
                   borderRadius:4, padding:".4rem .75rem", fontSize:".9rem",
-                  fontFamily:"Georgia,serif", fontStyle:"italic",
+                  fontFamily:"inherit", fontStyle:"italic",
                   outline:"none", boxSizing:"border-box", marginBottom:".6rem" }} />
               <div style={{ display:"flex", gap:".5rem" }}>
                 <button onClick={() => { setTitle(headerDraft.title.trim() || title); setSubtitle(headerDraft.subtitle); setEditingHeader(false); }}
-                  style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
-                    borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                  style={{ background:"#f0f4f8", border:"1px solid #2e5070", color:"#0b3d6b",
+                    borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"inherit", cursor:"pointer" }}>
                   Save
                 </button>
                 <button onClick={() => setEditingHeader(false)}
-                  style={{ background:"none", border:"1px solid #2e3a4a", color:"#4e7a9e",
-                    borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                  style={{ background:"none", border:"1px solid #2e3a4a", color:"#6b7a8a",
+                    borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"inherit", cursor:"pointer" }}>
                   Cancel
                 </button>
               </div>
@@ -1578,20 +1578,20 @@ export default function Itinerary() {
           ) : (
             <>
               <div style={{ display:"flex", alignItems:"flex-start", gap:".5rem", marginBottom:".4rem" }}>
-                <h1 style={{ fontSize:"clamp(1.6rem,4vw,2.4rem)", fontWeight:400, color:"#f5edd8",
+                <h1 style={{ fontSize:"clamp(1.6rem,4vw,2.4rem)", fontWeight:400, color:"#0e1014",
                   margin:0, letterSpacing:"-.02em", lineHeight:1.15, flex:1 }}>
                   {title}
                 </h1>
                 {!readOnly && (
                   <button onClick={() => { setEditingHeader(true); setHeaderDraft({ title, subtitle }); }}
-                    style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
-                      fontSize:".7rem", fontFamily:"sans-serif", padding:0, flexShrink:0, marginTop:".35rem" }}>
+                    style={{ background:"none", border:"none", color:"#6b7a8a", cursor:"pointer",
+                      fontSize:".7rem", fontFamily:"inherit", padding:0, flexShrink:0, marginTop:".35rem" }}>
                     Edit
                   </button>
                 )}
               </div>
               {subtitle && (
-                <p style={{ color:"#9ab8d4", margin:"0 0 1.5rem", fontSize:".95rem", fontStyle:"italic" }}>
+                <p style={{ color:"#9ba1ac", margin:"0 0 1.5rem", fontSize:".95rem", fontStyle:"italic" }}>
                   {subtitle}
                 </p>
               )}
@@ -1611,34 +1611,34 @@ export default function Itinerary() {
               { label: "Fuel Stops",     val: String(days.filter(d => d.fuelStop).length) },
             ].filter(Boolean).map(s => (
               <div key={s.label}>
-                <div style={{ fontSize: "1.3rem", color: "#c9a84c" }}>{s.val}</div>
-                <div style={{ fontSize: ".7rem", color: "#6b8fa8", letterSpacing: ".1em", textTransform: "uppercase" }}>{s.label}</div>
+                <div style={{ fontSize: "1.3rem", color: "#0b3d6b" }}>{s.val}</div>
+                <div style={{ fontSize: ".7rem", color: "#5c6470", letterSpacing: ".1em", textTransform: "uppercase" }}>{s.label}</div>
               </div>
             ))}
           </div>
 
           {/* Departure date */}
-          <div style={{ display:"flex", alignItems:"center", gap:".65rem", marginBottom:"1.25rem", fontFamily:"sans-serif" }}>
-            <span style={{ fontSize:".7rem", color:"#6b8fa8", letterSpacing:".1em", textTransform:"uppercase" }}>Departure</span>
+          <div style={{ display:"flex", alignItems:"center", gap:".65rem", marginBottom:"1.25rem", fontFamily:"inherit" }}>
+            <span style={{ fontSize:".7rem", color:"#5c6470", letterSpacing:".1em", textTransform:"uppercase" }}>Departure</span>
             <input
               type="date"
               value={startDate}
               onChange={e => setStartDate(e.target.value)}
-              style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
-                padding:"3px 8px", borderRadius:4, fontSize:".78rem", fontFamily:"sans-serif", cursor:"pointer" }}
+              style={{ background:"#f0f4f8", border:"1px solid #2e5070", color:"#0b3d6b",
+                padding:"3px 8px", borderRadius:4, fontSize:".78rem", fontFamily:"inherit", cursor:"pointer" }}
             />
             {startDate && (
               <>
                 <button onClick={() => setStartDate("")}
-                  style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
-                    fontSize:".7rem", fontFamily:"sans-serif", padding:0 }}>
+                  style={{ background:"none", border:"none", color:"#6b7a8a", cursor:"pointer",
+                    fontSize:".7rem", fontFamily:"inherit", padding:0 }}>
                   clear
                 </button>
                 {days.length > 0 && (
                   <>
                     <button onClick={generateICS}
-                      style={{ background:"none", border:"1px solid #2e5070", color:"#6b8fa8",
-                        cursor:"pointer", fontSize:".7rem", fontFamily:"sans-serif",
+                      style={{ background:"none", border:"1px solid #2e5070", color:"#5c6470",
+                        cursor:"pointer", fontSize:".7rem", fontFamily:"inherit",
                         padding:"2px 8px", borderRadius:4 }}>
                       Export .ics
                     </button>
@@ -1651,8 +1651,8 @@ export default function Itinerary() {
                           setTimeout(() => setCopiedICS(false), 2000);
                         }}
                         title="Copy subscription URL — paste into Apple Calendar or Google Calendar"
-                        style={{ background:"none", border:"1px solid #2e5070", color: copiedICS ? "#5cb85c" : "#6b8fa8",
-                          cursor:"pointer", fontSize:".7rem", fontFamily:"sans-serif",
+                        style={{ background:"none", border:"1px solid #2e5070", color: copiedICS ? "#16a34a" : "#5c6470",
+                          cursor:"pointer", fontSize:".7rem", fontFamily:"inherit",
                           padding:"2px 8px", borderRadius:4 }}>
                         {copiedICS ? "Copied!" : "Subscribe URL"}
                       </button>
@@ -1674,14 +1674,14 @@ export default function Itinerary() {
                   onKeyDown={e => { if (e.key === "Escape") setEditingNotes(false); }}
                   placeholder="Notes about this trip — crew, budget, packing list, pre-departure checklist…"
                   rows={4}
-                  style={{ width:"100%", background:"#112a44", border:"1px solid #2e5070", color:"#e8dcc8",
-                    borderRadius:4, padding:".5rem .75rem", fontSize:".82rem", fontFamily:"sans-serif",
+                  style={{ width:"100%", background:"#f0f4f8", border:"1px solid #2e5070", color:"#0e1014",
+                    borderRadius:4, padding:".5rem .75rem", fontSize:".82rem", fontFamily:"inherit",
                     lineHeight:1.6, resize:"vertical", boxSizing:"border-box", outline:"none",
                     marginBottom:".5rem" }}
                 />
                 <button onClick={() => setEditingNotes(false)}
-                  style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
-                    borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"sans-serif",
+                  style={{ background:"#f0f4f8", border:"1px solid #2e5070", color:"#0b3d6b",
+                    borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"inherit",
                     cursor:"pointer" }}>
                   Done
                 </button>
@@ -1693,16 +1693,16 @@ export default function Itinerary() {
                 </div>
                 {!readOnly && (
                   <button onClick={() => setEditingNotes(true)}
-                    style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
-                      fontSize:".7rem", fontFamily:"sans-serif", padding:0, flexShrink:0 }}>
+                    style={{ background:"none", border:"none", color:"#6b7a8a", cursor:"pointer",
+                      fontSize:".7rem", fontFamily:"inherit", padding:0, flexShrink:0 }}>
                     Edit
                   </button>
                 )}
               </div>
             ) : !readOnly ? (
               <button onClick={() => setEditingNotes(true)}
-                style={{ background:"none", border:"none", color:"#3d5060", cursor:"pointer",
-                  fontSize:".75rem", fontFamily:"sans-serif", fontStyle:"italic", padding:0 }}>
+                style={{ background:"none", border:"none", color:"#9ba1ac", cursor:"pointer",
+                  fontSize:".75rem", fontFamily:"inherit", fontStyle:"italic", padding:0 }}>
                 + Add itinerary notes
               </button>
             ) : null}
@@ -1711,20 +1711,20 @@ export default function Itinerary() {
           {/* TODOs */}
           {todos.length > 0 && (
             <div style={{ marginBottom:"1.25rem", padding:".65rem .85rem",
-              background:"#1a1400", border:"1px solid #e8a83844", borderRadius:5 }}>
-              <div style={{ fontSize:".62rem", color:"#e8a838", letterSpacing:".12em",
-                textTransform:"uppercase", fontFamily:"sans-serif", marginBottom:".5rem" }}>
+              background:"#fffbeb", border:"1px solid #e8a83844", borderRadius:5 }}>
+              <div style={{ fontSize:".62rem", color:"#d97706", letterSpacing:".12em",
+                textTransform:"uppercase", fontFamily:"inherit", marginBottom:".5rem" }}>
                 {todos.length} TODO{todos.length !== 1 ? "s" : ""}
               </div>
               <ul style={{ margin:0, paddingLeft:"1.1rem" }}>
                 {todos.map((t, i) => (
                   <li key={i}
                     onClick={t.day != null ? () => { setOpenDay(t.day); setActiveTab("itinerary"); } : undefined}
-                    style={{ fontSize:".78rem", color:"#e8dcc8", fontFamily:"sans-serif",
+                    style={{ fontSize:".78rem", color:"#0e1014", fontFamily:"inherit",
                       lineHeight:1.5, cursor: t.day != null ? "pointer" : "default",
                       marginBottom: i < todos.length - 1 ? ".15rem" : 0 }}>
                     {t.day != null && (
-                      <span style={{ fontSize:".65rem", color:"#e8a838", marginRight:".4rem", opacity:.8 }}>
+                      <span style={{ fontSize:".65rem", color:"#d97706", marginRight:".4rem", opacity:.8 }}>
                         Day {t.day}
                       </span>
                     )}
@@ -1741,8 +1741,8 @@ export default function Itinerary() {
               const lay  = effNm(d) === 0;
               const fuel = d.fuelStop;
               const tide = d.tideWarning;
-              const bg   = tide ? "#5c1a1a" : fuel ? "#5c3010" : lay ? "#1a3d1a" : "#1e3a52";
-              const col  = tide ? "#e87878" : fuel ? "#e8a838" : lay ? "#5cb85c" : "#6b8fa8";
+              const bg   = tide ? "#fee2e2" : fuel ? "#fff7ed" : lay ? "#dcfce7" : "#e2e5ea";
+              const col  = tide ? "#dc2626" : fuel ? "#d97706" : lay ? "#16a34a" : "#5c6470";
               const info = getDayDate(d.day);
               return (
                 <div key={d.day}
@@ -1750,9 +1750,9 @@ export default function Itinerary() {
                   title={info ? `${d.leg} · ${info.dow}, ${info.date}` : d.leg}
                   style={{ width:32, minHeight:32, borderRadius:4, background:bg,
                     display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
-                    fontSize:".6rem", color:col, cursor:"pointer", fontFamily:"sans-serif",
+                    fontSize:".6rem", color:col, cursor:"pointer", fontFamily:"inherit",
                     padding: info ? "4px 0" : 0, gap:1,
-                    border: openDay === d.day ? "1px solid #c9a84c" : "1px solid transparent" }}>
+                    border: openDay === d.day ? "2px solid #0b3d6b" : "1px solid transparent" }}>
                   <span>D{d.day}</span>
                   {info && <span style={{ fontSize:".5rem", opacity:.9, lineHeight:1 }}>{info.dow}</span>}
                   {info && <span style={{ fontSize:".5rem", opacity:.7, lineHeight:1 }}>{info.date}</span>}
@@ -1760,10 +1760,10 @@ export default function Itinerary() {
               );
             })}
             <div style={{ display:"flex", gap:10, marginLeft:8, flexWrap:"wrap", alignItems:"center" }}>
-              {[["#1e3a52","#6b8fa8","Underway"],["#1a3d1a","#5cb85c","Layover"],["#5c3010","#e8a838","⛽ Fuel"],["#5c1a1a","#e87878","⚠ Tides"]].map(([bg,col,lbl])=>(
+              {[["#e2e5ea","#5c6470","Underway"],["#dcfce7","#16a34a","Layover"],["#fff7ed","#d97706","⛽ Fuel"],["#fee2e2","#dc2626","⚠ Tides"]].map(([bg,col,lbl])=>(
                 <div key={lbl} style={{ display:"flex", alignItems:"center", gap:4 }}>
                   <div style={{ width:10, height:10, borderRadius:2, background:bg, border:`1px solid ${col}` }}/>
-                  <span style={{ fontSize:".62rem", color:col, fontFamily:"sans-serif" }}>{lbl}</span>
+                  <span style={{ fontSize:".62rem", color:col, fontFamily:"inherit" }}>{lbl}</span>
                 </div>
               ))}
             </div>
@@ -1773,30 +1773,30 @@ export default function Itinerary() {
 
       {/* ── CONFLICT BANNER ── */}
       {syncStatus === "conflict" && (
-        <div style={{ background:"#3a0a0a", borderBottom:"1px solid #dc354566", padding:".6rem 1rem",
+        <div style={{ background:"#fef2f2", borderBottom:"1px solid #dc354566", padding:".6rem 1rem",
           display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-          <span style={{ fontSize:".78rem", color:"#e87878", fontFamily:"sans-serif" }}>
+          <span style={{ fontSize:".78rem", color:"#dc2626", fontFamily:"inherit" }}>
             ⚠ Conflict — GitHub has a newer version.
           </span>
           <button onClick={reloadFromGitHub}
-            style={{ background:"none", border:"1px solid #dc354566", color:"#e87878",
+            style={{ background:"none", border:"1px solid #dc354566", color:"#dc2626",
               borderRadius:4, padding:".25rem .65rem", fontSize:".72rem",
-              fontFamily:"sans-serif", cursor:"pointer" }}>
+              fontFamily:"inherit", cursor:"pointer" }}>
             Reload from GitHub
           </button>
         </div>
       )}
 
       {/* ── TABS ── */}
-      <div style={{ borderBottom:"1px solid #1e3a5240", background:"#0d1f33" }}>
+      <div style={{ borderBottom:"1px solid #e2e5ea", background:"#ffffff" }}>
         <div style={{ maxWidth:820, margin:"0 auto", display:"flex" }}>
           {[["itinerary","Day by Day"],["fuel","Fuel Plan"],["tides","Tide Warnings"]].map(([t,lbl])=>(
             <button key={t} onClick={()=>setActiveTab(t)} style={{
               background:"none", border:"none",
-              borderBottom: activeTab===t ? "2px solid #c9a84c" : "2px solid transparent",
-              color: activeTab===t ? "#c9a84c" : "#6b8fa8",
+              borderBottom: activeTab===t ? "2px solid #0b3d6b" : "2px solid transparent",
+              color: activeTab===t ? "#0b3d6b" : "#5c6470",
               padding:".85rem 1.5rem", fontSize:".78rem", letterSpacing:".12em",
-              textTransform:"uppercase", cursor:"pointer" }}>
+              textTransform:"uppercase", cursor:"pointer", fontFamily:"inherit" }}>
               {lbl}
             </button>
           ))}
@@ -1807,7 +1807,7 @@ export default function Itinerary() {
 
         {/* ── ITINERARY TAB ── */}
         {activeTab === "itinerary" && days.length === 0 && (
-          <div style={{ padding: "2rem 1rem", fontFamily: "sans-serif" }}>
+          <div style={{ padding: "2rem 1rem", fontFamily: "inherit" }}>
             {settings.anthropicKey ? (
               <ClaudePrompt
                 mode="full"
@@ -1816,16 +1816,16 @@ export default function Itinerary() {
                 model={settings.claudeModel ?? "claude-sonnet-4-6"}
               />
             ) : (
-              <div style={{ textAlign: "center", color: "#4e7a9e", marginBottom: "1.25rem",
+              <div style={{ textAlign: "center", color: "#6b7a8a", marginBottom: "1.25rem",
                 fontSize: ".9rem" }}>
                 No itinerary yet.
               </div>
             )}
             <div style={{ textAlign: "center", marginTop: "1.25rem" }}>
               <button onClick={() => { setDays(initialDays); setOpenDay(1); }}
-                style={{ background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
+                style={{ background: "#f0f4f8", border: "1px solid #2e5070", color: "#0b3d6b",
                   borderRadius: 6, padding: ".55rem 1.5rem", fontSize: ".82rem",
-                  fontFamily: "sans-serif", cursor: "pointer" }}>
+                  fontFamily: "inherit", cursor: "pointer" }}>
                 Load sample itinerary
               </button>
             </div>
@@ -1839,8 +1839,8 @@ export default function Itinerary() {
           return (
             <div key={d.day} style={{
               marginBottom:".5rem",
-              border: isOpen ? "1px solid #c9a84c55" : "1px solid #1e3a5260",
-              borderRadius:6, background: isOpen ? "#0d2035" : "#0b1929", overflow:"hidden" }}>
+              border: isOpen ? "1px solid #0b3d6b33" : "1px solid #e2e5ea",
+              borderRadius:8, background: isOpen ? "#f8f9fb" : "#ffffff", overflow:"hidden" }}>
 
               {/* Row */}
               <button onClick={()=>setOpenDay(isOpen ? null : d.day)} style={{
@@ -1849,8 +1849,8 @@ export default function Itinerary() {
                 <div style={{
                   minWidth:38, height: dayInfo ? 56 : 38,
                   borderRadius: dayInfo ? 7 : "50%",
-                  background: isOpen ? "#c9a84c" : "#1a3352",
-                  color: isOpen ? "#0b1929" : "#c9a84c",
+                  background: isOpen ? "#0b3d6b" : "#f0f4f8",
+                  color: isOpen ? "#ffffff" : "#0b3d6b",
                   display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
                   fontSize:".75rem", fontWeight:700, flexShrink:0, gap:1 }}>
                   <span>{d.day}</span>
@@ -1858,13 +1858,13 @@ export default function Itinerary() {
                   {dayInfo && <span style={{ fontSize:".58rem", fontWeight:400, opacity: isOpen ? .65 : .55, lineHeight:1 }}>{dayInfo.date}</span>}
                 </div>
                 <div style={{ flex:1 }}>
-                  <div style={{ color: isOpen ? "#f5edd8" : "#c8daea", fontSize:".95rem", lineHeight:1.3 }}>
+                  <div style={{ color: isOpen ? "#0e1014" : "#0e1014", fontSize:".95rem", lineHeight:1.3 }}>
                     {d.leg}
-                    {d.fuelStop    && <span style={{ marginLeft:8,  background:"#e8553822", color:"#e87758", fontSize:".63rem", padding:"2px 7px", borderRadius:10, fontFamily:"sans-serif", verticalAlign:"middle" }}>⛽ {d.fuelLabel}</span>}
-                    {d.tideWarning && <span style={{ marginLeft:6,  background:"#dc354522", color:"#f87878", fontSize:".63rem", padding:"2px 7px", borderRadius:10, fontFamily:"sans-serif", verticalAlign:"middle" }}>⚠ Tide Critical</span>}
-                    {d.tags.includes("combined-leg") && <span style={{ marginLeft:6, background:"#20c99722", color:"#20c997", fontSize:".63rem", padding:"2px 7px", borderRadius:10, fontFamily:"sans-serif", verticalAlign:"middle" }}>Combined</span>}
+                    {d.fuelStop    && <span style={{ marginLeft:8,  background:"#fff7ed", color:"#d97706", fontSize:".63rem", padding:"2px 7px", borderRadius:10, fontFamily:"inherit", verticalAlign:"middle" }}>⛽ {d.fuelLabel}</span>}
+                    {d.tideWarning && <span style={{ marginLeft:6,  background:"#fee2e2", color:"#dc2626", fontSize:".63rem", padding:"2px 7px", borderRadius:10, fontFamily:"inherit", verticalAlign:"middle" }}>⚠ Tide Critical</span>}
+                    {d.tags.includes("combined-leg") && <span style={{ marginLeft:6, background:"#e8f1f9", color:"#0b3d6b", fontSize:".63rem", padding:"2px 7px", borderRadius:10, fontFamily:"inherit", verticalAlign:"middle" }}>Combined</span>}
                   </div>
-                  <div style={{ color:"#4e7a9e", fontSize:".75rem", marginTop:2, fontFamily:"sans-serif" }}>
+                  <div style={{ color:"#6b7a8a", fontSize:".75rem", marginTop:2, fontFamily:"inherit" }}>
                     {(() => {
                       const parts = [];
                       if (!isLayover) { const nm=effNm(d), hrs=effHrs(d); parts.push(`${nm} NM · ~${(() => { const h=Math.floor(hrs), m=Math.round((hrs-h)*60); return h===0?`${m}m`:m===0?`${h}h`:`${h}h ${m}m`; })()} `); }
@@ -1885,20 +1885,20 @@ export default function Itinerary() {
                       return parts.join(" · ") || "Layover";
                     })()}
                     {" · "}
-                    <span style={{ fontStyle:"italic", color:"#3d6680" }}>{d.overnight}</span>
+                    <span style={{ fontStyle:"italic", color:"#5c6470" }}>{d.overnight}</span>
                   </div>
                   {(() => {
                     const cities = getDayCities(d.day);
                     if (!cities.length) return null;
                     return (
-                      <div style={{ fontSize:".7rem", color:"#3d6680", fontFamily:"sans-serif",
+                      <div style={{ fontSize:".7rem", color:"#5c6470", fontFamily:"inherit",
                         marginTop:2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
                         {cities.join(" · ")}
                       </div>
                     );
                   })()}
                 </div>
-                <div style={{ color:"#4e7a9e", transform: isOpen ? "rotate(180deg)" : "none" }}>▾</div>
+                <div style={{ color:"#6b7a8a", transform: isOpen ? "rotate(180deg)" : "none" }}>▾</div>
               </button>
 
               {/* Expanded */}
@@ -1910,32 +1910,32 @@ export default function Itinerary() {
                       const c = tagConfig[t];
                       return <span key={t} style={{ fontSize:".63rem", padding:"3px 9px", borderRadius:12,
                         background:c.color+"22", color:c.color, border:`1px solid ${c.color}44`,
-                        letterSpacing:".07em", fontFamily:"sans-serif", textTransform:"uppercase" }}>{c.label}</span>;
+                        letterSpacing:".07em", fontFamily:"inherit", textTransform:"uppercase" }}>{c.label}</span>;
                     })}
                   </div>
                   {/* Core fields edit */}
                   {editingCoreDay === d.day ? (
-                    <div style={{ marginBottom:"1rem", padding:".75rem 1rem", background:"#0a1a2a",
+                    <div style={{ marginBottom:"1rem", padding:".75rem 1rem", background:"#f0f4f8",
                       borderLeft:"3px solid #6b8fa866", borderRadius:"0 4px 4px 0" }}>
-                      <div style={{ fontSize:".62rem", color:"#6b8fa8", letterSpacing:".1em",
-                        textTransform:"uppercase", fontFamily:"sans-serif", marginBottom:".65rem" }}>
+                      <div style={{ fontSize:".62rem", color:"#5c6470", letterSpacing:".1em",
+                        textTransform:"uppercase", fontFamily:"inherit", marginBottom:".65rem" }}>
                         Edit Day
                       </div>
                       <input autoFocus value={coreDraft.leg}
                         onChange={e => setCoreDraft(p => ({ ...p, leg: e.target.value }))}
                         onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if ((e.metaKey||e.ctrlKey) && e.key === "Enter") saveCore(d.day); }}
-                        style={{ width:"100%", background:"#0d1f33", border:"1px solid #2e5070", color:"#e8dcc8",
-                          borderRadius:4, padding:".4rem .65rem", fontSize:".85rem", fontFamily:"Georgia,serif",
+                        style={{ width:"100%", background:"#ffffff", border:"1px solid #e2e5ea", color:"#0e1014",
+                          borderRadius:4, padding:".4rem .65rem", fontSize:".85rem", fontFamily:"inherit",
                           outline:"none", boxSizing:"border-box", marginBottom:".65rem" }} />
                       <div style={{ display:"flex", gap:".5rem", marginTop:".65rem" }}>
                         <button onClick={() => saveCore(d.day)}
-                          style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
-                            borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                          style={{ background:"#f0f4f8", border:"1px solid #2e5070", color:"#0b3d6b",
+                            borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"inherit", cursor:"pointer" }}>
                           Save
                         </button>
                         <button onClick={() => setEditingCoreDay(null)}
-                          style={{ background:"none", border:"1px solid #2e3a4a", color:"#4e7a9e",
-                            borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                          style={{ background:"none", border:"1px solid #2e3a4a", color:"#6b7a8a",
+                            borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"inherit", cursor:"pointer" }}>
                           Cancel
                         </button>
                       </div>
@@ -1943,8 +1943,8 @@ export default function Itinerary() {
                   ) : !readOnly ? (
                     <div style={{ display:"flex", justifyContent:"flex-end", marginBottom:".75rem", marginTop:"-.25rem" }}>
                       <button onClick={() => startEditCore(d.day, d)}
-                        style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
-                          fontSize:".7rem", fontFamily:"sans-serif", padding:0 }}>
+                        style={{ background:"none", border:"none", color:"#6b7a8a", cursor:"pointer",
+                          fontSize:".7rem", fontFamily:"inherit", padding:0 }}>
                         Edit day title
                       </button>
                     </div>
@@ -1954,15 +1954,15 @@ export default function Itinerary() {
                   <ul style={{ margin:0, padding:0, listStyle:"none" }}>
                     {d.highlights.map((h,i) => (
                       <li key={i} style={{ display:"flex", gap:".75rem", marginBottom:".55rem",
-                        fontSize:".875rem", lineHeight:1.5, color:"#b8cfe0", fontFamily:"sans-serif" }}>
-                        <span style={{ color:"#c9a84c", flexShrink:0, marginTop:2 }}>◆</span>
+                        fontSize:".875rem", lineHeight:1.5, color:"#b8cfe0", fontFamily:"inherit" }}>
+                        <span style={{ color:"#0b3d6b", flexShrink:0, marginTop:2 }}>◆</span>
                         <span>{h}</span>
                       </li>
                     ))}
                     {(customHighlights[d.day] ?? []).map((h,i) => (
                       <li key={`c${i}`} style={{ display:"flex", gap:".75rem", marginBottom:".55rem",
-                        fontSize:".875rem", lineHeight:1.5, color:"#c8e0c8", fontFamily:"sans-serif" }}>
-                        <span style={{ color:"#5cb85c", flexShrink:0, marginTop:2 }}>◆</span>
+                        fontSize:".875rem", lineHeight:1.5, color:"#c8e0c8", fontFamily:"inherit" }}>
+                        <span style={{ color:"#16a34a", flexShrink:0, marginTop:2 }}>◆</span>
                         <span style={{ flex:1 }}>{h}</span>
                         {!readOnly && (
                           <button onClick={() => removeHighlight(d.day, i)}
@@ -1983,13 +1983,13 @@ export default function Itinerary() {
                         onChange={e => setNewHighlight(e.target.value)}
                         onKeyDown={e => e.key === "Enter" && addHighlight(d.day)}
                         placeholder="Add a highlight…"
-                        style={{ flex:1, background:"#0a1a2a", border:"1px solid #2e5070", color:"#e8dcc8",
-                          borderRadius:4, padding:".4rem .65rem", fontSize:".82rem", fontFamily:"sans-serif",
+                        style={{ flex:1, background:"#f0f4f8", border:"1px solid #2e5070", color:"#0e1014",
+                          borderRadius:4, padding:".4rem .65rem", fontSize:".82rem", fontFamily:"inherit",
                           outline:"none" }}
                       />
                       <button onClick={() => addHighlight(d.day)}
-                        style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
-                          borderRadius:4, padding:".4rem .85rem", fontSize:".78rem", fontFamily:"sans-serif",
+                        style={{ background:"#f0f4f8", border:"1px solid #2e5070", color:"#0b3d6b",
+                          borderRadius:4, padding:".4rem .85rem", fontSize:".78rem", fontFamily:"inherit",
                           cursor:"pointer", whiteSpace:"nowrap" }}>
                         Add
                       </button>
@@ -2000,14 +2000,14 @@ export default function Itinerary() {
                     const note = customNotes[d.day] !== undefined ? customNotes[d.day] : d.note;
                     const isEditing = editingNoteDay === d.day;
                     return (
-                      <div style={{ marginTop:"1rem", padding:".75rem 1rem", background:"#0a1a2a",
-                        borderLeft:"3px solid #c9a84c66", borderRadius:"0 4px 4px 0" }}>
+                      <div style={{ marginTop:"1rem", padding:".75rem 1rem", background:"#f0f4f8",
+                        borderLeft:"3px solid rgba(11,61,107,0.2)", borderRadius:"0 4px 4px 0" }}>
                         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:4 }}>
-                          <div style={{ fontSize:".62rem", color:"#c9a84c", letterSpacing:".1em", textTransform:"uppercase", fontFamily:"sans-serif" }}>Notes</div>
+                          <div style={{ fontSize:".62rem", color:"#0b3d6b", letterSpacing:".1em", textTransform:"uppercase", fontFamily:"inherit" }}>Notes</div>
                           {!isEditing && !readOnly && (
                             <button onClick={() => startEditNote(d.day, note)}
-                              style={{ background:"none", border:"none", color:"#4e7a9e", cursor:"pointer",
-                                fontSize:".7rem", fontFamily:"sans-serif", padding:0 }}>
+                              style={{ background:"none", border:"none", color:"#6b7a8a", cursor:"pointer",
+                                fontSize:".7rem", fontFamily:"inherit", padding:0 }}>
                               Edit
                             </button>
                           )}
@@ -2022,22 +2022,22 @@ export default function Itinerary() {
                                 if (e.key === "Escape") cancelEditNote();
                                 if ((e.metaKey || e.ctrlKey) && e.key === "Enter") saveNote(d.day);
                               }}
-                              style={{ width:"100%", background:"#0d1f33", border:"1px solid #2e5070",
-                                color:"#e8dcc8", borderRadius:4, padding:".4rem .65rem",
-                                fontSize:".82rem", fontFamily:"sans-serif", lineHeight:1.55,
+                              style={{ width:"100%", background:"#ffffff", border:"1px solid #e2e5ea",
+                                color:"#0e1014", borderRadius:4, padding:".4rem .65rem",
+                                fontSize:".82rem", fontFamily:"inherit", lineHeight:1.55,
                                 resize:"vertical", minHeight:80, boxSizing:"border-box", outline:"none" }}
                             />
                             <div style={{ display:"flex", gap:".5rem", marginTop:".5rem" }}>
                               <button onClick={() => saveNote(d.day)}
-                                style={{ background:"#1a3352", border:"1px solid #2e5070", color:"#c9a84c",
+                                style={{ background:"#f0f4f8", border:"1px solid #2e5070", color:"#0b3d6b",
                                   borderRadius:4, padding:".3rem .75rem", fontSize:".75rem",
-                                  fontFamily:"sans-serif", cursor:"pointer" }}>
+                                  fontFamily:"inherit", cursor:"pointer" }}>
                                 Save
                               </button>
                               <button onClick={cancelEditNote}
-                                style={{ background:"none", border:"1px solid #2e3a4a", color:"#4e7a9e",
+                                style={{ background:"none", border:"1px solid #2e3a4a", color:"#6b7a8a",
                                   borderRadius:4, padding:".3rem .75rem", fontSize:".75rem",
-                                  fontFamily:"sans-serif", cursor:"pointer" }}>
+                                  fontFamily:"inherit", cursor:"pointer" }}>
                                 Cancel
                               </button>
                             </div>
@@ -2115,10 +2115,10 @@ export default function Itinerary() {
 
                   {/* Tide warning */}
                   {d.tideWarning && d.tideNote && (
-                    <div style={{ marginTop:".75rem", padding:".75rem 1rem", background:"#1a0a0a",
+                    <div style={{ marginTop:".75rem", padding:".75rem 1rem", background:"#fef2f2",
                       borderLeft:"3px solid #dc3545", borderRadius:"0 4px 4px 0" }}>
-                      <div style={{ fontSize:".62rem", color:"#e87878", letterSpacing:".1em", textTransform:"uppercase", marginBottom:4, fontFamily:"sans-serif" }}>⚠ Tide Warning</div>
-                      <div style={{ fontSize:".82rem", color:"#cc8888", fontFamily:"sans-serif", lineHeight:1.55 }}>{d.tideNote}</div>
+                      <div style={{ fontSize:".62rem", color:"#dc2626", letterSpacing:".1em", textTransform:"uppercase", marginBottom:4, fontFamily:"inherit" }}>⚠ Tide Warning</div>
+                      <div style={{ fontSize:".82rem", color:"#ef4444", fontFamily:"inherit", lineHeight:1.55 }}>{d.tideNote}</div>
                     </div>
                   )}
 
@@ -2131,14 +2131,14 @@ export default function Itinerary() {
                         return (
                           <>
                             <button onClick={() => moveDay(idx, "up")} disabled={idx === 0}
-                              style={{ background:"#0d2035", border:"1px solid #2e5070", color:"#6b8fa8",
-                                borderRadius:4, padding:".3rem .55rem", fontSize:".82rem", fontFamily:"sans-serif",
+                              style={{ background:"#ffffff", border:"1px solid #e2e5ea", color:"#5c6470",
+                                borderRadius:4, padding:".3rem .55rem", fontSize:".82rem", fontFamily:"inherit",
                                 cursor: idx === 0 ? "not-allowed" : "pointer", opacity: idx === 0 ? 0.35 : 1 }}>
                               ↑
                             </button>
                             <button onClick={() => moveDay(idx, "down")} disabled={idx === days.length - 1}
-                              style={{ background:"#0d2035", border:"1px solid #2e5070", color:"#6b8fa8",
-                                borderRadius:4, padding:".3rem .55rem", fontSize:".82rem", fontFamily:"sans-serif",
+                              style={{ background:"#ffffff", border:"1px solid #e2e5ea", color:"#5c6470",
+                                borderRadius:4, padding:".3rem .55rem", fontSize:".82rem", fontFamily:"inherit",
                                 cursor: idx === days.length - 1 ? "not-allowed" : "pointer", opacity: idx === days.length - 1 ? 0.35 : 1 }}>
                               ↓
                             </button>
@@ -2146,27 +2146,27 @@ export default function Itinerary() {
                         );
                       })()}
                       <button onClick={() => duplicateDay(d.day)}
-                        style={{ background:"#0d2035", border:"1px solid #2e5070", color:"#6b8fa8",
-                          borderRadius:4, padding:".3rem .75rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                        style={{ background:"#ffffff", border:"1px solid #e2e5ea", color:"#5c6470",
+                          borderRadius:4, padding:".3rem .75rem", fontSize:".72rem", fontFamily:"inherit", cursor:"pointer" }}>
                         Duplicate day
                       </button>
                       <button onClick={() => addBlankDay(d.day)}
-                        style={{ background:"#0d2035", border:"1px solid #2e5070", color:"#6b8fa8",
-                          borderRadius:4, padding:".3rem .75rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                        style={{ background:"#ffffff", border:"1px solid #e2e5ea", color:"#5c6470",
+                          borderRadius:4, padding:".3rem .75rem", fontSize:".72rem", fontFamily:"inherit", cursor:"pointer" }}>
                         Insert day after
                       </button>
                       <div style={{ marginLeft:"auto", display:"flex", alignItems:"center", gap:".5rem" }}>
                         {confirmDeleteDay === d.day ? (
                           <>
-                            <span style={{ fontSize:".72rem", color:"#e87878", fontFamily:"sans-serif" }}>Delete Day {d.day}?</span>
+                            <span style={{ fontSize:".72rem", color:"#dc2626", fontFamily:"inherit" }}>Delete Day {d.day}?</span>
                             <button onClick={() => removeDay(d.day)}
-                              style={{ background:"#3a0a0a", border:"1px solid #dc354566", color:"#e87878",
-                                borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                              style={{ background:"#fef2f2", border:"1px solid #dc354566", color:"#dc2626",
+                                borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"inherit", cursor:"pointer" }}>
                               Yes, delete
                             </button>
                             <button onClick={() => setConfirmDeleteDay(null)}
-                              style={{ background:"none", border:"1px solid #2e3a4a", color:"#4e7a9e",
-                                borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
+                              style={{ background:"none", border:"1px solid #2e3a4a", color:"#6b7a8a",
+                                borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"inherit", cursor:"pointer" }}>
                               Cancel
                             </button>
                           </>
@@ -2174,7 +2174,7 @@ export default function Itinerary() {
                           <button onClick={() => setConfirmDeleteDay(d.day)} disabled={days.length <= 1}
                             style={{ background:"none", border:"1px solid #3a1a1a",
                               color: days.length <= 1 ? "#3d2020" : "#7a3838",
-                              borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"sans-serif",
+                              borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"inherit",
                               cursor: days.length <= 1 ? "not-allowed" : "pointer" }}>
                             Delete day
                           </button>
@@ -2190,9 +2190,9 @@ export default function Itinerary() {
         {!readOnly && (
           <div style={{ display:"flex", justifyContent:"center", marginTop:"1rem" }}>
             <button onClick={() => addBlankDay(days.length > 0 ? days[days.length - 1].day : 0)}
-              style={{ background:"none", border:"1px dashed #2e5070", color:"#4e7a9e",
+              style={{ background:"none", border:"1px dashed #2e5070", color:"#6b7a8a",
                 borderRadius:6, padding:".55rem 1.5rem", fontSize:".78rem",
-                fontFamily:"sans-serif", cursor:"pointer", letterSpacing:".05em" }}>
+                fontFamily:"inherit", cursor:"pointer", letterSpacing:".05em" }}>
               + Add day at end
             </button>
           </div>
@@ -2202,28 +2202,28 @@ export default function Itinerary() {
         {/* ── FUEL TAB ── */}
         {activeTab === "fuel" && (
           <div>
-            <div style={{ marginBottom:"1.5rem", padding:"1.25rem", background:"#0d2035", border:"1px solid #1e3a52", borderRadius:6 }}>
-              <div style={{ fontSize:".7rem", color:"#c9a84c", letterSpacing:".15em", textTransform:"uppercase", marginBottom:"1rem", fontFamily:"sans-serif" }}>Fuel Plan Summary</div>
+            <div style={{ marginBottom:"1.5rem", padding:"1.25rem", background:"#f8f9fb", border:"1px solid #1e3a52", borderRadius:6 }}>
+              <div style={{ fontSize:".7rem", color:"#0b3d6b", letterSpacing:".15em", textTransform:"uppercase", marginBottom:"1rem", fontFamily:"inherit" }}>Fuel Plan Summary</div>
               {fuelSummary.map(f => (
-                <div key={f.label} style={{ display:"flex", justifyContent:"space-between", padding:".6rem 0", borderBottom:"1px solid #1e3a5240", fontFamily:"sans-serif" }}>
-                  <span style={{ fontSize:".85rem", color:"#6b8fa8" }}>{f.label}</span>
-                  <span style={{ fontSize:".85rem", color:"#e8dcc8" }}>{f.value}</span>
+                <div key={f.label} style={{ display:"flex", justifyContent:"space-between", padding:".6rem 0", borderBottom:"1px solid #1e3a5240", fontFamily:"inherit" }}>
+                  <span style={{ fontSize:".85rem", color:"#5c6470" }}>{f.label}</span>
+                  <span style={{ fontSize:".85rem", color:"#0e1014" }}>{f.value}</span>
                 </div>
               ))}
             </div>
-            <div style={{ padding:"1.25rem", background:"#0d2035", border:"1px solid #e8553844", borderRadius:6, marginBottom:"1rem" }}>
-              <div style={{ fontSize:".7rem", color:"#e87758", letterSpacing:".15em", textTransform:"uppercase", marginBottom:".75rem", fontFamily:"sans-serif" }}>⛽ Fuel Stop Details</div>
+            <div style={{ padding:"1.25rem", background:"#f8f9fb", border:"1px solid #e8553844", borderRadius:6, marginBottom:"1rem" }}>
+              <div style={{ fontSize:".7rem", color:"#d97706", letterSpacing:".15em", textTransform:"uppercase", marginBottom:".75rem", fontFamily:"inherit" }}>⛽ Fuel Stop Details</div>
               {fuelStops.map(s => (
                 <div key={s.stop} style={{ marginBottom:"1.25rem", paddingBottom:"1.25rem", borderBottom:"1px solid #1e3a5230" }}>
-                  <div style={{ fontSize:".9rem", color:"#e8dcc8", fontFamily:"Georgia,serif", marginBottom:4 }}>{s.stop}</div>
-                  <div style={{ fontSize:".8rem", color:"#9ab8d4", fontFamily:"sans-serif", marginBottom:3 }}>{s.marina}</div>
-                  <div style={{ fontSize:".75rem", color:"#6b8fa8", fontFamily:"sans-serif", marginBottom:6 }}>VHF: {s.vhf}</div>
-                  <div style={{ fontSize:".8rem", color:"#7a9ab8", fontFamily:"sans-serif", fontStyle:"italic" }}>{s.notes}</div>
+                  <div style={{ fontSize:".9rem", color:"#0e1014", fontFamily:"inherit", marginBottom:4 }}>{s.stop}</div>
+                  <div style={{ fontSize:".8rem", color:"#9ba1ac", fontFamily:"inherit", marginBottom:3 }}>{s.marina}</div>
+                  <div style={{ fontSize:".75rem", color:"#5c6470", fontFamily:"inherit", marginBottom:6 }}>VHF: {s.vhf}</div>
+                  <div style={{ fontSize:".8rem", color:"#7a9ab8", fontFamily:"inherit", fontStyle:"italic" }}>{s.notes}</div>
                 </div>
               ))}
             </div>
-            <div style={{ padding:".85rem 1rem", background:"#0a1a2a", border:"1px solid #c9a84c33", borderRadius:6, fontSize:".8rem", color:"#8fb0cc", fontFamily:"sans-serif", lineHeight:1.6 }}>
-              <strong style={{ color:"#c9a84c" }}>Note:</strong> All calculations assume 15 kts / 33 gal·hr. Running at 20 kts increases consumption ~50–70%. Maintain a 15–20% reserve minimum. Fuel Stop #4 at Victoria on Day 17 is easy insurance — you're stopping there for lunch anyway.
+            <div style={{ padding:".85rem 1rem", background:"#f0f4f8", border:"1px solid #c9a84c33", borderRadius:6, fontSize:".8rem", color:"#5c6470", fontFamily:"inherit", lineHeight:1.6 }}>
+              <strong style={{ color:"#0b3d6b" }}>Note:</strong> All calculations assume 15 kts / 33 gal·hr. Running at 20 kts increases consumption ~50–70%. Maintain a 15–20% reserve minimum. Fuel Stop #4 at Victoria on Day 17 is easy insurance — you're stopping there for lunch anyway.
             </div>
           </div>
         )}
@@ -2231,17 +2231,17 @@ export default function Itinerary() {
         {/* ── TIDES TAB ── */}
         {activeTab === "tides" && (
           <div>
-            <div style={{ padding:".85rem 1rem", background:"#1a0a0a", border:"1px solid #dc354566", borderRadius:6, marginBottom:"1.25rem", fontSize:".82rem", color:"#cc8888", fontFamily:"sans-serif", lineHeight:1.6 }}>
-              <strong style={{ color:"#e87878" }}>Critical:</strong> This route has two non-negotiable tidal rapids (Malibu and Seymour) and one high-traffic channel (Active Pass). Plan exact passage times the night before using official CHS tables. Cross-check with at least two sources.
+            <div style={{ padding:".85rem 1rem", background:"#fef2f2", border:"1px solid #dc354566", borderRadius:6, marginBottom:"1.25rem", fontSize:".82rem", color:"#ef4444", fontFamily:"inherit", lineHeight:1.6 }}>
+              <strong style={{ color:"#dc2626" }}>Critical:</strong> This route has two non-negotiable tidal rapids (Malibu and Seymour) and one high-traffic channel (Active Pass). Plan exact passage times the night before using official CHS tables. Cross-check with at least two sources.
             </div>
             {tideWarnings.map(t => (
-              <div key={t.passage} style={{ marginBottom:".75rem", padding:"1.1rem 1.25rem", background:"#0d2035", border:"1px solid #dc354533", borderRadius:6 }}>
-                <div style={{ fontSize:".9rem", color:"#f5edd8", fontFamily:"Georgia,serif", marginBottom:".4rem" }}>{t.passage}</div>
-                <div style={{ fontSize:".82rem", color:"#9ab8d4", fontFamily:"sans-serif", lineHeight:1.55 }}>{t.detail}</div>
+              <div key={t.passage} style={{ marginBottom:".75rem", padding:"1.1rem 1.25rem", background:"#f8f9fb", border:"1px solid #dc354533", borderRadius:6 }}>
+                <div style={{ fontSize:".9rem", color:"#0e1014", fontFamily:"inherit", marginBottom:".4rem" }}>{t.passage}</div>
+                <div style={{ fontSize:".82rem", color:"#9ba1ac", fontFamily:"inherit", lineHeight:1.55 }}>{t.detail}</div>
               </div>
             ))}
-            <div style={{ marginTop:"1.5rem", padding:"1.25rem", background:"#0d2035", border:"1px solid #1e3a52", borderRadius:6 }}>
-              <div style={{ fontSize:".7rem", color:"#c9a84c", letterSpacing:".15em", textTransform:"uppercase", marginBottom:".85rem", fontFamily:"sans-serif" }}>Apps & Resources</div>
+            <div style={{ marginTop:"1.5rem", padding:"1.25rem", background:"#f8f9fb", border:"1px solid #1e3a52", borderRadius:6 }}>
+              <div style={{ fontSize:".7rem", color:"#0b3d6b", letterSpacing:".15em", textTransform:"uppercase", marginBottom:".85rem", fontFamily:"inherit" }}>Apps & Resources</div>
               {[
                 ["Navionics Boating App",      "Best all-in-one: charts, tides, ActiveCaptain community notes"],
                 ["XTide / Tides Near Me",       "Precise slack water timing for BC passages"],
@@ -2250,11 +2250,11 @@ export default function Itinerary() {
                 ["VHF Channel 16",              "Monitor at all times underway; 66A for BC marinas"],
                 ["CBP ROAM App (US Customs)",   "Required for US re-entry — register all passengers before departure"],
               ].map(([tool,desc]) => (
-                <div key={tool} style={{ display:"flex", gap:".75rem", marginBottom:".7rem", fontFamily:"sans-serif" }}>
-                  <span style={{ color:"#c9a84c", flexShrink:0, marginTop:2 }}>◆</span>
+                <div key={tool} style={{ display:"flex", gap:".75rem", marginBottom:".7rem", fontFamily:"inherit" }}>
+                  <span style={{ color:"#0b3d6b", flexShrink:0, marginTop:2 }}>◆</span>
                   <div>
-                    <div style={{ fontSize:".85rem", color:"#e8dcc8" }}>{tool}</div>
-                    <div style={{ fontSize:".78rem", color:"#6b8fa8", marginTop:1 }}>{desc}</div>
+                    <div style={{ fontSize:".85rem", color:"#0e1014" }}>{tool}</div>
+                    <div style={{ fontSize:".78rem", color:"#5c6470", marginTop:1 }}>{desc}</div>
                   </div>
                 </div>
               ))}
@@ -2267,14 +2267,14 @@ export default function Itinerary() {
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center",
             gap: ".75rem", marginTop: "1.5rem", paddingTop: "1rem",
             borderTop: "1px solid #1e3a5230" }}>
-            <span style={{ fontSize: ".72rem", fontFamily: "sans-serif", letterSpacing: ".04em",
+            <span style={{ fontSize: ".72rem", fontFamily: "inherit", letterSpacing: ".04em",
               minWidth: 48, textAlign: "right",
-              color: isLocked ? "#8338e8" : "#4e7a9e" }}>
+              color: isLocked ? "#8338e8" : "#6b7a8a" }}>
               {isLocked ? "Locked" : "Editing"}
             </span>
             <div onClick={toggleLock}
               style={{ width: 44, height: 26, borderRadius: 13, cursor: "pointer",
-                background: isLocked ? "#2e3a4a" : "#2e7050", position: "relative",
+                background: isLocked ? "#e2e5ea" : "#2e7050", position: "relative",
                 flexShrink: 0, transition: "background 0.2s",
                 border: `1px solid ${isLocked ? "#3a4a5a" : "#3a8060"}` }}>
               <div style={{
@@ -2283,8 +2283,8 @@ export default function Itinerary() {
                 transition: "left 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,0.4)",
               }} />
             </div>
-            <span style={{ fontSize: ".72rem", fontFamily: "sans-serif", letterSpacing: ".04em",
-              minWidth: 48, color: isLocked ? "#4e7a9e" : "#3a9060" }}>
+            <span style={{ fontSize: ".72rem", fontFamily: "inherit", letterSpacing: ".04em",
+              minWidth: 48, color: isLocked ? "#6b7a8a" : "#3a9060" }}>
               {isLocked ? "Unlock" : "🔒 Lock"}
             </span>
           </div>

@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(python3 -c ' *)",
+      "Bash(cat /tmp/design_b65b2636.js)",
+      "Read(//private/tmp/**)",
+      "Bash(python3 -)"
     ]
   }
 }

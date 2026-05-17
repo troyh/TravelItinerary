@@ -5,17 +5,17 @@ const borderAccent = "3px solid #8338e866";
 const accentColor  = "#8338e8";
 
 const S = {
-  input: { background: "#0a1a2a", border: "1px solid #2e5070", color: "#e8dcc8",
-    borderRadius: 4, padding: ".4rem .65rem", fontSize: ".82rem", fontFamily: "sans-serif",
+  input: { background: "#f0f4f8", border: "1px solid #2e5070", color: "#0e1014",
+    borderRadius: 4, padding: ".4rem .65rem", fontSize: ".82rem", fontFamily: "inherit",
     outline: "none", boxSizing: "border-box" },
-  btnPrimary: { background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
-    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
+  btnPrimary: { background: "#e8f1f9", border: "1px solid #2e5070", color: "#0b3d6b",
+    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "inherit",
     cursor: "pointer", whiteSpace: "nowrap", touchAction: "manipulation" },
-  btnGhost: { background: "none", border: "1px solid #2e3a4a", color: "#4e7a9e",
-    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
+  btnGhost: { background: "none", border: "1px solid #2e3a4a", color: "#6b7a8a",
+    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "inherit",
     cursor: "pointer", whiteSpace: "nowrap", touchAction: "manipulation" },
   label: { fontSize: ".62rem", letterSpacing: ".1em", textTransform: "uppercase",
-    fontFamily: "sans-serif" },
+    fontFamily: "inherit" },
 };
 
 const BLANK = { flightNumber: "", departure: "", arrival: "", departureName: "", arrivalName: "",
@@ -175,14 +175,14 @@ export default function DayFlights({
 
       {/* Section header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: ".75rem 1rem", background: "#0a1a2a", borderLeft: borderAccent,
+        padding: ".75rem 1rem", background: "#f0f4f8", borderLeft: borderAccent,
         borderRadius: "0 4px 0 0" }}>
         <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
           <span style={{ ...S.label, color: accentColor }}>Flights</span>
           {flights.length > 0 && (
             <span style={{ background: `${accentColor}22`, color: accentColor,
               border: `1px solid ${accentColor}44`,
-              borderRadius: 10, padding: "1px 7px", fontSize: ".6rem", fontFamily: "sans-serif" }}>
+              borderRadius: 10, padding: "1px 7px", fontSize: ".6rem", fontFamily: "inherit" }}>
               {flights.length}
             </span>
           )}
@@ -205,11 +205,11 @@ export default function DayFlights({
 
       {/* Add form */}
       {isAdding && (
-        <div style={{ background: "#0a1a2a", borderLeft: borderAccent, padding: ".75rem 1rem" }}>
+        <div style={{ background: "#f0f4f8", borderLeft: borderAccent, padding: ".75rem 1rem" }}>
 
           {/* Flight number + lookup */}
           <div style={{ marginBottom: ".5rem" }}>
-            <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Flight Number</div>
+            <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>Flight Number</div>
             <div style={{ display: "flex", gap: ".4rem" }}>
               <input autoFocus value={draft.flightNumber}
                 onChange={e => { set("flightNumber", e.target.value); setLookupErr(null); }}
@@ -225,15 +225,15 @@ export default function DayFlights({
               )}
             </div>
             {lookupErr && (
-              <div style={{ fontSize: ".72rem", color: "#e87878", fontFamily: "sans-serif", marginTop: 3 }}>
+              <div style={{ fontSize: ".72rem", color: "#dc2626", fontFamily: "inherit", marginTop: 3 }}>
                 {lookupErr}
               </div>
             )}
             {lookupResults && (
               <div style={{ marginTop: ".5rem", border: "1px solid #2e5070", borderRadius: 4,
                 background: "#071520", overflow: "hidden" }}>
-                <div style={{ fontSize: ".62rem", color: "#6b8fa8", letterSpacing: ".08em",
-                  textTransform: "uppercase", fontFamily: "sans-serif",
+                <div style={{ fontSize: ".62rem", color: "#5c6470", letterSpacing: ".08em",
+                  textTransform: "uppercase", fontFamily: "inherit",
                   padding: ".35rem .65rem", borderBottom: "1px solid #1e3a5230" }}>
                   Multiple flights found — select one
                 </div>
@@ -251,8 +251,8 @@ export default function DayFlights({
                     <div key={i} onClick={() => applyFlight(r)}
                       style={{ padding: ".45rem .65rem", cursor: "pointer",
                         borderBottom: i < lookupResults.length - 1 ? "1px solid #1e3a5230" : "none",
-                        fontFamily: "sans-serif", fontSize: ".8rem", color: "#e8dcc8" }}
-                      onMouseEnter={e => e.currentTarget.style.background = "#1a3352"}
+                        fontFamily: "inherit", fontSize: ".8rem", color: "#0e1014" }}
+                      onMouseEnter={e => e.currentTarget.style.background = "#e8f1f9"}
                       onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
                       {label || `Option ${i + 1}`}
                     </div>
@@ -265,17 +265,17 @@ export default function DayFlights({
           {/* From / To */}
           <div style={{ display: "flex", gap: ".5rem", marginBottom: ".5rem", alignItems: "flex-end" }}>
             <div style={{ width: 80 }}>
-              <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>From</div>
+              <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>From</div>
               <input value={draft.departure}
                 onChange={e => set("departure", e.target.value.toUpperCase())}
                 onKeyDown={e => e.key === "Enter" && handleAdd()}
                 placeholder="SFO"
                 style={{ ...S.input, width: "100%", textTransform: "uppercase" }} />
             </div>
-            <div style={{ color: "#4e7a9e", fontFamily: "sans-serif", fontSize: ".9rem",
+            <div style={{ color: "#6b7a8a", fontFamily: "inherit", fontSize: ".9rem",
               paddingBottom: ".5rem", flexShrink: 0 }}>→</div>
             <div style={{ width: 80 }}>
-              <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>To</div>
+              <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>To</div>
               <input value={draft.arrival}
                 onChange={e => set("arrival", e.target.value.toUpperCase())}
                 onKeyDown={e => e.key === "Enter" && handleAdd()}
@@ -283,7 +283,7 @@ export default function DayFlights({
                 style={{ ...S.input, width: "100%", textTransform: "uppercase" }} />
             </div>
             <div style={{ flex: 1, minWidth: 70 }}>
-              <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Miles</div>
+              <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>Miles</div>
               <input type="text" inputMode="numeric" value={draft.miles}
                 onChange={e => set("miles", e.target.value)}
                 onKeyDown={e => e.key === "Enter" && handleAdd()}
@@ -294,8 +294,8 @@ export default function DayFlights({
 
           {/* Confirmation */}
           <div style={{ marginBottom: ".65rem" }}>
-            <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>
-              Confirmation # <span style={{ color: "#3d5060", fontStyle: "italic", textTransform: "none",
+            <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>
+              Confirmation # <span style={{ color: "#9ba1ac", fontStyle: "italic", textTransform: "none",
                 letterSpacing: 0 }}>(optional)</span>
             </div>
             <input value={draft.confirmation}
@@ -315,7 +315,7 @@ export default function DayFlights({
 
       {/* Flight cards */}
       {flights.map(f => (
-        <div key={f.id} style={{ borderLeft: borderAccent, background: "#0a1a2a" }}>
+        <div key={f.id} style={{ borderLeft: borderAccent, background: "#f0f4f8" }}>
           <div style={{ padding: ".65rem 1rem", borderTop: "1px solid #1e3a5230" }}>
 
             {/* Header row */}
@@ -323,41 +323,41 @@ export default function DayFlights({
               alignItems: "flex-start", gap: ".5rem", marginBottom: ".3rem" }}>
               <div style={{ flex: 1 }}>
                 {/* Flight number + route */}
-                <div style={{ fontSize: ".88rem", color: "#e8dcc8", fontFamily: "sans-serif",
+                <div style={{ fontSize: ".88rem", color: "#0e1014", fontFamily: "inherit",
                   fontWeight: 600, lineHeight: 1.3 }}>
                   ✈ {f.flightNumber}
                   {f.departure && f.arrival && (
-                    <span style={{ fontWeight: 400, color: "#c8daea" }}>
+                    <span style={{ fontWeight: 400, color: "#0e1014" }}>
                       {"  "}{f.departure} → {f.arrival}
                     </span>
                   )}
                 </div>
                 {/* City names */}
                 {(f.departureName || f.arrivalName) && (
-                  <div style={{ fontSize: ".78rem", color: "#8fb0cc", fontFamily: "sans-serif",
+                  <div style={{ fontSize: ".78rem", color: "#5c6470", fontFamily: "inherit",
                     marginTop: 2 }}>
                     {[f.departureName, f.arrivalName].filter(Boolean).join(" → ")}
                   </div>
                 )}
                 {/* Airline + aircraft */}
                 {(f.airline || f.aircraft) && (
-                  <div style={{ fontSize: ".72rem", color: "#6b8fa8", fontFamily: "sans-serif",
+                  <div style={{ fontSize: ".72rem", color: "#5c6470", fontFamily: "inherit",
                     marginTop: 2 }}>
                     {[f.airline, f.aircraft].filter(Boolean).join("  ·  ")}
                   </div>
                 )}
                 {/* Times + status */}
                 {(f.departureTime || f.arrivalTime || f.status) && (
-                  <div style={{ fontSize: ".72rem", fontFamily: "sans-serif", marginTop: 2,
+                  <div style={{ fontSize: ".72rem", fontFamily: "inherit", marginTop: 2,
                     display: "flex", gap: ".75rem", flexWrap: "wrap", alignItems: "center" }}>
                     {(f.departureTime || f.arrivalTime) && (
-                      <span style={{ color: "#c9a84c" }}>
+                      <span style={{ color: "#0b3d6b" }}>
                         {[f.departureTime, f.arrivalTime].filter(Boolean).join(" → ")}
                       </span>
                     )}
                     {f.status && (
-                      <span style={{ color: f.status === "Arrived" ? "#5cb85c"
-                        : f.status === "Departed" ? "#4a9eff" : "#6b8fa8",
+                      <span style={{ color: f.status === "Arrived" ? "#16a34a"
+                        : f.status === "Departed" ? "#2563eb" : "#5c6470",
                         background: f.status === "Arrived" ? "#5cb85c18"
                           : f.status === "Departed" ? "#4a9eff18" : "#6b8fa818",
                         border: `1px solid ${f.status === "Arrived" ? "#5cb85c44"
@@ -371,7 +371,7 @@ export default function DayFlights({
                 )}
                 {/* Miles + confirmation */}
                 {(f.miles || f.confirmation) && (
-                  <div style={{ fontSize: ".72rem", color: "#4e7a9e", fontFamily: "sans-serif",
+                  <div style={{ fontSize: ".72rem", color: "#6b7a8a", fontFamily: "inherit",
                     marginTop: 2 }}>
                     {[
                       f.miles ? `${f.miles.toLocaleString()} mi` : null,
@@ -414,7 +414,7 @@ export default function DayFlights({
                 {f.notes
                   ? <NoteMarkdown>{f.notes}</NoteMarkdown>
                   : !readOnly && <span style={{ fontSize: ".78rem", color: "#2e4a5e",
-                      fontFamily: "sans-serif", fontStyle: "italic" }}>Add notes…</span>}
+                      fontFamily: "inherit", fontStyle: "italic" }}>Add notes…</span>}
               </div>
             )}
           </div>

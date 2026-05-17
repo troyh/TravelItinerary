@@ -28,20 +28,20 @@ function loadRouteApple() {
   return routeApplePromise;
 }
 
-const borderAccent = "3px solid #c9a84c66";
+const borderAccent = "3px solid rgba(11,61,107,0.2)";
 
 const S = {
-  input: { background: "#0a1a2a", border: "1px solid #2e5070", color: "#e8dcc8",
-    borderRadius: 4, padding: ".4rem .65rem", fontSize: ".82rem", fontFamily: "sans-serif",
+  input: { background: "#f0f4f8", border: "1px solid #2e5070", color: "#0e1014",
+    borderRadius: 4, padding: ".4rem .65rem", fontSize: ".82rem", fontFamily: "inherit",
     outline: "none", boxSizing: "border-box" },
-  btnPrimary: { background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
-    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
+  btnPrimary: { background: "#e8f1f9", border: "1px solid #2e5070", color: "#0b3d6b",
+    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "inherit",
     cursor: "pointer", whiteSpace: "nowrap", touchAction: "manipulation" },
-  btnGhost: { background: "none", border: "1px solid #2e3a4a", color: "#4e7a9e",
-    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
+  btnGhost: { background: "none", border: "1px solid #2e3a4a", color: "#6b7a8a",
+    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "inherit",
     cursor: "pointer", whiteSpace: "nowrap", touchAction: "manipulation" },
   label: { fontSize: ".62rem", letterSpacing: ".1em", textTransform: "uppercase",
-    fontFamily: "sans-serif" },
+    fontFamily: "inherit" },
 };
 
 const BLANK = { name: "", nm: "", speedKts: 15, time: "",
@@ -110,8 +110,8 @@ function fmtTime(hhmm) {
 }
 
 const timeInputStyle = {
-  background: "none", border: "none", color: "#c9a84c",
-  fontSize: ".75rem", fontFamily: "sans-serif",
+  background: "none", border: "none", color: "#0b3d6b",
+  fontSize: ".75rem", fontFamily: "inherit",
   cursor: "pointer", padding: 0, outline: "none", colorScheme: "dark",
 };
 
@@ -263,13 +263,13 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
 
       {/* Section header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: ".75rem 1rem", background: "#0a1a2a", borderLeft: borderAccent,
+        padding: ".75rem 1rem", background: "#f0f4f8", borderLeft: borderAccent,
         borderRadius: "0 4px 0 0" }}>
         <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
-          <span style={{ ...S.label, color: "#c9a84c" }}>Boating Routes</span>
+          <span style={{ ...S.label, color: "#0b3d6b" }}>Boating Routes</span>
           {routes.length > 0 && (
-            <span style={{ background: "#c9a84c22", color: "#c9a84c", border: "1px solid #c9a84c44",
-              borderRadius: 10, padding: "1px 7px", fontSize: ".6rem", fontFamily: "sans-serif" }}>
+            <span style={{ background: "rgba(11,61,107,0.08)", color: "#0b3d6b", border: "1px solid #c9a84c44",
+              borderRadius: 10, padding: "1px 7px", fontSize: ".6rem", fontFamily: "inherit" }}>
               {routes.length}
             </span>
           )}
@@ -294,10 +294,10 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
 
       {/* Add form */}
       {isAdding && (
-        <div style={{ background: "#0a1a2a", borderLeft: borderAccent, padding: ".75rem 1rem" }}>
+        <div style={{ background: "#f0f4f8", borderLeft: borderAccent, padding: ".75rem 1rem" }}>
           <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap", marginBottom: ".5rem" }}>
             <div style={{ flex: 2, minWidth: 160 }}>
-              <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Route Name (optional)</div>
+              <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>Route Name (optional)</div>
               <input value={draft.name}
                 onChange={e => set("name", e.target.value)}
                 onKeyDown={e => e.key === "Enter" && handleAdd()}
@@ -305,7 +305,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
                 style={{ ...S.input, width: "100%" }} />
             </div>
             <div style={{ width: 90 }}>
-              <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Distance</div>
+              <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>Distance</div>
               <input type="text" inputMode="decimal" value={draft.nm}
                 onChange={e => set("nm", e.target.value)}
                 onKeyDown={e => e.key === "Enter" && handleAdd()}
@@ -313,7 +313,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
                 style={{ ...S.input, width: "100%" }} />
             </div>
             <div style={{ width: 80 }}>
-              <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Speed</div>
+              <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>Speed</div>
               <input type="text" inputMode="decimal" value={draft.speedKts}
                 onChange={e => set("speedKts", e.target.value)}
                 onKeyDown={e => e.key === "Enter" && handleAdd()}
@@ -321,7 +321,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
                 style={{ ...S.input, width: "100%" }} />
             </div>
             <div style={{ width: 90 }}>
-              <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Depart</div>
+              <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>Depart</div>
               <input type="time" value={draft.time}
                 onChange={e => set("time", e.target.value)}
                 style={{ ...S.input, width: "100%", colorScheme: "dark" }} />
@@ -337,33 +337,33 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
                   setQ: setEndQuery,   setP: setEndPreds,   setC: setEndCoords,   deb: debEnd   },
               ].map(({ label, query, preds, coords, setQ, setP, setC, deb }) => (
                 <div key={label} style={{ marginBottom: ".4rem" }}>
-                  <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>
-                    {label} <span style={{ color: "#3d5060", fontStyle: "italic",
+                  <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>
+                    {label} <span style={{ color: "#9ba1ac", fontStyle: "italic",
                       textTransform: "none", letterSpacing: 0 }}>(optional)</span>
                   </div>
                   <input value={query}
                     onChange={e => makeHandler(setQ, setP, setC, deb)(e.target.value)}
                     placeholder="Search for a location…"
                     style={{ ...S.input, width: "100%",
-                      borderColor: coords ? "#c9a84c66" : "#2e5070" }} />
+                      borderColor: coords ? "rgba(11,61,107,0.2)" : "#e2e5ea" }} />
                   {coords && (
-                    <div style={{ fontSize: ".68rem", color: "#c9a84c", fontFamily: "sans-serif",
+                    <div style={{ fontSize: ".68rem", color: "#0b3d6b", fontFamily: "inherit",
                       marginTop: 2 }}>
                       ✓ {coords.name}
                     </div>
                   )}
                   {preds.length > 0 && (
                     <div style={{ border: "1px solid #2e5070", borderRadius: 4,
-                      background: "#0d1f33", overflow: "hidden", marginTop: ".25rem" }}>
+                      background: "#f8f9fb", overflow: "hidden", marginTop: ".25rem" }}>
                       {preds.map((pred, i) => (
                         <div key={i} onClick={() => selectPred(pred, setQ, setP, setC)}
                           style={{ padding: ".4rem .65rem", cursor: "pointer",
                             borderBottom: i < preds.length - 1 ? "1px solid #1e3a5230" : "none",
-                            fontFamily: "sans-serif" }}
-                          onMouseEnter={e => e.currentTarget.style.background = "#1a3352"}
+                            fontFamily: "inherit" }}
+                          onMouseEnter={e => e.currentTarget.style.background = "#e8f1f9"}
                           onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-                          <div style={{ fontSize: ".8rem", color: "#e8dcc8" }}>{pred.name}</div>
-                          {pred.subtitle && <div style={{ fontSize: ".7rem", color: "#4e7a9e", marginTop: 1 }}>{pred.subtitle}</div>}
+                          <div style={{ fontSize: ".8rem", color: "#0e1014" }}>{pred.name}</div>
+                          {pred.subtitle && <div style={{ fontSize: ".7rem", color: "#6b7a8a", marginTop: 1 }}>{pred.subtitle}</div>}
                         </div>
                       ))}
                     </div>
@@ -382,7 +382,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
               {fetchingRoute ? "Getting route…" : "Add"}
             </button>
             {computedHrs !== null && (
-              <span style={{ fontSize: ".78rem", color: "#c9a84c", fontFamily: "sans-serif" }}>
+              <span style={{ fontSize: ".78rem", color: "#0b3d6b", fontFamily: "inherit" }}>
                 ~{fmtHrs(computedHrs)} at {draft.speedKts} kts
               </span>
             )}
@@ -392,13 +392,13 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
 
       {/* Route cards */}
       {routes.map(route => (
-        <div key={route.id} style={{ borderLeft: borderAccent, background: "#0a1a2a" }}>
+        <div key={route.id} style={{ borderLeft: borderAccent, background: "#f0f4f8" }}>
           <div style={{ padding: ".65rem 1rem", borderTop: "1px solid #1e3a5230" }}>
 
             {/* Header row */}
             <div style={{ display: "flex", justifyContent: "space-between",
               alignItems: "flex-start", gap: ".5rem", marginBottom: ".3rem" }}>
-              <span style={{ fontSize: ".88rem", color: "#e8dcc8", fontFamily: "sans-serif",
+              <span style={{ fontSize: ".88rem", color: "#0e1014", fontFamily: "inherit",
                 fontWeight: 600, lineHeight: 1.3, flex: 1 }}>
                 🚢 {route.name || "Unnamed Route"}
               </span>
@@ -413,8 +413,8 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
                       setEndCoords(route.endLat   ? { name: route.endName,   lat: route.endLat,   lng: route.endLng   } : null);
                       setStartPreds([]); setEndPreds([]);
                     }}
-                    style={{ background: "none", border: "none", color: "#4e7a9e",
-                      cursor: "pointer", fontSize: ".7rem", fontFamily: "sans-serif", padding: 0 }}>
+                    style={{ background: "none", border: "none", color: "#6b7a8a",
+                      cursor: "pointer", fontSize: ".7rem", fontFamily: "inherit", padding: 0 }}>
                     Edit
                   </button>
                   <button type="button" onClick={() => onDelete(route.id)}
@@ -431,29 +431,29 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
               <div style={{ marginTop: ".5rem" }}>
                 <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap", marginBottom: ".5rem" }}>
                   <div style={{ flex: 2, minWidth: 140 }}>
-                    <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Route Name</div>
+                    <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>Route Name</div>
                     <input value={editDraft.name} onChange={e => setE("name", e.target.value)}
                       style={{ ...S.input, width: "100%" }} />
                   </div>
                   <div style={{ width: 80 }}>
-                    <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Distance</div>
+                    <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>Distance</div>
                     <input type="text" inputMode="decimal" value={editDraft.nm}
                       onChange={e => setE("nm", e.target.value)} placeholder="NM"
                       style={{ ...S.input, width: "100%" }} />
                   </div>
                   <div style={{ width: 80 }}>
-                    <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Speed</div>
+                    <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>Speed</div>
                     <input type="text" inputMode="decimal" value={editDraft.speedKts}
                       onChange={e => setE("speedKts", e.target.value)} placeholder="kts"
                       style={{ ...S.input, width: "100%" }} />
                   </div>
                   <div style={{ width: 90 }}>
-                    <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Depart</div>
+                    <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>Depart</div>
                     <input type="time" value={editDraft.time} onChange={e => setE("time", e.target.value)}
                       style={{ ...S.input, width: "100%", colorScheme: "dark" }} />
                   </div>
                 </div>
-                {(() => { const nm = parseFloat(editDraft.nm); const spd = parseFloat(editDraft.speedKts); const h = nm > 0 && spd > 0 ? Math.round(nm/spd*10)/10 : null; return h ? <span style={{ fontSize:".78rem", color:"#c9a84c", fontFamily:"sans-serif" }}>~{fmtHrs(h)} at {editDraft.speedKts} kts</span> : null; })()}
+                {(() => { const nm = parseFloat(editDraft.nm); const spd = parseFloat(editDraft.speedKts); const h = nm > 0 && spd > 0 ? Math.round(nm/spd*10)/10 : null; return h ? <span style={{ fontSize:".78rem", color:"#0b3d6b", fontFamily:"inherit" }}>~{fmtHrs(h)} at {editDraft.speedKts} kts</span> : null; })()}
 
                 {/* Location search in edit form */}
                 {mapsLib && (
@@ -465,21 +465,21 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
                         setQ: setEndQuery,   setP: setEndPreds,   setC: setEndCoords,   deb: debEnd   },
                     ].map(({ label, query, preds, coords, setQ, setP, setC, deb }) => (
                       <div key={label} style={{ marginBottom: ".4rem" }}>
-                        <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>{label}</div>
+                        <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>{label}</div>
                         <input value={query} onChange={e => makeHandler(setQ, setP, setC, deb)(e.target.value)}
                           placeholder="Search for a location…"
-                          style={{ ...S.input, width: "100%", borderColor: coords ? "#c9a84c66" : "#2e5070" }} />
-                        {coords && <div style={{ fontSize: ".68rem", color: "#c9a84c", fontFamily: "sans-serif", marginTop: 2 }}>✓ {coords.name}</div>}
+                          style={{ ...S.input, width: "100%", borderColor: coords ? "rgba(11,61,107,0.2)" : "#e2e5ea" }} />
+                        {coords && <div style={{ fontSize: ".68rem", color: "#0b3d6b", fontFamily: "inherit", marginTop: 2 }}>✓ {coords.name}</div>}
                         {preds.length > 0 && (
-                          <div style={{ border: "1px solid #2e5070", borderRadius: 4, background: "#0d1f33", overflow: "hidden", marginTop: ".25rem" }}>
+                          <div style={{ border: "1px solid #2e5070", borderRadius: 4, background: "#f8f9fb", overflow: "hidden", marginTop: ".25rem" }}>
                             {preds.map((pred, i) => (
                               <div key={i} onClick={() => selectPred(pred, setQ, setP, setC)}
                                 style={{ padding: ".4rem .65rem", cursor: "pointer",
-                                  borderBottom: i < preds.length - 1 ? "1px solid #1e3a5230" : "none", fontFamily: "sans-serif" }}
-                                onMouseEnter={e => e.currentTarget.style.background = "#1a3352"}
+                                  borderBottom: i < preds.length - 1 ? "1px solid #1e3a5230" : "none", fontFamily: "inherit" }}
+                                onMouseEnter={e => e.currentTarget.style.background = "#e8f1f9"}
                                 onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-                                <div style={{ fontSize: ".8rem", color: "#e8dcc8" }}>{pred.name}</div>
-                                {pred.subtitle && <div style={{ fontSize: ".7rem", color: "#4e7a9e", marginTop: 1 }}>{pred.subtitle}</div>}
+                                <div style={{ fontSize: ".8rem", color: "#0e1014" }}>{pred.name}</div>
+                                {pred.subtitle && <div style={{ fontSize: ".7rem", color: "#6b7a8a", marginTop: 1 }}>{pred.subtitle}</div>}
                               </div>
                             ))}
                           </div>
@@ -537,14 +537,14 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
             ) : (
               <>
                 {/* Stats row */}
-                <div style={{ fontSize: ".75rem", color: "#4e7a9e", fontFamily: "sans-serif",
+                <div style={{ fontSize: ".75rem", color: "#6b7a8a", fontFamily: "inherit",
                   marginBottom: ".4rem", display: "flex", alignItems: "center", gap: ".5rem", flexWrap: "wrap" }}>
                   <span>{route.nm} NM · ~{fmtHrs(route.hrs)} at {route.speedKts} kts</span>
                   {!readOnly
                     ? <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
                         <input type="time" value={route.time || ""}
                           onChange={e => onUpdate(route.id, { time: e.target.value })}
-                          style={{ ...timeInputStyle, color: route.time ? "#c9a84c" : "#2e4a5e" }} />
+                          style={{ ...timeInputStyle, color: route.time ? "#0b3d6b" : "#2e4a5e" }} />
                         {route.time && (
                           <button type="button" onClick={() => onUpdate(route.id, { time: "" })}
                             style={{ background: "none", border: "none", color: "#2e4a5e",
@@ -554,13 +554,13 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
                         )}
                       </div>
                     : route.time
-                      ? <span style={{ color: "#c9a84c" }}>{fmtTime(route.time)}</span>
+                      ? <span style={{ color: "#0b3d6b" }}>{fmtTime(route.time)}</span>
                       : null}
                 </div>
 
                 {/* Location display */}
                 {(route.startName || route.endName) && (
-                  <div style={{ fontSize: ".72rem", color: "#8fb0cc", fontFamily: "sans-serif",
+                  <div style={{ fontSize: ".72rem", color: "#5c6470", fontFamily: "inherit",
                     marginBottom: ".35rem" }}>
                     {route.startName && route.endName
                       ? `${route.startName} → ${route.endName}`
@@ -607,7 +607,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
                 style={{ cursor: readOnly ? "default" : "pointer" }}>
                 {route.notes
                   ? <NoteMarkdown>{route.notes}</NoteMarkdown>
-                  : !readOnly && <span style={{ fontSize: ".78rem", color: "#2e4a5e", fontFamily: "sans-serif",
+                  : !readOnly && <span style={{ fontSize: ".78rem", color: "#2e4a5e", fontFamily: "inherit",
                       fontStyle: "italic" }}>Add notes…</span>}
               </div>
             )}
@@ -617,7 +617,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
 
       {/* Bottom cap */}
       {(routes.length > 0 || isAdding) && (
-        <div style={{ height: 1, background: "#c9a84c22", borderLeft: borderAccent }} />
+        <div style={{ height: 1, background: "rgba(11,61,107,0.08)", borderLeft: borderAccent }} />
       )}
     </div>
   );

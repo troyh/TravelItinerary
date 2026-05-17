@@ -3,19 +3,19 @@ import { testConnection, inferRepo } from "../lib/github.js";
 import { CLAUDE_MODELS } from "../lib/claude.js";
 
 const S = {
-  label: { fontSize: ".62rem", color: "#6b8fa8", letterSpacing: ".08em",
-    textTransform: "uppercase", fontFamily: "sans-serif", marginBottom: 3 },
-  input: { width: "100%", background: "#0d1f33", border: "1px solid #2e5070", color: "#e8dcc8",
-    borderRadius: 4, padding: ".4rem .65rem", fontSize: ".82rem", fontFamily: "sans-serif",
+  label: { fontSize: ".62rem", color: "#5c6470", letterSpacing: ".08em",
+    textTransform: "uppercase", fontFamily: "inherit", marginBottom: 3 },
+  input: { width: "100%", background: "#f8f9fb", border: "1px solid #2e5070", color: "#0e1014",
+    borderRadius: 4, padding: ".4rem .65rem", fontSize: ".82rem", fontFamily: "inherit",
     outline: "none", boxSizing: "border-box" },
-  btnPrimary: { background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
-    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
+  btnPrimary: { background: "#e8f1f9", border: "1px solid #2e5070", color: "#0b3d6b",
+    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "inherit",
     cursor: "pointer" },
-  btnGhost: { background: "none", border: "1px solid #2e3a4a", color: "#4e7a9e",
-    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
+  btnGhost: { background: "none", border: "1px solid #2e3a4a", color: "#6b7a8a",
+    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "inherit",
     cursor: "pointer" },
   btnDanger: { background: "none", border: "1px solid #3a1a1a", color: "#7a3838",
-    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
+    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "inherit",
     cursor: "pointer" },
 };
 
@@ -61,19 +61,19 @@ function DbForm({ db, inferredRepo, onSave, onCancel }) {
         </div>
       </div>
       <div>
-        <div style={S.label}>Repository <span style={{ color: "#3d5060", fontStyle: "italic" }}>(optional)</span></div>
+        <div style={S.label}>Repository <span style={{ color: "#9ba1ac", fontStyle: "italic" }}>(optional)</span></div>
         <input value={d.githubRepo} onChange={e => set("githubRepo", e.target.value)}
           placeholder={inferredRepo || "owner/repo"} style={S.input} />
       </div>
       <div>
-        <div style={S.label}>Branch <span style={{ color: "#3d5060", fontStyle: "italic" }}>(optional)</span></div>
+        <div style={S.label}>Branch <span style={{ color: "#9ba1ac", fontStyle: "italic" }}>(optional)</span></div>
         <input value={d.githubBranch} onChange={e => set("githubBranch", e.target.value)}
           placeholder="data" style={S.input} />
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: ".5rem", flexWrap: "wrap" }}>
         {testStatus && testStatus !== "testing" && (
-          <span style={{ fontSize: ".7rem", fontFamily: "sans-serif",
-            color: testStatus === "ok" ? "#5cb85c" : "#e87878" }}>
+          <span style={{ fontSize: ".7rem", fontFamily: "inherit",
+            color: testStatus === "ok" ? "#16a34a" : "#dc2626" }}>
             {testStatus === "ok" ? "✓ Connected" : testStatus}
           </span>
         )}
@@ -138,18 +138,18 @@ export default function Settings({ settings, onSave, onClose }) {
   }
 
   return (
-    <div style={{ margin: "1rem 0", padding: "1rem 1.25rem", background: "#0a1a2a",
+    <div style={{ margin: "1rem 0", padding: "1rem 1.25rem", background: "#f0f4f8",
       borderLeft: "3px solid #6b8fa866", borderRadius: "0 6px 6px 0" }}>
 
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
         marginBottom: "1rem" }}>
-        <div style={{ fontSize: ".62rem", color: "#6b8fa8", letterSpacing: ".12em",
-          textTransform: "uppercase", fontFamily: "sans-serif" }}>
+        <div style={{ fontSize: ".62rem", color: "#5c6470", letterSpacing: ".12em",
+          textTransform: "uppercase", fontFamily: "inherit" }}>
           Settings
         </div>
         <button onClick={onClose} style={{ background: "none", border: "none",
-          color: "#4e7a9e", cursor: "pointer", fontSize: ".85rem", padding: 0 }}>
+          color: "#6b7a8a", cursor: "pointer", fontSize: ".85rem", padding: 0 }}>
           ×
         </button>
       </div>
@@ -190,7 +190,7 @@ export default function Settings({ settings, onSave, onClose }) {
               <div style={S.label}>Apple MapKit JS Token</div>
               <input value={draft.appleMapKitToken} onChange={e => set("appleMapKitToken", e.target.value)}
                 placeholder="eyJ…" style={S.input} />
-              <div style={{ fontSize: ".68rem", color: "#3d5060", fontFamily: "sans-serif",
+              <div style={{ fontSize: ".68rem", color: "#9ba1ac", fontFamily: "inherit",
                 fontStyle: "italic", marginTop: 4 }}>
                 Generate in Apple Developer → Maps IDs &amp; Keys.
               </div>
@@ -213,11 +213,11 @@ export default function Settings({ settings, onSave, onClose }) {
           {/* Boating Route Server */}
           <div>
             <div style={S.label}>
-              Boating Route Server <span style={{ color: "#3d5060", fontStyle: "italic" }}>(optional)</span>
+              Boating Route Server <span style={{ color: "#9ba1ac", fontStyle: "italic" }}>(optional)</span>
             </div>
             <input value={draft.routeServerUrl} onChange={e => set("routeServerUrl", e.target.value)}
               placeholder="https://waypoint.troyhakala.com" style={S.input} />
-            <div style={{ fontSize: ".68rem", color: "#3d5060", fontFamily: "sans-serif",
+            <div style={{ fontSize: ".68rem", color: "#9ba1ac", fontFamily: "inherit",
               fontStyle: "italic", marginTop: 4 }}>
               Fetches water-aware GPX routes when start/end coordinates are set.
             </div>
@@ -226,11 +226,11 @@ export default function Settings({ settings, onSave, onClose }) {
           {/* AeroDataBox */}
           <div>
             <div style={S.label}>
-              AeroDataBox API Key <span style={{ color: "#3d5060", fontStyle: "italic" }}>(optional)</span>
+              AeroDataBox API Key <span style={{ color: "#9ba1ac", fontStyle: "italic" }}>(optional)</span>
             </div>
             <input value={draft.aeroDataBoxKey} onChange={e => set("aeroDataBoxKey", e.target.value)}
               placeholder="RapidAPI key…" style={S.input} />
-            <div style={{ fontSize: ".68rem", color: "#3d5060", fontFamily: "sans-serif",
+            <div style={{ fontSize: ".68rem", color: "#9ba1ac", fontFamily: "inherit",
               fontStyle: "italic", marginTop: 4 }}>
               From rapidapi.com → AeroDataBox. Enables automatic flight lookup by flight number.
             </div>
@@ -239,7 +239,7 @@ export default function Settings({ settings, onSave, onClose }) {
           {/* Anthropic / Claude */}
           <div>
             <div style={S.label}>
-              Anthropic API Key <span style={{ color: "#3d5060", fontStyle: "italic" }}>(optional)</span>
+              Anthropic API Key <span style={{ color: "#9ba1ac", fontStyle: "italic" }}>(optional)</span>
             </div>
             <div style={{ display: "flex", gap: ".4rem" }}>
               <input value={draft.anthropicKey}
@@ -252,7 +252,7 @@ export default function Settings({ settings, onSave, onClose }) {
                 {showAnthropicKey ? "Hide" : "Show"}
               </button>
             </div>
-            <div style={{ fontSize: ".68rem", color: "#3d5060", fontFamily: "sans-serif",
+            <div style={{ fontSize: ".68rem", color: "#9ba1ac", fontFamily: "inherit",
               fontStyle: "italic", marginTop: 4 }}>
               From console.anthropic.com. Enables Ask Claude suggestions.
             </div>
@@ -279,7 +279,7 @@ export default function Settings({ settings, onSave, onClose }) {
       {tab === "databases" && (
         <div>
           {dbs.length === 0 && editingDbId !== "new" && (
-            <div style={{ fontSize: ".82rem", color: "#4e7a9e", fontFamily: "sans-serif",
+            <div style={{ fontSize: ".82rem", color: "#6b7a8a", fontFamily: "inherit",
               fontStyle: "italic", marginBottom: ".75rem" }}>
               No databases configured. Add one to enable GitHub sync.
             </div>
@@ -293,11 +293,11 @@ export default function Settings({ settings, onSave, onClose }) {
               ) : (
                 <div style={{ display: "flex", justifyContent: "space-between",
                   alignItems: "center", padding: ".6rem .85rem",
-                  background: "#0d2035", border: "1px solid #1e3a52", borderRadius: 6 }}>
+                  background: "#f8f9fb", border: "1px solid #1e3a52", borderRadius: 6 }}>
                   <div>
-                    <div style={{ fontSize: ".88rem", color: "#e8dcc8", fontFamily: "sans-serif",
+                    <div style={{ fontSize: ".88rem", color: "#0e1014", fontFamily: "inherit",
                       fontWeight: 500 }}>{db.label || "Unnamed"}</div>
-                    <div style={{ fontSize: ".72rem", color: "#4e7a9e", fontFamily: "sans-serif",
+                    <div style={{ fontSize: ".72rem", color: "#6b7a8a", fontFamily: "inherit",
                       marginTop: 2 }}>
                       {[db.githubRepo || inferredRepo || "—", db.githubBranch || "data"].join(" · ")}
                     </div>
@@ -330,7 +330,7 @@ export default function Settings({ settings, onSave, onClose }) {
       {/* Footer */}
       <div style={{ marginTop: "1rem", display: "flex", justifyContent: "space-between",
         alignItems: "center", gap: ".5rem" }}>
-        <div style={{ fontSize: ".68rem", color: "#3d5060", fontFamily: "sans-serif",
+        <div style={{ fontSize: ".68rem", color: "#9ba1ac", fontFamily: "inherit",
           fontStyle: "italic" }}>
           Stored in your browser only. Changing providers takes effect after reload.
         </div>

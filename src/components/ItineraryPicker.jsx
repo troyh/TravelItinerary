@@ -2,20 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import NoteMarkdown from "./NoteMarkdown.jsx";
 import { listItineraries, loadFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import Settings from "./Settings.jsx";
+import { T, btn, input } from "../theme.js";
 
-const S = {
-  input: { background: "#0d1f33", border: "1px solid #2e5070", color: "#e8dcc8",
-    borderRadius: 4, padding: ".45rem .75rem", fontSize: ".88rem", fontFamily: "sans-serif",
-    outline: "none", boxSizing: "border-box" },
-  btnPrimary: { background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
-    borderRadius: 4, padding: ".4rem .9rem", fontSize: ".78rem", fontFamily: "sans-serif",
-    cursor: "pointer", whiteSpace: "nowrap" },
-  btnGhost: { background: "none", border: "1px solid #2e3a4a", color: "#4e7a9e",
-    borderRadius: 4, padding: ".4rem .9rem", fontSize: ".78rem", fontFamily: "sans-serif",
-    cursor: "pointer", whiteSpace: "nowrap" },
-};
-
-const DB_COLORS = ["#c9a84c", "#4a9eff", "#5cb85c", "#e83870", "#8338e8", "#38a8e8"];
+const DB_COLORS = ["#0b3d6b", "#2563eb", "#059669", "#dc2626", "#7c3aed", "#0891b2"];
 function dbColor(idx) { return DB_COLORS[idx % DB_COLORS.length]; }
 
 function formatDateRange(startDate, dayCount) {
@@ -32,8 +21,6 @@ function resolveDb(db) {
   const repo = db.githubRepo || inferRepo() || "";
   return { ...db, githubRepo: repo, githubBranch: db.githubBranch || "data" };
 }
-
-// ── Date helpers ──────────────────────────────────────────────────────────────
 
 function parseDate(s) {
   const [y, m, d] = s.split("-").map(Number);
@@ -52,26 +39,20 @@ function daysBetween(from, to) {
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-function GapSeparator({ label }) {
+function SectionLabel({ label, count }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: ".6rem",
-      margin: ".35rem 0", fontFamily: "sans-serif" }}>
-      <div style={{ flex: 1, height: 1, background: "#1a3040" }} />
-      <span style={{ fontSize: ".62rem", color: "#3d5868", letterSpacing: ".1em",
-        textTransform: "uppercase", flexShrink: 0 }}>{label}</span>
-      <div style={{ flex: 1, height: 1, background: "#1a3040" }} />
-    </div>
-  );
-}
-
-function SectionHeader({ label }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: ".6rem",
-      margin: "1.5rem 0 .6rem", fontFamily: "sans-serif" }}>
-      <div style={{ width: 16, height: 1, background: "#2e5070" }} />
-      <span style={{ fontSize: ".62rem", color: "#4e7a9e", letterSpacing: ".15em",
-        textTransform: "uppercase", flexShrink: 0 }}>{label}</span>
-      <div style={{ flex: 1, height: 1, background: "#2e5070" }} />
+    <div style={{
+      display: "flex", alignItems: "baseline", gap: 8,
+      paddingBottom: 10, marginBottom: 4,
+      borderBottom: `1px solid ${T.border}`,
+    }}>
+      <span style={{
+        fontSize: 11, fontWeight: 600, letterSpacing: "0.12em",
+        textTransform: "uppercase", color: T.textMuted,
+      }}>{label}</span>
+      {count != null && (
+        <span style={{ fontSize: 11, color: T.textFaint, fontVariantNumeric: "tabular-nums" }}>{count}</span>
+      )}
     </div>
   );
 }
@@ -103,7 +84,6 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
   const refreshAllRef  = useRef(false);
   const [loadError,    setLoadError]    = useState(null);
   const [showSettings, setShowSettings] = useState(false);
-  const [expanded,     setExpanded]     = useState(new Set()); // card keys with todos open
 
   useEffect(() => { document.title = "Travel Itinerary"; }, []);
 
@@ -223,19 +203,9 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
     onCreate(newName.trim(), dbId);
   }
 
-  function toggleExpanded(key, e) {
-    e.stopPropagation();
-    setExpanded(prev => {
-      const next = new Set(prev);
-      next.has(key) ? next.delete(key) : next.add(key);
-      return next;
-    });
-  }
-
   // ── Group files into sections ──────────────────────────────────────────────
 
   const todayMidnight = (() => { const t = new Date(); t.setHours(0, 0, 0, 0); return t; })();
-
   const enriched = files.map(f => ({ ...f, d: details[`${f.dbId}:${f.path}`] }));
 
   const upcoming = enriched
@@ -260,11 +230,9 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
     .filter(f => !f.d?.startDate)
     .sort((a, b) => (a.d?.title || a.name).localeCompare(b.d?.title || b.name));
 
-  const showSectionHeaders = (upcoming.length > 0 && (past.length > 0 || planning.length > 0));
-
   // ── Card renderer ──────────────────────────────────────────────────────────
 
-  function renderCard(f) {
+  function renderCard(f, { featured = false, dim = false } = {}) {
     const fileKey      = `${f.dbId}:${f.path}`;
     const d            = f.d;
     const displayTitle = d?.title || f.name;
@@ -272,253 +240,372 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
     const busy         = !!loadingPath;
     const color        = dbColor(f.dbIdx);
     const hasTodos     = (d?.todos?.length ?? 0) > 0;
-    const isExpanded   = expanded.has(fileKey);
 
-    const summaryLine = (() => {
-      const parts = [];
-      if (d?.startDate && d?.dayCount) {
-        parts.push(formatDateRange(d.startDate, d.dayCount));
-        parts.push(`${d.dayCount} day${d.dayCount !== 1 ? "s" : ""}`);
-      } else if (d?.dayCount) {
-        parts.push(`${d.dayCount} day${d.dayCount !== 1 ? "s" : ""}`);
+    const dateRange = d?.startDate && d?.dayCount ? formatDateRange(d.startDate, d.dayCount) : null;
+    const daysCount = d?.dayCount ? `${d.dayCount} day${d.dayCount !== 1 ? "s" : ""}` : null;
+
+    // Countdown badge
+    let countdown = null;
+    if (d?.startDate) {
+      const tripStart = parseDate(d.startDate);
+      const gap = daysBetween(todayMidnight, tripStart);
+      if (gap > 0 && gap <= 90) {
+        countdown = { value: gap, unit: "DAYS" };
+      } else if (gap === 0) {
+        countdown = { value: "Today", unit: null };
       }
-      if (d?.locations) parts.push(d.locations);
-      if (d?.drivingKm) {
-        const useMi = settings.distanceUnit === "mi";
-        const val = useMi ? Math.round(d.drivingKm * 0.621371) : d.drivingKm;
-        parts.push(`${val} ${useMi ? "mi" : "km"} driving`);
-      }
-      return parts.join(" · ") || null;
-    })();
+    }
+
+    const summaryParts = [];
+    if (d?.locations) summaryParts.push(d.locations);
+    if (d?.drivingKm) {
+      const useMi = settings.distanceUnit === "mi";
+      const val = useMi ? Math.round(d.drivingKm * 0.621371) : d.drivingKm;
+      summaryParts.push(`${val} ${useMi ? "mi" : "km"} driving`);
+    }
 
     return (
-      <div key={fileKey} onClick={() => !busy && handleLoad(f)}
-        style={{ padding: ".75rem 1rem", marginBottom: ".4rem",
-          background: "#0d2035", border: "1px solid #1e3a52", borderRadius: 6,
+      <button
+        key={fileKey}
+        onClick={() => !busy && handleLoad(f)}
+        style={{
+          display: "block", width: "100%", textAlign: "left",
+          background: T.surface,
+          border: `1px solid ${T.border}`,
+          borderRadius: 12, padding: "14px 16px",
           cursor: busy ? "default" : "pointer",
-          opacity: busy && !isLoading ? 0.5 : 1 }}>
+          opacity: dim && !isLoading ? 0.6 : 1,
+          fontFamily: T.font, color: T.text,
+          position: "relative", overflow: "hidden",
+          transition: "box-shadow 0.12s",
+        }}
+      >
+        {/* Accent stripe for featured/upcoming */}
+        {featured && (
+          <div style={{
+            position: "absolute", top: 0, left: 0, bottom: 0, width: 3,
+            background: T.accent,
+          }} />
+        )}
 
-        <div style={{ display: "flex", justifyContent: "space-between",
-          alignItems: "center", gap: ".5rem" }}>
-
-          {/* Title + badge */}
-          <div style={{ flex: 1, minWidth: 0, display: "flex",
-            alignItems: "center", gap: ".5rem", flexWrap: "wrap" }}>
-            <span style={{ fontSize: ".95rem", color: "#e8dcc8", fontWeight: 500 }}>
-              {displayTitle}
-            </span>
-            {multiDb && (
-              <span style={{ fontSize: ".6rem", color, border: `1px solid ${color}55`,
-                borderRadius: 3, padding: "1px 5px", fontFamily: "sans-serif",
-                letterSpacing: ".06em", textTransform: "uppercase", flexShrink: 0 }}>
-                {f.dbLabel}
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            {/* Title row */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
+              <span style={{ fontSize: 15, fontWeight: 600, letterSpacing: -0.1, color: T.text }}>
+                {displayTitle}
               </span>
+              {multiDb && (
+                <span style={{
+                  fontSize: 10, color, border: `1px solid ${color}44`,
+                  borderRadius: 4, padding: "1px 6px", letterSpacing: "0.06em",
+                  textTransform: "uppercase", flexShrink: 0, fontWeight: 500,
+                }}>
+                  {f.dbLabel}
+                </span>
+              )}
+              {isLoading && (
+                <span style={{ fontSize: 11, color: T.textMuted }}>Loading…</span>
+              )}
+            </div>
+
+            {/* Date + day count */}
+            {(dateRange || daysCount) && (
+              <div style={{
+                fontSize: 12, color: T.textMuted, marginBottom: summaryParts.length || hasTodos ? 4 : 0,
+                fontVariantNumeric: "tabular-nums",
+                display: "flex", gap: 6, alignItems: "center",
+              }}>
+                {dateRange && <span>{dateRange}</span>}
+                {dateRange && daysCount && <span style={{ color: T.textFaint }}>·</span>}
+                {daysCount && <span>{daysCount}</span>}
+              </div>
+            )}
+
+            {/* Route/location summary */}
+            {summaryParts.length > 0 && (
+              <div style={{
+                fontSize: 12, color: T.textMuted,
+                overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                marginBottom: hasTodos ? 6 : 0,
+              }}>
+                {summaryParts.join(" · ")}
+              </div>
+            )}
+
+            {/* TODOs */}
+            {hasTodos && (
+              <div style={{ marginTop: 6 }}>
+                {d.todos.slice(0, 3).map((t, i) => (
+                  <div key={i} style={{ display: "flex", gap: 6, alignItems: "baseline", marginBottom: 2 }}>
+                    <span style={{ color: T.accent, fontSize: 10, flexShrink: 0 }}>□</span>
+                    <div style={{ fontSize: 11, color: T.textMuted, lineHeight: 1.4 }}>
+                      <NoteMarkdown>{t}</NoteMarkdown>
+                    </div>
+                  </div>
+                ))}
+                {d.todos.length > 3 && (
+                  <div style={{ fontSize: 11, color: T.textFaint, marginTop: 2 }}>
+                    +{d.todos.length - 3} more
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
-          {/* Right side: loading indicator */}
-          {isLoading && (
-            <span style={{ fontSize: ".75rem", fontFamily: "sans-serif",
-              flexShrink: 0, color: "#e8dcc8" }}>Loading…</span>
+          {/* Countdown badge */}
+          {countdown && (
+            <div style={{
+              background: T.accentSoft, color: T.accent,
+              padding: "6px 10px", borderRadius: 8, flexShrink: 0,
+              display: "flex", flexDirection: "column", alignItems: "center",
+              minWidth: 50,
+            }}>
+              <div style={{ fontSize: countdown.unit ? 18 : 12, fontWeight: 700, lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>
+                {countdown.value}
+              </div>
+              {countdown.unit && (
+                <div style={{ fontSize: 9, letterSpacing: "0.08em", marginTop: 2 }}>
+                  {countdown.unit}
+                </div>
+              )}
+            </div>
           )}
         </div>
-
-        {/* Summary line */}
-        {summaryLine && (
-          <div style={{ fontFamily: "sans-serif", fontSize: ".72rem", color: "#4e7a9e",
-            marginTop: ".25rem", overflow: "hidden", textOverflow: "ellipsis",
-            whiteSpace: "nowrap" }}>
-            {summaryLine}
-          </div>
-        )}
-
-        {/* Todos */}
-        {hasTodos && (
-          <div style={{ marginTop: ".45rem" }}>
-            {d.todos.map((t, i) => (
-              <div key={i} style={{ display: "flex", gap: ".4rem",
-                alignItems: "baseline", marginBottom: 2 }}>
-                <span style={{ color: "#c9a84c", fontSize: ".65rem",
-                  flexShrink: 0, marginTop: 2 }}>□</span>
-                <div style={{ fontSize: ".72rem", color: "#8fb0cc",
-                  lineHeight: 1.4, fontFamily: "sans-serif" }}>
-                  <NoteMarkdown>{t}</NoteMarkdown>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      </button>
     );
   }
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
-  const subtitleText = multiDb
+  const dbSubtitle = multiDb
     ? databases.map(db => db.label || db.githubRepo || "—").join(" · ")
     : databases[0]
-      ? `${databases[0].githubRepo || inferRepo() || "—"} · ${ITINERARIES_FOLDER}/`
-      : "Configure a database in Settings to sync";
+      ? `${databases[0].githubRepo || inferRepo() || "—"} / ${ITINERARIES_FOLDER}/`
+      : null;
 
   return (
-    <div style={{ fontFamily: "Georgia, 'Times New Roman', serif", background: "#0b1929",
-      minHeight: "100vh", color: "#e8dcc8" }}>
+    <div style={{ fontFamily: T.font, background: T.bg, minHeight: "100vh", color: T.text }}>
 
-      {/* Header */}
-      <div style={{ background: "linear-gradient(135deg,#0b1929 0%,#112a44 50%,#0b1929 100%)",
-        borderBottom: "1px solid #c9a84c33", padding: "2.5rem 2rem 2rem" }}>
-        <div style={{ maxWidth: 640, margin: "0 auto" }}>
-          <div style={{ display: "flex", justifyContent: "space-between",
-            alignItems: "center", marginBottom: ".5rem" }}>
-            <div style={{ fontSize: ".7rem", letterSpacing: ".25em", color: "#c9a84c",
-              textTransform: "uppercase" }}>Travel Itinerary</div>
-            <button onClick={() => setShowSettings(p => !p)} title="Settings"
-              style={{ background: "none", border: "none",
-                color: showSettings ? "#c9a84c" : "#6b8fa8",
-                cursor: "pointer", fontSize: "1rem", padding: 0 }}>⚙</button>
+      {/* ── Page layout: sidebar + main on desktop ── */}
+      <div style={{ display: "flex", minHeight: "100vh" }}>
+
+        {/* Sidebar */}
+        <aside style={{
+          width: 260, flexShrink: 0,
+          borderRight: `1px solid ${T.border}`,
+          background: T.surface2,
+          padding: "32px 20px",
+          display: "flex", flexDirection: "column", gap: 24,
+          position: "sticky", top: 0, height: "100vh", overflowY: "auto",
+        }}>
+          {/* Logo / app name */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{
+              width: 30, height: 30, borderRadius: 8, background: T.accent,
+              display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+            }}>
+              <svg width="18" height="18" viewBox="0 0 256 256" fill="none">
+                <line x1="128" y1="50" x2="128" y2="206" stroke="white" strokeOpacity="0.5" strokeWidth="14" strokeLinecap="round"/>
+                <circle cx="128" cy="56" r="14" fill="white" stroke="white" strokeWidth="4"/>
+                <circle cx="128" cy="200" r="14" fill="white" stroke="white" strokeWidth="4"/>
+                <circle cx="128" cy="128" r="36" fill={T.amber}/>
+              </svg>
+            </div>
+            <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: -0.2, color: T.text }}>
+              Travel Itinerary
+            </div>
           </div>
-          <h1 style={{ fontSize: "clamp(1.4rem,4vw,2rem)", fontWeight: 400,
-            color: "#f5edd8", margin: "0 0 .3rem", letterSpacing: "-.02em" }}>
-            Your Itineraries
-          </h1>
-          <p style={{ color: "#6b8fa8", margin: 0, fontSize: ".85rem",
-            fontFamily: "sans-serif" }}>{subtitleText}</p>
-          {showSettings && (
-            <div style={{ marginTop: "1.25rem" }}>
-              <Settings settings={settings}
-                onSave={draft => { onSettingsChange(draft); setShowSettings(false); }}
-                onClose={() => setShowSettings(false)} />
+
+          {/* DB info */}
+          {dbSubtitle && (
+            <div style={{ fontSize: 11, color: T.textMuted, lineHeight: 1.5 }}>
+              {dbSubtitle}
             </div>
           )}
-        </div>
-      </div>
 
-      <div style={{ maxWidth: 640, margin: "0 auto", padding: "1.5rem 1rem 3rem" }}>
+          {/* Settings */}
+          <div style={{ flex: 1 }} />
+          <button
+            onClick={() => setShowSettings(p => !p)}
+            style={{
+              ...btn.ghost,
+              display: "flex", alignItems: "center", gap: 8, width: "100%",
+              justifyContent: "flex-start",
+              background: showSettings ? T.accentSoft : "transparent",
+              color: showSettings ? T.accent : T.textMuted,
+              borderColor: showSettings ? T.accent + "44" : T.border,
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <path d="M8 10.5A2.5 2.5 0 1 0 8 5.5a2.5 2.5 0 0 0 0 5z" stroke="currentColor" strokeWidth="1.4"/>
+              <path d="M13.5 8c0-.28-.02-.56-.06-.83l1.28-1a.5.5 0 0 0 .12-.64l-1.2-2.07a.5.5 0 0 0-.61-.22l-1.5.6a6 6 0 0 0-1.43-.83l-.22-1.58A.5.5 0 0 0 9.38 1H6.62a.5.5 0 0 0-.5.43L5.9 3.01a6 6 0 0 0-1.43.83l-1.5-.6a.5.5 0 0 0-.61.22L1.16 5.53a.5.5 0 0 0 .12.64l1.28 1A5.9 5.9 0 0 0 2.5 8c0 .28.02.56.06.83l-1.28 1a.5.5 0 0 0-.12.64l1.2 2.07a.5.5 0 0 0 .61.22l1.5-.6c.44.32.92.6 1.43.83l.22 1.58c.06.25.27.43.5.43h2.76a.5.5 0 0 0 .5-.43l.22-1.58c.51-.23.99-.5 1.43-.83l1.5.6a.5.5 0 0 0 .61-.22l1.2-2.07a.5.5 0 0 0-.12-.64l-1.28-1c.04-.27.06-.55.06-.83z" stroke="currentColor" strokeWidth="1.4"/>
+            </svg>
+            Settings
+          </button>
+        </aside>
 
-        {/* File list */}
-        {hasAnyDb && (
-          <div style={{ marginBottom: "2rem" }}>
-            {listStatus === "loading" && (
-              <div style={{ color: "#4e7a9e", fontFamily: "sans-serif",
-                fontSize: ".85rem", padding: ".75rem 0" }}>Loading…</div>
-            )}
-            {listStatus === "error" && (
-              <div style={{ color: "#e87878", fontFamily: "sans-serif",
-                fontSize: ".82rem", padding: ".75rem 0" }}>
-                Could not load list from GitHub — check your token and repo name.
+        {/* Main content */}
+        <main style={{ flex: 1, padding: "40px 48px 80px", maxWidth: 760, minWidth: 0 }}>
+
+          {/* Page header */}
+          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 36 }}>
+            <div>
+              <div style={{ fontSize: 11, color: T.textMuted, letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 500, marginBottom: 6 }}>
+                {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
               </div>
-            )}
-            {listStatus === "idle" && files.length === 0 && (
-              <div style={{ color: "#4e7a9e", fontFamily: "sans-serif",
-                fontSize: ".85rem", padding: ".75rem 0", fontStyle: "italic" }}>
-                {canWrite
-                  ? "No itineraries yet — create one below."
-                  : "Add a GitHub token in Settings ⚙ to load your itineraries."}
-              </div>
-            )}
-
-            {/* ── Upcoming ── */}
-            {showSectionHeaders && upcoming.length > 0 && (
-              <SectionHeader label="Upcoming" />
-            )}
-            {upcoming.map((f, i) => {
-              const sd = f.d?.startDate;
-              const nodes = [];
-
-              // Gap separator before this card
-              if (i === 0 && sd) {
-                const tripStart = parseDate(sd);
-                const gap = daysBetween(todayMidnight, tripStart);
-                if (gap > 0)      nodes.push(<GapSeparator key="gap-today" label={`In ${gap} day${gap !== 1 ? "s" : ""}`} />);
-                else if (gap === 0) nodes.push(<GapSeparator key="gap-today" label="Starts today" />);
-              } else if (i > 0) {
-                const prev = upcoming[i - 1];
-                const prevEnd = getEndDate(prev.d?.startDate, prev.d?.dayCount);
-                if (prevEnd && sd) {
-                  const gap = daysBetween(prevEnd, parseDate(sd));
-                  if (gap > 0) nodes.push(
-                    <GapSeparator key={`gap-${i}`} label={`${gap}-day gap`} />
-                  );
-                }
-              }
-
-              nodes.push(renderCard(f));
-              return nodes;
-            })}
-
-            {/* ── Planning ── */}
-            {planning.length > 0 && <SectionHeader label="Planning" />}
-            {planning.map(f => renderCard(f))}
-
-            {/* ── Past ── */}
-            {past.length > 0 && <SectionHeader label="Past" />}
-            {past.map(f => renderCard(f))}
-
-            {loadError && (
-              <div style={{ color: "#e87878", fontFamily: "sans-serif",
-                fontSize: ".78rem", marginTop: ".5rem" }}>
-                {loadError}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Local unsaved session */}
-        {localCache && (
-          <div style={{ marginBottom: "2rem" }}>
-            <div style={{ fontSize: ".62rem", color: "#6b8fa8", letterSpacing: ".1em",
-              textTransform: "uppercase", fontFamily: "sans-serif", marginBottom: ".5rem" }}>
-              Unsaved Local Session
+              <h1 style={{ fontSize: 34, fontWeight: 700, margin: 0, letterSpacing: -0.6, color: T.text }}>
+                Itineraries
+              </h1>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between",
-              alignItems: "center", padding: ".85rem 1.1rem",
-              background: "#0d2035", border: "1px solid #2e5070", borderRadius: 6 }}>
-              <div>
-                <div style={{ fontSize: ".9rem", color: "#c8daea", fontWeight: 500 }}>
-                  {localCache.title || "Untitled"}
-                </div>
-                {localCache.days?.length > 0 && (
-                  <div style={{ fontSize: ".72rem", color: "#4e7a9e",
-                    fontFamily: "sans-serif", marginTop: 2 }}>
-                    {localCache.days.length} day{localCache.days.length !== 1 ? "s" : ""}
-                  </div>
-                )}
-              </div>
-              <button onClick={() => onLoad("__local__", localCache)}
-                style={S.btnGhost}>Resume →</button>
-            </div>
-          </div>
-        )}
-
-        {/* Create new */}
-        {canWrite && (
-          <div style={{ padding: "1.25rem", background: "#0a1a2a",
-            border: "1px solid #1e3a52", borderRadius: 6 }}>
-            <div style={{ fontSize: ".62rem", color: "#c9a84c", letterSpacing: ".12em",
-              textTransform: "uppercase", fontFamily: "sans-serif", marginBottom: ".85rem" }}>
-              New Itinerary
-            </div>
-            <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
-              <input value={newName} onChange={e => setNewName(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && handleCreate()}
-                placeholder="Name — e.g. Pacific Northwest 2027"
-                style={{ ...S.input, flex: 1, minWidth: 160 }} />
-              {multiDb && writableDbs.length > 1 && (
-                <select value={createDbId ?? defaultCreateDbId ?? ""}
-                  onChange={e => setCreateDbId(e.target.value)}
-                  style={{ ...S.input, width: "auto", cursor: "pointer" }}>
-                  {writableDbs.map((db, i) => (
-                    <option key={db.id} value={db.id}>{db.label || `DB ${i + 1}`}</option>
-                  ))}
-                </select>
-              )}
-              <button onClick={handleCreate} disabled={!newName.trim()}
-                style={{ ...S.btnPrimary, opacity: !newName.trim() ? 0.45 : 1 }}>
-                Create
+            {canWrite && (
+              <button
+                onClick={() => document.getElementById("new-itinerary-input")?.focus()}
+                style={btn.primary}
+              >
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                </svg>
+                New trip
               </button>
-            </div>
+            )}
           </div>
-        )}
+
+          {/* Settings panel (inline, full-width) */}
+          {showSettings && (
+            <div style={{ marginBottom: 28, padding: "20px 24px", background: T.surface2, border: `1px solid ${T.border}`, borderRadius: 12 }}>
+              <Settings
+                settings={settings}
+                onSave={draft => { onSettingsChange(draft); setShowSettings(false); }}
+                onClose={() => setShowSettings(false)}
+              />
+            </div>
+          )}
+
+          {/* Status / errors */}
+          {listStatus === "loading" && (
+            <div style={{ color: T.textMuted, fontSize: 13, padding: "12px 0" }}>Loading…</div>
+          )}
+          {loadError && (
+            <div style={{
+              padding: "10px 14px", background: T.redSoft, border: `1px solid ${T.redBorder}`,
+              borderRadius: 8, fontSize: 13, color: T.red, marginBottom: 16,
+            }}>
+              {loadError}
+            </div>
+          )}
+          {listStatus === "idle" && !hasAnyDb && (
+            <div style={{
+              padding: "20px 24px", background: T.surface2, border: `1px solid ${T.border}`,
+              borderRadius: 12, fontSize: 14, color: T.textMuted, lineHeight: 1.6,
+            }}>
+              Open Settings to connect a GitHub repository and sync your itineraries.
+            </div>
+          )}
+          {listStatus === "idle" && hasAnyDb && files.length === 0 && !canWrite && (
+            <div style={{ fontSize: 13, color: T.textMuted, padding: "12px 0", fontStyle: "italic" }}>
+              Add a GitHub token in Settings to load your itineraries.
+            </div>
+          )}
+
+          {/* Local unsaved session */}
+          {localCache && (
+            <div style={{ marginBottom: 28 }}>
+              <SectionLabel label="Unsaved local session" />
+              <div style={{ marginTop: 8 }}>
+                <div style={{
+                  display: "flex", justifyContent: "space-between", alignItems: "center",
+                  padding: "14px 16px", background: T.surface,
+                  border: `1px solid ${T.border}`, borderRadius: 12,
+                }}>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 2 }}>
+                      {localCache.title || "Untitled"}
+                    </div>
+                    {localCache.days?.length > 0 && (
+                      <div style={{ fontSize: 12, color: T.textMuted }}>
+                        {localCache.days.length} day{localCache.days.length !== 1 ? "s" : ""}
+                      </div>
+                    )}
+                  </div>
+                  <button onClick={() => onLoad("__local__", localCache)} style={btn.ghost}>
+                    Resume →
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── Upcoming ── */}
+          {upcoming.length > 0 && (
+            <div style={{ marginBottom: 32 }}>
+              <SectionLabel label="Upcoming" count={upcoming.length} />
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 8 }}>
+                {upcoming.map((f, i) => renderCard(f, { featured: i === 0 }))}
+              </div>
+            </div>
+          )}
+
+          {/* ── Planning ── */}
+          {planning.length > 0 && (
+            <div style={{ marginBottom: 32 }}>
+              <SectionLabel label="Planning" count={planning.length} />
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 8 }}>
+                {planning.map(f => renderCard(f))}
+              </div>
+            </div>
+          )}
+
+          {/* ── Past ── */}
+          {past.length > 0 && (
+            <div style={{ marginBottom: 32 }}>
+              <SectionLabel label="Past" count={past.length} />
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 8 }}>
+                {past.map(f => renderCard(f, { dim: true }))}
+              </div>
+            </div>
+          )}
+
+          {/* ── Create new ── */}
+          {canWrite && (
+            <div style={{
+              padding: "20px 24px", background: T.surface2,
+              border: `1px solid ${T.border}`, borderRadius: 12,
+            }}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: T.textMuted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>
+                New Itinerary
+              </div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <input
+                  id="new-itinerary-input"
+                  value={newName}
+                  onChange={e => setNewName(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && handleCreate()}
+                  placeholder="Name — e.g. Pacific Northwest 2027"
+                  style={{ ...input, flex: 1, minWidth: 160 }}
+                />
+                {multiDb && writableDbs.length > 1 && (
+                  <select
+                    value={createDbId ?? defaultCreateDbId ?? ""}
+                    onChange={e => setCreateDbId(e.target.value)}
+                    style={{ ...input, width: "auto", cursor: "pointer", background: T.bg }}
+                  >
+                    {writableDbs.map((db, i) => (
+                      <option key={db.id} value={db.id}>{db.label || `DB ${i + 1}`}</option>
+                    ))}
+                  </select>
+                )}
+                <button
+                  onClick={handleCreate}
+                  disabled={!newName.trim()}
+                  style={{ ...btn.primary, opacity: !newName.trim() ? 0.45 : 1 }}
+                >
+                  Create
+                </button>
+              </div>
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );

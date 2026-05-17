@@ -73,11 +73,11 @@ function greatCirclePoints(lat1, lng1, lat2, lng2, steps = 48) {
 
 const CATEGORY_COLOR = {
   restaurant:    "#e83870",
-  marina:        "#4a9eff",
+  marina:        "#2563eb",
   accommodation: "#8338e8",
   provisioning:  "#38a8e8",
-  activity:      "#5cb85c",
-  other:         "#6b8fa8",
+  activity:      "#16a34a",
+  other:         "#5c6470",
 };
 
 function placeIcon(category) {
@@ -87,7 +87,7 @@ function placeIcon(category) {
     iconAnchor: [6, 6],
     iconSize:   [12, 12],
     html: `<svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="6" cy="6" r="5" fill="${color}" stroke="#0b1929" stroke-width="1.5"/>
+      <circle cx="6" cy="6" r="5" fill="${color}" stroke="#ffffff" stroke-width="1.5"/>
     </svg>`,
   });
 }
@@ -100,9 +100,9 @@ function markerIcon(n) {
     iconAnchor: [13, 13],
     iconSize:   [26, 26],
     html: `<svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="13" cy="13" r="11.5" fill="#1a3352" stroke="#c9a84c" stroke-width="1.5"/>
+      <circle cx="13" cy="13" r="11.5" fill="#e8f1f9" stroke="#0b3d6b" stroke-width="1.5"/>
       <text x="13" y="17.5" text-anchor="middle" font-size="${n > 9 ? 8 : 10}"
-        font-family="sans-serif" font-weight="bold" fill="#c9a84c">${n}</text>
+        font-family="sans-serif" font-weight="bold" fill="#0b3d6b">${n}</text>
     </svg>`,
   });
 }
@@ -236,9 +236,9 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
           }).addTo(map);
           // Thin dotted connectors from overnight to airport and from airport to overnight
           L.polyline([[fromC.lat, fromC.lng], [flightWithCoords.departureLat, flightWithCoords.departureLng]],
-            { color: "#4e7a9e", weight: 1, opacity: 0.4, dashArray: "2,4" }).addTo(map);
+            { color: "#6b7a8a", weight: 1, opacity: 0.4, dashArray: "2,4" }).addTo(map);
           L.polyline([[flightWithCoords.arrivalLat, flightWithCoords.arrivalLng], [toC.lat, toC.lng]],
-            { color: "#4e7a9e", weight: 1, opacity: 0.4, dashArray: "2,4" }).addTo(map);
+            { color: "#6b7a8a", weight: 1, opacity: 0.4, dashArray: "2,4" }).addTo(map);
         } else {
           // No stored airport coords — draw arc between overnights
           const arcPoints = greatCirclePoints(fromC.lat, fromC.lng, toC.lat, toC.lng);
@@ -263,7 +263,7 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
         );
         if (!hasGpsRoute && !hasGpsDir) {
           L.polyline([[fromC.lat, fromC.lng], [toC.lat, toC.lng]], {
-            color: "#4e7a9e", weight: 2, opacity: 0.6,
+            color: "#6b7a8a", weight: 2, opacity: 0.6,
           }).addTo(map);
         }
       }
@@ -302,7 +302,7 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
           r.time ? `Departs ${(() => { const [h,m]=r.time.split(':').map(Number); return `${h%12||12}:${String(m).padStart(2,'0')} ${h<12?'AM':'PM'}`; })()}` : null,
         ].filter(Boolean).join('<br>');
 
-        L.polyline(pts, { color: "#c9a84c", weight: 4, opacity: 0.7,
+        L.polyline(pts, { color: "#0b3d6b", weight: 4, opacity: 0.7,
           dashArray: hasGpx ? null : "6,5" })
           .bindPopup(routeLabel, { className: "leaflet-popup-dark" })
           .addTo(map);
@@ -357,11 +357,11 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
         borderRadius: open ? "0 4px 0 0" : "0 4px 4px 0" }}>
         <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
           <span style={{ fontSize: ".62rem", letterSpacing: ".1em", textTransform: "uppercase",
-            fontFamily: "sans-serif", color: "#4e7a9e" }}>
+            fontFamily: "inherit", color: "#6b7a8a" }}>
             Overview Map
           </span>
           {geocoding && (
-            <span style={{ fontSize: ".62rem", color: "#3d5060", fontFamily: "sans-serif",
+            <span style={{ fontSize: ".62rem", color: "#9ba1ac", fontFamily: "inherit",
               fontStyle: "italic" }}>
               loading…
             </span>
@@ -370,8 +370,8 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
         <button
           type="button"
           onClick={() => setOpen(o => !o)}
-          style={{ background: "none", border: "none", color: "#4e7a9e",
-            cursor: "pointer", fontSize: ".72rem", fontFamily: "sans-serif",
+          style={{ background: "none", border: "none", color: "#6b7a8a",
+            cursor: "pointer", fontSize: ".72rem", fontFamily: "inherit",
             padding: "0 .2rem" }}>
           {open ? "▲ hide" : "▼ show"}
         </button>
@@ -384,7 +384,7 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
           height: mapHeight,
           borderLeft: "3px solid #4e7a9e44",
           display: open ? "block" : "none",
-          background: "#0b1929",
+          background: "#ffffff",
         }}
       />
 

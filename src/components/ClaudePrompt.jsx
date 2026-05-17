@@ -2,17 +2,17 @@ import { useState } from "react";
 import { askClaude, SYSTEM_FULL_ITINERARY, SYSTEM_DAY_SUGGESTIONS } from "../lib/claude.js";
 
 const S = {
-  input: { background: "#0a1a2a", border: "1px solid #2e5070", color: "#e8dcc8",
-    borderRadius: 4, padding: ".4rem .65rem", fontSize: ".82rem", fontFamily: "sans-serif",
+  input: { background: "#f0f4f8", border: "1px solid #2e5070", color: "#0e1014",
+    borderRadius: 4, padding: ".4rem .65rem", fontSize: ".82rem", fontFamily: "inherit",
     outline: "none", boxSizing: "border-box", width: "100%", resize: "vertical" },
-  btnPrimary: { background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
-    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
+  btnPrimary: { background: "#e8f1f9", border: "1px solid #2e5070", color: "#0b3d6b",
+    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "inherit",
     cursor: "pointer", whiteSpace: "nowrap", touchAction: "manipulation" },
-  btnGhost: { background: "none", border: "1px solid #2e3a4a", color: "#4e7a9e",
-    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
+  btnGhost: { background: "none", border: "1px solid #2e3a4a", color: "#6b7a8a",
+    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "inherit",
     cursor: "pointer", whiteSpace: "nowrap", touchAction: "manipulation" },
   label: { fontSize: ".62rem", letterSpacing: ".1em", textTransform: "uppercase",
-    fontFamily: "sans-serif", color: "#4e7a9e" },
+    fontFamily: "inherit", color: "#6b7a8a" },
 };
 
 function formatDate(iso) {
@@ -39,18 +39,18 @@ function FullPreview({ preview }) {
   const dateRange = formatDateRange(preview.startDate, days.length);
 
   return (
-    <div style={{ fontFamily: "sans-serif" }}>
+    <div style={{ fontFamily: "inherit" }}>
       {/* Title + meta */}
-      <div style={{ fontSize: ".95rem", color: "#e8dcc8", fontWeight: 600,
+      <div style={{ fontSize: ".95rem", color: "#0e1014", fontWeight: 600,
         marginBottom: ".2rem" }}>
         "{preview.title}"
       </div>
       {preview.subtitle && (
-        <div style={{ fontSize: ".78rem", color: "#8fb0cc", marginBottom: ".2rem" }}>
+        <div style={{ fontSize: ".78rem", color: "#5c6470", marginBottom: ".2rem" }}>
           {preview.subtitle}
         </div>
       )}
-      <div style={{ fontSize: ".72rem", color: "#4e7a9e", marginBottom: ".85rem" }}>
+      <div style={{ fontSize: ".72rem", color: "#6b7a8a", marginBottom: ".85rem" }}>
         {[dateRange, days.length ? `${days.length} day${days.length !== 1 ? "s" : ""}` : null]
           .filter(Boolean).join(" · ")}
       </div>
@@ -62,20 +62,20 @@ function FullPreview({ preview }) {
           const pl = places[String(d.day)] ?? [];
           return (
             <div key={d.day} style={{ borderLeft: "2px solid #2e5070", paddingLeft: ".65rem" }}>
-              <div style={{ fontSize: ".8rem", color: "#c9a84c", fontWeight: 600,
+              <div style={{ fontSize: ".8rem", color: "#0b3d6b", fontWeight: 600,
                 marginBottom: ".2rem" }}>
-                Day {d.day}{"  "}<span style={{ fontWeight: 400, color: "#c8daea" }}>{d.leg}</span>
+                Day {d.day}{"  "}<span style={{ fontWeight: 400, color: "#0e1014" }}>{d.leg}</span>
               </div>
               {hl.map((h, i) => (
-                <div key={i} style={{ fontSize: ".72rem", color: "#8fb0cc", marginLeft: ".3rem" }}>
+                <div key={i} style={{ fontSize: ".72rem", color: "#5c6470", marginLeft: ".3rem" }}>
                   ★ {h}
                 </div>
               ))}
               {pl.map((p, i) => (
-                <div key={i} style={{ fontSize: ".72rem", color: "#6b8fa8", marginLeft: ".3rem",
+                <div key={i} style={{ fontSize: ".72rem", color: "#5c6470", marginLeft: ".3rem",
                   marginTop: ".1rem" }}>
                   📍 {p.name}
-                  <span style={{ color: "#3d5060" }}> · {p.category}</span>
+                  <span style={{ color: "#9ba1ac" }}> · {p.category}</span>
                 </div>
               ))}
             </div>
@@ -91,7 +91,7 @@ function DayPreview({ preview }) {
   const highlights = preview.highlights ?? [];
 
   return (
-    <div style={{ fontFamily: "sans-serif" }}>
+    <div style={{ fontFamily: "inherit" }}>
       {places.length > 0 && (
         <div style={{ marginBottom: ".65rem" }}>
           <div style={{ ...S.label, marginBottom: ".35rem" }}>
@@ -99,12 +99,12 @@ function DayPreview({ preview }) {
           </div>
           {places.map((p, i) => (
             <div key={i} style={{ marginBottom: ".35rem" }}>
-              <div style={{ fontSize: ".8rem", color: "#c8daea" }}>
+              <div style={{ fontSize: ".8rem", color: "#0e1014" }}>
                 📍 {p.name}
-                <span style={{ color: "#3d5060", fontSize: ".7rem" }}> · {p.category}</span>
+                <span style={{ color: "#9ba1ac", fontSize: ".7rem" }}> · {p.category}</span>
               </div>
               {p.notes && (
-                <div style={{ fontSize: ".72rem", color: "#6b8fa8", marginLeft: "1.1rem",
+                <div style={{ fontSize: ".72rem", color: "#5c6470", marginLeft: "1.1rem",
                   marginTop: ".1rem" }}>
                   {p.notes}
                 </div>
@@ -119,7 +119,7 @@ function DayPreview({ preview }) {
             Highlights ({highlights.length})
           </div>
           {highlights.map((h, i) => (
-            <div key={i} style={{ fontSize: ".72rem", color: "#8fb0cc", marginBottom: ".2rem" }}>
+            <div key={i} style={{ fontSize: ".72rem", color: "#5c6470", marginBottom: ".2rem" }}>
               ★ {h}
             </div>
           ))}
@@ -191,7 +191,7 @@ export default function ClaudePrompt({
   if (mode === "day" && !isOpen) {
     return (
       <div style={{ marginTop: "1rem" }}>
-        <div style={{ padding: ".75rem 1rem", background: "#0a1a2a",
+        <div style={{ padding: ".75rem 1rem", background: "#f0f4f8",
           borderLeft: "3px solid #4e7a9e44", borderRadius: "0 4px 0 0",
           display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <span style={{ ...S.label }}>Ask Claude</span>
@@ -208,7 +208,7 @@ export default function ClaudePrompt({
   return (
     <div style={{ marginTop: "1rem" }}>
       {/* Header */}
-      <div style={{ padding: ".75rem 1rem", background: "#0a1a2a",
+      <div style={{ padding: ".75rem 1rem", background: "#f0f4f8",
         borderLeft: "3px solid #4e7a9e66", borderRadius: "0 4px 0 0",
         display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <span style={{ ...S.label }}>
@@ -216,14 +216,14 @@ export default function ClaudePrompt({
         </span>
         {mode === "day" && !preview && (
           <button type="button" onClick={handleCancel}
-            style={{ background: "none", border: "none", color: "#4e7a9e",
+            style={{ background: "none", border: "none", color: "#6b7a8a",
               cursor: "pointer", fontSize: ".85rem", padding: 0 }}>
             ×
           </button>
         )}
       </div>
 
-      <div style={{ background: "#0a1a2a", borderLeft: "3px solid #4e7a9e66",
+      <div style={{ background: "#f0f4f8", borderLeft: "3px solid #4e7a9e66",
         padding: ".75rem 1rem" }}>
 
         {/* Preview */}
@@ -232,12 +232,12 @@ export default function ClaudePrompt({
             {/* Preview header */}
             <div style={{ display: "flex", justifyContent: "space-between",
               alignItems: "center", marginBottom: ".65rem" }}>
-              <div style={{ fontSize: ".72rem", color: "#c9a84c", fontFamily: "sans-serif",
+              <div style={{ fontSize: ".72rem", color: "#0b3d6b", fontFamily: "inherit",
                 fontWeight: 600, letterSpacing: ".04em" }}>
                 ✨ {mode === "full" ? "Claude's Itinerary" : `Suggestions for Day ${dayNum}`}
               </div>
               <button type="button" onClick={handleCancel}
-                style={{ background: "none", border: "none", color: "#4e7a9e",
+                style={{ background: "none", border: "none", color: "#6b7a8a",
                   cursor: "pointer", fontSize: ".85rem", padding: 0 }}>
                 ×
               </button>
@@ -291,7 +291,7 @@ export default function ClaudePrompt({
 
             {/* Error */}
             {error && (
-              <div style={{ fontSize: ".72rem", color: "#e87878", fontFamily: "sans-serif",
+              <div style={{ fontSize: ".72rem", color: "#dc2626", fontFamily: "inherit",
                 marginBottom: ".5rem" }}>
                 {error}
               </div>
@@ -310,7 +310,7 @@ export default function ClaudePrompt({
                 </button>
               )}
               {loading && (
-                <span style={{ fontSize: ".7rem", color: "#4e7a9e", fontFamily: "sans-serif",
+                <span style={{ fontSize: ".7rem", color: "#6b7a8a", fontFamily: "inherit",
                   fontStyle: "italic" }}>
                   This may take a moment…
                 </span>

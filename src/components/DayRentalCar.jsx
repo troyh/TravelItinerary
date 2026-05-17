@@ -5,17 +5,17 @@ const borderAccent = "3px solid #e8832e66";
 const accentColor  = "#e8832e";
 
 const S = {
-  input: { background: "#0a1a2a", border: "1px solid #2e5070", color: "#e8dcc8",
-    borderRadius: 4, padding: ".4rem .65rem", fontSize: ".82rem", fontFamily: "sans-serif",
+  input: { background: "#f0f4f8", border: "1px solid #2e5070", color: "#0e1014",
+    borderRadius: 4, padding: ".4rem .65rem", fontSize: ".82rem", fontFamily: "inherit",
     outline: "none", boxSizing: "border-box" },
-  btnPrimary: { background: "#1a3352", border: "1px solid #2e5070", color: "#c9a84c",
-    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
+  btnPrimary: { background: "#e8f1f9", border: "1px solid #2e5070", color: "#0b3d6b",
+    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "inherit",
     cursor: "pointer", whiteSpace: "nowrap", touchAction: "manipulation" },
-  btnGhost: { background: "none", border: "1px solid #2e3a4a", color: "#4e7a9e",
-    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "sans-serif",
+  btnGhost: { background: "none", border: "1px solid #2e3a4a", color: "#6b7a8a",
+    borderRadius: 4, padding: ".35rem .8rem", fontSize: ".75rem", fontFamily: "inherit",
     cursor: "pointer", whiteSpace: "nowrap", touchAction: "manipulation" },
   label: { fontSize: ".62rem", letterSpacing: ".1em", textTransform: "uppercase",
-    fontFamily: "sans-serif" },
+    fontFamily: "inherit" },
 };
 
 const BLANK = { agency: "", confirmation: "", pickupLocation: "", dropoffLocation: "", time: "" };
@@ -27,8 +27,8 @@ function fmtTime(hhmm) {
 }
 
 const timeInputStyle = {
-  background: "none", border: "none", color: "#c9a84c",
-  fontSize: ".75rem", fontFamily: "sans-serif",
+  background: "none", border: "none", color: "#0b3d6b",
+  fontSize: ".75rem", fontFamily: "inherit",
   cursor: "pointer", padding: 0, outline: "none", colorScheme: "dark",
 };
 
@@ -75,14 +75,14 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
 
       {/* Section header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: ".75rem 1rem", background: "#0a1a2a", borderLeft: borderAccent,
+        padding: ".75rem 1rem", background: "#f0f4f8", borderLeft: borderAccent,
         borderRadius: "0 4px 0 0" }}>
         <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
           <span style={{ ...S.label, color: accentColor }}>Rental Cars</span>
           {rentalCars.length > 0 && (
             <span style={{ background: `${accentColor}22`, color: accentColor,
               border: `1px solid ${accentColor}44`,
-              borderRadius: 10, padding: "1px 7px", fontSize: ".6rem", fontFamily: "sans-serif" }}>
+              borderRadius: 10, padding: "1px 7px", fontSize: ".6rem", fontFamily: "inherit" }}>
               {rentalCars.length}
             </span>
           )}
@@ -105,11 +105,11 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
 
       {/* Add form */}
       {isAdding && (
-        <div style={{ background: "#0a1a2a", borderLeft: borderAccent, padding: ".75rem 1rem" }}>
+        <div style={{ background: "#f0f4f8", borderLeft: borderAccent, padding: ".75rem 1rem" }}>
 
           {/* Agency */}
           <div style={{ marginBottom: ".5rem" }}>
-            <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>Agency</div>
+            <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>Agency</div>
             <input autoFocus value={draft.agency}
               onChange={e => set("agency", e.target.value)}
               onKeyDown={e => e.key === "Enter" && handleAdd()}
@@ -119,8 +119,8 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
 
           {/* Confirmation */}
           <div style={{ marginBottom: ".5rem" }}>
-            <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>
-              Confirmation # <span style={{ color: "#3d5060", fontStyle: "italic",
+            <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>
+              Confirmation # <span style={{ color: "#9ba1ac", fontStyle: "italic",
                 textTransform: "none", letterSpacing: 0 }}>(optional)</span>
             </div>
             <input value={draft.confirmation}
@@ -133,8 +133,8 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
           {/* Pick-up / Drop-off */}
           <div style={{ display: "flex", gap: ".5rem", marginBottom: ".65rem", alignItems: "flex-end" }}>
             <div style={{ flex: 1 }}>
-              <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>
-                Pick-up <span style={{ color: "#3d5060", fontStyle: "italic",
+              <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>
+                Pick-up <span style={{ color: "#9ba1ac", fontStyle: "italic",
                   textTransform: "none", letterSpacing: 0 }}>(optional)</span>
               </div>
               <input value={draft.pickupLocation}
@@ -143,11 +143,11 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
                 placeholder="SFO Airport"
                 style={{ ...S.input, width: "100%" }} />
             </div>
-            <div style={{ color: "#4e7a9e", fontFamily: "sans-serif", fontSize: ".9rem",
+            <div style={{ color: "#6b7a8a", fontFamily: "inherit", fontSize: ".9rem",
               paddingBottom: ".5rem", flexShrink: 0 }}>→</div>
             <div style={{ flex: 1 }}>
-              <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>
-                Drop-off <span style={{ color: "#3d5060", fontStyle: "italic",
+              <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>
+                Drop-off <span style={{ color: "#9ba1ac", fontStyle: "italic",
                   textTransform: "none", letterSpacing: 0 }}>(optional)</span>
               </div>
               <input value={draft.dropoffLocation}
@@ -159,8 +159,8 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
           </div>
 
           <div style={{ marginBottom: ".65rem" }}>
-            <div style={{ ...S.label, color: "#6b8fa8", marginBottom: 3 }}>
-              Pick-up time <span style={{ color: "#3d5060", fontStyle: "italic",
+            <div style={{ ...S.label, color: "#5c6470", marginBottom: 3 }}>
+              Pick-up time <span style={{ color: "#9ba1ac", fontStyle: "italic",
                 textTransform: "none", letterSpacing: 0 }}>(optional)</span>
             </div>
             <input type="time" value={draft.time}
@@ -178,7 +178,7 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
 
       {/* Rental car cards */}
       {rentalCars.map(c => (
-        <div key={c.id} style={{ borderLeft: borderAccent, background: "#0a1a2a" }}>
+        <div key={c.id} style={{ borderLeft: borderAccent, background: "#f0f4f8" }}>
           <div style={{ padding: ".65rem 1rem", borderTop: "1px solid #1e3a5230" }}>
 
             {/* Header row */}
@@ -186,17 +186,17 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
               alignItems: "flex-start", gap: ".5rem", marginBottom: ".3rem" }}>
               <div style={{ flex: 1 }}>
                 {/* Agency + confirmation */}
-                <div style={{ fontSize: ".88rem", color: "#e8dcc8", fontFamily: "sans-serif",
+                <div style={{ fontSize: ".88rem", color: "#0e1014", fontFamily: "inherit",
                   fontWeight: 600, lineHeight: 1.3 }}>
                   🚗 {c.agency}
                   {c.confirmation && (
-                    <span style={{ fontWeight: 400, color: "#c8daea" }}>
+                    <span style={{ fontWeight: 400, color: "#0e1014" }}>
                       {"  ·  "}Conf: {c.confirmation}
                     </span>
                   )}
                 </div>
                 {/* Pickup / dropoff + time */}
-                <div style={{ fontSize: ".78rem", color: "#8fb0cc", fontFamily: "sans-serif",
+                <div style={{ fontSize: ".78rem", color: "#5c6470", fontFamily: "inherit",
                   marginTop: 2, display: "flex", alignItems: "center", gap: ".5rem", flexWrap: "wrap" }}>
                   {(c.pickupLocation || c.dropoffLocation) && (
                     <span>
@@ -211,7 +211,7 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
                     ? <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
                         <input type="time" value={c.time || ""}
                           onChange={e => onUpdate(c.id, { time: e.target.value })}
-                          style={{ ...timeInputStyle, color: c.time ? "#c9a84c" : "#2e4a5e" }} />
+                          style={{ ...timeInputStyle, color: c.time ? "#0b3d6b" : "#2e4a5e" }} />
                         {c.time && (
                           <button type="button" onClick={() => onUpdate(c.id, { time: "" })}
                             style={{ background: "none", border: "none", color: "#2e4a5e",
@@ -221,7 +221,7 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
                         )}
                       </div>
                     : c.time
-                      ? <span style={{ color: "#c9a84c" }}>{fmtTime(c.time)}</span>
+                      ? <span style={{ color: "#0b3d6b" }}>{fmtTime(c.time)}</span>
                       : null}
                 </div>
               </div>
@@ -259,7 +259,7 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
                 {c.notes
                   ? <NoteMarkdown>{c.notes}</NoteMarkdown>
                   : !readOnly && <span style={{ fontSize: ".78rem", color: "#2e4a5e",
-                      fontFamily: "sans-serif", fontStyle: "italic" }}>Add notes…</span>}
+                      fontFamily: "inherit", fontStyle: "italic" }}>Add notes…</span>}
               </div>
             )}
           </div>
