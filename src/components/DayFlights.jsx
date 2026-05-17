@@ -58,7 +58,7 @@ function genId() {
 
 export default function DayFlights({
   flights, onAdd, onUpdate, onDelete,
-  readOnly = false, startDate, dayNum, aeroDataBoxKey,
+  readOnly = false, startDate, dayNum, aeroDataBoxKey, hideList = false,
 }) {
   const [isAdding,      setIsAdding]      = useState(false);
   const [draft,         setDraft]         = useState(BLANK);
@@ -313,116 +313,160 @@ export default function DayFlights({
         </div>
       )}
 
-      {/* Flight cards */}
-      {flights.map(f => (
-        <div key={f.id} style={{ borderLeft: borderAccent, background: "#f0f4f8" }}>
-          <div style={{ padding: ".65rem 1rem", borderTop: "1px solid #1e3a5230" }}>
+      {/* Flight timeline */}
+      {!hideList && flights.length > 0 && (
+        <div style={{ borderLeft: borderAccent, background: "#f0f4f8", padding: ".65rem 1rem .25rem" }}>
+          {flights.map((f, idx) => {
+            const isLast = idx === flights.length - 1;
+            return (
+              <div key={f.id} style={{ display: "flex", gap: 14, paddingBottom: isLast ? 8 : 16 }}>
+                {/* Time zone */}
+                <div style={{ width: 42, textAlign: "right", fontSize: 12, color: "#5c6470",
+                  fontFamily: "inherit", flexShrink: 0, paddingTop: 1 }}>
+                  {f.departureTime || ""}
+                </div>
 
-            {/* Header row */}
-            <div style={{ display: "flex", justifyContent: "space-between",
-              alignItems: "flex-start", gap: ".5rem", marginBottom: ".3rem" }}>
-              <div style={{ flex: 1 }}>
-                {/* Flight number + route */}
-                <div style={{ fontSize: ".88rem", color: "#0e1014", fontFamily: "inherit",
-                  fontWeight: 600, lineHeight: 1.3 }}>
-                  ✈ {f.flightNumber}
-                  {f.departure && f.arrival && (
-                    <span style={{ fontWeight: 400, color: "#0e1014" }}>
-                      {"  "}{f.departure} → {f.arrival}
-                    </span>
+                {/* Rail zone */}
+                <div style={{ width: 18, position: "relative", display: "flex",
+                  flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
+                  <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#fff",
+                    border: "2px solid #0b3d6b", marginTop: 4, flexShrink: 0, zIndex: 1 }} />
+                  {!isLast && (
+                    <div style={{ position: "absolute", top: 14, bottom: -16, width: 1.5,
+                      background: "#e2e5ea" }} />
                   )}
                 </div>
-                {/* City names */}
-                {(f.departureName || f.arrivalName) && (
-                  <div style={{ fontSize: ".78rem", color: "#5c6470", fontFamily: "inherit",
-                    marginTop: 2 }}>
-                    {[f.departureName, f.arrivalName].filter(Boolean).join(" → ")}
-                  </div>
-                )}
-                {/* Airline + aircraft */}
-                {(f.airline || f.aircraft) && (
-                  <div style={{ fontSize: ".72rem", color: "#5c6470", fontFamily: "inherit",
-                    marginTop: 2 }}>
-                    {[f.airline, f.aircraft].filter(Boolean).join("  ·  ")}
-                  </div>
-                )}
-                {/* Times + status */}
-                {(f.departureTime || f.arrivalTime || f.status) && (
-                  <div style={{ fontSize: ".72rem", fontFamily: "inherit", marginTop: 2,
-                    display: "flex", gap: ".75rem", flexWrap: "wrap", alignItems: "center" }}>
-                    {(f.departureTime || f.arrivalTime) && (
-                      <span style={{ color: "#0b3d6b" }}>
-                        {[f.departureTime, f.arrivalTime].filter(Boolean).join(" → ")}
-                      </span>
-                    )}
-                    {f.status && (
-                      <span style={{ color: f.status === "Arrived" ? "#16a34a"
-                        : f.status === "Departed" ? "#2563eb" : "#5c6470",
-                        background: f.status === "Arrived" ? "#5cb85c18"
-                          : f.status === "Departed" ? "#4a9eff18" : "#6b8fa818",
-                        border: `1px solid ${f.status === "Arrived" ? "#5cb85c44"
-                          : f.status === "Departed" ? "#4a9eff44" : "#6b8fa844"}`,
-                        borderRadius: 3, padding: "1px 5px", fontSize: ".65rem",
-                        letterSpacing: ".04em" }}>
-                        {f.status}
-                      </span>
-                    )}
-                  </div>
-                )}
-                {/* Miles + confirmation */}
-                {(f.miles || f.confirmation) && (
-                  <div style={{ fontSize: ".72rem", color: "#6b7a8a", fontFamily: "inherit",
-                    marginTop: 2 }}>
-                    {[
-                      f.miles ? `${f.miles.toLocaleString()} mi` : null,
-                      f.confirmation ? `Conf: ${f.confirmation}` : null,
-                    ].filter(Boolean).join("  ·  ")}
-                  </div>
-                )}
-              </div>
-              {!readOnly && (
-                <button type="button" onClick={() => onDelete(f.id)}
-                  style={{ background: "none", border: "none", color: `${accentColor}66`,
-                    cursor: "pointer", fontSize: ".85rem", lineHeight: 1, padding: 0, flexShrink: 0 }}>
-                  ×
-                </button>
-              )}
-            </div>
 
-            {/* Notes */}
-            {editingId === f.id && !readOnly ? (
-              <div style={{ marginTop: ".35rem" }}>
-                <textarea value={noteDraft} rows={2} autoFocus
-                  onChange={e => setNoteDraft(e.target.value)}
-                  onKeyDown={e => {
-                    if (e.key === "Escape") setEditingId(null);
-                    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                      onUpdate(f.id, { notes: noteDraft }); setEditingId(null);
-                    }
-                  }}
-                  style={{ ...S.input, width: "100%", resize: "vertical", minHeight: 48 }} />
-                <div style={{ display: "flex", gap: ".4rem", marginTop: ".35rem" }}>
-                  <button type="button"
-                    onClick={() => { onUpdate(f.id, { notes: noteDraft }); setEditingId(null); }}
-                    style={S.btnPrimary}>Save</button>
-                  <button type="button" onClick={() => setEditingId(null)} style={S.btnGhost}>Cancel</button>
+                {/* Content zone */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  {/* Header row */}
+                  <div style={{ display: "flex", justifyContent: "space-between",
+                    alignItems: "flex-start", gap: ".5rem", marginBottom: ".3rem" }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      {/* Flight number + route */}
+                      <div style={{ fontSize: ".88rem", color: "#0e1014", fontFamily: "inherit",
+                        fontWeight: 600, lineHeight: 1.3, display: "flex", alignItems: "center", gap: 5 }}>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                          xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+                          <path d="M2 9.5l5 .5 2.5 3.5 1 .3 0-3.6 4-1.6c.5-.2.7-.7.5-1.2l-.1-.2c-.2-.5-.7-.7-1.2-.5l-3.7 1.5L7 5l-.4-1.1 1-.4-.7-.7L4.4 3.6 4 4.8 2.5 6.3 1.2 6.8c-.4.2-.6.5-.5.8l.1.3c.1.4.5.5.9.4L2 9.5z"
+                            stroke="#0b3d6b" strokeWidth="1.3" strokeLinejoin="round" fill="#0b3d6b" />
+                        </svg>
+                        <span>{f.flightNumber}</span>
+                        {f.departure && f.arrival && (
+                          <span style={{ fontWeight: 400, color: "#0e1014" }}>
+                            {f.departure} → {f.arrival}
+                          </span>
+                        )}
+                      </div>
+                      {/* Departure city */}
+                      {f.departureName && (
+                        <div style={{ fontSize: ".78rem", color: "#5c6470", fontFamily: "inherit",
+                          marginTop: 2 }}>
+                          {f.departureName}
+                        </div>
+                      )}
+                      {/* Arrival city */}
+                      {f.arrivalName && (
+                        <div style={{ fontSize: ".78rem", color: "#5c6470", fontFamily: "inherit",
+                          marginTop: 1 }}>
+                          {f.arrivalName}
+                        </div>
+                      )}
+                      {/* Confirmation pill */}
+                      {f.confirmation && (
+                        <div style={{ marginTop: 4 }}>
+                          <span style={{ fontFamily: "ui-monospace, monospace", fontSize: 11,
+                            background: "#f0f4f8", border: "1px solid #e2e5ea", borderRadius: 5,
+                            padding: "3px 8px", color: "#5c6470" }}>
+                            {f.confirmation}
+                          </span>
+                        </div>
+                      )}
+                      {/* Airline + aircraft */}
+                      {(f.airline || f.aircraft) && (
+                        <div style={{ fontSize: ".72rem", color: "#5c6470", fontFamily: "inherit",
+                          marginTop: 2 }}>
+                          {[f.airline, f.aircraft].filter(Boolean).join("  ·  ")}
+                        </div>
+                      )}
+                      {/* Times + status */}
+                      {(f.departureTime || f.arrivalTime || f.status) && (
+                        <div style={{ fontSize: ".72rem", fontFamily: "inherit", marginTop: 2,
+                          display: "flex", gap: ".75rem", flexWrap: "wrap", alignItems: "center" }}>
+                          {(f.departureTime || f.arrivalTime) && (
+                            <span style={{ color: "#0b3d6b" }}>
+                              {[f.departureTime, f.arrivalTime].filter(Boolean).join(" → ")}
+                            </span>
+                          )}
+                          {f.status && (
+                            <span style={{ color: f.status === "Arrived" ? "#16a34a"
+                              : f.status === "Departed" ? "#2563eb" : "#5c6470",
+                              background: f.status === "Arrived" ? "#5cb85c18"
+                                : f.status === "Departed" ? "#4a9eff18" : "#6b8fa818",
+                              border: `1px solid ${f.status === "Arrived" ? "#5cb85c44"
+                                : f.status === "Departed" ? "#4a9eff44" : "#6b8fa844"}`,
+                              borderRadius: 3, padding: "1px 5px", fontSize: ".65rem",
+                              letterSpacing: ".04em" }}>
+                              {f.status}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                      {/* Miles */}
+                      {f.miles && (
+                        <div style={{ fontSize: ".72rem", color: "#6b7a8a", fontFamily: "inherit",
+                          marginTop: 2 }}>
+                          {f.miles.toLocaleString()} mi
+                        </div>
+                      )}
+                    </div>
+                    {/* Delete button */}
+                    {!readOnly && (
+                      <button type="button" onClick={() => onDelete(f.id)}
+                        style={{ background: "none", border: "none", color: `${accentColor}66`,
+                          cursor: "pointer", fontSize: ".85rem", lineHeight: 1, padding: 0, flexShrink: 0 }}>
+                        ×
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Notes */}
+                  {editingId === f.id && !readOnly ? (
+                    <div style={{ marginTop: ".35rem" }}>
+                      <textarea value={noteDraft} rows={2} autoFocus
+                        onChange={e => setNoteDraft(e.target.value)}
+                        onKeyDown={e => {
+                          if (e.key === "Escape") setEditingId(null);
+                          if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                            onUpdate(f.id, { notes: noteDraft }); setEditingId(null);
+                          }
+                        }}
+                        style={{ ...S.input, width: "100%", resize: "vertical", minHeight: 48 }} />
+                      <div style={{ display: "flex", gap: ".4rem", marginTop: ".35rem" }}>
+                        <button type="button"
+                          onClick={() => { onUpdate(f.id, { notes: noteDraft }); setEditingId(null); }}
+                          style={S.btnPrimary}>Save</button>
+                        <button type="button" onClick={() => setEditingId(null)} style={S.btnGhost}>Cancel</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div onClick={() => !readOnly && (setEditingId(f.id), setNoteDraft(f.notes))}
+                      style={{ cursor: readOnly ? "default" : "pointer" }}>
+                      {f.notes
+                        ? <NoteMarkdown>{f.notes}</NoteMarkdown>
+                        : !readOnly && <span style={{ fontSize: ".78rem", color: "#2e4a5e",
+                            fontFamily: "inherit", fontStyle: "italic" }}>Add notes…</span>}
+                    </div>
+                  )}
                 </div>
               </div>
-            ) : (
-              <div onClick={() => !readOnly && (setEditingId(f.id), setNoteDraft(f.notes))}
-                style={{ cursor: readOnly ? "default" : "pointer" }}>
-                {f.notes
-                  ? <NoteMarkdown>{f.notes}</NoteMarkdown>
-                  : !readOnly && <span style={{ fontSize: ".78rem", color: "#2e4a5e",
-                      fontFamily: "inherit", fontStyle: "italic" }}>Add notes…</span>}
-              </div>
-            )}
-          </div>
+            );
+          })}
         </div>
-      ))}
+      )}
 
       {/* Bottom cap */}
-      {(flights.length > 0 || isAdding) && (
+      {!hideList && (flights.length > 0 || isAdding) && (
         <div style={{ height: 1, background: `${accentColor}22`, borderLeft: borderAccent }} />
       )}
     </div>

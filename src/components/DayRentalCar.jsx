@@ -38,7 +38,7 @@ function genId() {
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
-export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, readOnly = false }) {
+export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, readOnly = false, hideList = false }) {
   const [isAdding,  setIsAdding]  = useState(false);
   const [draft,     setDraft]     = useState(BLANK);
   const [editingId, setEditingId] = useState(null);
@@ -177,7 +177,7 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
       )}
 
       {/* Rental car cards */}
-      {rentalCars.map(c => (
+      {!hideList && rentalCars.map(c => (
         <div key={c.id} style={{ borderLeft: borderAccent, background: "#f0f4f8" }}>
           <div style={{ padding: ".65rem 1rem", borderTop: "1px solid #1e3a5230" }}>
 
@@ -267,7 +267,7 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
       ))}
 
       {/* Bottom cap */}
-      {(rentalCars.length > 0 || isAdding) && (
+      {!hideList && (rentalCars.length > 0 || isAdding) && (
         <div style={{ height: 1, background: `${accentColor}22`, borderLeft: borderAccent }} />
       )}
     </div>

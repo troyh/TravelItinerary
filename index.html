@@ -51,6 +51,13 @@
         color: #0e1014;
       }
       input, select, textarea { font-size: 16px !important; font-family: inherit; }
+      @media (max-width: 640px) {
+        .picker-sidebar { display: none !important; }
+        .picker-main { padding: 24px 16px 60px !important; }
+      }
+      @media (min-width: 641px) {
+        .picker-settings-btn { display: none !important; }
+      }
     </style>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />

@@ -5,7 +5,17 @@
       "Bash(python3 -c ' *)",
       "Bash(cat /tmp/design_b65b2636.js)",
       "Read(//private/tmp/**)",
-      "Bash(python3 -)"
+      "Bash(python3 -)",
+      "Bash(node --input-type=module)",
+      "Bash(curl -s \"http://localhost:5174/TravelItinerary/src/components/ItineraryPicker.jsx\")",
+      "Bash(curl -s \"http://localhost:5174/TravelItinerary/src/components/DayFlights.jsx\")",
+      "Bash(curl -s \"http://localhost:5174/TravelItinerary/src/components/Itinerary.jsx\")",
+      "Bash(node -e ' *)",
+      "Bash(pkill -f \"vite --port 5174\")",
+      "Bash(curl -s \"http://localhost:5175/TravelItinerary/src/components/Itinerary.jsx\")",
+      "Bash(pkill -f \"vite --port 517\")",
+      "Bash(git stash *)",
+      "Bash(git checkout *)"
     ]
   }
 }

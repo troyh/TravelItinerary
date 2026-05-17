@@ -72,7 +72,7 @@ function detectCategory(types = []) {
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
-export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, readOnly = false }) {
+export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, readOnly = false, hideList = false }) {
   const { provider } = getStoredProviderSettings();
   // Maps API lifecycle
   const [apiReady, setApiReady] = useState(false);
@@ -394,9 +394,9 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
       )}
 
       {/* ── Category filter pills (only when 2+ categories in use) ── */}
-      {places.length > 0 && usedCategoryKeys.length > 1 && (
+      {!hideList && places.length > 0 && usedCategoryKeys.length > 1 && (
         <div style={{ display: "flex", flexWrap: "wrap", gap: 5, padding: ".5rem 1rem",
-          background: "#071520", borderLeft: borderAccent }}>
+          background: "#f8f9fb", borderLeft: borderAccent }}>
           {[{ key: "all", label: "All", color: "#5c6470" },
             ...CATEGORIES.filter(c => usedCategoryKeys.includes(c.key))
           ].map(c => (
@@ -412,129 +412,158 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
         </div>
       )}
 
-      {/* ── Saved places grouped by category ── */}
-      {visibleCategories.map(cat => (
-        <div key={cat.key} style={{ borderLeft: borderAccent, background: "#f0f4f8" }}>
-          <div style={{ ...S.sectionLabel, color: cat.color, padding: ".45rem 1rem .3rem",
-            display: "flex", alignItems: "center", gap: ".4rem" }}>
-            <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%",
-              background: cat.color, flexShrink: 0 }} />
-            {cat.label}
-          </div>
+      {/* ── Saved places — timeline ── */}
+      {!hideList && (() => {
+        const sorted = CATEGORIES.flatMap(cat => places.filter(p => p.category === cat.key))
+          .filter(p => activeFilter === "all" || p.category === activeFilter)
+          .sort((a, b) => {
+            if (!a.time && !b.time) return 0;
+            if (!a.time) return 1;
+            if (!b.time) return -1;
+            return a.time < b.time ? -1 : a.time > b.time ? 1 : 0;
+          });
+        if (sorted.length === 0) return null;
+        return (
+          <div style={{ borderLeft: borderAccent, background: "#f0f4f8", padding: ".65rem 1rem .25rem" }}>
+            {sorted.map((place, idx) => {
+              const cat = CATEGORIES.find(c => c.key === place.category) ?? CATEGORIES[CATEGORIES.length - 1];
+              const isLast = idx === sorted.length - 1;
+              return (
+                <div key={place.id} style={{ display: "flex", gap: 14, paddingBottom: isLast ? 8 : 16 }}>
+                  {/* Time zone */}
+                  <div style={{ width: 42, textAlign: "right", fontSize: 12, color: "#5c6470",
+                    fontFamily: "inherit", flexShrink: 0, paddingTop: 1 }}>
+                    {fmtTime(place.time)}
+                  </div>
 
-          {places.filter(p => p.category === cat.key).map((place, idx, arr) => (
-            <div key={place.id}
-              style={{ padding: ".65rem 1rem",
-                borderTop: "1px solid #1e3a5230",
-                borderBottom: idx < arr.length - 1 ? "1px solid #1e3a5220" : "none" }}>
+                  {/* Rail zone */}
+                  <div style={{ width: 18, position: "relative", display: "flex",
+                    flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
+                    <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#fff",
+                      border: `2px solid ${cat.color}`, marginTop: 4, flexShrink: 0, zIndex: 1 }} />
+                    {!isLast && (
+                      <div style={{ position: "absolute", top: 14, bottom: -16, width: 1.5,
+                        background: "#e2e5ea" }} />
+                    )}
+                  </div>
 
-              <div style={{ display: "flex", justifyContent: "space-between",
-                alignItems: "flex-start", gap: ".5rem" }}>
-                <div style={{ flex: 1 }}>
-                  <span style={{ fontSize: ".88rem", color: "#0e1014", fontFamily: "inherit",
-                    fontWeight: 600, lineHeight: 1.3 }}>
-                    {place.name}
-                  </span>
-                  {!readOnly
-                    ? <div style={{ display: "flex", alignItems: "center", gap: 2, marginTop: 2 }}>
-                        <input type="time" value={place.time || ""}
-                          onChange={e => onUpdate(place.id, { time: e.target.value })}
-                          style={{ ...timeInputStyle, color: place.time ? "#0b3d6b" : "#9ba1ac" }} />
-                        {place.time && (
-                          <button type="button" onClick={() => onUpdate(place.id, { time: "" })}
+                  {/* Content zone */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    {/* Header row */}
+                    <div style={{ display: "flex", justifyContent: "space-between",
+                      alignItems: "flex-start", gap: ".5rem" }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 5, flexWrap: "wrap" }}>
+                          <span style={{ display: "inline-block", width: 6, height: 6,
+                            borderRadius: "50%", background: cat.color, flexShrink: 0 }} />
+                          <span style={{ fontSize: ".88rem", color: "#0e1014", fontFamily: "inherit",
+                            fontWeight: 600, lineHeight: 1.3 }}>
+                            {place.name}
+                          </span>
+                          {!readOnly && (
+                            <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+                              <input type="time" value={place.time || ""}
+                                onChange={e => onUpdate(place.id, { time: e.target.value })}
+                                style={{ ...timeInputStyle, color: place.time ? "#0b3d6b" : "#9ba1ac" }} />
+                              {place.time && (
+                                <button type="button" onClick={() => onUpdate(place.id, { time: "" })}
+                                  style={{ background: "none", border: "none", color: "#9ba1ac",
+                                    cursor: "pointer", fontSize: ".75rem", padding: "0 2px", lineHeight: 1 }}>
+                                  ×
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
+
+                        {place.address && (
+                          <div style={{ fontSize: ".75rem", color: "#6b7a8a", fontFamily: "inherit",
+                            marginTop: 2 }}>
+                            {place.address}
+                          </div>
+                        )}
+
+                        <div style={{ display: "flex", gap: "1rem",
+                          marginTop: place.phone || place.website ? 4 : 0 }}>
+                          {place.phone && (
+                            <a href={`tel:${place.phone}`}
+                              style={{ fontSize: ".75rem", color: "#5c6470", fontFamily: "inherit",
+                                textDecoration: "none" }}>
+                              {place.phone}
+                            </a>
+                          )}
+                          {place.website && (
+                            <a href={place.website} target="_blank" rel="noopener noreferrer"
+                              style={{ fontSize: ".75rem", color: "#5c6470", fontFamily: "inherit",
+                                textDecoration: "none", overflow: "hidden", textOverflow: "ellipsis",
+                                whiteSpace: "nowrap", maxWidth: 260 }}>
+                              {place.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                            </a>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Maps + delete */}
+                      <div style={{ display: "flex", gap: ".5rem", flexShrink: 0, alignItems: "center" }}>
+                        {place.placeId && (
+                          <a href={
+                              (place.mapsProvider ?? "google") === "apple"
+                                ? applePlaceMapsUrl(place)
+                                : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)}&query_place_id=${encodeURIComponent(place.placeId)}`
+                            }
+                            target="_blank" rel="noopener noreferrer"
+                            style={{ fontSize: ".7rem", color: "#2563eb", fontFamily: "inherit",
+                              textDecoration: "none" }}>
+                            Maps ↗
+                          </a>
+                        )}
+                        {!readOnly && (
+                          <button onClick={() => onDelete(place.id)}
                             style={{ background: "none", border: "none", color: "#9ba1ac",
-                              cursor: "pointer", fontSize: ".75rem", padding: "0 2px", lineHeight: 1 }}>
+                              cursor: "pointer", fontSize: ".85rem", lineHeight: 1, padding: 0 }}>
                             ×
                           </button>
                         )}
                       </div>
-                    : place.time
-                      ? <div style={{ fontSize: ".72rem", color: "#0b3d6b", marginTop: 2 }}>{fmtTime(place.time)}</div>
-                      : null}
-                </div>
-                <div style={{ display: "flex", gap: ".5rem", flexShrink: 0, alignItems: "center" }}>
-                  {place.placeId && (
-                    <a href={
-                        (place.mapsProvider ?? "google") === "apple"
-                          ? applePlaceMapsUrl(place)
-                          : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)}&query_place_id=${encodeURIComponent(place.placeId)}`
-                      }
-                      target="_blank" rel="noopener noreferrer"
-                      style={{ fontSize: ".7rem", color: "#2563eb", fontFamily: "inherit",
-                        textDecoration: "none" }}>
-                      Maps ↗
-                    </a>
-                  )}
-                  {!readOnly && (
-                    <button onClick={() => onDelete(place.id)}
-                      style={{ background: "none", border: "none", color: "#9ba1ac",
-                        cursor: "pointer", fontSize: ".85rem", lineHeight: 1, padding: 0 }}>
-                      ×
-                    </button>
-                  )}
-                </div>
-              </div>
+                    </div>
 
-              {place.address && (
-                <div style={{ fontSize: ".75rem", color: "#6b7a8a", fontFamily: "inherit",
-                  marginTop: 2 }}>
-                  {place.address}
-                </div>
-              )}
-
-              <div style={{ display: "flex", gap: "1rem",
-                marginTop: place.phone || place.website ? 4 : 0 }}>
-                {place.phone && (
-                  <a href={`tel:${place.phone}`}
-                    style={{ fontSize: ".75rem", color: "#5c6470", fontFamily: "inherit",
-                      textDecoration: "none" }}>
-                    {place.phone}
-                  </a>
-                )}
-                {place.website && (
-                  <a href={place.website} target="_blank" rel="noopener noreferrer"
-                    style={{ fontSize: ".75rem", color: "#5c6470", fontFamily: "inherit",
-                      textDecoration: "none", overflow: "hidden", textOverflow: "ellipsis",
-                      whiteSpace: "nowrap", maxWidth: 260 }}>
-                    {place.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
-                  </a>
-                )}
-              </div>
-
-              {/* Notes — click to edit inline */}
-              {editingId === place.id && !readOnly ? (
-                <div style={{ marginTop: ".5rem" }}>
-                  <textarea value={noteDraft} rows={3} autoFocus
-                    onChange={e => setNoteDraft(e.target.value)}
-                    onKeyDown={e => {
-                      if (e.key === "Escape") setEditingId(null);
-                      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                        onUpdate(place.id, { notes: noteDraft });
-                        setEditingId(null);
-                      }
-                    }}
-                    style={{ ...S.input, resize: "vertical", minHeight: 56 }} />
-                  <div style={{ display: "flex", gap: ".4rem", marginTop: ".4rem" }}>
-                    <button onClick={() => { onUpdate(place.id, { notes: noteDraft }); setEditingId(null); }}
-                      style={S.btnPrimary}>Save</button>
-                    <button onClick={() => setEditingId(null)} style={S.btnGhost}>Cancel</button>
+                    {/* Notes — click to edit inline */}
+                    {editingId === place.id && !readOnly ? (
+                      <div style={{ marginTop: ".5rem" }}>
+                        <textarea value={noteDraft} rows={3} autoFocus
+                          onChange={e => setNoteDraft(e.target.value)}
+                          onKeyDown={e => {
+                            if (e.key === "Escape") setEditingId(null);
+                            if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                              onUpdate(place.id, { notes: noteDraft });
+                              setEditingId(null);
+                            }
+                          }}
+                          style={{ ...S.input, resize: "vertical", minHeight: 56 }} />
+                        <div style={{ display: "flex", gap: ".4rem", marginTop: ".4rem" }}>
+                          <button onClick={() => { onUpdate(place.id, { notes: noteDraft }); setEditingId(null); }}
+                            style={S.btnPrimary}>Save</button>
+                          <button onClick={() => setEditingId(null)} style={S.btnGhost}>Cancel</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div onClick={() => !readOnly && (setEditingId(place.id), setNoteDraft(place.notes))}
+                        style={{ marginTop: ".45rem", cursor: readOnly ? "default" : "pointer" }}>
+                        {place.notes
+                          ? <NoteMarkdown>{place.notes}</NoteMarkdown>
+                          : !readOnly && <span style={{ fontSize: ".8rem", color: "#9ba1ac", fontFamily: "inherit", fontStyle: "italic" }}>Add notes…</span>}
+                      </div>
+                    )}
                   </div>
                 </div>
-              ) : (
-                <div onClick={() => !readOnly && (setEditingId(place.id), setNoteDraft(place.notes))}
-                  style={{ marginTop: ".45rem", cursor: readOnly ? "default" : "pointer" }}>
-                  {place.notes
-                    ? <NoteMarkdown>{place.notes}</NoteMarkdown>
-                    : !readOnly && <span style={{ fontSize:".8rem", color:"#9ba1ac", fontFamily:"inherit", fontStyle:"italic" }}>Add notes…</span>}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      ))}
+              );
+            })}
+          </div>
+        );
+      })()}
 
       {/* Bottom cap */}
-      {(places.length > 0 || isSearching || apiError) && (
+      {!hideList && (places.length > 0 || isSearching || apiError) && (
         <div style={{ height: 1, background: "rgba(37,99,235,0.08)", borderLeft: borderAccent }} />
       )}
     </div>

@@ -115,7 +115,7 @@ const timeInputStyle = {
   cursor: "pointer", padding: 0, outline: "none", colorScheme: "dark",
 };
 
-export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly = false, routeServerUrl = "" }) {
+export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly = false, routeServerUrl = "", hideList = false }) {
   const [isAdding,       setIsAdding]       = useState(false);
   const [fetchingRoute,  setFetchingRoute]  = useState(false);
   const [draft,          setDraft]          = useState(BLANK);
@@ -391,7 +391,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
       )}
 
       {/* Route cards */}
-      {routes.map(route => (
+      {!hideList && routes.map(route => (
         <div key={route.id} style={{ borderLeft: borderAccent, background: "#f0f4f8" }}>
           <div style={{ padding: ".65rem 1rem", borderTop: "1px solid #1e3a5230" }}>
 
@@ -616,7 +616,7 @@ export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly =
       ))}
 
       {/* Bottom cap */}
-      {(routes.length > 0 || isAdding) && (
+      {!hideList && (routes.length > 0 || isAdding) && (
         <div style={{ height: 1, background: "rgba(11,61,107,0.08)", borderLeft: borderAccent }} />
       )}
     </div>

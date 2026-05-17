@@ -84,7 +84,7 @@ function convertDistance(distStr, unit) {
   return distStr;
 }
 
-export default function DayDirections({ directions, onAdd, onUpdate, onDelete, readOnly = false, distanceUnit = "km" }) {
+export default function DayDirections({ directions, onAdd, onUpdate, onDelete, readOnly = false, distanceUnit = "km", hideList = false }) {
   const { provider } = getStoredProviderSettings();
   const [apiReady,  setApiReady]  = useState(false);
   const [apiError,  setApiError]  = useState(null);
@@ -444,7 +444,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
       )}
 
       {/* Direction cards */}
-      {directions.map(dir => {
+      {!hideList && directions.map(dir => {
         const modeLabel = MODES.find(m => m.key === dir.travelMode)?.label ?? dir.travelMode;
         const mapsUrl = (dir.mapsProvider ?? "google") === "apple"
           ? appleDirectionsMapsUrl(dir)
@@ -576,7 +576,7 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
       })}
 
       {/* Bottom cap */}
-      {(directions.length > 0 || isAdding || apiError) && (
+      {!hideList && (directions.length > 0 || isAdding || apiError) && (
         <div style={{ height: 1, background: "#5cb85c22", borderLeft: borderAccent }} />
       )}
     </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import NoteMarkdown from "./NoteMarkdown.jsx";
 import { days as initialDays, tagConfig, fuelStops, fuelSummary, tideWarnings } from "../data/itinerary.js";
-import DayPlaces from "./DayPlaces.jsx";
+import DayPlaces, { CATEGORIES as PLACE_CATEGORIES } from "./DayPlaces.jsx";
 import DayDirections from "./DayDirections.jsx";
 import DayRoute from "./DayRoute.jsx";
 import DayFlights from "./DayFlights.jsx";
@@ -31,7 +31,7 @@ const _db = (() => {
       highlights: (() => { try { return JSON.parse(localStorage.getItem("travelHighlights")) ?? {}; } catch { return {}; } })(),
       notes:      (() => { try { return JSON.parse(localStorage.getItem("travelNotes"))      ?? {}; } catch { return {}; } })(),
       startDate:  localStorage.getItem("travelStartDate") ?? "",
-      openDay:    (() => { const s = localStorage.getItem("travelOpenDay"); return s ? Number(s) : null; })(),
+      openDay:    null,
     };
     localStorage.setItem("travelItinerary", JSON.stringify(migrated));
     oldKeys.forEach(k => localStorage.removeItem(k));
@@ -92,19 +92,35 @@ const BLANK_DAY = {
 };
 
 
+// ── Timeline time helpers ──────────────────────────────────────────────────
+
+function timeToSortKey(str) {
+  if (!str) return "";
+  if (/^\d{1,2}:\d{2}$/.test(str)) {
+    const [h, m] = str.split(":").map(Number);
+    return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+  }
+  const match = str.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (match) {
+    let h = parseInt(match[1]);
+    const ampm = match[3].toUpperCase();
+    if (ampm === "PM" && h !== 12) h += 12;
+    if (ampm === "AM" && h === 12) h = 0;
+    return `${String(h).padStart(2,"0")}:${match[2]}`;
+  }
+  return "";
+}
+
+function fmtTime12(str) {
+  if (!str) return "";
+  if (/AM|PM/i.test(str)) return str;
+  const [h, m] = str.split(":").map(Number);
+  if (isNaN(h) || isNaN(m)) return "";
+  return `${h % 12 || 12}:${String(m).padStart(2,"0")} ${h < 12 ? "AM" : "PM"}`;
+}
+
 export default function Itinerary() {
-  const [openDay,          setOpenDay]          = useState(() => {
-    const urlDay = parseInt(new URLSearchParams(window.location.search).get("day"));
-    if (Number.isInteger(urlDay) && urlDay >= 1 && urlDay <= (_db?.days?.length ?? 0)) return urlDay;
-    const file = localStorage.getItem("travelCurrentFile");
-    if (!file) return null;
-    try {
-      const map = JSON.parse(localStorage.getItem("itineraryOpenDay") || "{}");
-      const n = map[file];
-      if (Number.isInteger(n) && n >= 1 && n <= (_db?.days?.length ?? 0)) return n;
-    } catch {}
-    return null;
-  });
+  const [closedDays,       setClosedDays]       = useState(() => new Set());
   const [activeTab,        setActiveTab]        = useState("itinerary");
   const [startDate,        setStartDate]        = useState(() => _db?.startDate ?? "");
   const [customHighlights, setCustomHighlights] = useState(() => _extracted.highlights);
@@ -203,7 +219,7 @@ export default function Itinerary() {
   useEffect(() => {
     setNewHighlight(""); setEditingNoteDay(null);
     setEditingCoreDay(null); setConfirmDeleteDay(null);
-  }, [openDay]);
+  }, [closedDays]);
 
   // Save to localStorage immediately on every change; GitHub is manual only.
   useEffect(() => {
@@ -262,21 +278,6 @@ export default function Itinerary() {
 
   useEffect(() => { if (!currentFile) setPickerKey(k => k + 1); }, [currentFile]);
 
-  // Persist openDay to localStorage per file
-  useEffect(() => {
-    if (!currentFile || currentFile === "__local__") return;
-    try {
-      const map = JSON.parse(localStorage.getItem("itineraryOpenDay") || "{}");
-      if (openDay !== null) map[currentFile] = openDay; else delete map[currentFile];
-      localStorage.setItem("itineraryOpenDay", JSON.stringify(map));
-    } catch {}
-  }, [openDay, currentFile]);
-
-  // Clamp openDay to valid range after days load
-  useEffect(() => {
-    if (openDay === null || !days.length) return;
-    if (openDay < 1 || openDay > days.length) setOpenDay(null);
-  }, [days]);
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -316,7 +317,7 @@ export default function Itinerary() {
         setSyncStatus("synced");
         const urlDay = parseInt(new URLSearchParams(window.location.search).get("day"));
         const dayCount = data.days?.length ?? 0;
-        if (Number.isInteger(urlDay) && urlDay >= 1 && urlDay <= dayCount) setOpenDay(urlDay);
+        if (Number.isInteger(urlDay) && urlDay >= 1 && urlDay <= dayCount) setClosedDays(new Set());
         return;
       }
       setUrlLoad(s => ({ ...s, status: "notfound" }));
@@ -475,7 +476,7 @@ export default function Itinerary() {
     setSavedRoutes(prev => remapKeys(prev, newNum, +1));
     setSavedFlights(prev => remapKeys(prev, newNum, +1));
     setSavedRentalCars(prev => remapKeys(prev, newNum, +1));
-    setOpenDay(newNum);
+    setClosedDays(prev => { const n = new Set(prev); n.delete(newNum); return n; });
   }
 
   function addBlankDay(afterDayNum) {
@@ -491,7 +492,7 @@ export default function Itinerary() {
     setSavedRoutes(prev => remapKeys(prev, newNum, +1));
     setSavedFlights(prev => remapKeys(prev, newNum, +1));
     setSavedRentalCars(prev => remapKeys(prev, newNum, +1));
-    setOpenDay(newNum);
+    setClosedDays(prev => { const n = new Set(prev); n.delete(newNum); return n; });
     setEditingCoreDay(newNum);
     setCoreDraft({ leg: "New Day", overnight: "", nm: 0, hrs: 0 });
   }
@@ -506,7 +507,7 @@ export default function Itinerary() {
     setSavedRoutes(prev => remapKeys(prev, dayNum, -1));
     setSavedFlights(prev => remapKeys(prev, dayNum, -1));
     setSavedRentalCars(prev => remapKeys(prev, dayNum, -1));
-    setOpenDay(prev => prev === dayNum ? Math.max(1, dayNum - 1) : prev > dayNum ? prev - 1 : prev);
+    setClosedDays(prev => prev === dayNum ? Math.max(1, dayNum - 1) : prev > dayNum ? prev - 1 : prev);
     setConfirmDeleteDay(null);
     setEditingCoreDay(null);
   }
@@ -535,7 +536,7 @@ export default function Itinerary() {
       [arr[dayIdx], arr[otherIdx]] = [arr[otherIdx], arr[dayIdx]];
       return arr.map((d, i) => ({ ...d, day: i + 1 }));
     });
-    setOpenDay(prev => {
+    setClosedDays(prev => {
       if (prev === kA) return kB;
       if (prev === kB) return kA;
       return prev;
@@ -585,7 +586,7 @@ export default function Itinerary() {
       );
     }
     dirtyRef.current = true;
-    if (data.days?.length) setOpenDay(1);
+    if (data.days?.length) setClosedDays(new Set());
   }
 
   function applyClaudeDaySuggestions(dayNum, data) {
@@ -643,7 +644,7 @@ export default function Itinerary() {
     dirtyRef.current = false;
     setDays([]); setSavedPlaces({}); setSavedDirections({}); setSavedRoutes({}); setSavedFlights({}); setSavedRentalCars({});
     setCustomHighlights({}); setCustomNotes({});
-    setStartDate(""); setOpenDay(null);
+    setStartDate(""); setClosedDays(new Set());
     setTitle(name); setSubtitle(""); setItineraryNotes("");
     localStorage.removeItem("travelItinerary");
     const resolvedDbId = dbId ?? databases[0]?.id ?? null;
@@ -1091,8 +1092,9 @@ export default function Itinerary() {
     const [y, m, d] = startDate.split("-").map(Number);
     const date = new Date(y, m - 1, d + dayNum - 1);
     return {
-      dow:  date.toLocaleDateString("en-US", { weekday: "short" }),
-      date: date.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+      dow:   date.toLocaleDateString("en-US", { weekday: "short" }),
+      date:  date.toLocaleDateString("en-US", { day: "numeric" }),
+      month: date.toLocaleDateString("en-US", { month: "short" }),
     };
   }
 
@@ -1232,26 +1234,22 @@ export default function Itinerary() {
     <div style={{ fontFamily: "inherit", background: "#ffffff", minHeight: "100vh", color: "#0e1014" }}>
 
       {/* ── HEADER ── */}
-      <div style={{ background: "#ffffff", borderBottom: "1px solid #e2e5ea", padding: "1rem 2rem" }}>
-        <div style={{ maxWidth: 820, margin: "0 auto" }}>
-          {/* Subtitle row: back button + file name + sync status + settings gear */}
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:".5rem" }}>
-            <div style={{ display:"flex", alignItems:"center", gap:".75rem" }}>
+      <div style={{ background: "#ffffff", borderBottom: "1px solid #e2e5ea", padding: ".75rem 2rem" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          {/* Breadcrumb: Trips / Title */}
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+            <div style={{ display:"flex", alignItems:"center", gap:8, fontSize:13, minWidth:0 }}>
               <button onClick={handleCloseRequest}
-                style={{ background:"none", border:"none", color:"#6b7a8a", cursor:"pointer",
-                  fontSize:".7rem", fontFamily:"inherit", padding:0 }}>
-                ← All Itineraries
+                style={{ background:"none", border:"none", color:"#5c6470", cursor:"pointer",
+                  fontSize:13, fontFamily:"inherit", padding:0, flexShrink:0 }}>
+                Trips
               </button>
-              <span style={{ color:"#9ba1ac", fontSize:".7rem", fontFamily:"inherit" }}>·</span>
-              <div style={{ fontSize:".7rem", color:"#0b3d6b", fontFamily:"inherit",
-                letterSpacing: dateRange ? ".03em" : ".15em",
-                textTransform: dateRange ? "none" : "uppercase" }}>
-                {dateRange
-                  ? <>{dateRange} <span style={{ opacity:.6 }}>· {days.length} days</span></>
-                  : <>{days.length} Days</>}
-                {currentFile === "__local__" &&
-                  <span style={{ color:"#d97706", marginLeft:".5rem" }}>· Local only</span>}
-              </div>
+              <span style={{ color:"#9ba1ac" }}>/</span>
+              <span style={{ color:"#0e1014", fontWeight:500, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
+                {title}
+              </span>
+              {currentFile === "__local__" &&
+                <span style={{ color:"#d97706", fontSize:11, flexShrink:0 }}>· Local only</span>}
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:".75rem" }}>
               {syncStatus !== "idle" && (() => {
@@ -1531,209 +1529,276 @@ export default function Itinerary() {
             </div>
           )}
 
-          {editingHeader ? (
-            <div style={{ marginBottom: "1.5rem" }}>
-              <input autoFocus value={headerDraft.title}
-                onChange={e => setHeaderDraft(p => ({ ...p, title: e.target.value }))}
-                onKeyDown={e => {
-                  if (e.key === "Escape") setEditingHeader(false);
-                  if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                    setTitle(headerDraft.title.trim() || title);
-                    setSubtitle(headerDraft.subtitle);
-                    setEditingHeader(false);
-                  }
-                }}
-                style={{ width:"100%", background:"#f0f4f8", border:"1px solid #2e5070", color:"#0e1014",
-                  borderRadius:4, padding:".45rem .75rem", fontSize:"clamp(1.2rem,3vw,1.8rem)",
-                  fontFamily:"inherit", fontWeight:400, letterSpacing:"-.02em",
-                  outline:"none", boxSizing:"border-box", marginBottom:".5rem" }} />
-              <input value={headerDraft.subtitle}
-                onChange={e => setHeaderDraft(p => ({ ...p, subtitle: e.target.value }))}
-                onKeyDown={e => {
-                  if (e.key === "Escape") setEditingHeader(false);
-                  if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                    setTitle(headerDraft.title.trim() || title);
-                    setSubtitle(headerDraft.subtitle);
-                    setEditingHeader(false);
-                  }
-                }}
-                placeholder="Subtitle / tagline (optional)"
-                style={{ width:"100%", background:"#f0f4f8", border:"1px solid #2e5070", color:"#9ba1ac",
-                  borderRadius:4, padding:".4rem .75rem", fontSize:".9rem",
-                  fontFamily:"inherit", fontStyle:"italic",
-                  outline:"none", boxSizing:"border-box", marginBottom:".6rem" }} />
-              <div style={{ display:"flex", gap:".5rem" }}>
-                <button onClick={() => { setTitle(headerDraft.title.trim() || title); setSubtitle(headerDraft.subtitle); setEditingHeader(false); }}
-                  style={{ background:"#f0f4f8", border:"1px solid #2e5070", color:"#0b3d6b",
-                    borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"inherit", cursor:"pointer" }}>
-                  Save
-                </button>
-                <button onClick={() => setEditingHeader(false)}
-                  style={{ background:"none", border:"1px solid #2e3a4a", color:"#6b7a8a",
-                    borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"inherit", cursor:"pointer" }}>
-                  Cancel
-                </button>
-              </div>
-            </div>
-          ) : (
-            <>
-              <div style={{ display:"flex", alignItems:"flex-start", gap:".5rem", marginBottom:".4rem" }}>
-                <h1 style={{ fontSize:"clamp(1.6rem,4vw,2.4rem)", fontWeight:400, color:"#0e1014",
-                  margin:0, letterSpacing:"-.02em", lineHeight:1.15, flex:1 }}>
-                  {title}
-                </h1>
-                {!readOnly && (
-                  <button onClick={() => { setEditingHeader(true); setHeaderDraft({ title, subtitle }); }}
-                    style={{ background:"none", border:"none", color:"#6b7a8a", cursor:"pointer",
-                      fontSize:".7rem", fontFamily:"inherit", padding:0, flexShrink:0, marginTop:".35rem" }}>
-                    Edit
-                  </button>
-                )}
-              </div>
-              {subtitle && (
-                <p style={{ color:"#9ba1ac", margin:"0 0 1.5rem", fontSize:".95rem", fontStyle:"italic" }}>
-                  {subtitle}
-                </p>
-              )}
-            </>
-          )}
+        </div>
+      </div>
 
-          {/* Overview map */}
+      {/* ── MAP ── */}
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "1.25rem 2rem 0" }}>
+        <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid #e2e5ea" }}>
           <ItineraryMap days={days} savedFlights={savedFlights} savedDirections={savedDirections} savedPlaces={savedPlaces} savedRoutes={savedRoutes} />
+        </div>
+      </div>
 
-          {/* Stats */}
-          <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", marginBottom: "1.25rem" }}>
-            {[
-              totalNM > 0          && { label: "Boating",  val: `${Math.round(totalNM)} NM` },
-              totalFlightMiles > 0 && { label: "Flying",   val: `${totalFlightMiles.toLocaleString()} mi` },
-              totalDrivingMiles > 0 && { label: "Driving",  val: `${totalDrivingMiles.toLocaleString()} mi` },
-              { label: "Travel Days",    val: String(travelDays) },
-              { label: "Fuel Stops",     val: String(days.filter(d => d.fuelStop).length) },
-            ].filter(Boolean).map(s => (
-              <div key={s.label}>
-                <div style={{ fontSize: "1.3rem", color: "#0b3d6b" }}>{s.val}</div>
-                <div style={{ fontSize: ".7rem", color: "#5c6470", letterSpacing: ".1em", textTransform: "uppercase" }}>{s.label}</div>
-              </div>
-            ))}
+      {/* ── TITLE + FACTS ── */}
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "1.5rem 2rem 0" }}>
+
+        {/* Title / edit form */}
+        {editingHeader ? (
+          <div style={{ marginBottom: "1.5rem" }}>
+            <input autoFocus value={headerDraft.title}
+              onChange={e => setHeaderDraft(p => ({ ...p, title: e.target.value }))}
+              onKeyDown={e => {
+                if (e.key === "Escape") setEditingHeader(false);
+                if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                  setTitle(headerDraft.title.trim() || title);
+                  setSubtitle(headerDraft.subtitle);
+                  setEditingHeader(false);
+                }
+              }}
+              style={{ width:"100%", background:"#f0f4f8", border:"1px solid #e2e5ea", color:"#0e1014",
+                borderRadius:8, padding:".45rem .75rem", fontSize:"clamp(1.2rem,3vw,1.8rem)",
+                fontFamily:"inherit", fontWeight:700, letterSpacing:"-.03em",
+                outline:"none", boxSizing:"border-box", marginBottom:".5rem" }} />
+            <input value={headerDraft.subtitle}
+              onChange={e => setHeaderDraft(p => ({ ...p, subtitle: e.target.value }))}
+              onKeyDown={e => {
+                if (e.key === "Escape") setEditingHeader(false);
+                if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                  setTitle(headerDraft.title.trim() || title);
+                  setSubtitle(headerDraft.subtitle);
+                  setEditingHeader(false);
+                }
+              }}
+              placeholder="Subtitle / tagline (optional)"
+              style={{ width:"100%", background:"#f0f4f8", border:"1px solid #e2e5ea", color:"#9ba1ac",
+                borderRadius:8, padding:".4rem .75rem", fontSize:".9rem",
+                fontFamily:"inherit", fontStyle:"italic",
+                outline:"none", boxSizing:"border-box", marginBottom:".6rem" }} />
+            <div style={{ display:"flex", gap:".5rem" }}>
+              <button onClick={() => { setTitle(headerDraft.title.trim() || title); setSubtitle(headerDraft.subtitle); setEditingHeader(false); }}
+                style={{ background:"#0b3d6b", border:"none", color:"#fff",
+                  borderRadius:6, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"inherit", cursor:"pointer" }}>
+                Save
+              </button>
+              <button onClick={() => setEditingHeader(false)}
+                style={{ background:"none", border:"1px solid #e2e5ea", color:"#6b7a8a",
+                  borderRadius:6, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"inherit", cursor:"pointer" }}>
+                Cancel
+              </button>
+            </div>
           </div>
-
-          {/* Departure date */}
-          <div style={{ display:"flex", alignItems:"center", gap:".65rem", marginBottom:"1.25rem", fontFamily:"inherit" }}>
-            <span style={{ fontSize:".7rem", color:"#5c6470", letterSpacing:".1em", textTransform:"uppercase" }}>Departure</span>
-            <input
-              type="date"
-              value={startDate}
-              onChange={e => setStartDate(e.target.value)}
-              style={{ background:"#f0f4f8", border:"1px solid #2e5070", color:"#0b3d6b",
-                padding:"3px 8px", borderRadius:4, fontSize:".78rem", fontFamily:"inherit", cursor:"pointer" }}
-            />
-            {startDate && (
-              <>
-                <button onClick={() => setStartDate("")}
-                  style={{ background:"none", border:"none", color:"#6b7a8a", cursor:"pointer",
-                    fontSize:".7rem", fontFamily:"inherit", padding:0 }}>
-                  clear
-                </button>
-                {days.length > 0 && (
-                  <>
-                    <button onClick={generateICS}
-                      style={{ background:"none", border:"1px solid #2e5070", color:"#5c6470",
-                        cursor:"pointer", fontSize:".7rem", fontFamily:"inherit",
-                        padding:"2px 8px", borderRadius:4 }}>
-                      Export .ics
-                    </button>
-                    {effectiveRepo && currentFile && currentFile !== "__local__" && (
-                      <button onClick={() => {
-                          const icsFile = currentFile.replace(/\.json$/i, ".ics");
-                          const url = `https://raw.githubusercontent.com/${effectiveRepo}/${effectiveBranch}/${icsFile}`;
-                          navigator.clipboard.writeText(url);
-                          setCopiedICS(true);
-                          setTimeout(() => setCopiedICS(false), 2000);
-                        }}
-                        title="Copy subscription URL — paste into Apple Calendar or Google Calendar"
-                        style={{ background:"none", border:"1px solid #2e5070", color: copiedICS ? "#16a34a" : "#5c6470",
-                          cursor:"pointer", fontSize:".7rem", fontFamily:"inherit",
-                          padding:"2px 8px", borderRadius:4 }}>
-                        {copiedICS ? "Copied!" : "Subscribe URL"}
-                      </button>
-                    )}
-                  </>
-                )}
-              </>
+        ) : (
+          <div style={{ display:"flex", alignItems:"flex-start", gap:".5rem", marginBottom: subtitle ? ".3rem" : ".75rem" }}>
+            <h1 style={{ fontSize:"clamp(1.6rem,4vw,2.4rem)", fontWeight:700, color:"#0e1014",
+              margin:0, letterSpacing:"-.03em", lineHeight:1.15, flex:1 }}>
+              {title}
+            </h1>
+            {!readOnly && (
+              <button onClick={() => { setEditingHeader(true); setHeaderDraft({ title, subtitle }); }}
+                style={{ background:"none", border:"none", color:"#6b7a8a", cursor:"pointer",
+                  fontSize:".7rem", fontFamily:"inherit", padding:0, flexShrink:0, marginTop:".35rem" }}>
+                Edit
+              </button>
             )}
           </div>
+        )}
+        {subtitle && !editingHeader && (
+          <p style={{ color:"#9ba1ac", margin:"0 0 .75rem", fontSize:".9rem", fontStyle:"italic" }}>
+            {subtitle}
+          </p>
+        )}
+        {dateRange && !editingHeader && (
+          <div style={{ fontSize:15, color:"#5c6470", marginBottom:"1.5rem", fontVariantNumeric:"tabular-nums" }}>
+            {dateRange} · {days.length} {days.length === 1 ? "day" : "days"}
+          </div>
+        )}
 
-          {/* Itinerary notes */}
-          <div style={{ marginBottom:"1.25rem" }}>
-            {editingNotes ? (
+        {/* Two-column: stats+notes left, date grid+todos right */}
+        <div style={{ display:"flex", gap:48, alignItems:"flex-start", marginBottom:"1.5rem", flexWrap:"wrap" }}>
+
+          {/* Left: stats + notes */}
+          <div style={{ flex:1, minWidth:200, display:"flex", flexDirection:"column", gap:16 }}>
+            {(() => {
+              const stats = [
+                totalNM > 0           && { label: "Boating",     val: `${Math.round(totalNM)} NM` },
+                totalFlightMiles > 0  && { label: "Flying",      val: `${totalFlightMiles.toLocaleString()} mi` },
+                totalDrivingMiles > 0 && { label: "Driving",     val: `${totalDrivingMiles.toLocaleString()} mi` },
+                travelDays > 0        && { label: "Travel days", val: String(travelDays) },
+                days.filter(d => d.fuelStop).length > 0 && { label: "Fuel stops", val: String(days.filter(d => d.fuelStop).length) },
+              ].filter(Boolean);
+              if (!stats.length) return null;
+              return (
+                <div style={{ display:"flex", gap:24, flexWrap:"wrap" }}>
+                  {stats.map(s => (
+                    <div key={s.label}>
+                      <div style={{ fontSize:"1.4rem", fontWeight:700, color:"#0b3d6b", letterSpacing:"-.02em", fontVariantNumeric:"tabular-nums" }}>{s.val}</div>
+                      <div style={{ fontSize:11, color:"#9ba1ac", letterSpacing:".08em", textTransform:"uppercase", marginTop:2 }}>{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+
+            {/* Notes */}
+            {(itineraryNotes && !editingNotes) && (
+              <div style={{ padding:"14px 16px", borderRadius:10, background:"#f8f9fb",
+                border:"1px solid #e2e5ea", display:"flex", gap:10, fontSize:13, lineHeight:1.55 }}>
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ color:"#f5b544", flexShrink:0, marginTop:1 }}>
+                  <path d="M3 2.5h7L13 5.5v8a1 1 0 01-1 1H3a1 1 0 01-1-1v-10a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+                  <path d="M10 2.5V5h3M5 8h6M5 10.5h6M5 5.5h2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+                </svg>
+                <div style={{ flex:1, minWidth:0 }}>
+                  <div style={{ fontSize:9, fontWeight:600, letterSpacing:".12em", color:"#9ba1ac", marginBottom:4, textTransform:"uppercase" }}>Notes</div>
+                  <div style={{ color:"#0e1014" }}><NoteMarkdown>{itineraryNotes}</NoteMarkdown></div>
+                  {!readOnly && (
+                    <button onClick={() => setEditingNotes(true)}
+                      style={{ background:"none", border:"none", color:"#6b7a8a", cursor:"pointer",
+                        fontSize:11, fontFamily:"inherit", padding:0, marginTop:6 }}>
+                      Edit
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+            {(!itineraryNotes && !readOnly && !editingNotes) && (
+              <button onClick={() => setEditingNotes(true)}
+                style={{ background:"none", border:"1px dashed #e2e5ea", color:"#9ba1ac",
+                  borderRadius:10, padding:"10px 16px", fontSize:12, fontFamily:"inherit",
+                  cursor:"pointer", textAlign:"left", alignSelf:"flex-start" }}>
+                + Add notes
+              </button>
+            )}
+            {editingNotes && (
               <div>
                 <textarea
                   autoFocus
                   value={itineraryNotes}
                   onChange={e => setItineraryNotes(e.target.value)}
                   onKeyDown={e => { if (e.key === "Escape") setEditingNotes(false); }}
-                  placeholder="Notes about this trip — crew, budget, packing list, pre-departure checklist…"
+                  placeholder="Notes about this trip…"
                   rows={4}
-                  style={{ width:"100%", background:"#f0f4f8", border:"1px solid #2e5070", color:"#0e1014",
-                    borderRadius:4, padding:".5rem .75rem", fontSize:".82rem", fontFamily:"inherit",
-                    lineHeight:1.6, resize:"vertical", boxSizing:"border-box", outline:"none",
-                    marginBottom:".5rem" }}
+                  style={{ width:"100%", background:"#ffffff", border:"1px solid #e2e5ea", color:"#0e1014",
+                    borderRadius:8, padding:".5rem .75rem", fontSize:13, fontFamily:"inherit",
+                    lineHeight:1.6, resize:"vertical", boxSizing:"border-box", outline:"none", marginBottom:6 }}
                 />
                 <button onClick={() => setEditingNotes(false)}
-                  style={{ background:"#f0f4f8", border:"1px solid #2e5070", color:"#0b3d6b",
-                    borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"inherit",
-                    cursor:"pointer" }}>
+                  style={{ background:"#0b3d6b", border:"none", color:"#fff",
+                    borderRadius:6, padding:".3rem .75rem", fontSize:12, fontFamily:"inherit", cursor:"pointer" }}>
                   Done
                 </button>
               </div>
-            ) : itineraryNotes ? (
-              <div style={{ display:"flex", gap:".75rem", alignItems:"flex-start" }}>
-                <div style={{ flex:1 }}>
-                  <NoteMarkdown>{itineraryNotes}</NoteMarkdown>
-                </div>
-                {!readOnly && (
-                  <button onClick={() => setEditingNotes(true)}
-                    style={{ background:"none", border:"none", color:"#6b7a8a", cursor:"pointer",
-                      fontSize:".7rem", fontFamily:"inherit", padding:0, flexShrink:0 }}>
-                    Edit
-                  </button>
-                )}
-              </div>
-            ) : !readOnly ? (
-              <button onClick={() => setEditingNotes(true)}
-                style={{ background:"none", border:"none", color:"#9ba1ac", cursor:"pointer",
-                  fontSize:".75rem", fontFamily:"inherit", fontStyle:"italic", padding:0 }}>
-                + Add itinerary notes
-              </button>
-            ) : null}
+            )}
           </div>
 
-          {/* TODOs */}
-          {todos.length > 0 && (
-            <div style={{ marginBottom:"1.25rem", padding:".65rem .85rem",
-              background:"#fffbeb", border:"1px solid #e8a83844", borderRadius:5 }}>
-              <div style={{ fontSize:".62rem", color:"#d97706", letterSpacing:".12em",
-                textTransform:"uppercase", fontFamily:"inherit", marginBottom:".5rem" }}>
-                {todos.length} TODO{todos.length !== 1 ? "s" : ""}
+          {/* Right: date grid only */}
+          <div style={{ width:300, flexShrink:0, display:"flex", flexDirection:"column", gap:10 }}>
+
+            {/* Date grid */}
+            {(() => {
+              const hasDate = !!startDate;
+              const start = hasDate ? (() => { const [y,m,d] = startDate.split("-").map(Number); return new Date(y,m-1,d); })() : null;
+              const end   = hasDate ? (() => { const [y,m,d] = startDate.split("-").map(Number); return new Date(y,m-1,d+days.length-1); })() : null;
+              const fmt   = dt => dt.toLocaleDateString("en-US", { month:"short", day:"numeric" });
+              const stops = (Object.values(savedPlaces).flat().length || 0) + (Object.values(savedFlights).flat().length || 0);
+              return (
+                <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
+                    {/* Days */}
+                    <div style={{ padding:"10px 12px", borderRadius:8, background:"#f8f9fb", border:"1px solid #e2e5ea" }}>
+                      <div style={{ fontSize:9, fontWeight:600, letterSpacing:".12em", color:"#9ba1ac", marginBottom:3, textTransform:"uppercase" }}>Days</div>
+                      <div style={{ fontSize:15, fontWeight:600, color:"#0e1014", fontVariantNumeric:"tabular-nums" }}>{days.length}</div>
+                    </div>
+                    {/* Stops */}
+                    <div style={{ padding:"10px 12px", borderRadius:8, background:"#f8f9fb", border:"1px solid #e2e5ea" }}>
+                      <div style={{ fontSize:9, fontWeight:600, letterSpacing:".12em", color:"#9ba1ac", marginBottom:3, textTransform:"uppercase" }}>Stops</div>
+                      <div style={{ fontSize:15, fontWeight:600, color:"#0e1014", fontVariantNumeric:"tabular-nums" }}>{stops}</div>
+                    </div>
+                    {/* Start — date picker */}
+                    <div style={{ padding:"10px 12px", borderRadius:8, background:"#f8f9fb",
+                      border: hasDate ? "1px solid #e2e5ea" : "1px dashed #d1d5db",
+                      position:"relative", cursor: readOnly ? "default" : "pointer" }}>
+                      <div style={{ fontSize:9, fontWeight:600, letterSpacing:".12em", color:"#9ba1ac", marginBottom:3, textTransform:"uppercase" }}>Start</div>
+                      <div style={{ fontSize:15, fontWeight:600, fontVariantNumeric:"tabular-nums",
+                        color: hasDate ? "#0e1014" : "#9ba1ac" }}>
+                        {hasDate ? fmt(start) : "Set date"}
+                      </div>
+                      {!readOnly && (
+                        <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)}
+                          style={{ position:"absolute", inset:0, opacity:0, cursor:"pointer",
+                            width:"100%", height:"100%", padding:0, margin:0, border:"none" }} />
+                      )}
+                    </div>
+                    {/* End */}
+                    <div style={{ padding:"10px 12px", borderRadius:8, background:"#f8f9fb", border:"1px solid #e2e5ea" }}>
+                      <div style={{ fontSize:9, fontWeight:600, letterSpacing:".12em", color:"#9ba1ac", marginBottom:3, textTransform:"uppercase" }}>End</div>
+                      <div style={{ fontSize:15, fontWeight:600, color: hasDate ? "#0e1014" : "#9ba1ac", fontVariantNumeric:"tabular-nums" }}>
+                        {hasDate ? fmt(end) : "—"}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ICS export actions */}
+                  {hasDate && days.length > 0 && (
+                    <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
+                      <button onClick={generateICS}
+                        style={{ background:"none", border:"1px solid #e2e5ea", color:"#5c6470",
+                          cursor:"pointer", fontSize:11, fontFamily:"inherit",
+                          padding:"4px 10px", borderRadius:6 }}>
+                        Export .ics
+                      </button>
+                      {effectiveRepo && currentFile && currentFile !== "__local__" && (
+                        <button onClick={() => {
+                            const icsFile = currentFile.replace(/\.json$/i, ".ics");
+                            const url = `https://raw.githubusercontent.com/${effectiveRepo}/${effectiveBranch}/${icsFile}`;
+                            navigator.clipboard.writeText(url);
+                            setCopiedICS(true);
+                            setTimeout(() => setCopiedICS(false), 2000);
+                          }}
+                          style={{ background:"none", border:"1px solid #e2e5ea",
+                            color: copiedICS ? "#16a34a" : "#5c6470",
+                            cursor:"pointer", fontSize:11, fontFamily:"inherit",
+                            padding:"4px 10px", borderRadius:6 }}>
+                          {copiedICS ? "Copied!" : "Subscribe URL"}
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
+            {/* TODOs */}
+            {todos.length > 0 && (
+              <div style={{ padding:"12px 14px", background:"#fffbeb",
+                border:"1px solid rgba(217,119,6,0.2)", borderRadius:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, letterSpacing:".12em", color:"#d97706",
+                  textTransform:"uppercase", marginBottom:8 }}>
+                  {todos.length} TODO{todos.length !== 1 ? "s" : ""}
+                </div>
+                <ul style={{ margin:0, paddingLeft:"1rem", display:"flex", flexDirection:"column", gap:4 }}>
+                  {todos.map((t, i) => (
+                    <li key={i}
+                      onClick={t.day != null ? () => { setClosedDays(prev => { const n = new Set(prev); n.delete(t.day); return n; }); setActiveTab("itinerary"); } : undefined}
+                      style={{ fontSize:12, color:"#0e1014", lineHeight:1.5,
+                        cursor: t.day != null ? "pointer" : "default" }}>
+                      {t.day != null && (
+                        <span style={{ fontSize:10, color:"#d97706", marginRight:4, opacity:.8 }}>
+                          Day {t.day}
+                        </span>
+                      )}
+                      <NoteMarkdown>{t.text}</NoteMarkdown>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul style={{ margin:0, paddingLeft:"1.1rem" }}>
-                {todos.map((t, i) => (
-                  <li key={i}
-                    onClick={t.day != null ? () => { setOpenDay(t.day); setActiveTab("itinerary"); } : undefined}
-                    style={{ fontSize:".78rem", color:"#0e1014", fontFamily:"inherit",
-                      lineHeight:1.5, cursor: t.day != null ? "pointer" : "default",
-                      marginBottom: i < todos.length - 1 ? ".15rem" : 0 }}>
-                    {t.day != null && (
-                      <span style={{ fontSize:".65rem", color:"#d97706", marginRight:".4rem", opacity:.8 }}>
-                        Day {t.day}
-                      </span>
-                    )}
-                    <NoteMarkdown>{t.text}</NoteMarkdown>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+            )}
+
+          </div>
+        </div>
+      </div>
+
+      {/* ── SECONDARY INFO ── */}
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 2rem" }}>
 
           {/* Day-strip */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
@@ -1746,13 +1811,13 @@ export default function Itinerary() {
               const info = getDayDate(d.day);
               return (
                 <div key={d.day}
-                  onClick={() => { setOpenDay(d.day); setActiveTab("itinerary"); }}
+                  onClick={() => { setClosedDays(prev => { const n = new Set(prev); n.delete(d.day); return n; }); setActiveTab("itinerary"); }}
                   title={info ? `${d.leg} · ${info.dow}, ${info.date}` : d.leg}
                   style={{ width:32, minHeight:32, borderRadius:4, background:bg,
                     display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
                     fontSize:".6rem", color:col, cursor:"pointer", fontFamily:"inherit",
                     padding: info ? "4px 0" : 0, gap:1,
-                    border: openDay === d.day ? "2px solid #0b3d6b" : "1px solid transparent" }}>
+                    border: !closedDays.has(d.day) ? "2px solid #0b3d6b" : "1px solid transparent" }}>
                   <span>D{d.day}</span>
                   {info && <span style={{ fontSize:".5rem", opacity:.9, lineHeight:1 }}>{info.dow}</span>}
                   {info && <span style={{ fontSize:".5rem", opacity:.7, lineHeight:1 }}>{info.date}</span>}
@@ -1769,7 +1834,6 @@ export default function Itinerary() {
             </div>
           </div>
         </div>
-      </div>
 
       {/* ── CONFLICT BANNER ── */}
       {syncStatus === "conflict" && (
@@ -1789,7 +1853,7 @@ export default function Itinerary() {
 
       {/* ── TABS ── */}
       <div style={{ borderBottom:"1px solid #e2e5ea", background:"#ffffff" }}>
-        <div style={{ maxWidth:820, margin:"0 auto", display:"flex" }}>
+        <div style={{ maxWidth:1100, margin:"0 auto", display:"flex" }}>
           {[["itinerary","Day by Day"],["fuel","Fuel Plan"],["tides","Tide Warnings"]].map(([t,lbl])=>(
             <button key={t} onClick={()=>setActiveTab(t)} style={{
               background:"none", border:"none",
@@ -1803,7 +1867,7 @@ export default function Itinerary() {
         </div>
       </div>
 
-      <div style={{ maxWidth:820, margin:"0 auto", padding:"1.5rem 1rem 3rem" }}>
+      <div style={{ maxWidth:1100, margin:"0 auto", padding:"1.5rem 2rem 3rem" }}>
 
         {/* ── ITINERARY TAB ── */}
         {activeTab === "itinerary" && days.length === 0 && (
@@ -1822,7 +1886,7 @@ export default function Itinerary() {
               </div>
             )}
             <div style={{ textAlign: "center", marginTop: "1.25rem" }}>
-              <button onClick={() => { setDays(initialDays); setOpenDay(1); }}
+              <button onClick={() => { setDays(initialDays); setClosedDays(new Set()); }}
                 style={{ background: "#f0f4f8", border: "1px solid #2e5070", color: "#0b3d6b",
                   borderRadius: 6, padding: ".55rem 1.5rem", fontSize: ".82rem",
                   fontFamily: "inherit", cursor: "pointer" }}>
@@ -1833,168 +1897,162 @@ export default function Itinerary() {
         )}
         {activeTab === "itinerary" && (<>
         {days.map(d => {
-          const isOpen    = openDay === d.day;
+          const isOpen    = !closedDays.has(d.day);
           const isLayover = effNm(d) === 0;
           const dayInfo   = getDayDate(d.day);
+          const allHighlights = [...(d.highlights ?? []), ...(customHighlights[d.day] ?? [])];
           return (
-            <div key={d.day} style={{
-              marginBottom:".5rem",
-              border: isOpen ? "1px solid #0b3d6b33" : "1px solid #e2e5ea",
-              borderRadius:8, background: isOpen ? "#f8f9fb" : "#ffffff", overflow:"hidden" }}>
+            <div key={d.day}>
 
-              {/* Row */}
-              <button onClick={()=>setOpenDay(isOpen ? null : d.day)} style={{
-                width:"100%", background:"none", border:"none", padding:"1rem 1.25rem",
-                cursor:"pointer", display:"flex", alignItems:"center", gap:"1rem", textAlign:"left" }}>
+              {/* ── Compact header row ── */}
+              <button onClick={()=>setClosedDays(prev => { const n = new Set(prev); n.has(d.day) ? n.delete(d.day) : n.add(d.day); return n; })} style={{
+                width:"100%", background:"none", border:"none",
+                padding:"14px 0", cursor:"pointer",
+                display:"flex", alignItems:"center", gap:12, textAlign:"left",
+                borderBottom:`1px solid ${isOpen ? "transparent" : "#e2e5ea"}`,
+                color:"inherit", fontFamily:"inherit" }}>
                 <div style={{
-                  minWidth:38, height: dayInfo ? 56 : 38,
-                  borderRadius: dayInfo ? 7 : "50%",
+                  width:34, height:34, borderRadius:8, flexShrink:0,
                   background: isOpen ? "#0b3d6b" : "#f0f4f8",
-                  color: isOpen ? "#ffffff" : "#0b3d6b",
-                  display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
-                  fontSize:".75rem", fontWeight:700, flexShrink:0, gap:1 }}>
-                  <span>{d.day}</span>
-                  {dayInfo && <span style={{ fontSize:".6rem", fontWeight:600, opacity: isOpen ? .85 : .75, lineHeight:1 }}>{dayInfo.dow}</span>}
-                  {dayInfo && <span style={{ fontSize:".58rem", fontWeight:400, opacity: isOpen ? .65 : .55, lineHeight:1 }}>{dayInfo.date}</span>}
+                  color: isOpen ? "#fff" : "#0b3d6b",
+                  display:"flex", alignItems:"center", justifyContent:"center",
+                  fontSize:13, fontWeight:700 }}>
+                  {d.day}
                 </div>
-                <div style={{ flex:1 }}>
-                  <div style={{ color: isOpen ? "#0e1014" : "#0e1014", fontSize:".95rem", lineHeight:1.3 }}>
+                <div style={{ flex:1, minWidth:0 }}>
+                  <div style={{ fontSize:14, fontWeight:600, color:"#0e1014", lineHeight:1.3 }}>
                     {d.leg}
-                    {d.fuelStop    && <span style={{ marginLeft:8,  background:"#fff7ed", color:"#d97706", fontSize:".63rem", padding:"2px 7px", borderRadius:10, fontFamily:"inherit", verticalAlign:"middle" }}>⛽ {d.fuelLabel}</span>}
-                    {d.tideWarning && <span style={{ marginLeft:6,  background:"#fee2e2", color:"#dc2626", fontSize:".63rem", padding:"2px 7px", borderRadius:10, fontFamily:"inherit", verticalAlign:"middle" }}>⚠ Tide Critical</span>}
-                    {d.tags.includes("combined-leg") && <span style={{ marginLeft:6, background:"#e8f1f9", color:"#0b3d6b", fontSize:".63rem", padding:"2px 7px", borderRadius:10, fontFamily:"inherit", verticalAlign:"middle" }}>Combined</span>}
+                    {d.fuelStop    && <span style={{ marginLeft:6, background:"#fff7ed", color:"#d97706", fontSize:10, padding:"2px 6px", borderRadius:8, verticalAlign:"middle" }}>⛽</span>}
+                    {d.tideWarning && <span style={{ marginLeft:4, background:"#fee2e2", color:"#dc2626", fontSize:10, padding:"2px 6px", borderRadius:8, verticalAlign:"middle" }}>⚠</span>}
                   </div>
-                  <div style={{ color:"#6b7a8a", fontSize:".75rem", marginTop:2, fontFamily:"inherit" }}>
-                    {(() => {
-                      const parts = [];
-                      if (!isLayover) { const nm=effNm(d), hrs=effHrs(d); parts.push(`${nm} NM · ~${(() => { const h=Math.floor(hrs), m=Math.round((hrs-h)*60); return h===0?`${m}m`:m===0?`${h}h`:`${h}h ${m}m`; })()} `); }
-                      let dKm = 0;
-                      (savedDirections[d.day] ?? []).forEach(dir => {
-                        const km = dir.distance?.match(/^([\d.]+)\s*km/i);
-                        const mi = dir.distance?.match(/^([\d.]+)\s*mi/i);
-                        const mo = dir.distance?.match(/^(\d+)\s*m\b/i);
-                        if (km) dKm += parseFloat(km[1]);
-                        else if (mi) dKm += parseFloat(mi[1]) * 1.60934;
-                        else if (mo) dKm += parseFloat(mo[1]) / 1000;
-                      });
-                      if (dKm > 0) {
-                        const useMi = settings.distanceUnit === "mi";
-                        const val = useMi ? Math.round(dKm * 0.621371) : Math.round(dKm);
-                        parts.push(`${val} ${useMi ? "mi" : "km"} driving`);
-                      }
-                      return parts.join(" · ") || "Layover";
-                    })()}
-                    {" · "}
-                    <span style={{ fontStyle:"italic", color:"#5c6470" }}>{d.overnight}</span>
+                  <div style={{ fontSize:12, color:"#9ba1ac", marginTop:2 }}>
+                    {!isLayover && `${effNm(d)} NM · `}{d.overnight || "Layover"}
                   </div>
-                  {(() => {
-                    const cities = getDayCities(d.day);
-                    if (!cities.length) return null;
-                    return (
-                      <div style={{ fontSize:".7rem", color:"#5c6470", fontFamily:"inherit",
-                        marginTop:2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
-                        {cities.join(" · ")}
-                      </div>
-                    );
-                  })()}
                 </div>
-                <div style={{ color:"#6b7a8a", transform: isOpen ? "rotate(180deg)" : "none" }}>▾</div>
+                {dayInfo && (
+                  <div style={{ fontSize:11, color:"#9ba1ac", textAlign:"right", flexShrink:0, lineHeight:1.4 }}>
+                    <div style={{ fontWeight:500 }}>{dayInfo.dow} {dayInfo.date}</div>
+                    <div>{dayInfo.month}</div>
+                  </div>
+                )}
+                <span style={{ color:"#9ba1ac", fontSize:16, transform: isOpen ? "rotate(90deg)" : "none",
+                  transition:"transform 0.15s", flexShrink:0 }}>›</span>
               </button>
 
-              {/* Expanded */}
+              {/* ── Expanded: two-column ── */}
               {isOpen && (
-                <div style={{ padding:"0 1.25rem 1.25rem", borderTop:"1px solid #1e3a5240" }}>
-                  {/* Tags */}
-                  <div style={{ display:"flex", flexWrap:"wrap", gap:6, margin:".85rem 0 1rem" }}>
-                    {d.tags.filter(t=>tagConfig[t]).map(t => {
-                      const c = tagConfig[t];
-                      return <span key={t} style={{ fontSize:".63rem", padding:"3px 9px", borderRadius:12,
-                        background:c.color+"22", color:c.color, border:`1px solid ${c.color}44`,
-                        letterSpacing:".07em", fontFamily:"inherit", textTransform:"uppercase" }}>{c.label}</span>;
-                    })}
-                  </div>
-                  {/* Core fields edit */}
-                  {editingCoreDay === d.day ? (
-                    <div style={{ marginBottom:"1rem", padding:".75rem 1rem", background:"#f0f4f8",
-                      borderLeft:"3px solid #6b8fa866", borderRadius:"0 4px 4px 0" }}>
-                      <div style={{ fontSize:".62rem", color:"#5c6470", letterSpacing:".1em",
-                        textTransform:"uppercase", fontFamily:"inherit", marginBottom:".65rem" }}>
-                        Edit Day
-                      </div>
-                      <input autoFocus value={coreDraft.leg}
-                        onChange={e => setCoreDraft(p => ({ ...p, leg: e.target.value }))}
-                        onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if ((e.metaKey||e.ctrlKey) && e.key === "Enter") saveCore(d.day); }}
-                        style={{ width:"100%", background:"#ffffff", border:"1px solid #e2e5ea", color:"#0e1014",
-                          borderRadius:4, padding:".4rem .65rem", fontSize:".85rem", fontFamily:"inherit",
-                          outline:"none", boxSizing:"border-box", marginBottom:".65rem" }} />
-                      <div style={{ display:"flex", gap:".5rem", marginTop:".65rem" }}>
-                        <button onClick={() => saveCore(d.day)}
-                          style={{ background:"#f0f4f8", border:"1px solid #2e5070", color:"#0b3d6b",
-                            borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"inherit", cursor:"pointer" }}>
-                          Save
-                        </button>
-                        <button onClick={() => setEditingCoreDay(null)}
-                          style={{ background:"none", border:"1px solid #2e3a4a", color:"#6b7a8a",
-                            borderRadius:4, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"inherit", cursor:"pointer" }}>
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  ) : !readOnly ? (
-                    <div style={{ display:"flex", justifyContent:"flex-end", marginBottom:".75rem", marginTop:"-.25rem" }}>
-                      <button onClick={() => startEditCore(d.day, d)}
-                        style={{ background:"none", border:"none", color:"#6b7a8a", cursor:"pointer",
-                          fontSize:".7rem", fontFamily:"inherit", padding:0 }}>
-                        Edit day title
-                      </button>
-                    </div>
-                  ) : null}
+                <div style={{ display:"grid", gridTemplateColumns:"180px 1fr", gap:36,
+                  padding:"28px 0 36px", borderBottom:"1px solid #e2e5ea" }}>
 
-                  {/* Highlights */}
-                  <ul style={{ margin:0, padding:0, listStyle:"none" }}>
-                    {d.highlights.map((h,i) => (
-                      <li key={i} style={{ display:"flex", gap:".75rem", marginBottom:".55rem",
-                        fontSize:".875rem", lineHeight:1.5, color:"#b8cfe0", fontFamily:"inherit" }}>
-                        <span style={{ color:"#0b3d6b", flexShrink:0, marginTop:2 }}>◆</span>
-                        <span>{h}</span>
-                      </li>
-                    ))}
-                    {(customHighlights[d.day] ?? []).map((h,i) => (
-                      <li key={`c${i}`} style={{ display:"flex", gap:".75rem", marginBottom:".55rem",
-                        fontSize:".875rem", lineHeight:1.5, color:"#c8e0c8", fontFamily:"inherit" }}>
-                        <span style={{ color:"#16a34a", flexShrink:0, marginTop:2 }}>◆</span>
-                        <span style={{ flex:1 }}>{h}</span>
+                  {/* Left: day header */}
+                  <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+                    <div style={{ fontSize:10, fontWeight:600, letterSpacing:1.5, color:"#9ba1ac", textTransform:"uppercase" }}>
+                      Day {d.day} / {days.length}
+                    </div>
+                    {dayInfo ? (
+                      <div style={{ display:"flex", alignItems:"baseline", gap:8 }}>
+                        <div style={{ fontSize:52, fontWeight:700, color:"#0b3d6b", lineHeight:1,
+                          letterSpacing:-2, fontVariantNumeric:"tabular-nums" }}>
+                          {dayInfo.date}
+                        </div>
+                        <div>
+                          <div style={{ fontSize:13, fontWeight:600 }}>{dayInfo.dow}</div>
+                          <div style={{ fontSize:11, color:"#9ba1ac", letterSpacing:1 }}>{dayInfo.month.toUpperCase()}</div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ fontSize:44, fontWeight:700, color:"#0b3d6b", lineHeight:1, fontVariantNumeric:"tabular-nums" }}>
+                        {d.day}
+                      </div>
+                    )}
+
+                    {/* Title / edit */}
+                    {editingCoreDay === d.day ? (
+                      <div>
+                        <input autoFocus value={coreDraft.leg}
+                          onChange={e => setCoreDraft(p => ({ ...p, leg: e.target.value }))}
+                          onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if ((e.metaKey||e.ctrlKey) && e.key === "Enter") saveCore(d.day); }}
+                          style={{ width:"100%", background:"#ffffff", border:"1px solid #e2e5ea", color:"#0e1014",
+                            borderRadius:6, padding:".4rem .65rem", fontSize:14, fontFamily:"inherit",
+                            outline:"none", boxSizing:"border-box", marginBottom:6 }} />
+                        <div style={{ display:"flex", gap:6 }}>
+                          <button onClick={() => saveCore(d.day)}
+                            style={{ background:"#0b3d6b", border:"none", color:"#fff",
+                              borderRadius:6, padding:".25rem .65rem", fontSize:12, fontFamily:"inherit", cursor:"pointer" }}>
+                            Save
+                          </button>
+                          <button onClick={() => setEditingCoreDay(null)}
+                            style={{ background:"none", border:"1px solid #e2e5ea", color:"#6b7a8a",
+                              borderRadius:6, padding:".25rem .65rem", fontSize:12, fontFamily:"inherit", cursor:"pointer" }}>
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <div style={{ fontSize:17, fontWeight:600, letterSpacing:-0.2, lineHeight:1.3 }}>{d.leg}</div>
                         {!readOnly && (
-                          <button onClick={() => removeHighlight(d.day, i)}
-                            style={{ background:"none", border:"none", color:"#3d6050", cursor:"pointer",
-                              fontSize:".85rem", lineHeight:1, padding:"0 0 0 .25rem", flexShrink:0, marginTop:2 }}>
-                            ×
+                          <button onClick={() => startEditCore(d.day, d)}
+                            style={{ background:"none", border:"none", color:"#9ba1ac", cursor:"pointer",
+                              fontSize:11, fontFamily:"inherit", padding:0, marginTop:4 }}>
+                            Edit title
                           </button>
                         )}
-                      </li>
-                    ))}
-                  </ul>
-                  {/* Add highlight */}
-                  {!readOnly && (
-                    <div style={{ display:"flex", gap:".5rem", marginTop:".75rem", marginBottom:".25rem" }}>
-                      <input
-                        ref={inputRef}
-                        value={newHighlight}
-                        onChange={e => setNewHighlight(e.target.value)}
-                        onKeyDown={e => e.key === "Enter" && addHighlight(d.day)}
-                        placeholder="Add a highlight…"
-                        style={{ flex:1, background:"#f0f4f8", border:"1px solid #2e5070", color:"#0e1014",
-                          borderRadius:4, padding:".4rem .65rem", fontSize:".82rem", fontFamily:"inherit",
-                          outline:"none" }}
-                      />
-                      <button onClick={() => addHighlight(d.day)}
-                        style={{ background:"#f0f4f8", border:"1px solid #2e5070", color:"#0b3d6b",
-                          borderRadius:4, padding:".4rem .85rem", fontSize:".78rem", fontFamily:"inherit",
-                          cursor:"pointer", whiteSpace:"nowrap" }}>
-                        Add
-                      </button>
-                    </div>
-                  )}
+                      </div>
+                    )}
+
+                    {/* Highlights */}
+                    {allHighlights.length > 0 && (
+                      <div style={{ fontSize:13, color:"#5c6470", fontStyle:"italic", lineHeight:1.55 }}>
+                        {allHighlights.map((h, i) => (
+                          <span key={i}>
+                            {i > 0 && " · "}
+                            {h}
+                            {!readOnly && customHighlights[d.day]?.includes(h) && (
+                              <button onClick={() => removeHighlight(d.day, customHighlights[d.day].indexOf(h))}
+                                style={{ background:"none", border:"none", color:"#9ba1ac", cursor:"pointer",
+                                  fontSize:10, padding:"0 2px", lineHeight:1, verticalAlign:"middle" }}>
+                                ×
+                              </button>
+                            )}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    {!readOnly && (
+                      <div style={{ display:"flex", gap:6 }}>
+                        <input
+                          ref={inputRef}
+                          value={newHighlight}
+                          onChange={e => setNewHighlight(e.target.value)}
+                          onKeyDown={e => e.key === "Enter" && addHighlight(d.day)}
+                          placeholder="Add highlight…"
+                          style={{ flex:1, minWidth:0, background:"#f8f9fb", border:"1px solid #e2e5ea", color:"#0e1014",
+                            borderRadius:6, padding:"5px 8px", fontSize:12, fontFamily:"inherit", outline:"none" }}
+                        />
+                        <button onClick={() => addHighlight(d.day)}
+                          style={{ background:"#f0f4f8", border:"1px solid #e2e5ea", color:"#0b3d6b",
+                            borderRadius:6, padding:"5px 10px", fontSize:12, fontFamily:"inherit", cursor:"pointer", flexShrink:0 }}>
+                          +
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Tags */}
+                    {(d.tags ?? []).filter(t=>tagConfig[t]).length > 0 && (
+                      <div style={{ display:"flex", flexWrap:"wrap", gap:4 }}>
+                        {(d.tags ?? []).filter(t=>tagConfig[t]).map(t => {
+                          const c = tagConfig[t];
+                          return <span key={t} style={{ fontSize:10, padding:"2px 7px", borderRadius:10,
+                            background:c.color+"22", color:c.color, border:`1px solid ${c.color}44`,
+                            letterSpacing:".06em", textTransform:"uppercase" }}>{c.label}</span>;
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Right: content with left border */}
+                  <div style={{ borderLeft:"1px solid #e2e5ea", paddingLeft:32, minWidth:0 }}>
                   {/* Captain's note */}
                   {(() => {
                     const note = customNotes[d.day] !== undefined ? customNotes[d.day] : d.note;
@@ -2048,7 +2106,147 @@ export default function Itinerary() {
                       </div>
                     );
                   })()}
-                  {/* Places */}
+                  {/* ── Unified timeline (all item types, sorted by time) ── */}
+                  {(() => {
+                    const distUnit = settings.distanceUnit ?? "km";
+                    const places   = (savedPlaces[d.day]      ?? []).map(p => ({ _type:"place",     _sort: timeToSortKey(p.time),              _disp: fmtTime12(p.time),              ...p }));
+                    const flights  = (savedFlights[d.day]     ?? []).map(f => ({ _type:"flight",    _sort: timeToSortKey(f.departureTime),      _disp: fmtTime12(f.departureTime),     ...f }));
+                    const dirs     = (savedDirections[d.day]  ?? []).map(x => ({ _type:"direction", _sort: timeToSortKey(x.time),              _disp: fmtTime12(x.time),              ...x }));
+                    const routes   = (savedRoutes[d.day]      ?? []).map(r => ({ _type:"route",     _sort: timeToSortKey(r.time),              _disp: fmtTime12(r.time),              ...r }));
+                    const cars     = (savedRentalCars[d.day]  ?? []).map(c => ({ _type:"rentalcar", _sort: timeToSortKey(c.time),              _disp: fmtTime12(c.time),              ...c }));
+
+                    const all = [...places, ...flights, ...dirs, ...routes, ...cars]
+                      .sort((a, b) => {
+                        if (!a._sort && !b._sort) return 0;
+                        if (!a._sort) return 1;
+                        if (!b._sort) return -1;
+                        return a._sort.localeCompare(b._sort);
+                      });
+
+                    if (!all.length) return null;
+
+                    return (
+                      <ol style={{ listStyle:"none", padding:0, margin:"1rem 0 0", display:"flex", flexDirection:"column" }}>
+                        {all.map((item, idx) => {
+                          const isLast = idx === all.length - 1;
+
+                          // Dot color + icon per type
+                          let dotColor = "#0b3d6b";
+                          let icon = null;
+                          let title = "";
+                          let sub1 = "";
+                          let sub2 = "";
+                          let badge = "";
+                          let onDel = null;
+                          let mapsUrl = null;
+
+                          if (item._type === "place") {
+                            const cat = PLACE_CATEGORIES.find(c => c.key === item.category) ?? PLACE_CATEGORIES[PLACE_CATEGORIES.length - 1];
+                            dotColor = cat.color;
+                            icon = <span style={{ display:"inline-block", width:8, height:8, borderRadius:"50%", background:cat.color, flexShrink:0, marginTop:1 }}/>;
+                            title = item.name;
+                            sub1 = item.address || "";
+                            sub2 = item.notes || "";
+                            onDel = !readOnly ? () => deletePlace(d.day, item.id) : null;
+                            if (item.placeId) {
+                              mapsUrl = (item.mapsProvider ?? "google") === "apple"
+                                ? `https://maps.apple.com/?q=${encodeURIComponent(item.name)}`
+                                : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name)}&query_place_id=${encodeURIComponent(item.placeId)}`;
+                            }
+                          } else if (item._type === "flight") {
+                            dotColor = "#0b3d6b";
+                            icon = <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}><path d="M2 9.5l5 .5 2.5 3.5 1 .3 0-3.6 4-1.6c.5-.2.7-.7.5-1.2l-.1-.2c-.2-.5-.7-.7-1.2-.5l-3.7 1.5L7 5l-.4-1.1 1-.4-.7-.7L4.4 3.6 4 4.8 2.5 6.3 1.2 6.8c-.4.2-.6.5-.5.8l.1.3c.1.4.5.5.9.4L2 9.5z" stroke="#0b3d6b" strokeWidth="1.3" strokeLinejoin="round"/></svg>;
+                            title = [item.flightNumber, item.departure && item.arrival ? `${item.departure} → ${item.arrival}` : ""].filter(Boolean).join(" · ");
+                            sub1 = [item.departureName, item.arrivalName].filter(Boolean).join(" → ");
+                            sub2 = [item.airline, item.aircraft].filter(Boolean).join(" · ");
+                            badge = item.confirmation || "";
+                            onDel = !readOnly ? () => deleteFlight(d.day, item.id) : null;
+                          } else if (item._type === "direction") {
+                            dotColor = "#16a34a";
+                            icon = <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}><path d="M2 8h12M10 4l4 4-4 4" stroke="#16a34a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+                            title = [item.origin?.name, item.destination?.name].filter(Boolean).join(" → ");
+                            const rawDist = item.distance || "";
+                            const distNum = parseFloat(rawDist);
+                            let distDisplay = rawDist;
+                            if (!isNaN(distNum) && rawDist.match(/km/i) && distUnit === "mi") distDisplay = `${Math.round(distNum * 0.621371)} mi`;
+                            else if (!isNaN(distNum) && rawDist.match(/mi/i) && distUnit === "km") distDisplay = `${Math.round(distNum * 1.60934)} km`;
+                            sub1 = [distDisplay, item.duration].filter(Boolean).join(" · ");
+                            onDel = !readOnly ? () => deleteDirection(d.day, item.id) : null;
+                          } else if (item._type === "route") {
+                            dotColor = "#0b3d6b";
+                            icon = <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3 4.5 8 4.5 8s4.5-5 4.5-8c0-2.5-2-4.5-4.5-4.5z" stroke="#0b3d6b" strokeWidth="1.3" strokeLinejoin="round"/><circle cx="8" cy="6" r="1.5" stroke="#0b3d6b" strokeWidth="1.3"/></svg>;
+                            title = item.name || [item.startName, item.endName].filter(Boolean).join(" → ") || "Route";
+                            if (item.nm > 0) {
+                              const h = Math.floor(item.hrs), m = Math.round((item.hrs - h) * 60);
+                              const hrsStr = h === 0 ? `${m}m` : m === 0 ? `${h}h` : `${h}h ${m}m`;
+                              sub1 = `${item.nm} NM · ~${hrsStr}`;
+                            }
+                            if (item.startName && item.endName && item.name) sub2 = `${item.startName} → ${item.endName}`;
+                            onDel = !readOnly ? () => deleteRoute(d.day, item.id) : null;
+                          } else if (item._type === "rentalcar") {
+                            dotColor = "#d97706";
+                            icon = <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}><path d="M2.5 11V8.5l1.2-3a1 1 0 011-.7h6.6a1 1 0 011 .7l1.2 3V11" stroke="#d97706" strokeWidth="1.3" strokeLinejoin="round"/><rect x="2" y="11" width="12" height="2.5" rx=".5" stroke="#d97706" strokeWidth="1.3"/></svg>;
+                            title = item.agency || "Rental Car";
+                            sub1 = [item.pickupLocation, item.dropoffLocation].filter(Boolean).join(" → ");
+                            badge = item.confirmation || "";
+                            onDel = !readOnly ? () => deleteRentalCar(d.day, item.id) : null;
+                          }
+
+                          return (
+                            <li key={item._type + item.id} style={{ display:"flex", gap:14, position:"relative" }}>
+                              {/* Time */}
+                              <div style={{ width:52, flexShrink:0, textAlign:"right", paddingTop:1, fontVariantNumeric:"tabular-nums" }}>
+                                <div style={{ fontSize:12, color:"#5c6470", fontWeight:500, letterSpacing:-0.1 }}>{item._disp}</div>
+                              </div>
+                              {/* Dot + connector */}
+                              <div style={{ width:18, flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", position:"relative" }}>
+                                <div style={{ width:10, height:10, borderRadius:5, background:"#ffffff", border:`2px solid ${dotColor}`, marginTop:4, zIndex:1, flexShrink:0 }}/>
+                                {!isLast && <div style={{ position:"absolute", top:14, bottom:-14, width:1.5, background:"#e2e5ea" }}/>}
+                              </div>
+                              {/* Content */}
+                              <div style={{ flex:1, minWidth:0, paddingBottom: isLast ? 0 : 14 }}>
+                                <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:8 }}>
+                                  <div style={{ flex:1, minWidth:0 }}>
+                                    <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:2, flexWrap:"wrap" }}>
+                                      {icon}
+                                      <span style={{ fontSize:14, fontWeight:600, letterSpacing:-0.1, color:"#0e1014" }}>{title}</span>
+                                    </div>
+                                    {sub1 && <div style={{ fontSize:12.5, color:"#5c6470", lineHeight:1.45, marginBottom:sub2 ? 1 : 0 }}>{sub1}</div>}
+                                    {sub2 && <div style={{ fontSize:12.5, color:"#5c6470", lineHeight:1.45 }}>{sub2}</div>}
+                                    {badge && (
+                                      <div style={{ marginTop:4, display:"inline-block",
+                                        fontFamily:"ui-monospace, 'SF Mono', Menlo, monospace",
+                                        fontSize:11, padding:"3px 8px", borderRadius:5,
+                                        background:"#f0f4f8", border:"1px solid #e2e5ea", color:"#5c6470" }}>
+                                        {badge}
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div style={{ display:"flex", gap:6, alignItems:"center", flexShrink:0 }}>
+                                    {mapsUrl && (
+                                      <a href={mapsUrl} target="_blank" rel="noopener noreferrer"
+                                        style={{ fontSize:11, color:"#2563eb", textDecoration:"none" }}>
+                                        Maps ↗
+                                      </a>
+                                    )}
+                                    {onDel && (
+                                      <button onClick={onDel}
+                                        style={{ background:"none", border:"none", color:"#9ba1ac",
+                                          cursor:"pointer", fontSize:14, lineHeight:1, padding:0 }}>
+                                        ×
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </li>
+                          );
+                        })}
+                      </ol>
+                    );
+                  })()}
+
+                  {/* Add forms (list hidden — display is in the unified timeline above) */}
                   <DayPlaces
                     dayNum={d.day}
                     places={savedPlaces[d.day] ?? []}
@@ -2056,9 +2254,8 @@ export default function Itinerary() {
                     onUpdate={(id, updates) => updatePlace(d.day, id, updates)}
                     onDelete={id => deletePlace(d.day, id)}
                     readOnly={readOnly}
+                    hideList
                   />
-
-                  {/* Directions */}
                   <DayDirections
                     dayNum={d.day}
                     directions={savedDirections[d.day] ?? []}
@@ -2067,9 +2264,8 @@ export default function Itinerary() {
                     onDelete={id => deleteDirection(d.day, id)}
                     readOnly={readOnly}
                     distanceUnit={settings.distanceUnit ?? "km"}
+                    hideList
                   />
-
-                  {/* Boating Routes */}
                   <DayRoute
                     routes={savedRoutes[d.day] ?? []}
                     onAdd={route => addRoute(d.day, route)}
@@ -2077,9 +2273,8 @@ export default function Itinerary() {
                     onDelete={id => deleteRoute(d.day, id)}
                     readOnly={readOnly}
                     routeServerUrl={settings.routeServerUrl ?? "https://waypoint.troyhakala.com"}
+                    hideList
                   />
-
-                  {/* Flights */}
                   <DayFlights
                     flights={savedFlights[d.day] ?? []}
                     onAdd={flight => addFlight(d.day, flight)}
@@ -2089,15 +2284,15 @@ export default function Itinerary() {
                     startDate={startDate}
                     dayNum={d.day}
                     aeroDataBoxKey={settings.aeroDataBoxKey ?? ""}
+                    hideList
                   />
-
-                  {/* Rental Cars */}
                   <DayRentalCar
                     rentalCars={savedRentalCars[d.day] ?? []}
                     onAdd={car => addRentalCar(d.day, car)}
                     onUpdate={(id, updates) => updateRentalCar(d.day, id, updates)}
                     onDelete={id => deleteRentalCar(d.day, id)}
                     readOnly={readOnly}
+                    hideList
                   />
 
                   {/* Claude suggestions */}
@@ -2182,6 +2377,7 @@ export default function Itinerary() {
                       </div>
                     </div>
                   )}
+                  </div>
                 </div>
               )}
             </div>

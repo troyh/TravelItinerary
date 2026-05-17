@@ -390,8 +390,8 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
       {/* ── Page layout: sidebar + main on desktop ── */}
       <div style={{ display: "flex", minHeight: "100vh" }}>
 
-        {/* Sidebar */}
-        <aside style={{
+        {/* Sidebar — hidden on mobile */}
+        <aside className="picker-sidebar" style={{
           width: 260, flexShrink: 0,
           borderRight: `1px solid ${T.border}`,
           background: T.surface2,
@@ -446,7 +446,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
         </aside>
 
         {/* Main content */}
-        <main style={{ flex: 1, padding: "40px 48px 80px", maxWidth: 760, minWidth: 0 }}>
+        <main className="picker-main" style={{ flex: 1, padding: "40px 48px 80px", maxWidth: 760, minWidth: 0 }}>
 
           {/* Page header */}
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 36 }}>
@@ -458,17 +458,36 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
                 Itineraries
               </h1>
             </div>
-            {canWrite && (
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              {/* Settings button — visible on mobile where sidebar is hidden */}
               <button
-                onClick={() => document.getElementById("new-itinerary-input")?.focus()}
-                style={btn.primary}
+                className="picker-settings-btn"
+                onClick={() => setShowSettings(p => !p)}
+                title="Settings"
+                style={{
+                  ...btn.icon,
+                  background: showSettings ? T.accentSoft : T.surface2,
+                  color: showSettings ? T.accent : T.textMuted,
+                  borderColor: showSettings ? T.accent + "44" : T.border,
+                }}
               >
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                  <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                  <path d="M8 10.5A2.5 2.5 0 1 0 8 5.5a2.5 2.5 0 0 0 0 5z" stroke="currentColor" strokeWidth="1.4"/>
+                  <path d="M13.5 8c0-.28-.02-.56-.06-.83l1.28-1a.5.5 0 0 0 .12-.64l-1.2-2.07a.5.5 0 0 0-.61-.22l-1.5.6a6 6 0 0 0-1.43-.83l-.22-1.58A.5.5 0 0 0 9.38 1H6.62a.5.5 0 0 0-.5.43L5.9 3.01a6 6 0 0 0-1.43.83l-1.5-.6a.5.5 0 0 0-.61.22L1.16 5.53a.5.5 0 0 0 .12.64l1.28 1A5.9 5.9 0 0 0 2.5 8c0 .28.02.56.06.83l-1.28 1a.5.5 0 0 0-.12.64l1.2 2.07a.5.5 0 0 0 .61.22l1.5-.6c.44.32.92.6 1.43.83l.22 1.58c.06.25.27.43.5.43h2.76a.5.5 0 0 0 .5-.43l.22-1.58c.51-.23.99-.5 1.43-.83l1.5.6a.5.5 0 0 0 .61-.22l1.2-2.07a.5.5 0 0 0-.12-.64l-1.28-1c.04-.27.06-.55.06-.83z" stroke="currentColor" strokeWidth="1.4"/>
                 </svg>
-                New trip
               </button>
-            )}
+              {canWrite && (
+                <button
+                  onClick={() => document.getElementById("new-itinerary-input")?.focus()}
+                  style={btn.primary}
+                >
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                  </svg>
+                  New trip
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Settings panel (inline, full-width) */}

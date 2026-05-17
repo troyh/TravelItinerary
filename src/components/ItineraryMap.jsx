@@ -166,14 +166,15 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
     const s = document.createElement("style");
     s.id = "leaflet-dark-styles";
     s.textContent = `
-      .leaflet-tooltip-dark { background:#0d1f33; border:1px solid #2e5070; color:#e8dcc8;
-        font-family:sans-serif; font-size:.75rem; padding:3px 8px; border-radius:4px; box-shadow:none; }
+      .leaflet-tooltip-dark { background:#ffffff; border:1px solid #e2e5ea; color:#0e1014;
+        font-family:inherit; font-size:.75rem; padding:3px 8px; border-radius:6px;
+        box-shadow:0 2px 8px rgba(0,0,0,0.08); }
       .leaflet-tooltip-dark::before { display:none; }
-      .leaflet-popup-dark .leaflet-popup-content-wrapper { background:#0d1f33;
-        border:1px solid #2e5070; color:#e8dcc8; font-family:sans-serif;
-        font-size:.78rem; line-height:1.5; border-radius:6px; box-shadow:0 2px 8px #00000066; }
-      .leaflet-popup-dark .leaflet-popup-tip { background:#0d1f33; }
-      .leaflet-popup-dark .leaflet-popup-close-button { color:#4e7a9e; }
+      .leaflet-popup-dark .leaflet-popup-content-wrapper { background:#ffffff;
+        border:1px solid #e2e5ea; color:#0e1014; font-family:inherit;
+        font-size:.78rem; line-height:1.5; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.1); }
+      .leaflet-popup-dark .leaflet-popup-tip { background:#ffffff; }
+      .leaflet-popup-dark .leaflet-popup-close-button { color:#9ba1ac; }
     `;
     document.head.appendChild(s);
   }, []);
@@ -350,43 +351,35 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
   if (stopsWithOvernight.length < 2) return null;
 
   return (
-    <div style={{ marginBottom: "1.25rem" }}>
-      {/* Header bar */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: ".45rem .75rem", background: "#071520", borderLeft: "3px solid #4e7a9e44",
-        borderRadius: open ? "0 4px 0 0" : "0 4px 4px 0" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
-          <span style={{ fontSize: ".62rem", letterSpacing: ".1em", textTransform: "uppercase",
-            fontFamily: "inherit", color: "#6b7a8a" }}>
-            Overview Map
-          </span>
-          {geocoding && (
-            <span style={{ fontSize: ".62rem", color: "#9ba1ac", fontFamily: "inherit",
-              fontStyle: "italic" }}>
-              loading…
-            </span>
-          )}
-        </div>
-        <button
-          type="button"
-          onClick={() => setOpen(o => !o)}
-          style={{ background: "none", border: "none", color: "#6b7a8a",
-            cursor: "pointer", fontSize: ".72rem", fontFamily: "inherit",
-            padding: "0 .2rem" }}>
-          {open ? "▲ hide" : "▼ show"}
-        </button>
-      </div>
-
-      {/* Map container — always mounted, hidden when collapsed to avoid remount */}
+    <div style={{ position: "relative" }}>
+      {/* Map container */}
       <div
         ref={mapElRef}
         style={{
-          height: mapHeight,
-          borderLeft: "3px solid #4e7a9e44",
+          height: open ? mapHeight : 0,
           display: open ? "block" : "none",
-          background: "#ffffff",
+          background: "#f8f9fb",
         }}
       />
+
+      {/* Floating controls — top-right corner of the map */}
+      <div style={{ position: "absolute", top: 10, right: 10, zIndex: 1000,
+        display: "flex", gap: 6, alignItems: "center" }}>
+        {geocoding && (
+          <span style={{ fontSize: 11, color: "#5c6470", background: "rgba(255,255,255,0.9)",
+            padding: "3px 8px", borderRadius: 6, fontFamily: "inherit" }}>
+            Locating…
+          </span>
+        )}
+        <button
+          type="button"
+          onClick={() => setOpen(o => !o)}
+          style={{ background: "rgba(255,255,255,0.92)", border: "1px solid #e2e5ea",
+            color: "#5c6470", cursor: "pointer", fontSize: 11, fontFamily: "inherit",
+            padding: "3px 10px", borderRadius: 6, backdropFilter: "blur(4px)" }}>
+          {open ? "Hide map" : "Show map"}
+        </button>
+      </div>
 
       {/* Drag handle to resize */}
       {open && (
@@ -408,12 +401,9 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
             window.addEventListener("pointermove", onMove);
             window.addEventListener("pointerup", onUp);
           }}
-          style={{ height: 6, borderLeft: "3px solid #4e7a9e44",
-            borderBottom: "1px solid #1e3a52",
-            background: "linear-gradient(#1e3a5200, #4e7a9e33)",
-            cursor: "ns-resize", touchAction: "none",
-            display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div style={{ width: 32, height: 2, borderRadius: 1, background: "#4e7a9e66" }} />
+          style={{ height: 6, background: "#f0f4f8", cursor: "ns-resize",
+            touchAction: "none", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ width: 32, height: 2, borderRadius: 1, background: "#d1d5db" }} />
         </div>
       )}
     </div>
