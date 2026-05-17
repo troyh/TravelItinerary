@@ -1,4 +1,8 @@
 {
+  "startDate": "",
+  "title": "South Puget Sound Cruise",
+  "subtitle": "3-day maritime adventure through Washington's scenic waterways",
+  "itineraryNotes": "???",
   "days": [
     {
       "day": 1,
@@ -6,9 +10,150 @@
       "overnight": "Olympia, WA",
       "nm": 28.2,
       "hrs": 1.9,
-      "highlights": [],
+      "highlights": [
+        "Depart from Olympia's waterfront and cruise through Budd Inlet with views of forested shorelines",
+        "Spot bald eagles, seals, and local marine wildlife in their natural habitat",
+        "Enjoy calm June waters perfect for photography and wildlife observation"
+      ],
       "tags": [],
-      "note": ""
+      "note": "",
+      "places": [
+        {
+          "id": "fcd91150-b6c2-4bcb-b492-0d4621c8b166",
+          "name": "Olympia Waterfront Marina",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "accommodation",
+          "notes": "Full-service marina with fuel, water, and provisions for departing cruisers. Great starting point for Puget Sound exploration.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "78accd23-b8fc-4b49-81f3-0736ff086cbb",
+          "name": "Budd Inlet Scenic Anchorages",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "Protected waters ideal for first night with excellent eagle-watching and peaceful natural surroundings.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "17feee2c-4ae6-41fa-bb6f-d3b5ddb73194",
+          "name": "The Waterwheel Cafe",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "restaurant",
+          "notes": "Casual waterfront dining in Olympia with fresh seafood and local ingredients, perfect for provisioning before departure.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "24300b37-4bf4-4e87-8e4b-65a51f5cb384",
+          "name": "Capitol Lake Park",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "Scenic starting point with walking trails and views of the Capitol building reflected in the water.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        }
+      ],
+      "directions": [],
+      "routes": [
+        {
+          "id": "f099cacb-3760-4573-a39c-91095484df9b",
+          "name": "",
+          "nm": 28.2,
+          "speedKts": 15,
+          "hrs": 1.9,
+          "time": "",
+          "startName": "Olympia, WA",
+          "startLat": 47.0458042,
+          "startLng": -122.8885607,
+          "endName": "Gig Harbor, WA",
+          "endLat": 47.3293755,
+          "endLng": -122.5808901,
+          "routePath": [
+            [
+              47.064,
+              -122.9
+            ],
+            [
+              47.068,
+              -122.908
+            ],
+            [
+              47.14,
+              -122.912
+            ],
+            [
+              47.16,
+              -122.892
+            ],
+            [
+              47.16,
+              -122.872
+            ],
+            [
+              47.18,
+              -122.848
+            ],
+            [
+              47.18,
+              -122.788
+            ],
+            [
+              47.164,
+              -122.772
+            ],
+            [
+              47.164,
+              -122.76
+            ],
+            [
+              47.192,
+              -122.732
+            ],
+            [
+              47.188,
+              -122.664
+            ],
+            [
+              47.192,
+              -122.648
+            ],
+            [
+              47.216,
+              -122.624
+            ],
+            [
+              47.216,
+              -122.6
+            ],
+            [
+              47.284,
+              -122.544
+            ],
+            [
+              47.324,
+              -122.572
+            ]
+          ],
+          "notes": "",
+          "addedAt": "2026-05-15T06:36:10.782Z"
+        }
+      ],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 2,
@@ -16,9 +161,118 @@
       "overnight": "Gig Harbor, WA",
       "nm": 0,
       "hrs": 0,
-      "highlights": [],
+      "highlights": [
+        "Explore the charming waterfront town of Gig Harbor with boutique shops and galleries",
+        "Cruise past the dramatic sandstone cliffs and protected beaches of Carr Inlet",
+        "Anchor near McNeil Island for scenic views and historical perspectives"
+      ],
       "tags": [],
-      "note": ""
+      "note": "",
+      "places": [
+        {
+          "id": "f39e8a31-2631-4152-b11b-315b5e340a20",
+          "name": "Gig Harbor Waterfront",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "accommodation",
+          "notes": "Charming protected harbor with modern marina facilities, guest moorage, and excellent shore-side amenities.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "38882b75-3b9c-40d3-b5ed-fd565458b64b",
+          "name": "Matsutake Restaurant",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "restaurant",
+          "notes": "Award-winning Japanese cuisine in downtown Gig Harbor with fresh local seafood and water views.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "f858247d-57a0-4d60-8d1d-558467ef3f55",
+          "name": "Gig Harbor Maritime Museum",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "Learn about the region's fishing and maritime heritage through exhibits and local history displays.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "919fe81f-eb96-4941-8fe3-5392e7dd1fb4",
+          "name": "Carr Inlet Anchorages",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "Scenic protected waters surrounded by wildlife and dramatic shoreline geology, ideal for exploring by dinghy.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        }
+      ],
+      "directions": [],
+      "routes": [
+        {
+          "id": "078e5fac-25a6-40e7-a00b-675f41534873",
+          "name": "",
+          "nm": 10.5,
+          "speedKts": 15,
+          "hrs": 0.7,
+          "time": "",
+          "startName": "Gig Harbor, WA",
+          "startLat": 47.3293755,
+          "startLng": -122.5808901,
+          "endName": "McNeil Island",
+          "endLat": 47.2079436,
+          "endLng": -122.6807781,
+          "routePath": [
+            [
+              47.324,
+              -122.572
+            ],
+            [
+              47.296,
+              -122.544
+            ],
+            [
+              47.284,
+              -122.544
+            ],
+            [
+              47.232,
+              -122.584
+            ],
+            [
+              47.216,
+              -122.6
+            ],
+            [
+              47.224,
+              -122.62
+            ],
+            [
+              47.224,
+              -122.66
+            ],
+            [
+              47.216,
+              -122.664
+            ]
+          ],
+          "notes": "",
+          "addedAt": "2026-05-15T06:38:44.436Z"
+        }
+      ],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "day": 3,
@@ -26,9 +280,67 @@
       "overnight": "Olympia, WA",
       "nm": 0,
       "hrs": 0,
-      "highlights": [],
+      "highlights": [
+        "Visit scenic overlooks at multiple points along the return route",
+        "Experience the maritime culture and small-town charm of South Puget Sound",
+        "Witness sunset views over the water as you return to Olympia"
+      ],
       "tags": [],
-      "note": ""
+      "note": "",
+      "places": [
+        {
+          "id": "ea184c0a-6dac-419b-b4b3-8528ebc335f6",
+          "name": "Nisqually Wildlife Refuge Viewpoint",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "Cruise past one of the Pacific Northwest's most important waterfowl refuges with opportunities for bird watching.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "a4a284ad-b039-49af-bb85-fb81d5bc5f39",
+          "name": "Woodenboat Cruiser's Paradise",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "Peaceful return route through calm waters with numerous quiet coves and pristine forest shorelines perfect for reflection.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "195d6bd3-5543-4408-b1c0-3647c206511d",
+          "name": "The Bread Shed",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "restaurant",
+          "notes": "Olympia's waterfront bakery and cafe, perfect for provisioning fresh pastries and coffee for the final leg of your journey.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "0eaf5d84-0b67-4b35-b89f-9e9d289cbf3a",
+          "name": "Garfield Nature Trail",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "activity",
+          "notes": "Shore-based walking trail near Olympia marina for stretching your legs after cruising with views of returning boat traffic.",
+          "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        }
+      ],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     },
     {
       "leg": "New Day",
@@ -42,374 +354,63 @@
       "tideWarning": false,
       "highlights": [],
       "note": "",
-      "day": 4
+      "day": 4,
+      "places": [],
+      "directions": [],
+      "routes": [
+        {
+          "id": "3daca338-6abe-418d-9bed-df9569a623e7",
+          "name": "",
+          "nm": 23.7,
+          "speedKts": 15,
+          "hrs": 1.6,
+          "time": "",
+          "startName": "Elliott Bay Marina",
+          "startLat": 47.6302997,
+          "startLng": -122.3914826,
+          "endName": "Tacoma, WA",
+          "endLat": 47.2557499,
+          "endLng": -122.4421437,
+          "routePath": [
+            [
+              47.628,
+              -122.392
+            ],
+            [
+              47.608,
+              -122.392
+            ],
+            [
+              47.576,
+              -122.424
+            ],
+            [
+              47.492,
+              -122.424
+            ],
+            [
+              47.448,
+              -122.392
+            ],
+            [
+              47.388,
+              -122.368
+            ],
+            [
+              47.308,
+              -122.448
+            ],
+            [
+              47.264,
+              -122.436
+            ]
+          ],
+          "notes": "",
+          "addedAt": "2026-05-15T06:43:17.875Z"
+        }
+      ],
+      "flights": [],
+      "rentalCars": []
     }
-  ],
-  "places": {
-    "1": [
-      {
-        "id": "fcd91150-b6c2-4bcb-b492-0d4621c8b166",
-        "name": "Olympia Waterfront Marina",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "accommodation",
-        "notes": "Full-service marina with fuel, water, and provisions for departing cruisers. Great starting point for Puget Sound exploration.",
-        "addedAt": "2026-05-15T06:28:47.554Z",
-        "mapsProvider": null
-      },
-      {
-        "id": "78accd23-b8fc-4b49-81f3-0736ff086cbb",
-        "name": "Budd Inlet Scenic Anchorages",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "activity",
-        "notes": "Protected waters ideal for first night with excellent eagle-watching and peaceful natural surroundings.",
-        "addedAt": "2026-05-15T06:28:47.554Z",
-        "mapsProvider": null
-      },
-      {
-        "id": "17feee2c-4ae6-41fa-bb6f-d3b5ddb73194",
-        "name": "The Waterwheel Cafe",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "restaurant",
-        "notes": "Casual waterfront dining in Olympia with fresh seafood and local ingredients, perfect for provisioning before departure.",
-        "addedAt": "2026-05-15T06:28:47.554Z",
-        "mapsProvider": null
-      },
-      {
-        "id": "24300b37-4bf4-4e87-8e4b-65a51f5cb384",
-        "name": "Capitol Lake Park",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "activity",
-        "notes": "Scenic starting point with walking trails and views of the Capitol building reflected in the water.",
-        "addedAt": "2026-05-15T06:28:47.554Z",
-        "mapsProvider": null
-      }
-    ],
-    "2": [
-      {
-        "id": "f39e8a31-2631-4152-b11b-315b5e340a20",
-        "name": "Gig Harbor Waterfront",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "accommodation",
-        "notes": "Charming protected harbor with modern marina facilities, guest moorage, and excellent shore-side amenities.",
-        "addedAt": "2026-05-15T06:28:47.554Z",
-        "mapsProvider": null
-      },
-      {
-        "id": "38882b75-3b9c-40d3-b5ed-fd565458b64b",
-        "name": "Matsutake Restaurant",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "restaurant",
-        "notes": "Award-winning Japanese cuisine in downtown Gig Harbor with fresh local seafood and water views.",
-        "addedAt": "2026-05-15T06:28:47.554Z",
-        "mapsProvider": null
-      },
-      {
-        "id": "f858247d-57a0-4d60-8d1d-558467ef3f55",
-        "name": "Gig Harbor Maritime Museum",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "activity",
-        "notes": "Learn about the region's fishing and maritime heritage through exhibits and local history displays.",
-        "addedAt": "2026-05-15T06:28:47.554Z",
-        "mapsProvider": null
-      },
-      {
-        "id": "919fe81f-eb96-4941-8fe3-5392e7dd1fb4",
-        "name": "Carr Inlet Anchorages",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "activity",
-        "notes": "Scenic protected waters surrounded by wildlife and dramatic shoreline geology, ideal for exploring by dinghy.",
-        "addedAt": "2026-05-15T06:28:47.554Z",
-        "mapsProvider": null
-      }
-    ],
-    "3": [
-      {
-        "id": "ea184c0a-6dac-419b-b4b3-8528ebc335f6",
-        "name": "Nisqually Wildlife Refuge Viewpoint",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "activity",
-        "notes": "Cruise past one of the Pacific Northwest's most important waterfowl refuges with opportunities for bird watching.",
-        "addedAt": "2026-05-15T06:28:47.554Z",
-        "mapsProvider": null
-      },
-      {
-        "id": "a4a284ad-b039-49af-bb85-fb81d5bc5f39",
-        "name": "Woodenboat Cruiser's Paradise",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "activity",
-        "notes": "Peaceful return route through calm waters with numerous quiet coves and pristine forest shorelines perfect for reflection.",
-        "addedAt": "2026-05-15T06:28:47.554Z",
-        "mapsProvider": null
-      },
-      {
-        "id": "195d6bd3-5543-4408-b1c0-3647c206511d",
-        "name": "The Bread Shed",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "restaurant",
-        "notes": "Olympia's waterfront bakery and cafe, perfect for provisioning fresh pastries and coffee for the final leg of your journey.",
-        "addedAt": "2026-05-15T06:28:47.554Z",
-        "mapsProvider": null
-      },
-      {
-        "id": "0eaf5d84-0b67-4b35-b89f-9e9d289cbf3a",
-        "name": "Garfield Nature Trail",
-        "address": "",
-        "phone": "",
-        "website": "",
-        "placeId": "",
-        "category": "activity",
-        "notes": "Shore-based walking trail near Olympia marina for stretching your legs after cruising with views of returning boat traffic.",
-        "addedAt": "2026-05-15T06:28:47.554Z",
-        "mapsProvider": null
-      }
-    ]
-  },
-  "directions": {},
-  "routes": {
-    "1": [
-      {
-        "id": "f099cacb-3760-4573-a39c-91095484df9b",
-        "name": "",
-        "nm": 28.2,
-        "speedKts": 15,
-        "hrs": 1.9,
-        "time": "",
-        "startName": "Olympia, WA",
-        "startLat": 47.0458042,
-        "startLng": -122.8885607,
-        "endName": "Gig Harbor, WA",
-        "endLat": 47.3293755,
-        "endLng": -122.5808901,
-        "routePath": [
-          [
-            47.064,
-            -122.9
-          ],
-          [
-            47.068,
-            -122.908
-          ],
-          [
-            47.14,
-            -122.912
-          ],
-          [
-            47.16,
-            -122.892
-          ],
-          [
-            47.16,
-            -122.872
-          ],
-          [
-            47.18,
-            -122.848
-          ],
-          [
-            47.18,
-            -122.788
-          ],
-          [
-            47.164,
-            -122.772
-          ],
-          [
-            47.164,
-            -122.76
-          ],
-          [
-            47.192,
-            -122.732
-          ],
-          [
-            47.188,
-            -122.664
-          ],
-          [
-            47.192,
-            -122.648
-          ],
-          [
-            47.216,
-            -122.624
-          ],
-          [
-            47.216,
-            -122.6
-          ],
-          [
-            47.284,
-            -122.544
-          ],
-          [
-            47.324,
-            -122.572
-          ]
-        ],
-        "notes": "",
-        "addedAt": "2026-05-15T06:36:10.782Z"
-      }
-    ],
-    "2": [
-      {
-        "id": "078e5fac-25a6-40e7-a00b-675f41534873",
-        "name": "",
-        "nm": 10.5,
-        "speedKts": 15,
-        "hrs": 0.7,
-        "time": "",
-        "startName": "Gig Harbor, WA",
-        "startLat": 47.3293755,
-        "startLng": -122.5808901,
-        "endName": "McNeil Island",
-        "endLat": 47.2079436,
-        "endLng": -122.6807781,
-        "routePath": [
-          [
-            47.324,
-            -122.572
-          ],
-          [
-            47.296,
-            -122.544
-          ],
-          [
-            47.284,
-            -122.544
-          ],
-          [
-            47.232,
-            -122.584
-          ],
-          [
-            47.216,
-            -122.6
-          ],
-          [
-            47.224,
-            -122.62
-          ],
-          [
-            47.224,
-            -122.66
-          ],
-          [
-            47.216,
-            -122.664
-          ]
-        ],
-        "notes": "",
-        "addedAt": "2026-05-15T06:38:44.436Z"
-      }
-    ],
-    "4": [
-      {
-        "id": "3daca338-6abe-418d-9bed-df9569a623e7",
-        "name": "",
-        "nm": 23.7,
-        "speedKts": 15,
-        "hrs": 1.6,
-        "time": "",
-        "startName": "Elliott Bay Marina",
-        "startLat": 47.6302997,
-        "startLng": -122.3914826,
-        "endName": "Tacoma, WA",
-        "endLat": 47.2557499,
-        "endLng": -122.4421437,
-        "routePath": [
-          [
-            47.628,
-            -122.392
-          ],
-          [
-            47.608,
-            -122.392
-          ],
-          [
-            47.576,
-            -122.424
-          ],
-          [
-            47.492,
-            -122.424
-          ],
-          [
-            47.448,
-            -122.392
-          ],
-          [
-            47.388,
-            -122.368
-          ],
-          [
-            47.308,
-            -122.448
-          ],
-          [
-            47.264,
-            -122.436
-          ]
-        ],
-        "notes": "",
-        "addedAt": "2026-05-15T06:43:17.875Z"
-      }
-    ]
-  },
-  "flights": {},
-  "rentalCars": {},
-  "highlights": {
-    "1": [
-      "Depart from Olympia's waterfront and cruise through Budd Inlet with views of forested shorelines",
-      "Spot bald eagles, seals, and local marine wildlife in their natural habitat",
-      "Enjoy calm June waters perfect for photography and wildlife observation"
-    ],
-    "2": [
-      "Explore the charming waterfront town of Gig Harbor with boutique shops and galleries",
-      "Cruise past the dramatic sandstone cliffs and protected beaches of Carr Inlet",
-      "Anchor near McNeil Island for scenic views and historical perspectives"
-    ],
-    "3": [
-      "Visit scenic overlooks at multiple points along the return route",
-      "Experience the maritime culture and small-town charm of South Puget Sound",
-      "Witness sunset views over the water as you return to Olympia"
-    ]
-  },
-  "notes": {},
-  "startDate": "",
-  "title": "South Puget Sound Cruise",
-  "subtitle": "3-day maritime adventure through Washington's scenic waterways",
-  "itineraryNotes": ""
+  ]
 }
