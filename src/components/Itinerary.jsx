@@ -42,11 +42,11 @@ const _db = (() => {
 // Handles both old format (top-level keyed dicts) and new format (per-day arrays embedded in each day).
 function extractPerDayState(data) {
   if (!data) return { days: [], places: {}, directions: {}, routes: {}, flights: {}, rentalCars: {}, highlights: {}, notes: {} };
-  const daysArr = data.days ?? [];
+  const rawDays = data.days ?? [];
   if ("places" in data || "directions" in data) {
-    // Old format
+    // Old format: top-level keyed dicts
     return {
-      days:       daysArr,
+      days:       rawDays.map((d, i) => ({ day: i + 1, ...d })),
       places:     data.places     ?? {},
       directions: data.directions ?? {},
       routes:     data.routes     ?? {},
@@ -56,7 +56,8 @@ function extractPerDayState(data) {
       notes:      data.notes      ?? {},
     };
   }
-  // New format: per-day data embedded in each day object
+  // New format: per-day data embedded; `day` derived from array position if absent
+  const daysArr = rawDays.map((d, i) => ({ day: i + 1, ...d }));
   return {
     days: daysArr.map(({ places, directions, routes, flights, rentalCars, highlights: _h, note: _n, ...rest }) => ({
       ...rest, highlights: [], note: "",
@@ -209,16 +210,19 @@ export default function Itinerary() {
     if (!currentFile) return;
     const data = {
       startDate, title, subtitle, itineraryNotes,
-      days: days.map(d => ({
-        ...d,
-        highlights: customHighlights[String(d.day)] ?? d.highlights ?? [],
-        note:       customNotes[String(d.day)]       ?? d.note       ?? "",
-        places:     savedPlaces[String(d.day)]        ?? [],
-        directions: savedDirections[String(d.day)]    ?? [],
-        routes:     savedRoutes[String(d.day)]         ?? [],
-        flights:    savedFlights[String(d.day)]        ?? [],
-        rentalCars: savedRentalCars[String(d.day)]     ?? [],
-      })),
+      days: days.map(d => {
+        const { day: _, ...rest } = d;
+        return {
+          ...rest,
+          highlights: customHighlights[String(d.day)] ?? d.highlights ?? [],
+          note:       customNotes[String(d.day)]       ?? d.note       ?? "",
+          places:     savedPlaces[String(d.day)]        ?? [],
+          directions: savedDirections[String(d.day)]    ?? [],
+          routes:     savedRoutes[String(d.day)]         ?? [],
+          flights:    savedFlights[String(d.day)]        ?? [],
+          rentalCars: savedRentalCars[String(d.day)]     ?? [],
+        };
+      }),
     };
     localStorage.setItem("travelItinerary", JSON.stringify(data));
     if (currentFile !== "__local__") {
@@ -469,6 +473,7 @@ export default function Itinerary() {
     setSavedPlaces(prev => { const s = remapKeys(prev, newNum, +1); if (prev[dayNum]) s[newNum] = prev[dayNum].map(p => ({ ...p, id: crypto.randomUUID() })); return s; });
     setSavedDirections(prev => remapKeys(prev, newNum, +1));
     setSavedRoutes(prev => remapKeys(prev, newNum, +1));
+    setSavedFlights(prev => remapKeys(prev, newNum, +1));
     setSavedRentalCars(prev => remapKeys(prev, newNum, +1));
     setOpenDay(newNum);
   }
@@ -484,6 +489,7 @@ export default function Itinerary() {
     setSavedPlaces(prev => remapKeys(prev, newNum, +1));
     setSavedDirections(prev => remapKeys(prev, newNum, +1));
     setSavedRoutes(prev => remapKeys(prev, newNum, +1));
+    setSavedFlights(prev => remapKeys(prev, newNum, +1));
     setSavedRentalCars(prev => remapKeys(prev, newNum, +1));
     setOpenDay(newNum);
     setEditingCoreDay(newNum);
@@ -498,10 +504,42 @@ export default function Itinerary() {
     setSavedPlaces(prev => remapKeys(prev, dayNum, -1));
     setSavedDirections(prev => remapKeys(prev, dayNum, -1));
     setSavedRoutes(prev => remapKeys(prev, dayNum, -1));
+    setSavedFlights(prev => remapKeys(prev, dayNum, -1));
     setSavedRentalCars(prev => remapKeys(prev, dayNum, -1));
     setOpenDay(prev => prev === dayNum ? Math.max(1, dayNum - 1) : prev > dayNum ? prev - 1 : prev);
     setConfirmDeleteDay(null);
     setEditingCoreDay(null);
+  }
+
+  function moveDay(dayIdx, direction) {
+    const otherIdx = direction === "up" ? dayIdx - 1 : dayIdx + 1;
+    if (otherIdx < 0 || otherIdx >= days.length) return;
+    const kA = days[dayIdx].day;
+    const kB = days[otherIdx].day;
+    const swapArr = (obj, empty) => {
+      const c = { ...obj };
+      const tmp = c[kA];
+      c[kA] = c[kB] ?? empty;
+      c[kB] = tmp   ?? empty;
+      return c;
+    };
+    setSavedPlaces(     p => swapArr(p, []));
+    setSavedDirections( p => swapArr(p, []));
+    setSavedRoutes(     p => swapArr(p, []));
+    setSavedFlights(    p => swapArr(p, []));
+    setSavedRentalCars( p => swapArr(p, []));
+    setCustomHighlights(p => swapArr(p, []));
+    setCustomNotes(     p => swapArr(p, ""));
+    setDays(prev => {
+      const arr = [...prev];
+      [arr[dayIdx], arr[otherIdx]] = [arr[otherIdx], arr[dayIdx]];
+      return arr.map((d, i) => ({ ...d, day: i + 1 }));
+    });
+    setOpenDay(prev => {
+      if (prev === kA) return kB;
+      if (prev === kB) return kA;
+      return prev;
+    });
   }
 
   function startEditCore(dayNum, d) {
@@ -641,16 +679,19 @@ export default function Itinerary() {
       const newPath = `${ITINERARIES_FOLDER}/it-${crypto.randomUUID().slice(0, 8)}.json`;
       const data = {
         startDate, subtitle, itineraryNotes, title: `Copy of ${title}`,
-        days: days.map(d => ({
-          ...d,
-          highlights: customHighlights[String(d.day)] ?? d.highlights ?? [],
-          note:       customNotes[String(d.day)]       ?? d.note       ?? "",
-          places:     savedPlaces[String(d.day)]        ?? [],
-          directions: savedDirections[String(d.day)]    ?? [],
-          routes:     savedRoutes[String(d.day)]         ?? [],
-          flights:    savedFlights[String(d.day)]        ?? [],
-          rentalCars: savedRentalCars[String(d.day)]     ?? [],
-        })),
+        days: days.map(d => {
+          const { day: _, ...rest } = d;
+          return {
+            ...rest,
+            highlights: customHighlights[String(d.day)] ?? d.highlights ?? [],
+            note:       customNotes[String(d.day)]       ?? d.note       ?? "",
+            places:     savedPlaces[String(d.day)]        ?? [],
+            directions: savedDirections[String(d.day)]    ?? [],
+            routes:     savedRoutes[String(d.day)]         ?? [],
+            flights:    savedFlights[String(d.day)]        ?? [],
+            rentalCars: savedRentalCars[String(d.day)]     ?? [],
+          };
+        }),
       };
       await saveToGitHub(data, { ...ghSettings, githubFile: newPath });
       const overnights = days.map(d => d.overnight).filter(Boolean);
@@ -975,16 +1016,19 @@ export default function Itinerary() {
       `Saved ${new Date().toLocaleString("en-US", { month:"short", day:"numeric", year:"numeric", hour:"numeric", minute:"2-digit" })}`;
     const data = {
       startDate, title, subtitle, itineraryNotes,
-      days: days.map(d => ({
-        ...d,
-        highlights: customHighlights[String(d.day)] ?? d.highlights ?? [],
-        note:       customNotes[String(d.day)]       ?? d.note       ?? "",
-        places:     savedPlaces[String(d.day)]        ?? [],
-        directions: savedDirections[String(d.day)]    ?? [],
-        routes:     savedRoutes[String(d.day)]         ?? [],
-        flights:    savedFlights[String(d.day)]        ?? [],
-        rentalCars: savedRentalCars[String(d.day)]     ?? [],
-      })),
+      days: days.map(d => {
+        const { day: _, ...rest } = d;
+        return {
+          ...rest,
+          highlights: customHighlights[String(d.day)] ?? d.highlights ?? [],
+          note:       customNotes[String(d.day)]       ?? d.note       ?? "",
+          places:     savedPlaces[String(d.day)]        ?? [],
+          directions: savedDirections[String(d.day)]    ?? [],
+          routes:     savedRoutes[String(d.day)]         ?? [],
+          flights:    savedFlights[String(d.day)]        ?? [],
+          rentalCars: savedRentalCars[String(d.day)]     ?? [],
+        };
+      }),
     };
     try {
       await saveToGitHub(data, { ...ghSettings, githubFile: currentFile, message: msg });
@@ -2076,6 +2120,25 @@ export default function Itinerary() {
                   {!readOnly && (
                     <div style={{ marginTop:"1.25rem", paddingTop:".85rem", borderTop:"1px solid #1e3a5240",
                       display:"flex", alignItems:"center", gap:".5rem", flexWrap:"wrap" }}>
+                      {days.length > 1 && (() => {
+                        const idx = days.findIndex(x => x.day === d.day);
+                        return (
+                          <>
+                            <button onClick={() => moveDay(idx, "up")} disabled={idx === 0}
+                              style={{ background:"#0d2035", border:"1px solid #2e5070", color:"#6b8fa8",
+                                borderRadius:4, padding:".3rem .55rem", fontSize:".82rem", fontFamily:"sans-serif",
+                                cursor: idx === 0 ? "not-allowed" : "pointer", opacity: idx === 0 ? 0.35 : 1 }}>
+                              ↑
+                            </button>
+                            <button onClick={() => moveDay(idx, "down")} disabled={idx === days.length - 1}
+                              style={{ background:"#0d2035", border:"1px solid #2e5070", color:"#6b8fa8",
+                                borderRadius:4, padding:".3rem .55rem", fontSize:".82rem", fontFamily:"sans-serif",
+                                cursor: idx === days.length - 1 ? "not-allowed" : "pointer", opacity: idx === days.length - 1 ? 0.35 : 1 }}>
+                              ↓
+                            </button>
+                          </>
+                        );
+                      })()}
                       <button onClick={() => duplicateDay(d.day)}
                         style={{ background:"#0d2035", border:"1px solid #2e5070", color:"#6b8fa8",
                           borderRadius:4, padding:".3rem .75rem", fontSize:".72rem", fontFamily:"sans-serif", cursor:"pointer" }}>
