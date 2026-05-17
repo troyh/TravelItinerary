@@ -1721,7 +1721,7 @@ export default function Itinerary() {
                         Day {t.day}
                       </span>
                     )}
-                    {t.text}
+                    <NoteMarkdown>{t.text}</NoteMarkdown>
                   </li>
                 ))}
               </ul>
