@@ -39,6 +39,40 @@ const _db = (() => {
   } catch { return null; }
 })();
 
+// Handles both old format (top-level keyed dicts) and new format (per-day arrays embedded in each day).
+function extractPerDayState(data) {
+  if (!data) return { days: [], places: {}, directions: {}, routes: {}, flights: {}, rentalCars: {}, highlights: {}, notes: {} };
+  const daysArr = data.days ?? [];
+  if ("places" in data || "directions" in data) {
+    // Old format
+    return {
+      days:       daysArr,
+      places:     data.places     ?? {},
+      directions: data.directions ?? {},
+      routes:     data.routes     ?? {},
+      flights:    data.flights    ?? {},
+      rentalCars: data.rentalCars ?? {},
+      highlights: data.highlights ?? {},
+      notes:      data.notes      ?? {},
+    };
+  }
+  // New format: per-day data embedded in each day object
+  return {
+    days: daysArr.map(({ places, directions, routes, flights, rentalCars, highlights: _h, note: _n, ...rest }) => ({
+      ...rest, highlights: [], note: "",
+    })),
+    places:     Object.fromEntries(daysArr.map(d => [String(d.day), d.places     ?? []])),
+    directions: Object.fromEntries(daysArr.map(d => [String(d.day), d.directions ?? []])),
+    routes:     Object.fromEntries(daysArr.map(d => [String(d.day), d.routes     ?? []])),
+    flights:    Object.fromEntries(daysArr.map(d => [String(d.day), d.flights    ?? []])),
+    rentalCars: Object.fromEntries(daysArr.map(d => [String(d.day), d.rentalCars ?? []])),
+    highlights: Object.fromEntries(daysArr.map(d => [String(d.day), d.highlights ?? []])),
+    notes:      Object.fromEntries(daysArr.map(d => [String(d.day), d.note       ?? ""])),
+  };
+}
+
+const _extracted = extractPerDayState(_db);
+
 function remapKeys(obj, pivot, delta) {
   const result = {};
   for (const [k, v] of Object.entries(obj)) {
@@ -72,17 +106,17 @@ export default function Itinerary() {
   });
   const [activeTab,        setActiveTab]        = useState("itinerary");
   const [startDate,        setStartDate]        = useState(() => _db?.startDate ?? "");
-  const [customHighlights, setCustomHighlights] = useState(() => _db?.highlights ?? {});
+  const [customHighlights, setCustomHighlights] = useState(() => _extracted.highlights);
   const [newHighlight,     setNewHighlight]     = useState("");
-  const [customNotes,      setCustomNotes]      = useState(() => _db?.notes ?? {});
+  const [customNotes,      setCustomNotes]      = useState(() => _extracted.notes);
   const [editingNoteDay,   setEditingNoteDay]   = useState(null);
   const [noteDraft,        setNoteDraft]        = useState("");
-  const [savedPlaces,      setSavedPlaces]      = useState(() => _db?.places ?? {});
-  const [savedDirections,  setSavedDirections]  = useState(() => _db?.directions ?? {});
-  const [savedRoutes,      setSavedRoutes]      = useState(() => _db?.routes ?? {});
-  const [savedFlights,     setSavedFlights]     = useState(() => _db?.flights ?? {});
-  const [savedRentalCars,  setSavedRentalCars]  = useState(() => _db?.rentalCars ?? {});
-  const [days,             setDays]             = useState(() => _db?.days ?? []);
+  const [savedPlaces,      setSavedPlaces]      = useState(() => _extracted.places);
+  const [savedDirections,  setSavedDirections]  = useState(() => _extracted.directions);
+  const [savedRoutes,      setSavedRoutes]      = useState(() => _extracted.routes);
+  const [savedFlights,     setSavedFlights]     = useState(() => _extracted.flights);
+  const [savedRentalCars,  setSavedRentalCars]  = useState(() => _extracted.rentalCars);
+  const [days,             setDays]             = useState(() => _extracted.days);
   const [editingCoreDay,   setEditingCoreDay]   = useState(null);
   const [coreDraft,        setCoreDraft]        = useState({});
   const [confirmDeleteDay, setConfirmDeleteDay] = useState(null);
@@ -173,10 +207,19 @@ export default function Itinerary() {
   // Save to localStorage immediately on every change; GitHub is manual only.
   useEffect(() => {
     if (!currentFile) return;
-    const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
-                   flights: savedFlights, rentalCars: savedRentalCars,
-                   highlights: customHighlights, notes: customNotes, startDate,
-                   title, subtitle, itineraryNotes };
+    const data = {
+      startDate, title, subtitle, itineraryNotes,
+      days: days.map(d => ({
+        ...d,
+        highlights: customHighlights[String(d.day)] ?? d.highlights ?? [],
+        note:       customNotes[String(d.day)]       ?? d.note       ?? "",
+        places:     savedPlaces[String(d.day)]        ?? [],
+        directions: savedDirections[String(d.day)]    ?? [],
+        routes:     savedRoutes[String(d.day)]         ?? [],
+        flights:    savedFlights[String(d.day)]        ?? [],
+        rentalCars: savedRentalCars[String(d.day)]     ?? [],
+      })),
+    };
     localStorage.setItem("travelItinerary", JSON.stringify(data));
     if (currentFile !== "__local__") {
       try {
@@ -259,16 +302,7 @@ export default function Itinerary() {
         const ghs = { githubToken: db.githubToken ?? "", githubRepo: repo, githubBranch: db.githubBranch || "data" };
         const data = await loadFromGitHub({ ...ghs, githubFile: urlLoad.file }).catch(() => null);
         if (!data) continue;
-        if (data.days?.length)              setDays(data.days);
-        if (data.places)                    setSavedPlaces(data.places);
-        if (data.directions)                setSavedDirections(data.directions);
-        if (data.routes)                    setSavedRoutes(data.routes);
-        if (data.highlights)                setCustomHighlights(data.highlights);
-        if (data.notes)                     setCustomNotes(data.notes);
-        if (data.startDate !== undefined)   setStartDate(data.startDate);
-        if (data.title !== undefined)       setTitle(data.title);
-        if (data.subtitle !== undefined)    setSubtitle(data.subtitle);
-        if (data.itineraryNotes !== undefined) setItineraryNotes(data.itineraryNotes);
+        applyData(data);
         localStorage.setItem("travelCurrentFile", urlLoad.file);
         localStorage.setItem("travelCurrentDb", db.id);
         skipNextLoadRef.current = true;
@@ -297,16 +331,7 @@ export default function Itinerary() {
           localStorage.removeItem("travelCurrentFile");
           return;
         }
-        if (data.days?.length)              setDays(data.days);
-        if (data.places)                    setSavedPlaces(data.places);
-        if (data.directions)                setSavedDirections(data.directions);
-        if (data.routes)                    setSavedRoutes(data.routes);
-        if (data.highlights)                setCustomHighlights(data.highlights);
-        if (data.notes)                     setCustomNotes(data.notes);
-        if (data.startDate !== undefined)          setStartDate(data.startDate);
-        if (data.title !== undefined)              setTitle(data.title);
-        if (data.subtitle !== undefined)           setSubtitle(data.subtitle);
-        if (data.itineraryNotes !== undefined)     setItineraryNotes(data.itineraryNotes);
+        applyData(data);
         setSyncStatus("synced");
       })
       .catch(() => setSyncStatus("offline"));
@@ -545,18 +570,19 @@ export default function Itinerary() {
   }
 
   function applyData(data) {
-    setDays(data.days?.length ? data.days : []);
-    setSavedPlaces(data.places ?? {});
-    setSavedDirections(data.directions ?? {});
-    setSavedRoutes(data.routes ?? {});
-    setSavedFlights(data.flights ?? {});
-    setSavedRentalCars(data.rentalCars ?? {});
-    setCustomHighlights(data.highlights ?? {});
-    setCustomNotes(data.notes ?? {});
-    setStartDate(data.startDate ?? "");
-    setTitle(data.title ?? "New Itinerary");
-    setSubtitle(data.subtitle ?? "");
-    setItineraryNotes(data.itineraryNotes ?? "");
+    const x = extractPerDayState(data);
+    setDays(x.days.length ? x.days : []);
+    setSavedPlaces(x.places);
+    setSavedDirections(x.directions);
+    setSavedRoutes(x.routes);
+    setSavedFlights(x.flights);
+    setSavedRentalCars(x.rentalCars);
+    setCustomHighlights(x.highlights);
+    setCustomNotes(x.notes);
+    setStartDate(data?.startDate ?? "");
+    setTitle(data?.title ?? "New Itinerary");
+    setSubtitle(data?.subtitle ?? "");
+    setItineraryNotes(data?.itineraryNotes ?? "");
   }
 
   function handleLoad(path, data, dbId) {
@@ -613,9 +639,19 @@ export default function Itinerary() {
     setMenuWorking(true);
     try {
       const newPath = `${ITINERARIES_FOLDER}/it-${crypto.randomUUID().slice(0, 8)}.json`;
-      const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
-                     highlights: customHighlights, notes: customNotes, startDate,
-                     title: `Copy of ${title}`, subtitle, itineraryNotes };
+      const data = {
+        startDate, subtitle, itineraryNotes, title: `Copy of ${title}`,
+        days: days.map(d => ({
+          ...d,
+          highlights: customHighlights[String(d.day)] ?? d.highlights ?? [],
+          note:       customNotes[String(d.day)]       ?? d.note       ?? "",
+          places:     savedPlaces[String(d.day)]        ?? [],
+          directions: savedDirections[String(d.day)]    ?? [],
+          routes:     savedRoutes[String(d.day)]         ?? [],
+          flights:    savedFlights[String(d.day)]        ?? [],
+          rentalCars: savedRentalCars[String(d.day)]     ?? [],
+        })),
+      };
       await saveToGitHub(data, { ...ghSettings, githubFile: newPath });
       const overnights = days.map(d => d.overnight).filter(Boolean);
       const legs       = days.map(d => d.leg).filter(Boolean);
@@ -647,9 +683,19 @@ export default function Itinerary() {
       const toDb  = databases.find(d => d.id === toDbId);
       const toGhs = { githubToken: toDb.githubToken ?? "", githubRepo: toDb.githubRepo || inferRepo() || "", githubBranch: toDb.githubBranch || "data" };
       const newPath = `${ITINERARIES_FOLDER}/it-${crypto.randomUUID().slice(0, 8)}.json`;
-      const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
-                     highlights: customHighlights, notes: customNotes, startDate,
-                     title, subtitle, itineraryNotes };
+      const data = {
+        startDate, title, subtitle, itineraryNotes,
+        days: days.map(d => ({
+          ...d,
+          highlights: customHighlights[String(d.day)] ?? d.highlights ?? [],
+          note:       customNotes[String(d.day)]       ?? d.note       ?? "",
+          places:     savedPlaces[String(d.day)]        ?? [],
+          directions: savedDirections[String(d.day)]    ?? [],
+          routes:     savedRoutes[String(d.day)]         ?? [],
+          flights:    savedFlights[String(d.day)]        ?? [],
+          rentalCars: savedRentalCars[String(d.day)]     ?? [],
+        })),
+      };
       await saveToGitHub(data, { ...toGhs, githubFile: newPath });
       await deleteFromGitHub({ ...ghSettings, githubFile: currentFile });
       try { await deleteFromGitHub({ ...ghSettings, githubFile: currentFile.replace(/\.json$/i, ".ics") }); } catch {}
@@ -927,10 +973,19 @@ export default function Itinerary() {
     setSyncError("");
     const msg = message.trim() ||
       `Saved ${new Date().toLocaleString("en-US", { month:"short", day:"numeric", year:"numeric", hour:"numeric", minute:"2-digit" })}`;
-    const data = { days, places: savedPlaces, directions: savedDirections, routes: savedRoutes,
-                   flights: savedFlights, rentalCars: savedRentalCars,
-                   highlights: customHighlights, notes: customNotes, startDate,
-                   title, subtitle, itineraryNotes };
+    const data = {
+      startDate, title, subtitle, itineraryNotes,
+      days: days.map(d => ({
+        ...d,
+        highlights: customHighlights[String(d.day)] ?? d.highlights ?? [],
+        note:       customNotes[String(d.day)]       ?? d.note       ?? "",
+        places:     savedPlaces[String(d.day)]        ?? [],
+        directions: savedDirections[String(d.day)]    ?? [],
+        routes:     savedRoutes[String(d.day)]         ?? [],
+        flights:    savedFlights[String(d.day)]        ?? [],
+        rentalCars: savedRentalCars[String(d.day)]     ?? [],
+      })),
+    };
     try {
       await saveToGitHub(data, { ...ghSettings, githubFile: currentFile, message: msg });
       const icsContent = buildICSContent(days, startDate, title, customHighlights, customNotes,
@@ -977,15 +1032,7 @@ export default function Itinerary() {
     loadFromGitHub({ ...settings, githubFile: currentFile })
       .then(data => {
         if (!data) { setSyncStatus("idle"); return; }
-        if (data.days?.length)            setDays(data.days);
-        if (data.places)                  setSavedPlaces(data.places);
-        if (data.directions)              setSavedDirections(data.directions);
-        if (data.highlights)              setCustomHighlights(data.highlights);
-        if (data.notes)                   setCustomNotes(data.notes);
-        if (data.startDate !== undefined)      setStartDate(data.startDate);
-        if (data.title !== undefined)          setTitle(data.title);
-        if (data.subtitle !== undefined)       setSubtitle(data.subtitle);
-        if (data.itineraryNotes !== undefined) setItineraryNotes(data.itineraryNotes);
+        applyData(data);
         setSyncStatus("synced");
       })
       .catch(() => setSyncStatus("error"));
