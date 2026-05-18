@@ -15,11 +15,33 @@
       "fuelStop": false,
       "tideWarning": false,
       "highlights": [],
-      "note": "TODO: get airfare July 12-14\nTODO: get hotel",
+      "note": "TODO: get hotel",
       "places": [],
       "directions": [],
       "routes": [],
-      "flights": [],
+      "flights": [
+        {
+          "id": "5a84feeb-c6bb-4edc-8434-3f815677b44c",
+          "flightNumber": "as400",
+          "departure": "SEA",
+          "arrival": "SBA",
+          "departureName": "Seattle",
+          "arrivalName": "Santa Barbara",
+          "departureTime": "4:06 PM",
+          "arrivalTime": "6:38 PM",
+          "airline": "Alaska Airlines",
+          "aircraft": "Boeing 737-800",
+          "status": "Expected",
+          "miles": 909,
+          "confirmation": "SMEPDX",
+          "departureLat": 47.449,
+          "departureLng": -122.309,
+          "arrivalLat": 34.4262,
+          "arrivalLng": -119.84,
+          "notes": "",
+          "addedAt": "2026-05-18T03:12:25.713Z"
+        }
+      ],
       "rentalCars": []
     },
     {
@@ -58,7 +80,29 @@
       "places": [],
       "directions": [],
       "routes": [],
-      "flights": [],
+      "flights": [
+        {
+          "id": "f741e40f-c63f-4ee9-9f85-dc7c01eaaaa6",
+          "flightNumber": "AS400",
+          "departure": "SBA",
+          "arrival": "SEA",
+          "departureName": "Santa Barbara",
+          "arrivalName": "Seattle",
+          "departureTime": "7:28 PM",
+          "arrivalTime": "10:00 PM",
+          "airline": "Alaska Airlines",
+          "aircraft": "Boeing 737-800",
+          "status": "Expected",
+          "miles": 909,
+          "confirmation": "SMEPDX",
+          "departureLat": 34.4262,
+          "departureLng": -119.84,
+          "arrivalLat": 47.449,
+          "arrivalLng": -122.309,
+          "notes": "",
+          "addedAt": "2026-05-18T03:12:56.132Z"
+        }
+      ],
       "rentalCars": []
     }
   ]
