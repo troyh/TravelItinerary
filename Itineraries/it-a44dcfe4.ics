@@ -40,7 +40,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260713
 DTEND;VALUE=DATE:20260714
 SUMMARY:Day 2: Orientation Day 1
-DESCRIPTION:\nNote: Check-in 7:30-9:10am
+DESCRIPTION:\nNote: Check-in 7:30-9:10am\n\nWhen you arrive on campus\, follow the signs for Orientation and park in the Lot 22 Parking Structure. All vehicles on campus must have a valid campus parking permit. You will enter your vehicle's license plate information to purchase an ePermit from a kiosk in the parking lot. Parking permits cost $8 per day. You will have the option to select an Orientation parking permit to be valid for the entire Orientation program for $16. \n\nFor directions to UCSB\, see https://www.ucsb.edu/about/visit
 URL:https://troyh.github.io/TravelItinerary/?i=it-a44dcfe4&day=2
 UID:day-2-20260713@travelitinerary
 END:VEVENT
