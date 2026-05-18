@@ -20,6 +20,9 @@
         "Dinner"
       ],
       "note": "TODO: Reserve rental car (big SUV)\n\n",
+      "centerName": "Santa Barbara, United States",
+      "centerLat": 34.417567999999996,
+      "centerLng": -119.73995566666667,
       "places": [
         {
           "id": "1ddc2bb3-17f8-4c98-a00d-c2a26492b23d",
@@ -1104,6 +1107,9 @@
       "tideWarning": false,
       "highlights": [],
       "note": "",
+      "centerName": "Santa Barbara, United States",
+      "centerLat": 34.43939734999999,
+      "centerLng": -119.74907904999999,
       "places": [
         {
           "id": "105c6d26-848e-4121-993b-74ba7bed10b2",
@@ -1160,6 +1166,9 @@
         "Consider purchasing bulky items (pillows, mattress pad) before arriving to save luggage space"
       ],
       "note": "",
+      "centerName": "Isla Vista, United States",
+      "centerLat": 34.414669599999996,
+      "centerLng": -119.84366355,
       "places": [
         {
           "id": "d66244c4-cab2-4a64-8eb3-752c11d82bce",
@@ -2037,6 +2046,9 @@
         "Go to airport"
       ],
       "note": "",
+      "centerName": "Santa Barbara, CA, United States",
+      "centerLat": 34.420344,
+      "centerLng": -119.698886,
       "places": [],
       "directions": [
         {
