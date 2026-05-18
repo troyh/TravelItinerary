@@ -1,0 +1,71 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Take Hudson to College 🏫//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Take Hudson to College 🏫
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260917
+DTEND;VALUE=DATE:20260918
+SUMMARY:Day 1: Fly to Santa Barbara
+LOCATION:Santa Barbara
+DESCRIPTION:Overnight: Santa Barbara\n\nHighlights:\n• Get rental car\n• Check into hotel\n• Dinner\n\nNote: TODO: Reserve rental car (big SUV)\n\n\n\nFlights:\n✈ as610: SEA → SBA · 909 mi (Conf: LCJDCP)
+URL:https://troyh.github.io/TravelItinerary/?i=it-fa79158e&day=1
+UID:day-1-20260917@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260917T155700
+DTEND:20260917T183400
+SUMMARY:✈ as610: SEA → SBA
+DESCRIPTION:Alaska Airlines · Boeing 737-800\nSeattle → Santa Barbara\nConfirmation: LCJDCP
+UID:flight-0b3af93f-42d6-468f-87e7-f9c7eeb59c4e@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260917T190000
+DTEND:20260917T200000
+SUMMARY:Hotel Californian
+LOCATION:36 State St\, Santa Barbara\, CA 93101\, USA
+DESCRIPTION:Phone: (805) 882-0100\nWebsite: https://www.hotelcalifornian.com/?utm_source=local&utm_medium=organic&utm_campaign=website_link\nConfirmation numbers: \nZO-AX1048-09082\nZO-AX1048-09016
+UID:place-1ddc2bb3-17f8-4c98-a00d-c2a26492b23d@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260917T190000
+DTEND:20260917T191500
+SUMMARY:Santa Barbara Airport - SBA → Hotel Californian
+LOCATION:Hotel Californian
+DESCRIPTION:17.7 km · 15 min
+URL:https://maps.apple.com/?saddr=Santa%20Barbara%20Airport%20-%20SBA&daddr=Hotel%20Californian&dirflg=d
+UID:dir-20cfd69a-6549-4c22-bd7e-0667c4934836@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260918
+DTEND;VALUE=DATE:20260919
+SUMMARY:Day 2: Shopping Day
+URL:https://troyh.github.io/TravelItinerary/?i=it-fa79158e&day=2
+UID:day-2-20260918@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260919
+DTEND;VALUE=DATE:20260920
+SUMMARY:Day 3: Move-in Day
+LOCATION:Santa Barbara
+DESCRIPTION:Overnight: Santa Barbara\n\nHighlights:\n• Drive to campus\n• Check-in\n• Unload car\n• Move-in and set up room\n• Shop early morning on move-in day to beat crowds and ensure full stock of popular items\n• Bring a detailed packing list and dorm room dimensions to avoid over-purchasing\n• Check if your college has a move-in essentials list or partnerships with specific retailers for discounts\n• Consider purchasing bulky items (pillows\, mattress pad) before arriving to save luggage space
+URL:https://troyh.github.io/TravelItinerary/?i=it-fa79158e&day=3
+UID:day-3-20260919@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260920
+DTEND;VALUE=DATE:20260921
+SUMMARY:Day 4: Fly to Seattle
+DESCRIPTION:\nHighlights:\n• Check out of hotel\n• Return rental car\n• Go to airport\n\nFlights:\n✈ as618: SBA → SEA · 909 mi
+URL:https://troyh.github.io/TravelItinerary/?i=it-fa79158e&day=4
+UID:day-4-20260920@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260920T192200
+DTEND:20260920T220000
+SUMMARY:✈ as618: SBA → SEA
+DESCRIPTION:Alaska Airlines · Boeing 737-800\nSanta Barbara → Seattle
+UID:flight-485f6d92-5a66-4017-abc8-aa642756d511@travelitinerary
+END:VEVENT
+END:VCALENDAR
