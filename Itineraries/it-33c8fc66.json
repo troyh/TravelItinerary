@@ -1,20 +1,19 @@
 {
   "startDate": "",
-  "title": "7-Day Porsche 911 Adventure: London to the Mediterranean",
+  "title": "7-Day Porsche 911 Adventure: London to the Mediterranean🇫🇷",
   "subtitle": "London → Calais → Reims → Burgundy → Lyon → Provence → French Riviera",
   "itineraryNotes": "A fun drive through France, starting in London. \n\nTODO: airfare to London\nTODO: airfare home\n\n\n",
   "days": [
     {
-      "day": 1,
       "leg": "London → Calais",
       "overnight": "Calais, France",
       "nm": 0,
       "hrs": 0,
+      "tags": [],
       "highlights": [
         "Channel crossing to continental Europe",
         "Explore medieval Calais old town"
       ],
-      "tags": [],
       "note": "TODO: train ticket\nTODO: rent 911 in London ",
       "places": [
         {
@@ -1452,16 +1451,15 @@
       "rentalCars": []
     },
     {
-      "day": 2,
       "leg": "Calais → Reims (2.5 hours, champagne country roads)",
       "overnight": "Reims, France",
       "nm": 0,
       "hrs": 0,
+      "tags": [],
       "highlights": [
         "Champagne house tours in UNESCO Reims",
         "Drive through prestigious vineyards"
       ],
-      "tags": [],
       "note": "",
       "places": [
         {
@@ -2622,16 +2620,15 @@
       "rentalCars": []
     },
     {
-      "day": 3,
       "leg": "Reims → Dijon (2 hours, scenic vineyard routes)",
       "overnight": "Dijon, France",
       "nm": 0,
       "hrs": 0,
+      "tags": [],
       "highlights": [
         "Burgundy wine region scenic routes",
         "Historic Dijon medieval architecture"
       ],
-      "tags": [],
       "note": "",
       "places": [
         {
@@ -3811,16 +3808,15 @@
       "rentalCars": []
     },
     {
-      "day": 4,
       "leg": "Dijon → Lyon (2.5 hours, Burgundy wine region)",
       "overnight": "Lyon, France",
       "nm": 0,
       "hrs": 0,
+      "tags": [],
       "highlights": [
         "Lyon's Renaissance riverside charm",
         "Confluence of Rhône and Saône rivers"
       ],
-      "tags": [],
       "note": "",
       "places": [
         {
@@ -5131,16 +5127,15 @@
       "rentalCars": []
     },
     {
-      "day": 5,
       "leg": "Lyon → Avignon (2.5 hours, Rhône Valley roads)",
       "overnight": "Avignon, France",
       "nm": 0,
       "hrs": 0,
+      "tags": [],
       "highlights": [
         "Papal Palace in Avignon",
         "Provence lavender fields and villages"
       ],
-      "tags": [],
       "note": "",
       "places": [
         {
@@ -6447,16 +6442,15 @@
       "rentalCars": []
     },
     {
-      "day": 6,
       "leg": "Avignon → Antibes (2.5 hours, Provence to Côte d'Azur)",
       "overnight": "Antibes, France",
       "nm": 0,
       "hrs": 0,
+      "tags": [],
       "highlights": [
         "Arrive at French Riviera",
         "Antibes old town and yacht-lined harbor"
       ],
-      "tags": [],
       "note": "",
       "places": [
         {
@@ -7748,16 +7742,15 @@
       "rentalCars": []
     },
     {
-      "day": 7,
       "leg": "Antibes → Menton (1.5 hours, scenic coastal drive)",
       "overnight": "Menton, France",
       "nm": 0,
       "hrs": 0,
+      "tags": [],
       "highlights": [
         "Final coastal drive to Mediterranean",
         "Menton's Belle Époque seaside charm"
       ],
-      "tags": [],
       "note": "",
       "places": [
         {
