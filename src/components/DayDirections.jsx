@@ -84,7 +84,7 @@ function convertDistance(distStr, unit) {
   return distStr;
 }
 
-export default function DayDirections({ directions, onAdd, onUpdate, onDelete, readOnly = false, distanceUnit = "km", hideList = false }) {
+export default function DayDirections({ directions, onAdd, onUpdate, onDelete, readOnly = false, distanceUnit = "km", hideList = false, locationBias = null }) {
   const { provider } = getStoredProviderSettings();
   const [apiReady,  setApiReady]  = useState(false);
   const [apiError,  setApiError]  = useState(null);
@@ -190,13 +190,14 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
       debounceRef.current = setTimeout(async () => {
         try {
           if (provider === "apple") {
-            const results = await appleAutocomplete(libRef.current, value, null);
+            const results = await appleAutocomplete(libRef.current, value, locationBias);
             setPreds(results);
           } else {
             const { AutocompleteSuggestion } = libRef.current;
             const { suggestions } = await AutocompleteSuggestion.fetchAutocompleteSuggestions({
               input: value,
               sessionToken: tokenRef.current,
+              ...(locationBias ? { locationBias: { lat: locationBias.lat, lng: locationBias.lng } } : {}),
             });
             setPreds(
               suggestions.filter(s => s.placePrediction).slice(0, 5).map(s => ({

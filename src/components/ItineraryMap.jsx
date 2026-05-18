@@ -190,10 +190,30 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
       leafletRef.current = null;
     }
 
-    // Need at least 2 stops with coords
-    const stops = stopsWithOvernight
-      .map(d => ({ day: d.day, overnight: d.overnight.trim() }))
-      .filter(s => coords[s.overnight]);
+    // Build stops: prefer geocoded overnight text; fall back to day centroid for days without overnight
+    const overnightStops = stopsWithOvernight
+      .map(d => ({ day: d.day, label: d.overnight.trim(), lat: coords[d.overnight.trim()]?.lat, lng: coords[d.overnight.trim()]?.lng }))
+      .filter(s => s.lat && s.lng);
+    const centroidStops = days
+      .filter(d => !d.overnight?.trim())
+      .map(d => {
+        // Prefer user-set coords; fall back to computed centroid
+        if (d.centerLat && d.centerLng) {
+          return { day: d.day, label: d.centerName || `Day ${d.day}`, lat: d.centerLat, lng: d.centerLng };
+        }
+        const pts = [];
+        (savedPlaces[d.day]     ?? []).forEach(p => { if (p.lat    && p.lng)    pts.push([p.lat,    p.lng]);    });
+        (savedFlights[d.day]    ?? []).forEach(f => { if (f.arrivalLat  && f.arrivalLng)  pts.push([f.arrivalLat,  f.arrivalLng]);  });
+        (savedDirections[d.day] ?? []).forEach(x => { if (x.destinationLat && x.destinationLng) pts.push([x.destinationLat, x.destinationLng]); });
+        (savedRoutes[d.day]     ?? []).forEach(r => { if (r.endLat  && r.endLng)  pts.push([r.endLat,  r.endLng]);  });
+        if (!pts.length) return null;
+        return { day: d.day, label: d.centerName || `Day ${d.day}`,
+          lat: pts.reduce((s,c) => s+c[0], 0)/pts.length,
+          lng: pts.reduce((s,c) => s+c[1], 0)/pts.length };
+      })
+      .filter(Boolean);
+    // Merge and sort by day number
+    const stops = [...overnightStops, ...centroidStops].sort((a, b) => a.day - b.day);
 
     if (stops.length < 2) return;
 
@@ -209,11 +229,11 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
 
     // Draw connectors between consecutive stops
     for (let i = 0; i < stops.length - 1; i++) {
-      const from = stops[i];
-      const to   = stops[i + 1];
-      const fromC = coords[from.overnight];
-      const toC   = coords[to.overnight];
-      if (!fromC || !toC) continue;
+      const from  = stops[i];
+      const to    = stops[i + 1];
+      const fromC = from;   // stops now carry lat/lng directly
+      const toC   = to;
+      if (!fromC?.lat || !toC?.lat) continue;
 
       // Check both departure day (from) and arrival day (to) for flights on this leg
       const legFlights = [
@@ -315,14 +335,13 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
     });
 
     // Add markers
-    stops.forEach((s, i) => {
-      const c = coords[s.overnight];
-      if (!c) return;
-      L.marker([c.lat, c.lng], { icon: markerIcon(s.day) })
-        .bindTooltip(s.overnight, { direction: "top", offset: [0, -10],
+    stops.forEach(s => {
+      if (!s.lat || !s.lng) return;
+      L.marker([s.lat, s.lng], { icon: markerIcon(s.day) })
+        .bindTooltip(s.label, { direction: "top", offset: [0, -10],
           className: "leaflet-tooltip-dark" })
         .addTo(map);
-      bounds.extend([c.lat, c.lng]);
+      bounds.extend([s.lat, s.lng]);
     });
 
     // Draw place markers
@@ -345,10 +364,20 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
     };
   // Rebuild when open toggles or coords change
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, mapHeight, coords, JSON.stringify(savedFlights), JSON.stringify(savedDirections), JSON.stringify(savedPlaces), JSON.stringify(savedRoutes)]);
+  }, [open, mapHeight, coords, JSON.stringify(savedFlights), JSON.stringify(savedDirections), JSON.stringify(savedPlaces), JSON.stringify(savedRoutes), JSON.stringify(days.map(d => [d.day, d.centerLat, d.centerLng]))]);
 
-  // Don't render if fewer than 2 days have overnight locations
-  if (stopsWithOvernight.length < 2) return null;
+  // Don't render if fewer than 2 locatable days (overnight text or GPS centroid)
+  const locatableDays = days.filter(d => {
+    if (d.overnight?.trim()) return true;
+    const hasCentroid = [
+      ...(savedPlaces[d.day]     ?? []).filter(p => p.lat && p.lng),
+      ...(savedFlights[d.day]    ?? []).filter(f => f.arrivalLat && f.arrivalLng),
+      ...(savedDirections[d.day] ?? []).filter(x => x.destinationLat && x.destinationLng),
+      ...(savedRoutes[d.day]     ?? []).filter(r => r.endLat && r.endLng),
+    ].length > 0;
+    return hasCentroid;
+  });
+  if (locatableDays.length < 2) return null;
 
   return (
     <div style={{ position: "relative" }}>

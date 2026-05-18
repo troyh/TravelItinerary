@@ -12,6 +12,23 @@ import Settings from "./Settings.jsx";
 import { loadFromGitHub, saveToGitHub, deleteFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import ItineraryPicker from "./ItineraryPicker.jsx";
 import HistoryPanel from "./HistoryPanel.jsx";
+import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
+import { loadMapKit, appleAutocomplete, appleFetchPlaceDetails, getStoredProviderSettings } from "../lib/mapkit.js";
+
+// ── Location autocomplete singletons ──────────────────────────────────────────
+let locGooglePromise = null;
+let locApplePromise  = null;
+
+function loadLocGoogle() {
+  if (!locGooglePromise) {
+    try { const s = localStorage.getItem("travelSettings"); const k = (s ? JSON.parse(s) : {}).googleMapsKey ?? ""; setOptions({ key: k, version: "weekly" }); locGooglePromise = k ? importLibrary("places") : Promise.reject(new Error("no-key")); } catch { locGooglePromise = Promise.reject(new Error("no-key")); }
+  }
+  return locGooglePromise;
+}
+function loadLocApple() {
+  if (!locApplePromise) { const { appleMapKitToken } = getStoredProviderSettings(); locApplePromise = loadMapKit(appleMapKitToken); }
+  return locApplePromise;
+}
 
 function sanitizeFilename(name) {
   return name.trim().replace(/[^\w\s-]/g, "").replace(/\s+/g, " ").trim().slice(0, 80);
@@ -60,7 +77,7 @@ function extractPerDayState(data) {
   const daysArr = rawDays.map((d, i) => ({ day: i + 1, ...d }));
   return {
     days: daysArr.map(({ places, directions, routes, flights, rentalCars, highlights: _h, note: _n, ...rest }) => ({
-      ...rest, highlights: [], note: "",
+      ...rest, highlights: [], note: "", centerName: rest.centerName ?? "", centerLat: rest.centerLat ?? null, centerLng: rest.centerLng ?? null,
     })),
     places:     Object.fromEntries(daysArr.map(d => [String(d.day), d.places     ?? []])),
     directions: Object.fromEntries(daysArr.map(d => [String(d.day), d.directions ?? []])),
@@ -88,9 +105,60 @@ function remapKeys(obj, pivot, delta) {
 const BLANK_DAY = {
   leg: "New Day", nm: 0, hrs: 0, overnight: "",
   tags: ["layover"], fuelStop: false, tideWarning: false,
-  highlights: [], note: "",
+  highlights: [], note: "", centerName: "", centerLat: null, centerLng: null,
 };
 
+// ── Per-day centroid helpers ───────────────────────────────────────────────
+
+function computeDayCentroid(dayNum, savedPlaces, savedFlights, savedDirections, savedRoutes) {
+  const coords = [];
+  (savedPlaces[dayNum]     ?? []).forEach(p => { if (p.lat    && p.lng)    coords.push([p.lat,    p.lng]);    });
+  (savedFlights[dayNum]    ?? []).forEach(f => { if (f.arrivalLat  && f.arrivalLng)  coords.push([f.arrivalLat,  f.arrivalLng]);  });
+  (savedDirections[dayNum] ?? []).forEach(d => { if (d.destinationLat && d.destinationLng) coords.push([d.destinationLat, d.destinationLng]); });
+  (savedRoutes[dayNum]     ?? []).forEach(r => { if (r.endLat  && r.endLng)  coords.push([r.endLat,  r.endLng]);  });
+  if (!coords.length) return null;
+  return {
+    lat: coords.reduce((s, c) => s + c[0], 0) / coords.length,
+    lng: coords.reduce((s, c) => s + c[1], 0) / coords.length,
+  };
+}
+
+async function reverseGeocode(lat, lng) {
+  const key = `rev:${lat.toFixed(2)},${lng.toFixed(2)}`;
+  const cache = (() => { try { return JSON.parse(localStorage.getItem("geocodeCache") || "{}"); } catch { return {}; } })();
+  if (cache[key]) return cache[key];
+  try {
+    const res  = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
+      { headers: { "Accept-Language": "en" } }
+    );
+    const data = await res.json();
+    const a    = data.address ?? {};
+    const name = [a.city || a.town || a.village || a.county, a.country].filter(Boolean).join(", ") || "";
+    cache[key] = name;
+    try { localStorage.setItem("geocodeCache", JSON.stringify(cache)); } catch {}
+    return name;
+  } catch { return ""; }
+}
+
+
+async function forwardGeocode(query) {
+  if (!query.trim()) return null;
+  const cache = (() => { try { return JSON.parse(localStorage.getItem("geocodeCache") || "{}"); } catch { return {}; } })();
+  if (cache[query]?.lat) return cache[query];
+  try {
+    const res  = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
+      { headers: { "Accept-Language": "en" } }
+    );
+    const data = await res.json();
+    if (!data.length) return null;
+    const result = { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+    cache[query] = result;
+    try { localStorage.setItem("geocodeCache", JSON.stringify(cache)); } catch {}
+    return result;
+  } catch { return null; }
+}
 
 // ── Timeline time helpers ──────────────────────────────────────────────────
 
@@ -196,6 +264,10 @@ export default function Itinerary() {
     try { return new Set(JSON.parse(localStorage.getItem("itineraryLocked") || "[]")); }
     catch { return new Set(); }
   });
+  const [geocodingDay,     setGeocodingDay]     = useState(null);
+  const [locPreds,         setLocPreds]         = useState([]);
+  const [locActiveDay,     setLocActiveDay]     = useState(null);
+  const locDebounceRef    = useRef(null);
   const inputRef          = useRef(null);
   const syncTimerRef       = useRef(null);
   const dirtyRef           = useRef(false);
@@ -274,6 +346,33 @@ export default function Itinerary() {
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
 
   useEffect(() => { document.title = title || "Travel Itinerary"; }, [title]);
+
+  // Auto-populate centerName for days that have GPS data but no name yet
+  const lastCentroidRef = useRef({});
+  useEffect(() => {
+    if (!days.length) return;
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      for (const d of days) {
+        if (cancelled) break;
+        const centroid = computeDayCentroid(d.day, savedPlaces, savedFlights, savedDirections, savedRoutes);
+        if (!centroid) continue;
+        const last = lastCentroidRef.current[d.day];
+        const moved = !last || Math.abs(last.lat - centroid.lat) > 0.01 || Math.abs(last.lng - centroid.lng) > 0.01;
+        if (!moved) continue;
+        lastCentroidRef.current[d.day] = centroid;
+        if (d.centerLat !== null) continue; // user has manually set coords — don't overwrite
+        const name = await reverseGeocode(centroid.lat, centroid.lng);
+        if (cancelled || !name) continue;
+        setDays(prev => prev.map(x => x.day === d.day
+          ? { ...x, centerName: x.centerName || name, centerLat: centroid.lat, centerLng: centroid.lng }
+          : x));
+        await new Promise(r => setTimeout(r, 1100)); // Nominatim rate limit
+      }
+    }, 1000);
+    return () => { cancelled = true; clearTimeout(timer); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [savedPlaces, savedFlights, savedDirections, savedRoutes]);
 
   useEffect(() => { if (!currentFile) setPickerKey(k => k + 1); }, [currentFile]);
 
@@ -1172,6 +1271,54 @@ export default function Itinerary() {
     } catch { return null; }
   })();
 
+  // ── Location autocomplete helpers ─────────────────────────────────────────
+  async function fetchLocPreds(dayNum, query, bias) {
+    clearTimeout(locDebounceRef.current);
+    if (!query.trim()) { setLocPreds([]); return; }
+    locDebounceRef.current = setTimeout(async () => {
+      const { provider } = getStoredProviderSettings();
+      try {
+        if (provider === "apple") {
+          const mk = await loadLocApple();
+          setLocPreds(await appleAutocomplete(mk, query, bias));
+        } else {
+          const { AutocompleteSuggestion } = await loadLocGoogle();
+          const { suggestions } = await AutocompleteSuggestion.fetchAutocompleteSuggestions({
+            input: query,
+            ...(bias ? { locationBias: { lat: bias.lat, lng: bias.lng } } : {}),
+          });
+          setLocPreds(suggestions.filter(s => s.placePrediction).map(s => ({
+            name:     s.placePrediction.mainText.text,
+            subtitle: s.placePrediction.secondaryText?.text ?? "",
+            _raw:     s,
+          })));
+        }
+      } catch { setLocPreds([]); }
+    }, 300);
+  }
+
+  async function selectLocPred(dayNum, pred) {
+    setLocPreds([]); setLocActiveDay(null);
+    const { provider } = getStoredProviderSettings();
+    try {
+      if (provider === "apple" && pred._data) {
+        const mk = await loadLocApple();
+        const details = await appleFetchPlaceDetails(mk, pred._data);
+        setDays(prev => prev.map(x => x.day === dayNum
+          ? { ...x, centerName: pred.name + (pred.subtitle ? `, ${pred.subtitle}` : ""), centerLat: details.lat, centerLng: details.lng }
+          : x));
+      } else if (pred._raw) {
+        const place = pred._raw.placePrediction.toPlace();
+        await place.fetchFields({ fields: ["location", "displayName"] });
+        if (place.location) {
+          setDays(prev => prev.map(x => x.day === dayNum
+            ? { ...x, centerName: place.displayName ?? pred.name, centerLat: place.location.lat(), centerLng: place.location.lng() }
+            : x));
+        }
+      }
+    } catch { /* geocode failed — leave name unchanged */ }
+  }
+
   if (urlLoad?.status === "loading") {
     return (
       <div style={{ display:"flex", justifyContent:"center", alignItems:"center",
@@ -1883,6 +2030,9 @@ export default function Itinerary() {
           const isLayover = effNm(d) === 0;
           const dayInfo   = getDayDate(d.day);
           const allHighlights = [...(d.highlights ?? []), ...(customHighlights[d.day] ?? [])];
+          const dayBias   = (d.centerLat && d.centerLng)
+            ? { lat: d.centerLat, lng: d.centerLng }
+            : computeDayCentroid(d.day, savedPlaces, savedFlights, savedDirections, savedRoutes);
           return (
             <div key={d.day}>
 
@@ -2021,6 +2171,59 @@ export default function Itinerary() {
                             background:c.color+"22", color:c.color, border:`1px solid ${c.color}44`,
                             letterSpacing:".06em", textTransform:"uppercase" }}>{c.label}</span>;
                         })}
+                      </div>
+                    )}
+
+                    {/* General location — auto-geocoded, user-editable */}
+                    {(dayBias !== null || d.centerName) && (
+                      <div style={{ position:"relative" }}>
+                        <div style={{ display:"flex", alignItems:"center", gap:4 }}>
+                          <span style={{ color:"#9ba1ac", fontSize:12, flexShrink:0 }}>📍</span>
+                          <input
+                            value={d.centerName || ""}
+                            onChange={e => {
+                              setDays(prev => prev.map(x => x.day === d.day ? { ...x, centerName: e.target.value } : x));
+                              fetchLocPreds(d.day, e.target.value, dayBias);
+                              setLocActiveDay(d.day);
+                            }}
+                            onFocus={() => setLocActiveDay(d.day)}
+                            onBlur={() => setTimeout(() => { if (locActiveDay === d.day) { setLocPreds([]); setLocActiveDay(null); } }, 150)}
+                            onKeyDown={e => { if (e.key === "Escape") { setLocPreds([]); setLocActiveDay(null); } }}
+                            placeholder={dayBias ? "Detecting…" : ""}
+                            readOnly={readOnly}
+                            title={d.centerLat ? `${d.centerLat.toFixed(3)}, ${d.centerLng.toFixed(3)}` : ""}
+                            style={{ fontSize:12, color:"#5c6470", background:"none", border:"none", outline:"none",
+                              fontFamily:"inherit", flex:1, cursor: readOnly ? "default" : "text",
+                              padding:0, minWidth:0 }}
+                          />
+                          {!readOnly && d.centerLat !== null && (
+                            <button
+                              onClick={() => setDays(prev => prev.map(x => x.day === d.day
+                                ? { ...x, centerName: "", centerLat: null, centerLng: null }
+                                : x))}
+                              title="Reset to auto-detected location"
+                              style={{ background:"none", border:"none", color:"#9ba1ac", cursor:"pointer",
+                                fontSize:11, padding:0, lineHeight:1, flexShrink:0 }}>
+                              ↺
+                            </button>
+                          )}
+                        </div>
+                        {locActiveDay === d.day && locPreds.length > 0 && (
+                          <div style={{ position:"absolute", top:"100%", left:0, zIndex:200, minWidth:260,
+                            background:"#ffffff", border:"1px solid #e2e5ea", borderRadius:8,
+                            boxShadow:"0 4px 20px rgba(0,0,0,0.1)", overflow:"hidden", marginTop:4 }}>
+                            {locPreds.map((pred, i) => (
+                              <button key={i}
+                                onMouseDown={e => { e.preventDefault(); selectLocPred(d.day, pred); }}
+                                style={{ display:"block", width:"100%", textAlign:"left", background:"none",
+                                  border:"none", borderBottom: i < locPreds.length-1 ? "1px solid #f0f1f3" : "none",
+                                  padding:"8px 12px", fontSize:13, cursor:"pointer", fontFamily:"inherit" }}>
+                                <div style={{ fontWeight:500, color:"#0e1014" }}>{pred.name}</div>
+                                {pred.subtitle && <div style={{ fontSize:11, color:"#9ba1ac", marginTop:1 }}>{pred.subtitle}</div>}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -2228,6 +2431,7 @@ export default function Itinerary() {
                     onUpdate={(id, updates) => updatePlace(d.day, id, updates)}
                     onDelete={id => deletePlace(d.day, id)}
                     readOnly={readOnly}
+                    locationBias={dayBias}
                     hideList
                   />
                   <DayDirections
@@ -2238,6 +2442,7 @@ export default function Itinerary() {
                     onDelete={id => deleteDirection(d.day, id)}
                     readOnly={readOnly}
                     distanceUnit={settings.distanceUnit ?? "km"}
+                    locationBias={dayBias}
                     hideList
                   />
                   <DayRoute

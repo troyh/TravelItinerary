@@ -41,8 +41,6 @@ export const CATEGORIES = [
 ];
 
 // Location bias: central Salish Sea / Victoria BC
-const LOCATION_LAT = 48.4284;
-const LOCATION_LNG = -123.3656;
 const BIAS_RADIUS_M = 500_000;
 
 const PLACE_TYPE_MAP = {
@@ -72,7 +70,7 @@ function detectCategory(types = []) {
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
-export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, readOnly = false, hideList = false }) {
+export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, readOnly = false, hideList = false, locationBias = null }) {
   const { provider } = getStoredProviderSettings();
   // Maps API lifecycle
   const [apiReady, setApiReady] = useState(false);
@@ -145,7 +143,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
       try {
         if (provider === "apple") {
           const results = await appleAutocomplete(
-            placesLibRef.current, value, { lat: LOCATION_LAT, lng: LOCATION_LNG }
+            placesLibRef.current, value, locationBias
           );
           setLoadingPredictions(false);
           setPredictions(results);
@@ -154,7 +152,7 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
           const { suggestions } = await AutocompleteSuggestion.fetchAutocompleteSuggestions({
             input: value,
             sessionToken: sessionTokenRef.current,
-            locationBias: { lat: LOCATION_LAT, lng: LOCATION_LNG },
+            ...(locationBias ? { locationBias: { lat: locationBias.lat, lng: locationBias.lng } } : {}),
           });
           setLoadingPredictions(false);
           setPredictions(
