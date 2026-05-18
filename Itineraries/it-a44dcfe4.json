@@ -14,14 +14,14 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "centerName": "Santa Barbara, CA",
+      "centerName": "Santa Barbara, CA, United States",
+      "centerLat": 34.420344,
+      "centerLng": -119.698886,
       "highlights": [
         "Get rental car",
         "Drive to hotel"
       ],
       "note": "TODO: get hotel",
-      "centerLat": 40.93477815,
-      "centerLng": -121.07148975000001,
       "places": [],
       "directions": [
         {
@@ -1725,10 +1725,10 @@
       "fuelStop": false,
       "tideWarning": false,
       "centerName": "UC Santa Barbara",
-      "highlights": [],
-      "note": "Check-in 7:30-9:10am\n\nWhen you arrive on campus, follow the signs for Orientation and park in the Lot 22 Parking Structure. All vehicles on campus must have a valid campus parking permit. You will enter your vehicle's license plate information to purchase an ePermit from a kiosk in the parking lot. Parking permits cost $8 per day. You will have the option to select an Orientation parking permit to be valid for the entire Orientation program for $16. \n\nFor directions to UCSB, see https://www.ucsb.edu/about/visit",
       "centerLat": 34.4136225,
       "centerLng": -119.8525843,
+      "highlights": [],
+      "note": "Check-in 7:30-9:10am\n\nWhen you arrive on campus, follow the signs for Orientation and park in the Lot 22 Parking Structure. All vehicles on campus must have a valid campus parking permit. You will enter your vehicle's license plate information to purchase an ePermit from a kiosk in the parking lot. Parking permits cost $8 per day. You will have the option to select an Orientation parking permit to be valid for the entire Orientation program for $16. \n\nFor directions to UCSB, see https://www.ucsb.edu/about/visit",
       "places": [
         {
           "id": "6466d4dd-153a-480b-8b62-f8822de0ad05",
@@ -1761,14 +1761,14 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "centerName": "UC Santa Barbara",
+      "centerName": "UC Santa Barbara, 1210 Cheadle Hall",
+      "centerLat": 34.4163036,
+      "centerLng": -119.8464094,
       "highlights": [
         "Attend events",
         "Fly home"
       ],
       "note": "",
-      "centerLat": 38.7624542,
-      "centerLng": -120.66600000000001,
       "places": [
         {
           "id": "0ce89002-9e17-48f3-8ee9-ac0e31061544",
