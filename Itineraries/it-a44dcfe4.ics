@@ -8,7 +8,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260712
 DTEND;VALUE=DATE:20260713
 SUMMARY:Day 1: Fly to UCSB
-DESCRIPTION:\nHighlights:\n• Get rental car\n• Drive to hotel\n\nNote: TODO: get hotel\n\nFlights:\n✈ as400: SEA → SBA · 909 mi (Conf: SMEPDX)
+DESCRIPTION:\nHighlights:\n• Get rental car\n• Drive to hotel\n\nNote: TODO: get hotel\n\nFlights:\n✈ as400: SEA → SBA · 909 mi (Conf: SMEPDX)\n\nRental Cars:\n🚗 Hertz?\n   Pick-up: SBA Airport\n   Drop-off: SBA Airport
 URL:https://troyh.github.io/TravelItinerary/?i=it-a44dcfe4&day=1
 UID:day-1-20260712@travelitinerary
 END:VEVENT
@@ -18,6 +18,14 @@ DTEND:20260712T183800
 SUMMARY:✈ as400: SEA → SBA
 DESCRIPTION:Alaska Airlines · Boeing 737-800\nSeattle → Santa Barbara\nConfirmation: SMEPDX
 UID:flight-5a84feeb-c6bb-4edc-8434-3f815677b44c@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260712T190000
+DTEND:20260712T200000
+SUMMARY:🚗 Hertz? Car Rental
+LOCATION:SBA Airport
+DESCRIPTION:Pick-up: SBA Airport\nDrop-off: SBA Airport
+UID:rental-b675ca79-127b-4768-b4b4-4f27a563f6e6@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260713
@@ -48,5 +56,22 @@ DTEND:20260714T220000
 SUMMARY:✈ AS400: SBA → SEA
 DESCRIPTION:Alaska Airlines · Boeing 737-800\nSanta Barbara → Seattle\nConfirmation: SMEPDX
 UID:flight-f741e40f-c63f-4ee9-9f85-dc7c01eaaaa6@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260714T090000
+DTEND:20260714T100000
+SUMMARY:UCSB Parking Lot 22
+LOCATION:22 Ocean Rd\, Santa Barbara\, CA 93106\, United States
+DESCRIPTION:Orientation Events Begin
+UID:place-0ce89002-9e17-48f3-8ee9-ac0e31061544@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260714T170000
+DTEND:20260714T170800
+SUMMARY:UCSB Parking Lot 22 → Santa Barbara Airport - SBA
+LOCATION:Santa Barbara Airport - SBA
+DESCRIPTION:4.5 km · 8 min
+URL:https://maps.apple.com/?saddr=UCSB%20Parking%20Lot%2022&daddr=Santa%20Barbara%20Airport%20-%20SBA&dirflg=d
+UID:dir-0fe30eea-940a-4ec2-a5ca-a124660080eb@travelitinerary
 END:VEVENT
 END:VCALENDAR
