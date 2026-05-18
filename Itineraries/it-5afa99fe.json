@@ -1,6 +1,6 @@
 {
   "startDate": "2026-09-17",
-  "title": "Take Hudson to College",
+  "title": "Take Hudson to College 🏫",
   "subtitle": "Move into UCSB",
   "itineraryNotes": "TODO: consider SeaTac parking vs uber\n\nGay’s picks for hotels:\n\nFor your travel project, we need a hotel to take Hudson for school. I looked at a few hotels though the amex website and these are all acceptable to me but I figured you could book and use your app.  Acceptable\n\n[Hideaway](https://www.kirkwoodcollection.com/hideaway/rooms/)\n[Canary Hotel](https://www.ihg.com/kimptonhotels/hotels/us/en/canary-hotel-santa-barbara-ca/sabcn/hoteldetail)\n[The Stewared](https://www.marriott.com/en-us/hotels/sbatx-the-steward-santa-barbara-a-tribute-portfolio-hotel/overview/)\n[Hotel Californian](https://www.hotelcalifornian.com/)\n\nI think we should arrive on the 17th of sept, run our purchase errands on the 18th and pick up supplies and then we are moving in on the 19th & 20th.  He will get a staggered time for move in on one of those dates? So I supposed we can fly home late on the 20th pretty safely?",
   "days": [
@@ -20,7 +20,6 @@
         "Dinner"
       ],
       "note": "TODO: Reserve rental car (big SUV)\n\n",
-      "day": 1,
       "places": [
         {
           "id": "1ddc2bb3-17f8-4c98-a00d-c2a26492b23d",
@@ -1105,7 +1104,6 @@
       "tideWarning": false,
       "highlights": [],
       "note": "",
-      "day": 2,
       "places": [
         {
           "id": "105c6d26-848e-4121-993b-74ba7bed10b2",
@@ -1162,7 +1160,6 @@
         "Consider purchasing bulky items (pillows, mattress pad) before arriving to save luggage space"
       ],
       "note": "",
-      "day": 3,
       "places": [
         {
           "id": "d66244c4-cab2-4a64-8eb3-752c11d82bce",
@@ -2040,7 +2037,6 @@
         "Go to airport"
       ],
       "note": "",
-      "day": 4,
       "places": [],
       "directions": [
         {
