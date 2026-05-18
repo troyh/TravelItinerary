@@ -14,7 +14,10 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
+      "highlights": [
+        "Get rental car",
+        "Drive to hotel"
+      ],
       "note": "TODO: get hotel",
       "places": [],
       "directions": [],
