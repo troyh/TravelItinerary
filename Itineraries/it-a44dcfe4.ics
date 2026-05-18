@@ -20,6 +20,15 @@ DESCRIPTION:Alaska Airlines · Boeing 737-800\nSeattle → Santa Barbara\nConfir
 UID:flight-5a84feeb-c6bb-4edc-8434-3f815677b44c@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260712T140000
+DTEND:20260712T142700
+SUMMARY:1107 21st Ave E → Seattle-Tacoma Airport
+LOCATION:Seattle-Tacoma Airport
+DESCRIPTION:29.5 km · 27 min
+URL:https://maps.apple.com/?saddr=1107%2021st%20Ave%20E&daddr=Seattle-Tacoma%20Airport&dirflg=d
+UID:dir-3422106b-6b77-4577-89cd-91ffed08b5d7@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260712T190000
 DTEND:20260712T200000
 SUMMARY:🚗 Hertz? Car Rental
