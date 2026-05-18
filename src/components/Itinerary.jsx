@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import NoteMarkdown from "./NoteMarkdown.jsx";
 import { days as initialDays, tagConfig, fuelStops, fuelSummary, tideWarnings } from "../data/itinerary.js";
 import DayPlaces, { CATEGORIES as PLACE_CATEGORIES } from "./DayPlaces.jsx";
@@ -160,20 +160,79 @@ async function forwardGeocode(query) {
   } catch { return null; }
 }
 
+// ── Add-item SVG glyphs ────────────────────────────────────────────────────
+const AddGlyph = {
+  flight: <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 9.5l5 .5 2.5 3.5 1 .3 0-3.6 4-1.6c.5-.2.7-.7.5-1.2l-.1-.2c-.2-.5-.7-.7-1.2-.5l-3.7 1.5L7 5l-.4-1.1 1-.4-.7-.7L4.4 3.6 4 4.8 2.5 6.3 1.2 6.8c-.4.2-.6.5-.5.8l.1.3c.1.4.5.5.9.4L2 9.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/></svg>,
+  pin:    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3 4.5 8 4.5 8s4.5-5 4.5-8c0-2.5-2-4.5-4.5-4.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/><circle cx="8" cy="6" r="1.5" stroke="currentColor" strokeWidth="1.3"/></svg>,
+  note:   <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2.5h7L13 5.5v8a1 1 0 01-1 1H3a1 1 0 01-1-1v-10a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/><path d="M10 2.5V5h3M5 8h6M5 10.5h6M5 5.5h2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  hotel:  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="3" width="13" height="9.5" rx="1" stroke="currentColor" strokeWidth="1.3"/><path d="M1.5 9h13M4.5 6.5h2M4.5 6.5a1 1 0 011-1h0a1 1 0 011 1" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  eat:    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 2v6a2 2 0 002 2v4M4 2v3a1 1 0 001 1h0a1 1 0 001-1V2M11 2c-1 0-2 1-2 3.5S10 9 11 9v5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  ticket: <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2.5 5.5a1 1 0 011-1h9a1 1 0 011 1v.5a1 1 0 100 2v1.5a1 1 0 01-1 1h-9a1 1 0 01-1-1V8a1 1 0 100-2v-.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/><line x1="9" y1="5" x2="9" y2="10" stroke="currentColor" strokeWidth="1.3" strokeDasharray="1 1.4"/></svg>,
+  more:   <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="3.5" cy="8" r="1" fill="currentColor"/><circle cx="8" cy="8" r="1" fill="currentColor"/><circle cx="12.5" cy="8" r="1" fill="currentColor"/></svg>,
+  search: <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" strokeWidth="1.5"/><path d="M13.5 13.5L10.2 10.2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  plus:   <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>,
+  close:  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  bookmark: <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 2h8v11l-4-2.5L3 13V2z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/></svg>,
+  forward: <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12v8a1 1 0 01-1 1H3a1 1 0 01-1-1V4z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/><path d="M2 4l6 5 6-5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+};
+
+const PLACE_KINDS = [
+  { id:"stay", label:"Stay",  glyph: AddGlyph.hotel,  cat:"accommodation" },
+  { id:"eat",  label:"Eat",   glyph: AddGlyph.eat,    cat:"restaurant" },
+  { id:"see",  label:"See",   glyph: AddGlyph.pin,    cat:"activity" },
+  { id:"do",   label:"Do",    glyph: AddGlyph.ticket, cat:"activity" },
+  { id:"note", label:"Note",  glyph: AddGlyph.note,   cat:null },
+];
+
 // ── Add-type button (used in button bar and empty state) ──────────────────
-function AddTypeBtn({ icon, label, sub, onClick }) {
+function AddTypeBtn({ glyph, label, sub, onClick, accent = false }) {
   return (
     <button onClick={onClick} style={{
       display:"flex", alignItems:"center", gap:10, padding:"10px 14px",
-      background:"#ffffff", border:"1px solid #e2e5ea", borderRadius:10,
-      cursor:"pointer", fontFamily:"inherit", textAlign:"left", flex:1, minWidth:120,
+      background: accent ? "#0b3d6b" : "#ffffff",
+      border: accent ? "none" : "1px solid #e2e5ea",
+      borderRadius:8, cursor:"pointer", fontFamily:"inherit", textAlign:"left", flex:1, minWidth:0,
     }}>
-      <span style={{ fontSize:18, lineHeight:1, flexShrink:0 }}>{icon}</span>
-      <div>
-        <div style={{ fontSize:13, fontWeight:600, color:"#0e1014" }}>{label}</div>
-        <div style={{ fontSize:11, color:"#9ba1ac", marginTop:1 }}>{sub}</div>
+      <div style={{
+        width:30, height:30, borderRadius:7, flexShrink:0,
+        background: accent ? "rgba(255,255,255,0.18)" : "#e8f1f9",
+        color: accent ? "#fff" : "#0b3d6b",
+        display:"flex", alignItems:"center", justifyContent:"center",
+      }}>{glyph}</div>
+      <div style={{ minWidth:0 }}>
+        <div style={{ fontSize:13, fontWeight:600, color: accent ? "#fff" : "#0e1014", letterSpacing:-0.1 }}>{label}</div>
+        <div style={{ fontSize:11, color: accent ? "rgba(255,255,255,0.7)" : "#9ba1ac", marginTop:1 }}>{sub}</div>
       </div>
     </button>
+  );
+}
+
+// ── Insert gap (hover affordance between timeline items) ───────────────────
+function InsertGap({ onInsert, suggestedTime }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      style={{ height: hovered ? 40 : 10, position:"relative", display:"flex", alignItems:"center" }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {hovered ? (
+        <>
+          <div style={{ flex:1, height:1, background:"#0b3d6b", opacity:0.35 }}/>
+          <button onMouseDown={e => { e.stopPropagation(); onInsert?.(suggestedTime); }} style={{
+            display:"inline-flex", alignItems:"center", gap:6, padding:"5px 11px",
+            borderRadius:999, background:"#0b3d6b", color:"#fff", border:"none",
+            cursor:"pointer", fontFamily:"inherit", fontSize:11.5, fontWeight:600,
+            boxShadow:"0 2px 8px rgba(11,61,107,0.33)", whiteSpace:"nowrap", flexShrink:0,
+          }}>
+            {AddGlyph.plus} Insert here{suggestedTime ? ` · ${suggestedTime}` : ""}
+          </button>
+          <div style={{ flex:1, height:1, background:"#0b3d6b", opacity:0.35 }}/>
+        </>
+      ) : (
+        <div style={{ position:"absolute", inset:"50% 0 auto 0", height:1, background:"transparent" }}/>
+      )}
+    </div>
   );
 }
 
@@ -203,6 +262,710 @@ function fmtTime12(str) {
   if (isNaN(h) || isNaN(m)) return "";
   return `${h % 12 || 12}:${String(m).padStart(2,"0")} ${h < 12 ? "AM" : "PM"}`;
 }
+
+// ── AddPlacePanel ─────────────────────────────────────────────────────────────
+// Self-contained "Add Place" side panel. Not yet wired into the layout — define
+// only. Wire-up happens separately.
+
+const APP_PANEL_KINDS = [
+  { id: "stay", label: "Stay",  glyph: AddGlyph.hotel  },
+  { id: "eat",  label: "Eat",   glyph: AddGlyph.eat    },
+  { id: "see",  label: "See",   glyph: AddGlyph.pin    },
+  { id: "do",   label: "Do",    glyph: AddGlyph.ticket },
+  { id: "note", label: "Note",  glyph: AddGlyph.note   },
+];
+
+const DO_QUICK_PICKS = [
+  "Cooking class", "Sunset drinks", "Day hike", "Live music", "Market visit", "Spa",
+];
+
+// Shared style tokens
+const AP = {
+  accent:     "#0b3d6b",
+  accentSoft: "#e8f1f9",
+  surface2:   "#f8f9fb",
+  border:     "#e2e5ea",
+  muted:      "#9ba1ac",
+  text:       "#0e1014",
+  amber:      "#f5b544",
+  input: {
+    width: "100%", background: "#fff", border: "1px solid #e2e5ea",
+    color: "#0e1014", borderRadius: 6, padding: "10px 12px",
+    fontSize: 13, fontFamily: "inherit", outline: "none",
+    boxSizing: "border-box",
+  },
+  textarea: {
+    width: "100%", background: "#f8f9fb", border: "1px solid #e2e5ea",
+    color: "#0e1014", borderRadius: 6, padding: "10px 12px",
+    fontSize: 13, fontFamily: "inherit", outline: "none",
+    boxSizing: "border-box", resize: "vertical", minHeight: 56,
+    lineHeight: 1.5,
+  },
+};
+
+function EditorSection({ label, children }) {
+  return (
+    <div style={{ marginBottom: 18 }}>
+      <div style={{
+        fontSize: 10.5, fontWeight: 600, textTransform: "uppercase",
+        letterSpacing: 1, color: AP.muted, marginBottom: 8,
+      }}>{label}</div>
+      {children}
+    </div>
+  );
+}
+
+function FieldRow({ label, value, onChange, placeholder, mono, half, type = "text" }) {
+  return (
+    <div style={{ flex: half ? "0 0 calc(50% - 4px)" : "1 1 100%" }}>
+      <div style={{ fontSize: 9.5, textTransform: "uppercase", color: AP.muted, marginBottom: 4, letterSpacing: 0.5 }}>
+        {label}
+      </div>
+      <input
+        type={type}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        style={{ ...AP.input, fontFamily: mono ? "monospace" : "inherit" }}
+      />
+    </div>
+  );
+}
+
+function PlaceSearchField({ search, setSearch, preds, onSelect, selected, onClear, locationBias, loadLocGoogle, loadLocApple, getStoredProviderSettings: getProvSettings, appleAutocomplete: appleAC, appleFetchPlaceDetails: appleFPD }) {
+  const debRef  = useRef(null);
+  const libRef  = useRef(null);
+  const [loading, setLoading] = useState(false);
+
+  function handleInput(val) {
+    setSearch(val);
+    onClear();
+    clearTimeout(debRef.current);
+    if (!val.trim()) return;
+    setLoading(true);
+    debRef.current = setTimeout(async () => {
+      try {
+        const { provider } = getProvSettings();
+        if (provider === "apple") {
+          const mk = await loadLocApple();
+          libRef.current = mk;
+          const results = await appleAC(mk, val, locationBias);
+          setLoading(false);
+          // results already in {name, subtitle, _data} shape from mapkit.js
+          // pass raw to onSelect handler via preds state — caller owns preds
+          // We update via a local approach: store in a ref and trigger re-render via a cb
+          // Since preds is owned by parent, we call a special cb:
+          if (typeof onSelect._setPreds === "function") onSelect._setPreds(results);
+        } else {
+          const lib = await loadLocGoogle();
+          libRef.current = lib;
+          const { AutocompleteSessionToken, AutocompleteSuggestion } = lib;
+          if (!libRef._token) libRef._token = new AutocompleteSessionToken();
+          const { suggestions } = await AutocompleteSuggestion.fetchAutocompleteSuggestions({
+            input: val,
+            sessionToken: libRef._token,
+            ...(locationBias ? { locationBias } : {}),
+          });
+          setLoading(false);
+          const mapped = suggestions.filter(s => s.placePrediction).slice(0, 5).map(s => ({
+            name:     s.placePrediction.mainText.text,
+            subtitle: s.placePrediction.secondaryText?.text ?? "",
+            _data:    s,
+          }));
+          if (typeof onSelect._setPreds === "function") onSelect._setPreds(mapped);
+        }
+      } catch { setLoading(false); }
+    }, 350);
+  }
+
+  return (
+    <div style={{ position: "relative" }}>
+      <div style={{ position: "relative" }}>
+        <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: AP.muted, pointerEvents: "none", display: "flex" }}>
+          {AddGlyph.search}
+        </span>
+        <input
+          type="text"
+          value={search}
+          onChange={e => handleInput(e.target.value)}
+          placeholder="Search for a place…"
+          style={{ ...AP.input, paddingLeft: 34, paddingRight: selected ? 80 : 12 }}
+        />
+        {selected && (
+          <span style={{
+            position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)",
+            background: AP.accentSoft, color: AP.accent, fontSize: 10.5, fontWeight: 600,
+            borderRadius: 99, padding: "2px 8px", display: "inline-flex", alignItems: "center", gap: 4,
+            cursor: "pointer",
+          }} onClick={onClear}>
+            ✨ matched ×
+          </span>
+        )}
+        {loading && !selected && (
+          <span style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", color: AP.muted, fontSize: 11 }}>…</span>
+        )}
+      </div>
+      {preds.length > 0 && !selected && (
+        <div style={{
+          position: "absolute", zIndex: 50, top: "calc(100% + 4px)", left: 0, right: 0,
+          background: "#fff", border: "1px solid " + AP.border, borderRadius: 8,
+          boxShadow: "0 4px 16px rgba(0,0,0,0.10)", overflow: "hidden",
+        }}>
+          {preds.map((p, i) => (
+            <div key={i} onClick={() => onSelect(p)} style={{
+              padding: "9px 12px", cursor: "pointer", borderBottom: i < preds.length - 1 ? "1px solid " + AP.border : "none",
+              background: "#fff",
+            }}
+              onMouseEnter={e => e.currentTarget.style.background = AP.surface2}
+              onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+            >
+              <div style={{ fontSize: 13, fontWeight: 600, color: AP.text }}>{p.name}</div>
+              {p.subtitle && <div style={{ fontSize: 11.5, color: AP.muted, marginTop: 1 }}>{p.subtitle}</div>}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AddPlacePanel({
+  day, dayLabel, onAdd, onUpdate, onClose, readOnly,
+  locationBias, editItem,
+  loadLocGoogle, loadLocApple, getStoredProviderSettings: getProvSettings,
+  appleAutocomplete: appleAC, appleFetchPlaceDetails: appleFPD,
+  initialKind,
+}) {
+  const ei = editItem; // shorthand
+  const [kind, setKind]               = useState(initialKind || "eat");
+  // Place search (Stay/Eat/See) — pre-fill from editItem if editing
+  const [search, setSearch]           = useState(ei?.name || "");
+  const [preds, setPreds]             = useState([]);
+  const [selected, setSelected]       = useState(ei && ei.name ? { name: ei.name, address: ei.address || "", lat: ei.lat || null, lng: ei.lng || null } : null);
+  // Do optional place
+  const [doAttached, setDoAttached]   = useState(false);
+  const [doSearch, setDoSearch]       = useState("");
+  const [doPreds, setDoPreds]         = useState([]);
+  const [doSelected, setDoSelected]   = useState(null);
+  // Per-kind fields — pre-fill from editItem
+  const [time, setTime]               = useState(ei?.time || "");
+  const [duration, setDuration]       = useState(ei?.duration || "");
+  const [notes, setNotes]             = useState(ei?.notes || "");
+  const [tags, setTags]               = useState(ei?.tags || []);
+  const [tagInput, setTagInput]       = useState("");
+  const [confirmation, setConfirm]    = useState(ei?.confirmation || "");
+  const [partySize, setPartySize]     = useState(ei?.partySize || "");
+  const [bookedVia, setBookedVia]     = useState(ei?.bookedVia || "");
+  const [dietary, setDietary]         = useState(ei?.dietary || "");
+  const [room, setRoom]               = useState(ei?.room || "");
+  const [guests, setGuests]           = useState(ei?.guests || "");
+  const [stayLength, setStayLength]   = useState(ei?.stayLength || "");
+  const [entry, setEntry]             = useState(ei?.entry || "");
+  const [tickets, setTickets]         = useState(ei?.tickets || "");
+  const [activity, setActivity]       = useState(ei?.activity || "");
+  const [operator, setOperator]       = useState(ei?.operator || "");
+  const [cost, setCost]               = useState(ei?.cost || "");
+  const [partyDo, setPartyDo]         = useState(ei?.partyDo || "");
+  const [noteText, setNoteText]       = useState(ei?.noteText || "");
+
+  // Reset place search when kind changes
+  useEffect(() => {
+    setSearch(""); setPreds([]); setSelected(null);
+    setDoSearch(""); setDoPreds([]); setDoSelected(null);
+    setDoAttached(false);
+  }, [kind]);
+
+  // Default times per kind
+  useEffect(() => {
+    if (kind === "stay" && !time) setTime("15:00");
+    if (kind === "eat"  && !time) setTime("12:30");
+    if (kind === "see"  && !time) setTime("10:00");
+  }, [kind]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Resolve a prediction to a place detail object
+  async function resolvePred(pred, setPredsFn, setSelectedFn) {
+    setPredsFn([]);
+    try {
+      const { provider } = getProvSettings();
+      if (provider === "apple") {
+        const mk = await loadLocApple();
+        const details = await appleFPD(mk, pred._data);
+        setSelectedFn({ name: details.name, address: details.address, lat: details.lat ?? null, lng: details.lng ?? null });
+      } else {
+        const lib = await loadLocGoogle();
+        const place = pred._data.placePrediction.toPlace();
+        await place.fetchFields({ fields: ["displayName", "formattedAddress", "location"] });
+        setSelectedFn({
+          name: place.displayName ?? pred.name,
+          address: place.formattedAddress ?? "",
+          lat: place.location?.lat() ?? null,
+          lng: place.location?.lng() ?? null,
+        });
+      }
+    } catch { /* ignore */ }
+  }
+
+  // Attach _setPreds so PlaceSearchField can bubble autocomplete results up
+  const mainOnSelect = (pred) => resolvePred(pred, setPreds, setSelected);
+  mainOnSelect._setPreds = setPreds;
+  const doOnSelect = (pred) => resolvePred(pred, setDoPreds, setDoSelected);
+  doOnSelect._setPreds = setDoPreds;
+
+  function clearSelected() { setSelected(null); setPreds([]); }
+  function clearDoSelected() { setDoSelected(null); setDoPreds([]); }
+
+  function handleAdd() {
+    const item = {
+      id: ei?.id || crypto.randomUUID(),
+      name:         kind === "do" ? (activity || "Activity") : (selected?.name || search || ""),
+      address:      kind === "do" ? (doSelected?.address ?? "") : (selected?.address ?? ""),
+      lat:          kind === "do" ? (doSelected?.lat ?? null)   : (selected?.lat ?? null),
+      lng:          kind === "do" ? (doSelected?.lng ?? null)   : (selected?.lng ?? null),
+      category:     kind === "stay" ? "accommodation" : kind === "eat" ? "restaurant" : kind === "see" ? "activity" : kind === "do" ? "activity" : "other",
+      time, duration, notes: kind === "note" ? noteText : notes,
+      confirmation, partySize, bookedVia, dietary, room, guests, stayLength,
+      operator, cost, entry, tickets, activity,
+      addedAt: ei?.addedAt || new Date().toISOString(),
+    };
+    if (ei && onUpdate) {
+      onUpdate(ei.id, item);
+    } else {
+      onAdd(item);
+    }
+    onClose();
+  }
+
+  const isNote = kind === "note";
+  const isDo   = kind === "do";
+
+
+  // Notes & tags section (shared across Stay/Eat/See/Do)
+  function NotesAndTags() {
+    return (
+      <EditorSection label="Notes & tags">
+        <textarea
+          value={notes}
+          onChange={e => setNotes(e.target.value)}
+          placeholder="Add any notes…"
+          style={{ ...AP.textarea }}
+        />
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8, alignItems: "center" }}>
+          {tags.map((t, i) => (
+            <span key={i} style={{
+              background: AP.accentSoft, color: AP.accent, borderRadius: 99,
+              padding: "3px 10px", fontSize: 11.5, fontWeight: 500, display: "inline-flex", alignItems: "center", gap: 4,
+            }}>
+              {t}
+              <span style={{ cursor: "pointer", fontSize: 10 }} onClick={() => setTags(tags.filter((_, j) => j !== i))}>×</span>
+            </span>
+          ))}
+          <input
+            value={tagInput}
+            onChange={e => setTagInput(e.target.value)}
+            onKeyDown={e => {
+              if ((e.key === "Enter" || e.key === ",") && tagInput.trim()) {
+                e.preventDefault();
+                setTags([...tags, tagInput.trim()]);
+                setTagInput("");
+              }
+            }}
+            placeholder="+ tag"
+            style={{
+              background: "none", border: "1px dashed " + AP.border, borderRadius: 99,
+              padding: "3px 10px", fontSize: 11.5, color: AP.muted, fontFamily: "inherit",
+              outline: "none", minWidth: 60, cursor: "text",
+            }}
+          />
+        </div>
+      </EditorSection>
+    );
+  }
+
+  // ── Per-kind body forms ────────────────────────────────────────────────────
+
+  function StayBody() {
+    return (
+      <>
+        <EditorSection label="Place">
+          <PlaceSearchField
+            search={search} setSearch={setSearch}
+            preds={preds} onSelect={mainOnSelect}
+            selected={selected} onClear={clearSelected}
+            locationBias={locationBias}
+            loadLocGoogle={loadLocGoogle} loadLocApple={loadLocApple}
+            getStoredProviderSettings={getProvSettings}
+            appleAutocomplete={appleAC} appleFetchPlaceDetails={appleFPD}
+          />
+          {selected?.address && (
+            <div style={{ fontSize: 11.5, color: AP.muted, marginTop: 6 }}>{selected.address}</div>
+          )}
+        </EditorSection>
+        <EditorSection label="When">
+          <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+            <FieldRow label="Check-in" value={time} onChange={setTime} placeholder="15:00" half />
+            <FieldRow label="Stay length" value={stayLength} onChange={setStayLength} placeholder="3 nights" half />
+          </div>
+          {stayLength && (
+            <div style={{
+              background: AP.surface2, border: "1px solid #f5e0a0", borderRadius: 6,
+              padding: "8px 12px", display: "flex", alignItems: "center", gap: 8,
+            }}>
+              <span style={{ fontSize: 14, color: AP.amber }}>✨</span>
+              <span style={{ fontSize: 12, color: AP.muted, lineHeight: 1.4 }}>
+                Spans Day {day} → Day {day + (parseInt(stayLength) || 0)}. Will appear on each day header.
+              </span>
+            </div>
+          )}
+        </EditorSection>
+        <EditorSection label="Booking details (optional)">
+          <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+            <FieldRow label="Room" value={room} onChange={setRoom} placeholder="Suite 204" half />
+            <FieldRow label="Guests" value={guests} onChange={setGuests} placeholder="2 adults" half />
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <FieldRow label="Booked via" value={bookedVia} onChange={setBookedVia} placeholder="Booking.com" half />
+            <FieldRow label="Confirmation #" value={confirmation} onChange={setConfirm} placeholder="ABC123" mono half />
+          </div>
+        </EditorSection>
+        {NotesAndTags()}
+      </>
+    );
+  }
+
+  function EatBody() {
+    return (
+      <>
+        <EditorSection label="Place">
+          <PlaceSearchField
+            search={search} setSearch={setSearch}
+            preds={preds} onSelect={mainOnSelect}
+            selected={selected} onClear={clearSelected}
+            locationBias={locationBias}
+            loadLocGoogle={loadLocGoogle} loadLocApple={loadLocApple}
+            getStoredProviderSettings={getProvSettings}
+            appleAutocomplete={appleAC} appleFetchPlaceDetails={appleFPD}
+          />
+          {selected?.address && (
+            <div style={{ fontSize: 11.5, color: AP.muted, marginTop: 6 }}>{selected.address}</div>
+          )}
+        </EditorSection>
+        <EditorSection label="When">
+          <div style={{ display: "flex", gap: 8 }}>
+            <FieldRow label="Time" value={time} onChange={setTime} placeholder="12:30" half />
+            <FieldRow label="Duration" value={duration} onChange={setDuration} placeholder="90 min" half />
+          </div>
+        </EditorSection>
+        <EditorSection label="Reservation details (optional)">
+          <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+            <FieldRow label="Party size" value={partySize} onChange={setPartySize} placeholder="4" half />
+            <FieldRow label="Booked via" value={bookedVia} onChange={setBookedVia} placeholder="OpenTable" half />
+          </div>
+          <div style={{ marginBottom: 8 }}>
+            <FieldRow label="Confirmation" value={confirmation} onChange={setConfirm} placeholder="RES-1234" mono />
+          </div>
+          <FieldRow label="Dietary / requests" value={dietary} onChange={setDietary} placeholder="Vegetarian, window seat…" />
+        </EditorSection>
+        {NotesAndTags()}
+      </>
+    );
+  }
+
+  function SeeBody() {
+    return (
+      <>
+        <EditorSection label="Place">
+          <PlaceSearchField
+            search={search} setSearch={setSearch}
+            preds={preds} onSelect={mainOnSelect}
+            selected={selected} onClear={clearSelected}
+            locationBias={locationBias}
+            loadLocGoogle={loadLocGoogle} loadLocApple={loadLocApple}
+            getStoredProviderSettings={getProvSettings}
+            appleAutocomplete={appleAC} appleFetchPlaceDetails={appleFPD}
+          />
+          {selected?.address && (
+            <div style={{ fontSize: 11.5, color: AP.muted, marginTop: 6 }}>{selected.address}</div>
+          )}
+        </EditorSection>
+        <EditorSection label="When">
+          <div style={{ display: "flex", gap: 8 }}>
+            <FieldRow label="Time" value={time} onChange={setTime} placeholder="10:00" half />
+            <FieldRow label="Duration" value={duration} onChange={setDuration} placeholder="1h" half />
+          </div>
+        </EditorSection>
+        <EditorSection label="See details">
+          <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+            <FieldRow label="Entry" value={entry} onChange={setEntry} placeholder="Free / €12" half />
+            <FieldRow label="Tickets" value={tickets} onChange={setTickets} placeholder="Booked" half />
+          </div>
+          <FieldRow label="Confirmation" value={confirmation} onChange={setConfirm} placeholder="TKT-5678" mono />
+        </EditorSection>
+        {NotesAndTags()}
+      </>
+    );
+  }
+
+  function DoBody() {
+    return (
+      <>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 6, marginBottom: 20 }}>
+        {APP_PANEL_KINDS.map(k => (
+          <button key={k.id} onClick={() => setKind(k.id)} style={{
+            display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
+            padding: "12px 4px", borderRadius: 8, cursor: "pointer", fontFamily: "inherit",
+            fontSize: 12, fontWeight: 600, border: "1px solid",
+            background:   kind === k.id ? AP.accent      : "#fff",
+            color:        kind === k.id ? "#fff"          : AP.text,
+            borderColor:  kind === k.id ? AP.accent       : AP.border,
+            boxShadow:    kind === k.id ? `0 0 0 3px ${AP.accentSoft}` : "none",
+          }}>
+            <span style={{ opacity: kind === k.id ? 1 : 0.6 }}>{k.glyph}</span>
+            {k.label}
+          </button>
+        ))}
+      </div>
+        <EditorSection label="Activity">
+          <input
+            type="text"
+            value={activity}
+            onChange={e => setActivity(e.target.value)}
+            placeholder="What are you doing?"
+            autoFocus
+            style={{
+              ...AP.input,
+              fontSize: 14, fontWeight: 500,
+              border: activity ? `1px solid ${AP.accent}` : `1px solid ${AP.border}`,
+              boxShadow: activity ? `0 0 0 3px ${AP.accentSoft}` : "none",
+              transition: "border-color 0.15s, box-shadow 0.15s",
+            }}
+          />
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
+            {DO_QUICK_PICKS.map(pick => (
+              <button key={pick} onClick={() => setActivity(pick)} style={{
+                background: activity === pick ? AP.accentSoft : AP.surface2,
+                border: "1px solid " + (activity === pick ? AP.accent : AP.border),
+                color: activity === pick ? AP.accent : AP.muted,
+                borderRadius: 99, padding: "4px 12px", fontSize: 12, fontFamily: "inherit",
+                cursor: "pointer", fontWeight: 500,
+              }}>{pick}</button>
+            ))}
+          </div>
+        </EditorSection>
+        <EditorSection label="When">
+          <div style={{ display: "flex", gap: 8 }}>
+            <FieldRow label="Time" value={time} onChange={setTime} placeholder="—" half />
+            <FieldRow label="Duration" value={duration} onChange={setDuration} placeholder="—" half />
+          </div>
+        </EditorSection>
+        <EditorSection label="Place (optional)">
+          {!doAttached ? (
+            <button onClick={() => setDoAttached(true)} style={{
+              display: "flex", alignItems: "center", gap: 8, width: "100%",
+              background: AP.surface2, border: "1px dashed " + AP.border, borderRadius: 8,
+              padding: "10px 14px", cursor: "pointer", fontFamily: "inherit", color: AP.muted,
+              fontSize: 13,
+            }}>
+              <span style={{ color: AP.accent, fontWeight: 700, fontSize: 16 }}>+</span>
+              Attach a meeting point or venue
+            </button>
+          ) : (
+            <div>
+              <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+                <div style={{ flex: 1 }}>
+                  <PlaceSearchField
+                    search={doSearch} setSearch={setDoSearch}
+                    preds={doPreds} onSelect={doOnSelect}
+                    selected={doSelected} onClear={clearDoSelected}
+                    locationBias={locationBias}
+                    loadLocGoogle={loadLocGoogle} loadLocApple={loadLocApple}
+                    getStoredProviderSettings={getProvSettings}
+                    appleAutocomplete={appleAC} appleFetchPlaceDetails={appleFPD}
+                  />
+                </div>
+                <button onClick={() => { setDoAttached(false); clearDoSelected(); setDoSearch(""); }} style={{
+                  flexShrink: 0, background: "none", border: "1px solid " + AP.border, borderRadius: 6,
+                  padding: "10px 10px", cursor: "pointer", color: AP.muted, display: "flex", alignItems: "center",
+                }}>
+                  {AddGlyph.close}
+                </button>
+              </div>
+              {doSelected?.address && (
+                <div style={{ fontSize: 11.5, color: AP.muted, marginTop: 6 }}>{doSelected.address}</div>
+              )}
+              <div style={{ fontSize: 11.5, color: AP.muted, marginTop: 6, fontStyle: "italic" }}>
+                Optional — skip if there's no specific spot
+              </div>
+            </div>
+          )}
+        </EditorSection>
+        <EditorSection label="Details (optional)">
+          <div style={{ marginBottom: 8 }}>
+            <FieldRow label="Operator / host" value={operator} onChange={setOperator} placeholder="Name or company" />
+          </div>
+          <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+            <FieldRow label="Cost" value={cost} onChange={setCost} placeholder="€45/person" half />
+            <FieldRow label="Party / tickets" value={partyDo} onChange={setPartyDo} placeholder="2 people" half />
+          </div>
+          <FieldRow label="Confirmation" value={confirmation} onChange={setConfirm} placeholder="CONF-9999" mono />
+        </EditorSection>
+        {NotesAndTags()}
+      </>
+    );
+  }
+
+  function NoteBody() {
+    return (
+      <>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 6, marginBottom: 20 }}>
+        {APP_PANEL_KINDS.map(k => (
+          <button key={k.id} onClick={() => setKind(k.id)} style={{
+            display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
+            padding: "12px 4px", borderRadius: 8, cursor: "pointer", fontFamily: "inherit",
+            fontSize: 12, fontWeight: 600, border: "1px solid",
+            background:   kind === k.id ? AP.accent      : "#fff",
+            color:        kind === k.id ? "#fff"          : AP.text,
+            borderColor:  kind === k.id ? AP.accent       : AP.border,
+            boxShadow:    kind === k.id ? `0 0 0 3px ${AP.accentSoft}` : "none",
+          }}>
+            <span style={{ opacity: kind === k.id ? 1 : 0.6 }}>{k.glyph}</span>
+            {k.label}
+          </button>
+        ))}
+      </div>
+        <EditorSection label="Note">
+          <textarea
+            value={noteText}
+            onChange={e => setNoteText(e.target.value)}
+            placeholder="What do you want to remember?"
+            autoFocus
+            style={{ ...AP.textarea, minHeight: 120 }}
+          />
+        </EditorSection>
+      </>
+    );
+  }
+
+  // ── Panel chrome ──────────────────────────────────────────────────────────
+
+  // Icon for header
+  const kindMeta = APP_PANEL_KINDS.find(k => k.id === kind) ?? APP_PANEL_KINDS[0];
+  const headerTitle = ei ? (isDo ? "Edit activity" : "Edit place") : (isDo ? "Add activity" : "Add place");
+
+  return (
+    <div style={{
+      display: "flex", flexDirection: "column", height: "100%",
+      fontFamily: "inherit", color: AP.text, background: "#fff",
+    }}>
+      {/* Header */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 12,
+        padding: "16px 20px", borderBottom: "1px solid " + AP.border, flexShrink: 0,
+      }}>
+        <div style={{
+          width: 32, height: 32, borderRadius: 8, background: AP.accentSoft, color: AP.accent,
+          display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+        }}>
+          {kindMeta.glyph}
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 15, fontWeight: 600, color: AP.text, lineHeight: 1.2 }}>{headerTitle}</div>
+          <div style={{ fontSize: 11.5, color: AP.muted, marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {dayLabel}
+          </div>
+        </div>
+        <button onClick={onClose} style={{
+          width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center",
+          background: "none", border: "1px solid " + AP.border, borderRadius: 6,
+          cursor: "pointer", color: AP.muted, flexShrink: 0,
+        }}>
+          {AddGlyph.close}
+        </button>
+      </div>
+
+      {/* Forward strip */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 10,
+        padding: "12px 20px", background: AP.surface2, borderBottom: "1px solid " + AP.border,
+        flexShrink: 0,
+      }}>
+        <span style={{ color: AP.muted, display: "flex", flexShrink: 0 }}>{AddGlyph.forward}</span>
+        <span style={{ fontSize: 12, color: AP.muted, lineHeight: 1.4 }}>
+          Have a confirmation email? Forward to{" "}
+          <span style={{ color: AP.accent, fontWeight: 500 }}>you@in.travelitinerary.app</span>
+        </span>
+      </div>
+
+      {/* Scrollable body */}
+      <div style={{ flex: 1, overflowY: "auto", padding: "20px 20px 8px" }}>
+        {/* Kind tabs shown at top for Stay/Eat/See; Do/Note include them inline */}
+        {!isDo && !isNote && (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 6, marginBottom: 20 }}>
+            {APP_PANEL_KINDS.map(k => (
+              <button key={k.id} onClick={() => setKind(k.id)} style={{
+                display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
+                padding: "12px 4px", borderRadius: 8, cursor: "pointer", fontFamily: "inherit",
+                fontSize: 12, fontWeight: 600, border: "1px solid",
+                background:   kind === k.id ? AP.accent : "#fff",
+                color:        kind === k.id ? "#fff"    : AP.text,
+                borderColor:  kind === k.id ? AP.accent : AP.border,
+                boxShadow:    kind === k.id ? `0 0 0 3px ${AP.accentSoft}` : "none",
+              }}>
+                <span style={{ opacity: kind === k.id ? 1 : 0.6 }}>{k.glyph}</span>
+                {k.label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {kind === "stay" && StayBody()}
+        {kind === "eat"  && EatBody()}
+        {kind === "see"  && SeeBody()}
+        {kind === "do"   && DoBody()}
+        {kind === "note" && NoteBody()}
+      </div>
+
+      {/* Footer */}
+      {!readOnly && (
+        <div style={{
+          display: "flex", alignItems: "center", gap: 10,
+          padding: "14px 20px", borderTop: "1px solid " + AP.border,
+          background: AP.surface2, flexShrink: 0,
+        }}>
+          <button onClick={onClose} style={{
+            background: "none", border: "1px solid " + AP.border, color: AP.muted,
+            borderRadius: 8, padding: "8px 16px", fontSize: 13, fontFamily: "inherit",
+            cursor: "pointer", fontWeight: 500,
+          }}>
+            Cancel
+          </button>
+          <div style={{ flex: 1 }} />
+          {!isNote && (
+            <button style={{
+              display: "flex", alignItems: "center", gap: 6,
+              background: AP.surface2, border: "1px solid " + AP.border, color: AP.text,
+              borderRadius: 8, padding: "8px 14px", fontSize: 13, fontFamily: "inherit",
+              cursor: "pointer", fontWeight: 500,
+            }}>
+              {AddGlyph.bookmark}
+              {isDo ? "Save for later" : "Save to Places"}
+            </button>
+          )}
+          <button onClick={handleAdd} style={{
+            display: "flex", alignItems: "center", gap: 6,
+            background: AP.accent, border: "none", color: "#fff",
+            borderRadius: 8, padding: "8px 16px", fontSize: 13, fontFamily: "inherit",
+            cursor: "pointer", fontWeight: 600,
+          }}>
+            {AddGlyph.plus}
+            {ei ? "Save changes" : `Add to Day ${day}`}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── End AddPlacePanel ─────────────────────────────────────────────────────────
 
 export default function Itinerary() {
   const [activeTab,        setActiveTab]        = useState("itinerary");
@@ -1293,7 +2056,18 @@ export default function Itinerary() {
   // ── Add-panel helpers ──────────────────────────────────────────────────────
   function openAddPanel(day, type, subtype) {
     setMobileSheet(null);
-    setAddPanel({ day, type, subtype: subtype ?? undefined });
+    setAddPanel({ day, type, subtype: subtype ?? undefined, editItem: undefined });
+  }
+  function openEditPanel(day, item) {
+    setMobileSheet(null);
+    if (item._type === "place") {
+      const kindMap = { accommodation:"stay", restaurant:"eat", activity:"see", other:"see" };
+      const kind = kindMap[item.category] ?? "see";
+      setAddPanel({ day, type:"place", subtype: kind, editItem: item });
+    } else {
+      // Travel types — open the component panel showing the list so edit buttons are accessible
+      setAddPanel({ day, type:"travel", subtype: item._type, editItem: item });
+    }
   }
   function closeAddPanel() { setAddPanel(null); }
 
@@ -1305,11 +2079,13 @@ export default function Itinerary() {
 
   function panelTitle(panel) {
     if (!panel) return "";
-    if (panel.type === "place") return "Add place";
-    if (panel.type === "note")  return "Add note";
+    const edit = panel.editItem;
+    if (panel.type === "place") return edit ? "Edit place" : "Add place";
+    if (panel.type === "note")  return edit ? "Edit note"  : "Add note";
     if (panel.type === "travel") {
       const sub = { flight:"Flight", direction:"Drive / Transit", route:"Boating route", rentalcar:"Rental car" };
-      return panel.subtype ? sub[panel.subtype] : "Add travel";
+      const label = panel.subtype ? sub[panel.subtype] : "Travel";
+      return edit ? `Edit ${label.toLowerCase()}` : (panel.subtype ? label : "Add travel");
     }
     return "";
   }
@@ -2413,7 +3189,8 @@ export default function Itinerary() {
                           }
 
                           return (
-                            <li key={item._type + item.id} style={{ display:"flex", gap:14, position:"relative" }}>
+                            <React.Fragment key={item._type + item.id}>
+                            <li style={{ display:"flex", gap:14, position:"relative" }}>
                               {/* Time */}
                               <div style={{ width:52, flexShrink:0, textAlign:"right", paddingTop:1, fontVariantNumeric:"tabular-nums" }}>
                                 <div style={{ fontSize:12, color:"#5c6470", fontWeight:500, letterSpacing:-0.1 }}>{item._disp}</div>
@@ -2426,7 +3203,8 @@ export default function Itinerary() {
                               {/* Content */}
                               <div style={{ flex:1, minWidth:0, paddingBottom: isLast ? 0 : 14 }}>
                                 <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:8 }}>
-                                  <div style={{ flex:1, minWidth:0 }}>
+                                  <div style={{ flex:1, minWidth:0, cursor:"pointer" }}
+                                    onClick={() => openEditPanel(d.day, item)}>
                                     <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:2, flexWrap:"wrap" }}>
                                       {icon}
                                       <span style={{ fontSize:14, fontWeight:600, letterSpacing:-0.1, color:"#0e1014" }}>{title}</span>
@@ -2460,6 +3238,33 @@ export default function Itinerary() {
                                 </div>
                               </div>
                             </li>
+                            {/* Insert gap between items */}
+                            {!isLast && !readOnly && (() => {
+                              const nextItem = all[idx + 1];
+                              const suggested = (() => {
+                                const parseSort = s => {
+                                  if (!s) return null;
+                                  const mo = s.match(/^(\d{2}):(\d{2})$/);
+                                  if (!mo) return null;
+                                  return parseInt(mo[1]) * 60 + parseInt(mo[2]);
+                                };
+                                const a = parseSort(item._sort);
+                                const b = parseSort(nextItem._sort);
+                                if (a === null || b === null) return null;
+                                const mid = Math.round((a + b) / 2 / 15) * 15;
+                                const h = Math.floor(mid / 60) % 24;
+                                const mn = mid % 60;
+                                return `${String(h).padStart(2,"0")}:${String(mn).padStart(2,"0")}`;
+                              })();
+                              return (
+                                <InsertGap
+                                  key={"gap-" + idx}
+                                  suggestedTime={suggested ? fmtTime12(suggested) : undefined}
+                                  onInsert={() => openAddPanel(d.day, "place")}
+                                />
+                              );
+                            })()}
+                            </React.Fragment>
                           );
                         })}
                       </ol>
@@ -2475,18 +3280,27 @@ export default function Itinerary() {
                     ];
                     if (allItems.length > 0) return null;
                     return (
-                      <div style={{ textAlign:"center", padding:"32px 8px 20px" }}>
-                        <div style={{ width:40, height:40, borderRadius:"50%", border:"1px solid #e2e5ea",
-                          display:"flex", alignItems:"center", justifyContent:"center",
-                          margin:"0 auto 14px", color:"#9ba1ac", fontSize:20, lineHeight:1 }}>+</div>
-                        <div style={{ fontWeight:600, fontSize:15, marginBottom:6 }}>Nothing planned yet.</div>
-                        <div style={{ fontSize:13, color:"#5c6470", marginBottom:20 }}>
-                          Add a flight, a place to visit, or a note.
+                      <div style={{
+                        border:"1px dashed #e2e5ea", borderRadius:14,
+                        background:"#f8f9fb", padding:"32px 28px",
+                        display:"flex", flexDirection:"column", alignItems:"center", gap:14, textAlign:"center",
+                        marginTop:8,
+                      }}>
+                        <div style={{
+                          width:44, height:44, borderRadius:22,
+                          background:"#ffffff", border:"1px solid #e2e5ea",
+                          color:"#9ba1ac", display:"flex", alignItems:"center", justifyContent:"center",
+                        }}>{AddGlyph.plus}</div>
+                        <div>
+                          <div style={{ fontSize:15, fontWeight:600, letterSpacing:-0.2, marginBottom:4 }}>Nothing planned yet.</div>
+                          <div style={{ fontSize:12.5, color:"#5c6470", maxWidth:320 }}>
+                            Add a flight, a place to visit, or a note.
+                          </div>
                         </div>
-                        <div style={{ display:"flex", gap:8, justifyContent:"center", flexWrap:"wrap" }}>
-                          <AddTypeBtn icon="✈" label="Add travel"   sub="Flight, drive, walk…"  onClick={() => openAddPanel(d.day,"travel")} />
-                          <AddTypeBtn icon="📍" label="Add place"    sub="Stay, eat, see, do"    onClick={() => openAddPanel(d.day,"place")} />
-                          <AddTypeBtn icon="📝" label="Add note"     sub="Reminder, thought"     onClick={() => openAddPanel(d.day,"note")} />
+                        <div style={{ display:"flex", gap:8, marginTop:6, flexWrap:"wrap", justifyContent:"center" }}>
+                          <AddTypeBtn glyph={AddGlyph.flight} label="Add travel" sub="Flight, drive, walk…"  onClick={() => openAddPanel(d.day,"travel")} />
+                          <AddTypeBtn glyph={AddGlyph.pin}    label="Add place"  sub="Stay, eat, see, do"    onClick={() => openAddPanel(d.day,"place")}  accent />
+                          <AddTypeBtn glyph={AddGlyph.note}   label="Add note"   sub="Reminder, thought"     onClick={() => openAddPanel(d.day,"note")} />
                         </div>
                       </div>
                     );
@@ -2501,17 +3315,25 @@ export default function Itinerary() {
                     ];
                     if (!allItems.length) return null;
                     return (
-                      <div className="day-add-bar" style={{ gap:10, marginTop:20, paddingTop:16, borderTop:"1px solid #e2e5ea" }}>
-                        <AddTypeBtn icon="✈" label="Add travel"   sub="Flight, drive, walk…"  onClick={() => openAddPanel(d.day,"travel")} />
-                        <AddTypeBtn icon="📍" label="Add place"    sub="Stay, eat, see, do"    onClick={() => openAddPanel(d.day,"place")} />
-                        <AddTypeBtn icon="📝" label="Add note"     sub="Reminder, thought"     onClick={() => openAddPanel(d.day,"note")} />
+                      <div className="day-add-bar" style={{ gap:8, marginTop:14, padding:"4px 0 0" }}>
+                        <AddTypeBtn glyph={AddGlyph.flight} label="Add travel" sub="Flight, drive, walk…"  onClick={() => openAddPanel(d.day,"travel")} />
+                        <AddTypeBtn glyph={AddGlyph.pin}    label="Add place"  sub="Stay, eat, see, do"    onClick={() => openAddPanel(d.day,"place")} />
+                        <AddTypeBtn glyph={AddGlyph.note}   label="Add note"   sub="Reminder, thought"     onClick={() => openAddPanel(d.day,"note")} />
+                        <button title="More: import GPX, paste link, duplicate from another day" style={{
+                          width:44, display:"flex", alignItems:"center", justifyContent:"center",
+                          borderRadius:8, background:"#ffffff", border:"1px solid #e2e5ea",
+                          color:"#9ba1ac", cursor:"pointer", fontFamily:"inherit", flexShrink:0,
+                        }}>{AddGlyph.more}</button>
                       </div>
                     );
                   })()}
 
                   {/* Mobile FAB */}
                   {!readOnly && (
-                    <button className="day-add-fab" onClick={() => setMobileSheet(d.day)}>+</button>
+                    <button className="day-add-fab" onClick={() => setMobileSheet(d.day)}
+                      style={{ fontSize:"inherit", lineHeight:1 }}>
+                      {AddGlyph.plus}
+                    </button>
                   )}
 
                   {/* Claude suggestions */}
@@ -2719,20 +3541,24 @@ export default function Itinerary() {
               })()}
             </div>
             {[
-              { type:"travel", label:"Add travel", sub:"Flight, drive, walk, train, ferry",   icon:"✈" },
-              { type:"place",  label:"Add place",  sub:"Stay, eat, see, do",                  icon:"📍" },
-              { type:"note",   label:"Add note",   sub:"Reminder, thought, packing item",     icon:"📝" },
-            ].map(({ type, label, sub, icon }) => (
+              { type:"travel", label:"Add travel", sub:"Flight, drive, walk, train, ferry",   glyph:AddGlyph.flight, amber:false },
+              { type:"place",  label:"Add place",  sub:"Stay, eat, see, do",                  glyph:AddGlyph.pin,    amber:false },
+              { type:"note",   label:"Add note",   sub:"Reminder, thought, packing item",     glyph:AddGlyph.note,   amber:false },
+              { type:"paste",  label:"Paste a confirmation", sub:"Or forward to your inbox address", glyph:AddGlyph.forward, amber:true },
+            ].map(({ type, label, sub, glyph, amber }) => (
               <button key={type} className="add-sheet-row"
-                onClick={() => openAddPanel(mobileSheet, type)}>
-                <div className="add-sheet-row-icon">
-                  <span style={{ fontSize:18 }}>{icon}</span>
+                onClick={() => type === "paste" ? null : openAddPanel(mobileSheet, type)}>
+                <div className="add-sheet-row-icon" style={{
+                  background: amber ? "rgba(245,181,68,0.16)" : "#e8f1f9",
+                  color: amber ? "#f5b544" : "#0b3d6b",
+                }}>
+                  {glyph}
                 </div>
                 <div>
                   <div style={{ fontWeight:600, fontSize:15, color:"#0e1014" }}>{label}</div>
                   <div style={{ fontSize:13, color:"#5c6470", marginTop:2 }}>{sub}</div>
                 </div>
-                <span style={{ marginLeft:"auto", color:"#9ba1ac", fontSize:18 }}>›</span>
+                <span style={{ marginLeft:"auto", color:"#9ba1ac" }}>›</span>
               </button>
             ))}
           </div>
@@ -2744,8 +3570,8 @@ export default function Itinerary() {
         <>
           <div className="add-panel-backdrop" onClick={closeAddPanel} />
           <div className="add-panel">
-            {/* Header */}
-            <div className="add-panel-header">
+            {/* Header — hidden for type='place' which has its own header */}
+            <div className="add-panel-header" style={{ display: addPanel.type === "place" ? "none" : undefined }}>
               {addPanel.subtype && (
                 <button className="add-panel-back"
                   onClick={() => setAddPanel(p => ({ ...p, subtype: undefined }))}>‹</button>
@@ -2789,7 +3615,8 @@ export default function Itinerary() {
                   onUpdate={(id, u) => updateFlight(addPanel.day, id, u)}
                   onDelete={id => deleteFlight(addPanel.day, id)}
                   readOnly={readOnly} startDate={startDate} dayNum={addPanel.day}
-                  aeroDataBoxKey={settings.aeroDataBoxKey ?? ""} hideList autoOpen
+                  aeroDataBoxKey={settings.aeroDataBoxKey ?? ""}
+                  hideList={!addPanel.editItem} autoOpen={!addPanel.editItem}
                 />
               )}
               {addPanel.type === "travel" && addPanel.subtype === "direction" && (
@@ -2799,7 +3626,8 @@ export default function Itinerary() {
                   onUpdate={(id, u) => updateDirection(addPanel.day, id, u)}
                   onDelete={id => deleteDirection(addPanel.day, id)}
                   readOnly={readOnly} distanceUnit={settings.distanceUnit ?? "km"}
-                  locationBias={dayBiasFor(addPanel.day)} hideList autoOpen
+                  locationBias={dayBiasFor(addPanel.day)}
+                  hideList={!addPanel.editItem} autoOpen={!addPanel.editItem}
                 />
               )}
               {addPanel.type === "travel" && addPanel.subtype === "route" && (
@@ -2809,7 +3637,7 @@ export default function Itinerary() {
                   onUpdate={(id, u) => updateRoute(addPanel.day, id, u)}
                   onDelete={id => deleteRoute(addPanel.day, id)}
                   readOnly={readOnly} routeServerUrl={settings.routeServerUrl ?? "https://waypoint.troyhakala.com"}
-                  hideList autoOpen
+                  hideList={!addPanel.editItem} autoOpen={!addPanel.editItem}
                 />
               )}
               {addPanel.type === "travel" && addPanel.subtype === "rentalcar" && (
@@ -2818,21 +3646,39 @@ export default function Itinerary() {
                   onAdd={c => { addRentalCar(addPanel.day, c); closeAddPanel(); }}
                   onUpdate={(id, u) => updateRentalCar(addPanel.day, id, u)}
                   onDelete={id => deleteRentalCar(addPanel.day, id)}
-                  readOnly={readOnly} hideList autoOpen
+                  readOnly={readOnly}
+                  hideList={!addPanel.editItem} autoOpen={!addPanel.editItem}
                 />
               )}
 
-              {/* Place */}
-              {addPanel.type === "place" && (
-                <DayPlaces
-                  dayNum={addPanel.day}
-                  places={savedPlaces[addPanel.day] ?? []}
-                  onAdd={p => { addPlace(addPanel.day, p); closeAddPanel(); }}
-                  onUpdate={(id, u) => updatePlace(addPanel.day, id, u)}
-                  onDelete={id => deletePlace(addPanel.day, id)}
-                  readOnly={readOnly} locationBias={dayBiasFor(addPanel.day)} hideList autoOpen
-                />
-              )}
+              {/* Place — uses the new unified AddPlacePanel */}
+              {addPanel.type === "place" && (() => {
+                const pdi = getDayDate(addPanel.day);
+                const pDay = days.find(x => x.day === addPanel.day);
+                const dayLabel = [
+                  `Day ${addPanel.day}`,
+                  pdi ? `${pdi.dow} ${pdi.month} ${pdi.date}` : null,
+                  pDay?.leg ?? null,
+                ].filter(Boolean).join(" · ");
+                return (
+                  <AddPlacePanel
+                    day={addPanel.day}
+                    dayLabel={dayLabel}
+                    initialKind={addPanel.subtype || "eat"}
+                    editItem={addPanel.editItem}
+                    onAdd={p => { addPlace(addPanel.day, p); closeAddPanel(); }}
+                    onUpdate={(id, updates) => { updatePlace(addPanel.day, id, updates); closeAddPanel(); }}
+                    onClose={closeAddPanel}
+                    readOnly={readOnly}
+                    locationBias={dayBiasFor(addPanel.day)}
+                    loadLocGoogle={loadLocGoogle}
+                    loadLocApple={loadLocApple}
+                    getStoredProviderSettings={getStoredProviderSettings}
+                    appleAutocomplete={appleAutocomplete}
+                    appleFetchPlaceDetails={appleFetchPlaceDetails}
+                  />
+                );
+              })()}
 
               {/* Note */}
               {addPanel.type === "note" && (() => {

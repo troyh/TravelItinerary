@@ -15,7 +15,13 @@
       "Bash(curl -s \"http://localhost:5175/TravelItinerary/src/components/Itinerary.jsx\")",
       "Bash(pkill -f \"vite --port 517\")",
       "Bash(git stash *)",
-      "Bash(git checkout *)"
+      "Bash(git checkout *)",
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(cp \"/Users/troy/.claude/projects/-Users-troy-dev-TravelItinerary/e70a1d73-92de-4a9a-963b-d52c9766e21e/tool-results/webfetch-1779145465547-cjneho.bin\" /tmp/design.gz)",
+      "Bash(gunzip -f /tmp/design.gz)",
+      "Read(//tmp/**)",
+      "Bash(mkdir -p /tmp/design-pkg)",
+      "Bash(tar -xf /tmp/design -C /tmp/design-pkg)"
     ]
   }
 }
