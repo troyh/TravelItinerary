@@ -8,9 +8,16 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260712
 DTEND;VALUE=DATE:20260713
 SUMMARY:Day 1: Fly to UCSB
-DESCRIPTION:\nNote: TODO: get airfare July 12-14\nTODO: get hotel
+DESCRIPTION:\nNote: TODO: get hotel\n\nFlights:\n✈ as400: SEA → SBA · 909 mi (Conf: SMEPDX)
 URL:https://troyh.github.io/TravelItinerary/?i=it-a44dcfe4&day=1
 UID:day-1-20260712@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260712T160600
+DTEND:20260712T183800
+SUMMARY:✈ as400: SEA → SBA
+DESCRIPTION:Alaska Airlines · Boeing 737-800\nSeattle → Santa Barbara\nConfirmation: SMEPDX
+UID:flight-5a84feeb-c6bb-4edc-8434-3f815677b44c@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260713
@@ -24,8 +31,15 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260714
 DTEND;VALUE=DATE:20260715
 SUMMARY:Day 3: Orientation Day 2
-DESCRIPTION:\nHighlights:\n• Attend events\n• Fly home
+DESCRIPTION:\nHighlights:\n• Attend events\n• Fly home\n\nFlights:\n✈ AS400: SBA → SEA · 909 mi (Conf: SMEPDX)
 URL:https://troyh.github.io/TravelItinerary/?i=it-a44dcfe4&day=3
 UID:day-3-20260714@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260714T192800
+DTEND:20260714T220000
+SUMMARY:✈ AS400: SBA → SEA
+DESCRIPTION:Alaska Airlines · Boeing 737-800\nSanta Barbara → Seattle\nConfirmation: SMEPDX
+UID:flight-f741e40f-c63f-4ee9-9f85-dc7c01eaaaa6@travelitinerary
 END:VEVENT
 END:VCALENDAR
