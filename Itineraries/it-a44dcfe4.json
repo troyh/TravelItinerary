@@ -45,7 +45,18 @@
           "addedAt": "2026-05-18T03:12:25.713Z"
         }
       ],
-      "rentalCars": []
+      "rentalCars": [
+        {
+          "id": "b675ca79-127b-4768-b4b4-4f27a563f6e6",
+          "agency": "Hertz?",
+          "confirmation": "",
+          "pickupLocation": "SBA Airport",
+          "dropoffLocation": "SBA Airport",
+          "time": "19:00",
+          "notes": "",
+          "addedAt": "2026-05-18T20:02:30.700Z"
+        }
+      ]
     },
     {
       "leg": "Orientation Day 1",
@@ -96,10 +107,26 @@
         "Fly home"
       ],
       "note": "",
-      "places": [],
+      "places": [
+        {
+          "id": "0ce89002-9e17-48f3-8ee9-ac0e31061544",
+          "name": "UCSB Parking Lot 22",
+          "address": "22 Ocean Rd, Santa Barbara, CA 93106, United States",
+          "phone": "",
+          "website": "",
+          "placeId": "ll:34.4136225,-119.8525843",
+          "category": "other",
+          "lat": 34.4136225,
+          "lng": -119.8525843,
+          "time": "09:00",
+          "notes": "Orientation Events Begin",
+          "addedAt": "2026-05-18T20:03:48.457Z",
+          "mapsProvider": "apple"
+        }
+      ],
       "directions": [
         {
-          "id": "93ae3eee-4890-4fb8-b8ca-c0eb29413686",
+          "id": "0fe30eea-940a-4ec2-a5ca-a124660080eb",
           "origin": {
             "name": "UCSB Parking Lot 22"
           },
@@ -108,7 +135,7 @@
           },
           "travelMode": "DRIVING",
           "distance": "4.5 km",
-          "duration": "9 min",
+          "duration": "8 min",
           "summary": "",
           "originLat": 34.4136225,
           "originLng": -119.8525843,
@@ -823,9 +850,9 @@
               "duration": ""
             }
           ],
-          "time": "",
+          "time": "17:00",
           "notes": "",
-          "addedAt": "2026-05-18T20:00:10.556Z",
+          "addedAt": "2026-05-18T20:03:17.749Z",
           "mapsProvider": "apple"
         }
       ],
