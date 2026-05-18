@@ -58,7 +58,7 @@ function genId() {
 
 export default function DayFlights({
   flights, onAdd, onUpdate, onDelete,
-  readOnly = false, startDate, dayNum, aeroDataBoxKey, hideList = false,
+  readOnly = false, startDate, dayNum, aeroDataBoxKey, hideList = false, autoOpen = false,
 }) {
   const [isAdding,      setIsAdding]      = useState(false);
   const [draft,         setDraft]         = useState(BLANK);
@@ -161,6 +161,9 @@ export default function DayFlights({
     setDraft(BLANK);
     setLookupErr(null);
   }
+
+  // Open add form when autoOpen prop is set
+  useEffect(() => { if (autoOpen) setIsAdding(true); }, [autoOpen]);
 
   function handleCancel() {
     setIsAdding(false);

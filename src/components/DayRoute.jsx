@@ -115,8 +115,11 @@ const timeInputStyle = {
   cursor: "pointer", padding: 0, outline: "none", colorScheme: "dark",
 };
 
-export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly = false, routeServerUrl = "", hideList = false }) {
+export default function DayRoute({ routes, onAdd, onUpdate, onDelete, readOnly = false, routeServerUrl = "", hideList = false, autoOpen = false }) {
   const [isAdding,       setIsAdding]       = useState(false);
+
+  // Open add form when autoOpen prop is set
+  useEffect(() => { if (autoOpen) setIsAdding(true); }, [autoOpen]);
   const [fetchingRoute,  setFetchingRoute]  = useState(false);
   const [draft,          setDraft]          = useState(BLANK);
   const [editingId,      setEditingId]      = useState(null);

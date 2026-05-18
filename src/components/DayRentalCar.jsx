@@ -38,7 +38,7 @@ function genId() {
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
-export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, readOnly = false, hideList = false }) {
+export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, readOnly = false, hideList = false, autoOpen = false }) {
   const [isAdding,  setIsAdding]  = useState(false);
   const [draft,     setDraft]     = useState(BLANK);
   const [editingId, setEditingId] = useState(null);
@@ -68,7 +68,10 @@ export default function DayRentalCar({ rentalCars, onAdd, onUpdate, onDelete, re
     setDraft(BLANK);
   }
 
-  if (readOnly && rentalCars.length === 0) return null;
+  // Open add form when autoOpen prop is set
+  useEffect(() => { if (autoOpen) setIsAdding(true); }, [autoOpen]);
+
+  if (readOnly && rentalCars.length === 0) return null;  if (readOnly && rentalCars.length === 0) return null;
 
   return (
     <div style={{ marginTop: "1rem" }}>

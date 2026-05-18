@@ -84,7 +84,7 @@ function convertDistance(distStr, unit) {
   return distStr;
 }
 
-export default function DayDirections({ directions, onAdd, onUpdate, onDelete, readOnly = false, distanceUnit = "km", hideList = false, locationBias = null }) {
+export default function DayDirections({ directions, onAdd, onUpdate, onDelete, readOnly = false, distanceUnit = "km", hideList = false, locationBias = null, autoOpen = false }) {
   const { provider } = getStoredProviderSettings();
   const [apiReady,  setApiReady]  = useState(false);
   const [apiError,  setApiError]  = useState(null);
@@ -113,6 +113,9 @@ export default function DayDirections({ directions, onAdd, onUpdate, onDelete, r
   const destTokenRef   = useRef(null);
   const debounceOrigin = useRef(null);
   const debounceDest   = useRef(null);
+
+  // Open add form when autoOpen + apiReady
+  useEffect(() => { if (autoOpen && apiReady) openForm(); }, [autoOpen, apiReady]);
 
   // ── Load API ─────────────────────────────────────────────────────────
   useEffect(() => {

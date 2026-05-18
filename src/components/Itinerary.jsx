@@ -160,6 +160,23 @@ async function forwardGeocode(query) {
   } catch { return null; }
 }
 
+// ── Add-type button (used in button bar and empty state) ──────────────────
+function AddTypeBtn({ icon, label, sub, onClick }) {
+  return (
+    <button onClick={onClick} style={{
+      display:"flex", alignItems:"center", gap:10, padding:"10px 14px",
+      background:"#ffffff", border:"1px solid #e2e5ea", borderRadius:10,
+      cursor:"pointer", fontFamily:"inherit", textAlign:"left", flex:1, minWidth:120,
+    }}>
+      <span style={{ fontSize:18, lineHeight:1, flexShrink:0 }}>{icon}</span>
+      <div>
+        <div style={{ fontSize:13, fontWeight:600, color:"#0e1014" }}>{label}</div>
+        <div style={{ fontSize:11, color:"#9ba1ac", marginTop:1 }}>{sub}</div>
+      </div>
+    </button>
+  );
+}
+
 // ── Timeline time helpers ──────────────────────────────────────────────────
 
 function timeToSortKey(str) {
@@ -264,6 +281,8 @@ export default function Itinerary() {
     try { return new Set(JSON.parse(localStorage.getItem("itineraryLocked") || "[]")); }
     catch { return new Set(); }
   });
+  const [addPanel,         setAddPanel]         = useState(null);
+  const [mobileSheet,      setMobileSheet]      = useState(null);
   const [geocodingDay,     setGeocodingDay]     = useState(null);
   const [locPreds,         setLocPreds]         = useState([]);
   const [locActiveDay,     setLocActiveDay]     = useState(null);
@@ -1270,6 +1289,30 @@ export default function Itinerary() {
       return d;
     } catch { return null; }
   })();
+
+  // ── Add-panel helpers ──────────────────────────────────────────────────────
+  function openAddPanel(day, type, subtype) {
+    setMobileSheet(null);
+    setAddPanel({ day, type, subtype: subtype ?? undefined });
+  }
+  function closeAddPanel() { setAddPanel(null); }
+
+  function dayBiasFor(dayNum) {
+    const d = days.find(x => x.day === dayNum);
+    if (d?.centerLat && d?.centerLng) return { lat: d.centerLat, lng: d.centerLng };
+    return computeDayCentroid(dayNum, savedPlaces, savedFlights, savedDirections, savedRoutes);
+  }
+
+  function panelTitle(panel) {
+    if (!panel) return "";
+    if (panel.type === "place") return "Add place";
+    if (panel.type === "note")  return "Add note";
+    if (panel.type === "travel") {
+      const sub = { flight:"Flight", direction:"Drive / Transit", route:"Boating route", rentalcar:"Rental car" };
+      return panel.subtype ? sub[panel.subtype] : "Add travel";
+    }
+    return "";
+  }
 
   // ── Location autocomplete helpers ─────────────────────────────────────────
   async function fetchLocPreds(dayNum, query, bias) {
@@ -2423,56 +2466,53 @@ export default function Itinerary() {
                     );
                   })()}
 
-                  {/* Add forms (list hidden — display is in the unified timeline above) */}
-                  <DayPlaces
-                    dayNum={d.day}
-                    places={savedPlaces[d.day] ?? []}
-                    onAdd={place => addPlace(d.day, place)}
-                    onUpdate={(id, updates) => updatePlace(d.day, id, updates)}
-                    onDelete={id => deletePlace(d.day, id)}
-                    readOnly={readOnly}
-                    locationBias={dayBias}
-                    hideList
-                  />
-                  <DayDirections
-                    dayNum={d.day}
-                    directions={savedDirections[d.day] ?? []}
-                    onAdd={dir => addDirection(d.day, dir)}
-                    onUpdate={(id, updates) => updateDirection(d.day, id, updates)}
-                    onDelete={id => deleteDirection(d.day, id)}
-                    readOnly={readOnly}
-                    distanceUnit={settings.distanceUnit ?? "km"}
-                    locationBias={dayBias}
-                    hideList
-                  />
-                  <DayRoute
-                    routes={savedRoutes[d.day] ?? []}
-                    onAdd={route => addRoute(d.day, route)}
-                    onUpdate={(id, updates) => updateRoute(d.day, id, updates)}
-                    onDelete={id => deleteRoute(d.day, id)}
-                    readOnly={readOnly}
-                    routeServerUrl={settings.routeServerUrl ?? "https://waypoint.troyhakala.com"}
-                    hideList
-                  />
-                  <DayFlights
-                    flights={savedFlights[d.day] ?? []}
-                    onAdd={flight => addFlight(d.day, flight)}
-                    onUpdate={(id, updates) => updateFlight(d.day, id, updates)}
-                    onDelete={id => deleteFlight(d.day, id)}
-                    readOnly={readOnly}
-                    startDate={startDate}
-                    dayNum={d.day}
-                    aeroDataBoxKey={settings.aeroDataBoxKey ?? ""}
-                    hideList
-                  />
-                  <DayRentalCar
-                    rentalCars={savedRentalCars[d.day] ?? []}
-                    onAdd={car => addRentalCar(d.day, car)}
-                    onUpdate={(id, updates) => updateRentalCar(d.day, id, updates)}
-                    onDelete={id => deleteRentalCar(d.day, id)}
-                    readOnly={readOnly}
-                    hideList
-                  />
+                  {/* Empty state */}
+                  {!readOnly && (() => {
+                    const allItems = [
+                      ...(savedPlaces[d.day] ?? []), ...(savedFlights[d.day] ?? []),
+                      ...(savedDirections[d.day] ?? []), ...(savedRoutes[d.day] ?? []),
+                      ...(savedRentalCars[d.day] ?? []),
+                    ];
+                    if (allItems.length > 0) return null;
+                    return (
+                      <div style={{ textAlign:"center", padding:"32px 8px 20px" }}>
+                        <div style={{ width:40, height:40, borderRadius:"50%", border:"1px solid #e2e5ea",
+                          display:"flex", alignItems:"center", justifyContent:"center",
+                          margin:"0 auto 14px", color:"#9ba1ac", fontSize:20, lineHeight:1 }}>+</div>
+                        <div style={{ fontWeight:600, fontSize:15, marginBottom:6 }}>Nothing planned yet.</div>
+                        <div style={{ fontSize:13, color:"#5c6470", marginBottom:20 }}>
+                          Add a flight, a place to visit, or a note.
+                        </div>
+                        <div style={{ display:"flex", gap:8, justifyContent:"center", flexWrap:"wrap" }}>
+                          <AddTypeBtn icon="✈" label="Add travel"   sub="Flight, drive, walk…"  onClick={() => openAddPanel(d.day,"travel")} />
+                          <AddTypeBtn icon="📍" label="Add place"    sub="Stay, eat, see, do"    onClick={() => openAddPanel(d.day,"place")} />
+                          <AddTypeBtn icon="📝" label="Add note"     sub="Reminder, thought"     onClick={() => openAddPanel(d.day,"note")} />
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Add buttons bar — desktop, shown when timeline has items */}
+                  {!readOnly && (() => {
+                    const allItems = [
+                      ...(savedPlaces[d.day] ?? []), ...(savedFlights[d.day] ?? []),
+                      ...(savedDirections[d.day] ?? []), ...(savedRoutes[d.day] ?? []),
+                      ...(savedRentalCars[d.day] ?? []),
+                    ];
+                    if (!allItems.length) return null;
+                    return (
+                      <div className="day-add-bar" style={{ gap:10, marginTop:20, paddingTop:16, borderTop:"1px solid #e2e5ea" }}>
+                        <AddTypeBtn icon="✈" label="Add travel"   sub="Flight, drive, walk…"  onClick={() => openAddPanel(d.day,"travel")} />
+                        <AddTypeBtn icon="📍" label="Add place"    sub="Stay, eat, see, do"    onClick={() => openAddPanel(d.day,"place")} />
+                        <AddTypeBtn icon="📝" label="Add note"     sub="Reminder, thought"     onClick={() => openAddPanel(d.day,"note")} />
+                      </div>
+                    );
+                  })()}
+
+                  {/* Mobile FAB */}
+                  {!readOnly && (
+                    <button className="day-add-fab" onClick={() => setMobileSheet(d.day)}>+</button>
+                  )}
 
                   {/* Claude suggestions */}
                   {settings.anthropicKey && !readOnly && (
@@ -2665,6 +2705,191 @@ export default function Itinerary() {
         )}
 
       </div>
+
+      {/* ── Mobile: initial options bottom sheet ── */}
+      {mobileSheet !== null && (
+        <>
+          <div className="add-sheet-backdrop" onClick={() => setMobileSheet(null)} />
+          <div className="add-sheet">
+            <div className="add-sheet-handle" />
+            <div style={{ fontSize:15, fontWeight:600, padding:"0 20px 14px", color:"#0e1014" }}>
+              {(() => {
+                const info = getDayDate(mobileSheet);
+                return `Add to Day ${mobileSheet}${info ? ` · ${info.dow} ${info.date} ${info.month}` : ""}`;
+              })()}
+            </div>
+            {[
+              { type:"travel", label:"Add travel", sub:"Flight, drive, walk, train, ferry",   icon:"✈" },
+              { type:"place",  label:"Add place",  sub:"Stay, eat, see, do",                  icon:"📍" },
+              { type:"note",   label:"Add note",   sub:"Reminder, thought, packing item",     icon:"📝" },
+            ].map(({ type, label, sub, icon }) => (
+              <button key={type} className="add-sheet-row"
+                onClick={() => openAddPanel(mobileSheet, type)}>
+                <div className="add-sheet-row-icon">
+                  <span style={{ fontSize:18 }}>{icon}</span>
+                </div>
+                <div>
+                  <div style={{ fontWeight:600, fontSize:15, color:"#0e1014" }}>{label}</div>
+                  <div style={{ fontSize:13, color:"#5c6470", marginTop:2 }}>{sub}</div>
+                </div>
+                <span style={{ marginLeft:"auto", color:"#9ba1ac", fontSize:18 }}>›</span>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* ── Add panel (desktop: right drawer; mobile: bottom sheet) ── */}
+      {addPanel && (
+        <>
+          <div className="add-panel-backdrop" onClick={closeAddPanel} />
+          <div className="add-panel">
+            {/* Header */}
+            <div className="add-panel-header">
+              {addPanel.subtype && (
+                <button className="add-panel-back"
+                  onClick={() => setAddPanel(p => ({ ...p, subtype: undefined }))}>‹</button>
+              )}
+              <span style={{ flex:1 }}>{panelTitle(addPanel)}</span>
+              <button className="add-panel-close" onClick={closeAddPanel}>×</button>
+            </div>
+
+            {/* Body */}
+            <div className="add-panel-body">
+
+              {/* Travel: sub-selection */}
+              {addPanel.type === "travel" && !addPanel.subtype && (
+                <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+                  {[
+                    { sub:"flight",    label:"Flight",          desc:"International or domestic" },
+                    { sub:"direction", label:"Drive / Transit", desc:"Directions with a map route" },
+                    { sub:"route",     label:"Boating route",   desc:"NM, hours, departure time" },
+                    { sub:"rentalcar", label:"Rental car",      desc:"Agency, pickup, drop-off" },
+                  ].map(({ sub, label, desc }) => (
+                    <button key={sub}
+                      onClick={() => setAddPanel(p => ({ ...p, subtype: sub }))}
+                      style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 16px",
+                        background:"#f8f9fb", border:"1px solid #e2e5ea", borderRadius:10,
+                        cursor:"pointer", fontFamily:"inherit", textAlign:"left" }}>
+                      <div style={{ flex:1 }}>
+                        <div style={{ fontWeight:600, fontSize:14, color:"#0e1014" }}>{label}</div>
+                        <div style={{ fontSize:12, color:"#5c6470", marginTop:2 }}>{desc}</div>
+                      </div>
+                      <span style={{ color:"#9ba1ac", fontSize:18 }}>›</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Travel: specific forms */}
+              {addPanel.type === "travel" && addPanel.subtype === "flight" && (
+                <DayFlights
+                  flights={savedFlights[addPanel.day] ?? []}
+                  onAdd={f => { addFlight(addPanel.day, f); closeAddPanel(); }}
+                  onUpdate={(id, u) => updateFlight(addPanel.day, id, u)}
+                  onDelete={id => deleteFlight(addPanel.day, id)}
+                  readOnly={readOnly} startDate={startDate} dayNum={addPanel.day}
+                  aeroDataBoxKey={settings.aeroDataBoxKey ?? ""} hideList autoOpen
+                />
+              )}
+              {addPanel.type === "travel" && addPanel.subtype === "direction" && (
+                <DayDirections
+                  directions={savedDirections[addPanel.day] ?? []}
+                  onAdd={dir => { addDirection(addPanel.day, dir); closeAddPanel(); }}
+                  onUpdate={(id, u) => updateDirection(addPanel.day, id, u)}
+                  onDelete={id => deleteDirection(addPanel.day, id)}
+                  readOnly={readOnly} distanceUnit={settings.distanceUnit ?? "km"}
+                  locationBias={dayBiasFor(addPanel.day)} hideList autoOpen
+                />
+              )}
+              {addPanel.type === "travel" && addPanel.subtype === "route" && (
+                <DayRoute
+                  routes={savedRoutes[addPanel.day] ?? []}
+                  onAdd={r => { addRoute(addPanel.day, r); closeAddPanel(); }}
+                  onUpdate={(id, u) => updateRoute(addPanel.day, id, u)}
+                  onDelete={id => deleteRoute(addPanel.day, id)}
+                  readOnly={readOnly} routeServerUrl={settings.routeServerUrl ?? "https://waypoint.troyhakala.com"}
+                  hideList autoOpen
+                />
+              )}
+              {addPanel.type === "travel" && addPanel.subtype === "rentalcar" && (
+                <DayRentalCar
+                  rentalCars={savedRentalCars[addPanel.day] ?? []}
+                  onAdd={c => { addRentalCar(addPanel.day, c); closeAddPanel(); }}
+                  onUpdate={(id, u) => updateRentalCar(addPanel.day, id, u)}
+                  onDelete={id => deleteRentalCar(addPanel.day, id)}
+                  readOnly={readOnly} hideList autoOpen
+                />
+              )}
+
+              {/* Place */}
+              {addPanel.type === "place" && (
+                <DayPlaces
+                  dayNum={addPanel.day}
+                  places={savedPlaces[addPanel.day] ?? []}
+                  onAdd={p => { addPlace(addPanel.day, p); closeAddPanel(); }}
+                  onUpdate={(id, u) => updatePlace(addPanel.day, id, u)}
+                  onDelete={id => deletePlace(addPanel.day, id)}
+                  readOnly={readOnly} locationBias={dayBiasFor(addPanel.day)} hideList autoOpen
+                />
+              )}
+
+              {/* Note */}
+              {addPanel.type === "note" && (() => {
+                const note = customNotes[addPanel.day] !== undefined
+                  ? customNotes[addPanel.day]
+                  : (days.find(x => x.day === addPanel.day)?.note ?? "");
+                const isEditing = editingNoteDay === addPanel.day;
+                return (
+                  <div>
+                    {!readOnly ? (
+                      <>
+                        <textarea
+                          autoFocus
+                          value={isEditing ? noteDraft : note}
+                          onChange={e => {
+                            if (!isEditing) startEditNote(addPanel.day, note);
+                            setNoteDraft(e.target.value);
+                          }}
+                          onFocus={() => { if (!isEditing) startEditNote(addPanel.day, note); }}
+                          placeholder="Add a note for this day…"
+                          rows={6}
+                          style={{ width:"100%", background:"#f8f9fb", border:"1px solid #e2e5ea",
+                            color:"#0e1014", borderRadius:8, padding:".6rem .85rem", fontSize:14,
+                            fontFamily:"inherit", lineHeight:1.6, resize:"vertical",
+                            boxSizing:"border-box", outline:"none" }}
+                        />
+                        <div style={{ display:"flex", gap:8, marginTop:10 }}>
+                          <button
+                            onClick={() => { saveNote(addPanel.day); closeAddPanel(); }}
+                            style={{ background:"#0b3d6b", border:"none", color:"#fff",
+                              borderRadius:8, padding:"8px 18px", fontSize:13,
+                              fontFamily:"inherit", cursor:"pointer", fontWeight:600 }}>
+                            Save
+                          </button>
+                          <button
+                            onClick={() => { cancelEditNote(); closeAddPanel(); }}
+                            style={{ background:"none", border:"1px solid #e2e5ea", color:"#5c6470",
+                              borderRadius:8, padding:"8px 14px", fontSize:13,
+                              fontFamily:"inherit", cursor:"pointer" }}>
+                            Cancel
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <div style={{ fontSize:14, lineHeight:1.6, color:"#0e1014" }}>
+                        <NoteMarkdown>{note}</NoteMarkdown>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
+            </div>
+          </div>
+        </>
+      )}
+
     </div>
   );
 }

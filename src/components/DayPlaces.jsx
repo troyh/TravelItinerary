@@ -70,7 +70,7 @@ function detectCategory(types = []) {
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
-export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, readOnly = false, hideList = false, locationBias = null }) {
+export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, readOnly = false, hideList = false, locationBias = null, autoOpen = false }) {
   const { provider } = getStoredProviderSettings();
   // Maps API lifecycle
   const [apiReady, setApiReady] = useState(false);
@@ -92,6 +92,9 @@ export default function DayPlaces({ dayNum, places, onAdd, onUpdate, onDelete, r
 
   // Display filter
   const [activeFilter, setActiveFilter] = useState("all");
+
+  // Open search form when autoOpen prop is set (waits for apiReady via openSearch)
+  useEffect(() => { if (autoOpen && apiReady) openSearch(); }, [autoOpen, apiReady]);
 
   // ── Load Maps library once ────────────────────────────────────────────────
   useEffect(() => {
