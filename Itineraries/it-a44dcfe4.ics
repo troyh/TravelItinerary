@@ -8,7 +8,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260712
 DTEND;VALUE=DATE:20260713
 SUMMARY:Day 1: Fly to UCSB
-DESCRIPTION:\nNote: TODO: get hotel\n\nFlights:\n✈ as400: SEA → SBA · 909 mi (Conf: SMEPDX)
+DESCRIPTION:\nHighlights:\n• Get rental car\n• Drive to hotel\n\nNote: TODO: get hotel\n\nFlights:\n✈ as400: SEA → SBA · 909 mi (Conf: SMEPDX)
 URL:https://troyh.github.io/TravelItinerary/?i=it-a44dcfe4&day=1
 UID:day-1-20260712@travelitinerary
 END:VEVENT
