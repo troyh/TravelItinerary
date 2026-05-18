@@ -75,9 +75,15 @@
         /* Hide desktop standalone title (shown in mobile date row instead) */
         .day-title-desktop { display: none !important; }
       }
+      /* Hidden by default; mobile media query below reveals them */
+      .day-date-mobile { display: none; }
+
       @media (min-width: 641px) {
         .picker-settings-btn { display: none !important; }
-        .day-date-mobile { display: none !important; }
+        /* Hide compact header on desktop when day is open */
+        .day-compact-open { display: none !important; }
+        /* Show collapse button on desktop */
+        .day-collapse-btn { display: block !important; }
       }
     </style>
     <meta name="apple-mobile-web-app-capable" content="yes" />

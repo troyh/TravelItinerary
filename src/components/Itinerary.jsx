@@ -1904,8 +1904,9 @@ export default function Itinerary() {
           return (
             <div key={d.day}>
 
-              {/* ── Compact header row ── */}
-              <button onClick={()=>setClosedDays(prev => { const n = new Set(prev); n.has(d.day) ? n.delete(d.day) : n.add(d.day); return n; })} style={{
+              {/* ── Compact header row — hidden on desktop when open ── */}
+              <button className={isOpen ? "day-compact-btn day-compact-open" : "day-compact-btn"}
+                onClick={()=>setClosedDays(prev => { const n = new Set(prev); n.has(d.day) ? n.delete(d.day) : n.add(d.day); return n; })} style={{
                 width:"100%", background:"none", border:"none",
                 padding:"14px 0", cursor:"pointer",
                 display:"flex", alignItems:"center", gap:12, textAlign:"left",
@@ -1947,6 +1948,14 @@ export default function Itinerary() {
                   {/* Left: day header */}
                   <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
 
+                    {/* Collapse button (desktop only) */}
+                    <button className="day-collapse-btn"
+                      onClick={() => setClosedDays(prev => { const n = new Set(prev); n.add(d.day); return n; })}
+                      style={{ background:"none", border:"none", color:"#9ba1ac", cursor:"pointer",
+                        fontSize:11, fontFamily:"inherit", padding:0, textAlign:"left", display:"none" }}>
+                      ↑ Collapse
+                    </button>
+
                     {/* Desktop date display */}
                     <div className="day-date-desktop">
                       <div style={{ fontSize:10, fontWeight:600, letterSpacing:1.5, color:"#9ba1ac", textTransform:"uppercase", marginBottom:4 }}>
@@ -1971,7 +1980,7 @@ export default function Itinerary() {
                     </div>
 
                     {/* Mobile date + title row */}
-                    <div className="day-date-mobile" style={{ display:"none", alignItems:"flex-start", gap:12 }}>
+                    <div className="day-date-mobile" style={{ alignItems:"flex-start", gap:12 }}>
                       <div style={{
                         width:56, height:56, borderRadius:12, background:"#0b3d6b", color:"#fff",
                         display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
