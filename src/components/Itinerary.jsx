@@ -120,7 +120,6 @@ function fmtTime12(str) {
 }
 
 export default function Itinerary() {
-  const [closedDays,       setClosedDays]       = useState(() => new Set());
   const [activeTab,        setActiveTab]        = useState("itinerary");
   const [startDate,        setStartDate]        = useState(() => _db?.startDate ?? "");
   const [customHighlights, setCustomHighlights] = useState(() => _extracted.highlights);
@@ -219,7 +218,7 @@ export default function Itinerary() {
   useEffect(() => {
     setNewHighlight(""); setEditingNoteDay(null);
     setEditingCoreDay(null); setConfirmDeleteDay(null);
-  }, [closedDays]);
+  }, []);
 
   // Save to localStorage immediately on every change; GitHub is manual only.
   useEffect(() => {
@@ -317,7 +316,7 @@ export default function Itinerary() {
         setSyncStatus("synced");
         const urlDay = parseInt(new URLSearchParams(window.location.search).get("day"));
         const dayCount = data.days?.length ?? 0;
-        if (Number.isInteger(urlDay) && urlDay >= 1 && urlDay <= dayCount) setClosedDays(new Set());
+        if (Number.isInteger(urlDay) && urlDay >= 1 && urlDay <= dayCount) ;
         return;
       }
       setUrlLoad(s => ({ ...s, status: "notfound" }));
@@ -476,8 +475,7 @@ export default function Itinerary() {
     setSavedRoutes(prev => remapKeys(prev, newNum, +1));
     setSavedFlights(prev => remapKeys(prev, newNum, +1));
     setSavedRentalCars(prev => remapKeys(prev, newNum, +1));
-    setClosedDays(prev => { const n = new Set(prev); n.delete(newNum); return n; });
-  }
+    }
 
   function addBlankDay(afterDayNum) {
     const newNum = afterDayNum + 1;
@@ -492,7 +490,6 @@ export default function Itinerary() {
     setSavedRoutes(prev => remapKeys(prev, newNum, +1));
     setSavedFlights(prev => remapKeys(prev, newNum, +1));
     setSavedRentalCars(prev => remapKeys(prev, newNum, +1));
-    setClosedDays(prev => { const n = new Set(prev); n.delete(newNum); return n; });
     setEditingCoreDay(newNum);
     setCoreDraft({ leg: "New Day", overnight: "", nm: 0, hrs: 0 });
   }
@@ -507,7 +504,6 @@ export default function Itinerary() {
     setSavedRoutes(prev => remapKeys(prev, dayNum, -1));
     setSavedFlights(prev => remapKeys(prev, dayNum, -1));
     setSavedRentalCars(prev => remapKeys(prev, dayNum, -1));
-    setClosedDays(prev => prev === dayNum ? Math.max(1, dayNum - 1) : prev > dayNum ? prev - 1 : prev);
     setConfirmDeleteDay(null);
     setEditingCoreDay(null);
   }
@@ -535,11 +531,6 @@ export default function Itinerary() {
       const arr = [...prev];
       [arr[dayIdx], arr[otherIdx]] = [arr[otherIdx], arr[dayIdx]];
       return arr.map((d, i) => ({ ...d, day: i + 1 }));
-    });
-    setClosedDays(prev => {
-      if (prev === kA) return kB;
-      if (prev === kB) return kA;
-      return prev;
     });
   }
 
@@ -586,7 +577,7 @@ export default function Itinerary() {
       );
     }
     dirtyRef.current = true;
-    if (data.days?.length) setClosedDays(new Set());
+    if (data.days?.length) ;
   }
 
   function applyClaudeDaySuggestions(dayNum, data) {
@@ -644,7 +635,7 @@ export default function Itinerary() {
     dirtyRef.current = false;
     setDays([]); setSavedPlaces({}); setSavedDirections({}); setSavedRoutes({}); setSavedFlights({}); setSavedRentalCars({});
     setCustomHighlights({}); setCustomNotes({});
-    setStartDate(""); setClosedDays(new Set());
+    setStartDate(""); ;
     setTitle(name); setSubtitle(""); setItineraryNotes("");
     localStorage.removeItem("travelItinerary");
     const resolvedDbId = dbId ?? databases[0]?.id ?? null;
@@ -1641,23 +1632,15 @@ export default function Itinerary() {
 
             {/* Notes */}
             {(itineraryNotes && !editingNotes) && (
-              <div style={{ padding:"14px 16px", borderRadius:10, background:"#f8f9fb",
-                border:"1px solid #e2e5ea", display:"flex", gap:10, fontSize:13, lineHeight:1.55 }}>
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ color:"#f5b544", flexShrink:0, marginTop:1 }}>
-                  <path d="M3 2.5h7L13 5.5v8a1 1 0 01-1 1H3a1 1 0 01-1-1v-10a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
-                  <path d="M10 2.5V5h3M5 8h6M5 10.5h6M5 5.5h2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-                </svg>
-                <div style={{ flex:1, minWidth:0 }}>
-                  <div style={{ fontSize:9, fontWeight:600, letterSpacing:".12em", color:"#9ba1ac", marginBottom:4, textTransform:"uppercase" }}>Notes</div>
-                  <div style={{ color:"#0e1014" }}><NoteMarkdown>{itineraryNotes}</NoteMarkdown></div>
-                  {!readOnly && (
-                    <button onClick={() => setEditingNotes(true)}
-                      style={{ background:"none", border:"none", color:"#6b7a8a", cursor:"pointer",
-                        fontSize:11, fontFamily:"inherit", padding:0, marginTop:6 }}>
-                      Edit
-                    </button>
-                  )}
-                </div>
+              <div style={{ fontSize:13, lineHeight:1.6, color:"#0e1014" }}>
+                <NoteMarkdown>{itineraryNotes}</NoteMarkdown>
+                {!readOnly && (
+                  <button onClick={() => setEditingNotes(true)}
+                    style={{ background:"none", border:"none", color:"#9ba1ac", cursor:"pointer",
+                      fontSize:11, fontFamily:"inherit", padding:0, marginTop:4, display:"block" }}>
+                    Edit
+                  </button>
+                )}
               </div>
             )}
             {(!itineraryNotes && !readOnly && !editingNotes) && (
@@ -1778,7 +1761,7 @@ export default function Itinerary() {
                 <ul style={{ margin:0, paddingLeft:"1rem", display:"flex", flexDirection:"column", gap:4 }}>
                   {todos.map((t, i) => (
                     <li key={i}
-                      onClick={t.day != null ? () => { setClosedDays(prev => { const n = new Set(prev); n.delete(t.day); return n; }); setActiveTab("itinerary"); } : undefined}
+                      onClick={t.day != null ? () => { setActiveTab("itinerary"); } : undefined}
                       style={{ fontSize:12, color:"#0e1014", lineHeight:1.5,
                         cursor: t.day != null ? "pointer" : "default" }}>
                       {t.day != null && (
@@ -1811,13 +1794,13 @@ export default function Itinerary() {
               const info = getDayDate(d.day);
               return (
                 <div key={d.day}
-                  onClick={() => { setClosedDays(prev => { const n = new Set(prev); n.delete(d.day); return n; }); setActiveTab("itinerary"); }}
+                  onClick={() => { setActiveTab("itinerary"); }}
                   title={info ? `${d.leg} · ${info.dow}, ${info.date}` : d.leg}
                   style={{ width:32, minHeight:32, borderRadius:4, background:bg,
                     display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
                     fontSize:".6rem", color:col, cursor:"pointer", fontFamily:"inherit",
                     padding: info ? "4px 0" : 0, gap:1,
-                    border: !closedDays.has(d.day) ? "2px solid #0b3d6b" : "1px solid transparent" }}>
+                    border: "1px solid transparent" }}>
                   <span>D{d.day}</span>
                   {info && <span style={{ fontSize:".5rem", opacity:.9, lineHeight:1 }}>{info.dow}</span>}
                   {info && <span style={{ fontSize:".5rem", opacity:.7, lineHeight:1 }}>{info.date}</span>}
@@ -1886,7 +1869,7 @@ export default function Itinerary() {
               </div>
             )}
             <div style={{ textAlign: "center", marginTop: "1.25rem" }}>
-              <button onClick={() => { setDays(initialDays); setClosedDays(new Set()); }}
+              <button onClick={() => { setDays(initialDays); ; }}
                 style={{ background: "#f0f4f8", border: "1px solid #2e5070", color: "#0b3d6b",
                   borderRadius: 6, padding: ".55rem 1.5rem", fontSize: ".82rem",
                   fontFamily: "inherit", cursor: "pointer" }}>
@@ -1897,64 +1880,18 @@ export default function Itinerary() {
         )}
         {activeTab === "itinerary" && (<>
         {days.map(d => {
-          const isOpen    = !closedDays.has(d.day);
           const isLayover = effNm(d) === 0;
           const dayInfo   = getDayDate(d.day);
           const allHighlights = [...(d.highlights ?? []), ...(customHighlights[d.day] ?? [])];
           return (
             <div key={d.day}>
 
-              {/* ── Compact header row — hidden on desktop when open ── */}
-              <button className={isOpen ? "day-compact-btn day-compact-open" : "day-compact-btn"}
-                onClick={()=>setClosedDays(prev => { const n = new Set(prev); n.has(d.day) ? n.delete(d.day) : n.add(d.day); return n; })} style={{
-                width:"100%", background:"none", border:"none",
-                padding:"14px 0", cursor:"pointer",
-                display:"flex", alignItems:"center", gap:12, textAlign:"left",
-                borderBottom:`1px solid ${isOpen ? "transparent" : "#e2e5ea"}`,
-                color:"inherit", fontFamily:"inherit" }}>
-                <div style={{
-                  width:34, height:34, borderRadius:8, flexShrink:0,
-                  background: isOpen ? "#0b3d6b" : "#f0f4f8",
-                  color: isOpen ? "#fff" : "#0b3d6b",
-                  display:"flex", alignItems:"center", justifyContent:"center",
-                  fontSize:13, fontWeight:700 }}>
-                  {d.day}
-                </div>
-                <div style={{ flex:1, minWidth:0 }}>
-                  <div style={{ fontSize:14, fontWeight:600, color:"#0e1014", lineHeight:1.3 }}>
-                    {d.leg}
-                    {d.fuelStop    && <span style={{ marginLeft:6, background:"#fff7ed", color:"#d97706", fontSize:10, padding:"2px 6px", borderRadius:8, verticalAlign:"middle" }}>⛽</span>}
-                    {d.tideWarning && <span style={{ marginLeft:4, background:"#fee2e2", color:"#dc2626", fontSize:10, padding:"2px 6px", borderRadius:8, verticalAlign:"middle" }}>⚠</span>}
-                  </div>
-                  <div style={{ fontSize:12, color:"#9ba1ac", marginTop:2 }}>
-                    {!isLayover && `${effNm(d)} NM · `}{d.overnight || "Layover"}
-                  </div>
-                </div>
-                {dayInfo && (
-                  <div style={{ fontSize:11, color:"#9ba1ac", textAlign:"right", flexShrink:0, lineHeight:1.4 }}>
-                    <div style={{ fontWeight:500 }}>{dayInfo.dow} {dayInfo.date}</div>
-                    <div>{dayInfo.month}</div>
-                  </div>
-                )}
-                <span style={{ color:"#9ba1ac", fontSize:16, transform: isOpen ? "rotate(90deg)" : "none",
-                  transition:"transform 0.15s", flexShrink:0 }}>›</span>
-              </button>
-
-              {/* ── Expanded: two-column ── */}
-              {isOpen && (
+              {/* ── Day: two-column layout ── */}
                 <div className="day-expanded-grid" style={{ display:"grid", gridTemplateColumns:"180px 1fr", gap:36,
                   padding:"28px 0 36px", borderBottom:"1px solid #e2e5ea" }}>
 
                   {/* Left: day header */}
                   <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
-
-                    {/* Collapse button (desktop only) */}
-                    <button className="day-collapse-btn"
-                      onClick={() => setClosedDays(prev => { const n = new Set(prev); n.add(d.day); return n; })}
-                      style={{ background:"none", border:"none", color:"#9ba1ac", cursor:"pointer",
-                        fontSize:11, fontFamily:"inherit", padding:0, textAlign:"left", display:"none" }}>
-                      ↑ Collapse
-                    </button>
 
                     {/* Desktop date display */}
                     <div className="day-date-desktop">
@@ -2416,7 +2353,6 @@ export default function Itinerary() {
                   )}
                   </div>
                 </div>
-              )}
             </div>
           );
         })}

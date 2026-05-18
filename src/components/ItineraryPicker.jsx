@@ -249,7 +249,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
     if (d?.startDate) {
       const tripStart = parseDate(d.startDate);
       const gap = daysBetween(todayMidnight, tripStart);
-      if (gap > 0 && gap <= 90) {
+      if (gap > 0) {
         countdown = { value: gap, unit: "DAYS" };
       } else if (gap === 0) {
         countdown = { value: "Today", unit: null };
@@ -455,7 +455,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
                 {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
               </div>
               <h1 style={{ fontSize: 34, fontWeight: 700, margin: 0, letterSpacing: -0.6, color: T.text }}>
-                Itineraries
+                Trips
               </h1>
             </div>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
