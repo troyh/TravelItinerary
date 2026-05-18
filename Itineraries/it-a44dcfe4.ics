@@ -28,6 +28,13 @@ URL:https://troyh.github.io/TravelItinerary/?i=it-a44dcfe4&day=2
 UID:day-2-20260713@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260713T074500
+DTEND:20260713T084500
+SUMMARY:UCSB Parking Lot 22
+LOCATION:22 Ocean Rd\, Santa Barbara\, CA 93106\, United States
+UID:place-6466d4dd-153a-480b-8b62-f8822de0ad05@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260714
 DTEND;VALUE=DATE:20260715
 SUMMARY:Day 3: Orientation Day 2
