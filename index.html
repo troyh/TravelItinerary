@@ -54,9 +54,30 @@
       @media (max-width: 640px) {
         .picker-sidebar { display: none !important; }
         .picker-main { padding: 24px 16px 60px !important; }
+
+        /* Day view: collapse to single column */
+        .day-expanded-grid {
+          grid-template-columns: 1fr !important;
+          gap: 0 !important;
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+        }
+        .day-expanded-right {
+          border-left: none !important;
+          padding-left: 0 !important;
+          border-top: 1px solid #e2e5ea;
+          padding-top: 20px;
+          margin-top: 8px;
+        }
+        /* Show mobile date box, hide desktop large number */
+        .day-date-desktop { display: none !important; }
+        .day-date-mobile  { display: flex !important; }
+        /* Hide desktop standalone title (shown in mobile date row instead) */
+        .day-title-desktop { display: none !important; }
       }
       @media (min-width: 641px) {
         .picker-settings-btn { display: none !important; }
+        .day-date-mobile { display: none !important; }
       }
     </style>
     <meta name="apple-mobile-web-app-capable" content="yes" />

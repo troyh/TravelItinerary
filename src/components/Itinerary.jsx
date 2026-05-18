@@ -1941,32 +1941,59 @@ export default function Itinerary() {
 
               {/* ── Expanded: two-column ── */}
               {isOpen && (
-                <div style={{ display:"grid", gridTemplateColumns:"180px 1fr", gap:36,
+                <div className="day-expanded-grid" style={{ display:"grid", gridTemplateColumns:"180px 1fr", gap:36,
                   padding:"28px 0 36px", borderBottom:"1px solid #e2e5ea" }}>
 
                   {/* Left: day header */}
                   <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
-                    <div style={{ fontSize:10, fontWeight:600, letterSpacing:1.5, color:"#9ba1ac", textTransform:"uppercase" }}>
-                      Day {d.day} / {days.length}
-                    </div>
-                    {dayInfo ? (
-                      <div style={{ display:"flex", alignItems:"baseline", gap:8 }}>
-                        <div style={{ fontSize:52, fontWeight:700, color:"#0b3d6b", lineHeight:1,
-                          letterSpacing:-2, fontVariantNumeric:"tabular-nums" }}>
-                          {dayInfo.date}
-                        </div>
-                        <div>
-                          <div style={{ fontSize:13, fontWeight:600 }}>{dayInfo.dow}</div>
-                          <div style={{ fontSize:11, color:"#9ba1ac", letterSpacing:1 }}>{dayInfo.month.toUpperCase()}</div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div style={{ fontSize:44, fontWeight:700, color:"#0b3d6b", lineHeight:1, fontVariantNumeric:"tabular-nums" }}>
-                        {d.day}
-                      </div>
-                    )}
 
-                    {/* Title / edit */}
+                    {/* Desktop date display */}
+                    <div className="day-date-desktop">
+                      <div style={{ fontSize:10, fontWeight:600, letterSpacing:1.5, color:"#9ba1ac", textTransform:"uppercase", marginBottom:4 }}>
+                        Day {d.day} / {days.length}
+                      </div>
+                      {dayInfo ? (
+                        <div style={{ display:"flex", alignItems:"baseline", gap:8 }}>
+                          <div style={{ fontSize:52, fontWeight:700, color:"#0b3d6b", lineHeight:1,
+                            letterSpacing:-2, fontVariantNumeric:"tabular-nums" }}>
+                            {dayInfo.date}
+                          </div>
+                          <div>
+                            <div style={{ fontSize:13, fontWeight:600 }}>{dayInfo.dow}</div>
+                            <div style={{ fontSize:11, color:"#9ba1ac", letterSpacing:1 }}>{dayInfo.month.toUpperCase()}</div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div style={{ fontSize:44, fontWeight:700, color:"#0b3d6b", lineHeight:1, fontVariantNumeric:"tabular-nums" }}>
+                          {d.day}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Mobile date + title row */}
+                    <div className="day-date-mobile" style={{ display:"none", alignItems:"flex-start", gap:12 }}>
+                      <div style={{
+                        width:56, height:56, borderRadius:12, background:"#0b3d6b", color:"#fff",
+                        display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+                        flexShrink:0, gap:2,
+                      }}>
+                        <div style={{ fontSize:9, fontWeight:600, letterSpacing:1, opacity:.85 }}>
+                          {dayInfo?.dow?.toUpperCase() ?? `D${d.day}`}
+                        </div>
+                        <div style={{ fontSize:22, fontWeight:700, lineHeight:1, fontVariantNumeric:"tabular-nums" }}>
+                          {dayInfo?.date ?? d.day}
+                        </div>
+                      </div>
+                      <div style={{ flex:1, minWidth:0 }}>
+                        <div style={{ fontSize:10, fontWeight:600, letterSpacing:1.5, color:"#9ba1ac", textTransform:"uppercase", marginBottom:4 }}>
+                          Day {d.day} / {days.length}{dayInfo ? ` · ${dayInfo.month.toUpperCase()}` : ""}
+                        </div>
+                        <div style={{ fontSize:17, fontWeight:600, letterSpacing:-0.2, lineHeight:1.3 }}>{d.leg}</div>
+                      </div>
+                    </div>
+
+                    {/* Title / edit (hidden on mobile — shown in day-date-mobile row) */}
+                    <div className="day-title-desktop">
                     {editingCoreDay === d.day ? (
                       <div>
                         <input autoFocus value={coreDraft.leg}
@@ -2000,6 +2027,7 @@ export default function Itinerary() {
                         )}
                       </div>
                     )}
+                    </div>{/* end day-title-desktop */}
 
                     {/* Highlights */}
                     {allHighlights.length > 0 && (
@@ -2052,7 +2080,7 @@ export default function Itinerary() {
                   </div>
 
                   {/* Right: content with left border */}
-                  <div style={{ borderLeft:"1px solid #e2e5ea", paddingLeft:32, minWidth:0 }}>
+                  <div className="day-expanded-right" style={{ borderLeft:"1px solid #e2e5ea", paddingLeft:32, minWidth:0 }}>
                   {/* Captain's note */}
                   {(() => {
                     const note = customNotes[d.day] !== undefined ? customNotes[d.day] : d.note;
