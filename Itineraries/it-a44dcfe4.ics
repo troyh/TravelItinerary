@@ -8,7 +8,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260712
 DTEND;VALUE=DATE:20260713
 SUMMARY:Day 1: Fly to Santa Barbara
-DESCRIPTION:\nNote: t\n\nFlights:\n✈ undefined: undefined → undefined
+DESCRIPTION:\nNote: t\n\nFlights:\n✈ undefined: undefined → undefined\n\nRental Cars:\n🚗 undefined · Conf: 3471666875
 URL:[object Object]?i=https%3A%2F%2Ftroyh.github.io%2FTravelItinerary%2F&day=1
 UID:day-1-20260712@travelitinerary
 END:VEVENT
@@ -17,6 +17,13 @@ DTSTART:20260712T140000
 DTEND:20260712T150000
 SUMMARY:
 UID:place-3422106b-6b77-4577-89cd-91ffed08b5d7@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260712T160000
+DTEND:20260712T170000
+SUMMARY:🚗 undefined Car Rental
+DESCRIPTION:Confirmation: 3471666875\nAmex Trip reference: ZO-AX1050-68433
+UID:rental-85a6a458-bad1-4fcd-a2dd-9e5022c7c11d@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260713
