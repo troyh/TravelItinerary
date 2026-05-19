@@ -347,28 +347,43 @@ function PlaceSearchField({ search, setSearch, preds, onSelect, selected, onClea
         if (provider === "apple") {
           const mk = await loadLocApple();
           libRef.current = mk;
-          const results = await appleAC(mk, val, locationBias);
+          // Use text search so category queries ("Restaurants") work and results are location-biased
+          const opts = locationBias
+            ? { region: new mk.CoordinateRegion(new mk.Coordinate(locationBias.lat, locationBias.lng), new mk.CoordinateSpan(0.2, 0.2)) }
+            : {};
+          const results = await new Promise(resolve => {
+            new mk.Search(opts).search(val, (err, data) => {
+              if (err || !data?.places?.length) { resolve([]); return; }
+              resolve(data.places.slice(0, 20).map(p => ({
+                name:     p.name ?? "",
+                subtitle: p.formattedAddress ?? "",
+                lat:      p.coordinate?.latitude  ?? null,
+                lng:      p.coordinate?.longitude ?? null,
+              })));
+            });
+          });
           setLoading(false);
-          // results already in {name, subtitle, _data} shape from mapkit.js
-          // pass raw to onSelect handler via preds state — caller owns preds
-          // We update via a local approach: store in a ref and trigger re-render via a cb
-          // Since preds is owned by parent, we call a special cb:
           if (typeof onSelect._setPreds === "function") onSelect._setPreds(results);
         } else {
           const lib = await loadLocGoogle();
           libRef.current = lib;
-          const { AutocompleteSessionToken, AutocompleteSuggestion } = lib;
-          if (!libRef._token) libRef._token = new AutocompleteSessionToken();
-          const { suggestions } = await AutocompleteSuggestion.fetchAutocompleteSuggestions({
-            input: val,
-            sessionToken: libRef._token,
-            ...(locationBias ? { locationBias } : {}),
-          });
+          // Place.searchByText handles category searches properly and supports location bias
+          const { Place } = lib;
+          const searchOpts = {
+            textQuery: val,
+            fields: ["displayName", "formattedAddress", "location"],
+            maxResultCount: 20,
+          };
+          if (locationBias) {
+            searchOpts.locationBias = { circle: { center: { latitude: locationBias.lat, longitude: locationBias.lng }, radius: 10000 } };
+          }
+          const { places } = await Place.searchByText(searchOpts);
           setLoading(false);
-          const mapped = suggestions.filter(s => s.placePrediction).slice(0, 5).map(s => ({
-            name:     s.placePrediction.mainText.text,
-            subtitle: s.placePrediction.secondaryText?.text ?? "",
-            _data:    s,
+          const mapped = (places ?? []).slice(0, 20).map(p => ({
+            name:     p.displayName ?? "",
+            subtitle: p.formattedAddress ?? "",
+            lat:      p.location?.lat() ?? null,
+            lng:      p.location?.lng() ?? null,
           }));
           if (typeof onSelect._setPreds === "function") onSelect._setPreds(mapped);
         }
@@ -410,7 +425,7 @@ function PlaceSearchField({ search, setSearch, preds, onSelect, selected, onClea
           boxShadow: "0 4px 16px rgba(0,0,0,0.10)", overflow: "hidden",
         }}>
           {preds.map((p, i) => (
-            <div key={i} onClick={() => onSelect(p)} style={{
+            <div key={i} onClick={() => { setSearch(p.name); onSelect(p); }} style={{
               padding: "9px 12px", cursor: "pointer", borderBottom: i < preds.length - 1 ? "1px solid " + AP.border : "none",
               background: "#fff",
             }}
@@ -483,13 +498,19 @@ function AddPlacePanel({
   // Resolve a prediction to a place detail object
   async function resolvePred(pred, setPredsFn, setSelectedFn) {
     setPredsFn([]);
+    // Text-search results already carry lat/lng — use them directly
+    if (pred.lat != null && pred.lng != null) {
+      setSelectedFn({ name: pred.name, address: pred.subtitle ?? "", lat: pred.lat, lng: pred.lng });
+      return;
+    }
+    // Fallback for legacy autocomplete results that need an extra geocoding step
     try {
       const { provider } = getProvSettings();
-      if (provider === "apple") {
+      if (provider === "apple" && pred._data) {
         const mk = await loadLocApple();
         const details = await appleFPD(mk, pred._data);
         setSelectedFn({ name: details.name, address: details.address, lat: details.lat ?? null, lng: details.lng ?? null });
-      } else {
+      } else if (pred._data?.placePrediction) {
         const lib = await loadLocGoogle();
         const place = pred._data.placePrediction.toPlace();
         await place.fetchFields({ fields: ["displayName", "formattedAddress", "location"] });
@@ -3816,30 +3837,45 @@ export default function Itinerary() {
                     </div>{/* end day-title-desktop */}
 
 
-                    {/* Day notes — always-rendered textarea; readOnly gates typing so iOS focus works natively */}
+                    {/* Day notes — Markdown display when idle, textarea when editing */}
                     {(() => {
                       const note = customNotes[d.day] !== undefined ? customNotes[d.day] : (d.note || "");
                       if (readOnly && !note) return null;
                       const isEditing = !readOnly && editingNoteDay === d.day;
-                      return (
+
+                      if (isEditing) return (
                         <textarea
-                          readOnly={readOnly || !isEditing}
-                          value={isEditing ? noteDraft : note}
-                          onFocus={() => { if (!readOnly && !isEditing) startEditNote(d.day, note); }}
+                          ref={el => el && el.focus()}
+                          value={noteDraft}
                           onChange={e => setNoteDraft(e.target.value)}
-                          onBlur={e => { if (isEditing) { setCustomNotes(prev => ({ ...prev, [d.day]: e.target.value })); setEditingNoteDay(null); } }}
+                          onBlur={e => { setCustomNotes(prev => ({ ...prev, [d.day]: e.target.value })); setEditingNoteDay(null); }}
                           onKeyDown={e => { if (e.key === "Escape") cancelEditNote(); }}
                           placeholder="Add a note…"
                           className="inline-day-notes-textarea"
                           style={{ width:"100%", background:"transparent", border:"none",
-                            borderBottom: isEditing ? "1px solid #e2e5ea" : "none",
-                            color: note ? "#5c6470" : "#9ba1ac",
-                            fontStyle: (isEditing || note) ? "normal" : "italic",
+                            borderBottom:"1px solid #e2e5ea", color:"#0e1014",
                             padding:".1rem 0", fontFamily:"inherit",
                             lineHeight:1.55, boxSizing:"border-box", outline:"none",
-                            cursor: readOnly ? "default" : "text", resize:"none",
-                            flex:1, minHeight:20, overflow:"auto" }}
+                            resize:"none", flex:1, minHeight:60, overflow:"auto" }}
                         />
+                      );
+
+                      return (
+                        <div
+                          onClick={e => {
+                            if (readOnly) return;
+                            // Synchronous focus attempt so iOS raises keyboard on tap
+                            const ta = e.currentTarget.querySelector("textarea._note_ta");
+                            if (ta) ta.focus();
+                            startEditNote(d.day, note);
+                          }}
+                          style={{ flex:1, minHeight:20, cursor: readOnly ? "default" : "text" }}>
+                          {/* Hidden textarea keeps iOS focus chain alive during the click */}
+                          {!readOnly && <textarea className="_note_ta" readOnly style={{ position:"absolute", opacity:0, width:1, height:1, pointerEvents:"none" }} />}
+                          {note
+                            ? <div style={{ fontSize:12, lineHeight:1.55, color:"#5c6470" }}><NoteMarkdown>{note}</NoteMarkdown></div>
+                            : <div style={{ fontSize:12, lineHeight:1.55, color:"#9ba1ac", fontStyle:"italic" }}>Add a note…</div>}
+                        </div>
                       );
                     })()}
 
