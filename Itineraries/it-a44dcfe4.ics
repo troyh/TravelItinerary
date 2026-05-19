@@ -22,7 +22,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260713
 DTEND;VALUE=DATE:20260714
 SUMMARY:Day 2: Orientation Day 1
-DESCRIPTION:\nNote: -\n\nRental Cars:\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined
+DESCRIPTION:\nNote: -\n\nRental Cars:\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined
 URL:[object Object]?i=https%3A%2F%2Ftroyh.github.io%2FTravelItinerary%2F&day=2
 UID:day-2-20260713@travelitinerary
 END:VEVENT
@@ -33,23 +33,57 @@ SUMMARY:🚗 undefined Car Rental
 UID:rental-6466d4dd-153a-480b-8b62-f8822de0ad05@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260713T123000
-DTEND:20260713T133000
+DTSTART:20260713TNaNundefined00
+DTEND:NaNNaNNaNTNaNNaN00
 SUMMARY:🚗 undefined Car Rental
-DESCRIPTION:We can eat at some food court or place on campus
-UID:rental-16c4e052-3533-4bad-90c8-76899759f745@travelitinerary
+UID:rental-e3996ba2-1153-4a20-b256-68ea618a4705@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260713T090000
-DTEND:20260713T100000
+DTSTART:20260713T094500
+DTEND:20260713T104500
 SUMMARY:🚗 undefined Car Rental
-UID:rental-a1916642-bd4a-42a6-bd31-662a69b75b2a@travelitinerary
+DESCRIPTION:Testing a note
+UID:rental-ee488ae5-96d1-42ae-8dff-722c3af96cc5@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260713T104500
+DTEND:20260713T114500
+SUMMARY:🚗 undefined Car Rental
+DESCRIPTION:Hear directly from academic deans and college academic advisors about the academic expectations at UCSB\nPresented in both English and Spanish
+UID:rental-f7efaf23-bb7e-4d63-968e-ca94cd214fcc@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260713T124000
+DTEND:20260713T134000
+SUMMARY:🚗 undefined Car Rental
+UID:rental-a90243b1-65e3-40ed-a563-d66eacc59e2f@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260713T134500
+DTEND:20260713T144500
+SUMMARY:🚗 undefined Car Rental
+DESCRIPTION:Sessions held relating to multiple campus resources: the Education Abroad Program\, Recreation Center\, Educational Opportunity Program and more. 
+UID:rental-00a6a518-4336-4709-98fb-2bd6b40e7814@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260713T151500
+DTEND:20260713T161500
+SUMMARY:🚗 undefined Car Rental
+DESCRIPTION:Understand academic support\, financial aid\, and student health information
+UID:rental-9f6fa2c4-25bd-4e0c-aa2e-908863d957a2@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260713T164500
+DTEND:20260713T174500
+SUMMARY:🚗 undefined Car Rental
+DESCRIPTION:Plan for move-in weekend and the UCSB Housing process for freshman year and beyond
+UID:rental-0cb90434-08be-43c4-8ec9-defc99d5b3a1@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713TNaNundefined00
 DTEND:NaNNaNNaNTNaNNaN00
 SUMMARY:🚗 undefined Car Rental
-UID:rental-e3996ba2-1153-4a20-b256-68ea618a4705@travelitinerary
+UID:rental-e9a5bcff-c3f9-4cbf-b59e-2754add60b79@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260714
