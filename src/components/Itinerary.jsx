@@ -1907,8 +1907,6 @@ function AddTravelPanel({
 export default function Itinerary() {
   const [activeTab,        setActiveTab]        = useState("itinerary");
   const [startDate,        setStartDate]        = useState(() => _db?.startDate ?? "");
-  const [customHighlights, setCustomHighlights] = useState(() => _extracted.highlights);
-  const [newHighlight,     setNewHighlight]     = useState("");
   const [customNotes,      setCustomNotes]      = useState(() => _extracted.notes);
   const [editingNoteDay,   setEditingNoteDay]   = useState(null);
   const [noteDraft,        setNoteDraft]        = useState("");
@@ -2007,7 +2005,7 @@ export default function Itinerary() {
   const ghSettings = { githubToken: currentDb.githubToken ?? "", githubRepo: effectiveRepo, githubBranch: effectiveBranch };
 
   useEffect(() => {
-    setNewHighlight(""); setEditingNoteDay(null);
+    setEditingNoteDay(null);
     setEditingCoreDay(null); setConfirmDeleteDay(null);
   }, []);
 
@@ -2020,7 +2018,6 @@ export default function Itinerary() {
         const { day: _, ...rest } = d;
         return {
           ...rest,
-          highlights: customHighlights[String(d.day)] ?? d.highlights ?? [],
           note:       customNotes[String(d.day)]       ?? d.note       ?? "",
           places:     savedPlaces[String(d.day)]        ?? [],
           directions: savedDirections[String(d.day)]    ?? [],
@@ -2060,7 +2057,7 @@ export default function Itinerary() {
       setSyncStatus("unsaved");
     }
     dirtyRef.current = true;
-  }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, savedFlights, savedRentalCars, customHighlights, customNotes, startDate, title, subtitle, itineraryNotes]);
+  }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, savedFlights, savedRentalCars, customNotes, startDate, title, subtitle, itineraryNotes]);
 
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
 
@@ -2174,24 +2171,6 @@ export default function Itinerary() {
     setEditingNoteDay(null);
   }
 
-  function addHighlight(dayNum) {
-    const text = newHighlight.trim();
-    if (!text) return;
-    setCustomHighlights(prev => ({
-      ...prev,
-      [dayNum]: [...(prev[dayNum] ?? []), text],
-    }));
-    setNewHighlight("");
-    inputRef.current?.focus();
-  }
-
-  function removeHighlight(dayNum, index) {
-    setCustomHighlights(prev => ({
-      ...prev,
-      [dayNum]: prev[dayNum].filter((_, i) => i !== index),
-    }));
-  }
-
   function addPlace(dayNum, place) {
     setSavedPlaces(prev => ({ ...prev, [dayNum]: [...(prev[dayNum] ?? []), place] }));
   }
@@ -2283,17 +2262,16 @@ export default function Itinerary() {
     setDays(prev => {
       const idx = prev.findIndex(d => d.day === dayNum);
       const orig = prev[idx];
-      const copy = { ...orig, day: newNum, highlights: [...orig.highlights], tags: [...orig.tags] };
+      const copy = { ...orig, day: newNum, tags: [...orig.tags] };
       return [...prev.slice(0, idx + 1), copy, ...prev.slice(idx + 1).map(d => ({ ...d, day: d.day + 1 }))];
     });
-    setCustomHighlights(prev => { const s = remapKeys(prev, newNum, +1); if (prev[dayNum]) s[newNum] = [...prev[dayNum]]; return s; });
     setCustomNotes(prev => { const s = remapKeys(prev, newNum, +1); if (prev[dayNum] !== undefined) s[newNum] = prev[dayNum]; return s; });
-    setSavedPlaces(prev => { const s = remapKeys(prev, newNum, +1); if (prev[dayNum]) s[newNum] = prev[dayNum].map(p => ({ ...p, id: crypto.randomUUID() })); return s; });
+    setSavedPlaces(prev => remapKeys(prev, newNum, +1));
     setSavedDirections(prev => remapKeys(prev, newNum, +1));
     setSavedRoutes(prev => remapKeys(prev, newNum, +1));
     setSavedFlights(prev => remapKeys(prev, newNum, +1));
     setSavedRentalCars(prev => remapKeys(prev, newNum, +1));
-    }
+  }
 
   function addBlankDay(afterDayNum) {
     const newNum = afterDayNum + 1;
@@ -2377,11 +2355,6 @@ export default function Itinerary() {
         nm: 0, hrs: 0, highlights: [], tags: [], note: "",
       })));
     }
-    if (data.highlights) {
-      setCustomHighlights(
-        Object.fromEntries(Object.entries(data.highlights).map(([k, v]) => [Number(k), v]))
-      );
-    }
     if (data.places) {
       setSavedPlaces(
         Object.fromEntries(Object.entries(data.places).map(([k, arr]) => [
@@ -2425,7 +2398,6 @@ export default function Itinerary() {
     setSavedRoutes(x.routes);
     setSavedFlights(x.flights);
     setSavedRentalCars(x.rentalCars);
-    setCustomHighlights(x.highlights);
     setCustomNotes(x.notes);
     setStartDate(data?.startDate ?? "");
     setTitle(data?.title ?? "New Itinerary");
@@ -2493,7 +2465,6 @@ export default function Itinerary() {
           const { day: _, ...rest } = d;
           return {
             ...rest,
-            highlights: customHighlights[String(d.day)] ?? d.highlights ?? [],
             note:       customNotes[String(d.day)]       ?? d.note       ?? "",
             places:     savedPlaces[String(d.day)]        ?? [],
             directions: savedDirections[String(d.day)]    ?? [],
@@ -2538,7 +2509,6 @@ export default function Itinerary() {
         startDate, title, subtitle, itineraryNotes,
         days: days.map(d => ({
           ...d,
-          highlights: customHighlights[String(d.day)] ?? d.highlights ?? [],
           note:       customNotes[String(d.day)]       ?? d.note       ?? "",
           places:     savedPlaces[String(d.day)]        ?? [],
           directions: savedDirections[String(d.day)]    ?? [],
@@ -2617,7 +2587,7 @@ export default function Itinerary() {
     setSaveAsName("");
   }
 
-  function buildICSContent(daysArr, sd, ttl, highlights, notes, fileId, appBase,
+  function buildICSContent(daysArr, sd, ttl, _highlights, notes, fileId, appBase,
                            flights, rentalCars, savedPlaces, savedDirections, savedRoutes) {
     if (!sd || !daysArr.length) return null;
     const [sy, sm, sday] = sd.split("-").map(Number);
@@ -2670,8 +2640,6 @@ export default function Itinerary() {
       const _hrs = _rHrs > 0 ? _rHrs : d.hrs;
       if (_nm > 0) parts.push(`${_nm} NM · ~${_hrs.toFixed(1)} hrs`);
       if (d.overnight) parts.push(`Overnight: ${d.overnight}`);
-      const hl = [...(d.highlights ?? []), ...(highlights[d.day] ?? [])];
-      if (hl.length) parts.push("\nHighlights:\n" + hl.map(h => `• ${h}`).join("\n"));
       const note = notes[d.day] !== undefined ? notes[d.day] : d.note;
       if (note) parts.push(`\nNote: ${note}`);
       const fl = (flights ?? {})[d.day] ?? [];
@@ -2809,7 +2777,7 @@ export default function Itinerary() {
   }
 
   function generateICS() {
-    const content = buildICSContent(days, startDate, title, customHighlights, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase, savedFlights, savedRentalCars, savedPlaces, savedDirections, savedRoutes);
+    const content = buildICSContent(days, startDate, title, customNotes, currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase, savedFlights, savedRentalCars, savedPlaces, savedDirections, savedRoutes);
     if (!content) return;
     const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -2834,7 +2802,6 @@ export default function Itinerary() {
         const { day: _, ...rest } = d;
         return {
           ...rest,
-          highlights: customHighlights[String(d.day)] ?? d.highlights ?? [],
           note:       customNotes[String(d.day)]       ?? d.note       ?? "",
           places:     savedPlaces[String(d.day)]        ?? [],
           directions: savedDirections[String(d.day)]    ?? [],
@@ -2846,7 +2813,7 @@ export default function Itinerary() {
     };
     try {
       await saveToGitHub(data, { ...ghSettings, githubFile: currentFile, message: msg });
-      const icsContent = buildICSContent(days, startDate, title, customHighlights, customNotes,
+      const icsContent = buildICSContent(days, startDate, title, customNotes,
         currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase, savedFlights, savedRentalCars,
         savedPlaces, savedDirections, savedRoutes);
       if (icsContent) {
@@ -3717,7 +3684,6 @@ export default function Itinerary() {
         {days.map(d => {
           const isLayover = effNm(d) === 0;
           const dayInfo   = getDayDate(d.day);
-          const allHighlights = [...(d.highlights ?? []), ...(customHighlights[d.day] ?? [])];
           const dayBias   = (d.centerLat && d.centerLng)
             ? { lat: d.centerLat, lng: d.centerLng }
             : computeDayCentroid(d.day, savedPlaces, savedFlights, savedDirections, savedRoutes);
@@ -3797,46 +3763,11 @@ export default function Itinerary() {
                     )}
                     </div>{/* end day-title-desktop */}
 
-                    {/* Highlights */}
-                    {allHighlights.length > 0 && (
-                      <div style={{ fontSize:13, color:"#5c6470", fontStyle:"italic", lineHeight:1.55 }}>
-                        {allHighlights.map((h, i) => (
-                          <span key={i}>
-                            {i > 0 && " · "}
-                            {h}
-                            {!readOnly && customHighlights[d.day]?.includes(h) && (
-                              <button onClick={() => removeHighlight(d.day, customHighlights[d.day].indexOf(h))}
-                                style={{ background:"none", border:"none", color:"#9ba1ac", cursor:"pointer",
-                                  fontSize:10, padding:"0 2px", lineHeight:1, verticalAlign:"middle" }}>
-                                ×
-                              </button>
-                            )}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    {!readOnly && (
-                      <div style={{ display:"flex", gap:6 }}>
-                        <input
-                          ref={inputRef}
-                          value={newHighlight}
-                          onChange={e => setNewHighlight(e.target.value)}
-                          onKeyDown={e => e.key === "Enter" && addHighlight(d.day)}
-                          placeholder="Add highlight…"
-                          style={{ flex:1, minWidth:0, background:"#f8f9fb", border:"1px solid #e2e5ea", color:"#0e1014",
-                            borderRadius:6, padding:"5px 8px", fontSize:12, fontFamily:"inherit", outline:"none" }}
-                        />
-                        <button onClick={() => addHighlight(d.day)}
-                          style={{ background:"#f0f4f8", border:"1px solid #e2e5ea", color:"#0b3d6b",
-                            borderRadius:6, padding:"5px 10px", fontSize:12, fontFamily:"inherit", cursor:"pointer", flexShrink:0 }}>
-                          +
-                        </button>
-                      </div>
-                    )}
 
                     {/* Day notes — always-rendered textarea; readOnly gates typing so iOS focus works natively */}
                     {(() => {
                       const note = customNotes[d.day] !== undefined ? customNotes[d.day] : (d.note || "");
+                      if (readOnly && !note) return null;
                       const isEditing = !readOnly && editingNoteDay === d.day;
                       return (
                         <textarea
@@ -3859,18 +3790,6 @@ export default function Itinerary() {
                         />
                       );
                     })()}
-
-                    {/* Tags */}
-                    {(d.tags ?? []).filter(t=>tagConfig[t]).length > 0 && (
-                      <div style={{ display:"flex", flexWrap:"wrap", gap:4 }}>
-                        {(d.tags ?? []).filter(t=>tagConfig[t]).map(t => {
-                          const c = tagConfig[t];
-                          return <span key={t} style={{ fontSize:10, padding:"2px 7px", borderRadius:10,
-                            background:c.color+"22", color:c.color, border:`1px solid ${c.color}44`,
-                            letterSpacing:".06em", textTransform:"uppercase" }}>{c.label}</span>;
-                        })}
-                      </div>
-                    )}
 
                     {/* General location — auto-geocoded, user-editable */}
                     {(dayBias !== null || d.centerName) && (
