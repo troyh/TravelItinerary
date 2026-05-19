@@ -22,13 +22,13 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260713
 DTEND;VALUE=DATE:20260714
 SUMMARY:Day 2: Orientation Day 1
-DESCRIPTION:\nNote: -\n\nRental Cars:\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined
+DESCRIPTION:\nNote: -\n\nRental Cars:\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined
 URL:[object Object]?i=https%3A%2F%2Ftroyh.github.io%2FTravelItinerary%2F&day=2
 UID:day-2-20260713@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260713T074500
-DTEND:20260713T084500
+DTSTART:20260713T083000
+DTEND:20260713T093000
 SUMMARY:🚗 undefined Car Rental
 UID:rental-6466d4dd-153a-480b-8b62-f8822de0ad05@travelitinerary
 END:VEVENT
@@ -42,14 +42,13 @@ BEGIN:VEVENT
 DTSTART:20260713T094500
 DTEND:20260713T104500
 SUMMARY:🚗 undefined Car Rental
-DESCRIPTION:Testing a note
 UID:rental-ee488ae5-96d1-42ae-8dff-722c3af96cc5@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T104500
 DTEND:20260713T114500
 SUMMARY:🚗 undefined Car Rental
-DESCRIPTION:Hear directly from academic deans and college academic advisors about the academic expectations at UCSB\nPresented in both English and Spanish
+DESCRIPTION:Hear directly from academic deans and college academic advisors about the academic expectations at UCSB
 UID:rental-f7efaf23-bb7e-4d63-968e-ca94cd214fcc@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
@@ -114,6 +113,12 @@ DESCRIPTION:**Requires laptops or tablets.** Learn about course registration and
 UID:rental-1fc16621-108b-49c4-96fc-f104827c28b7@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260713T073000
+DTEND:20260713T083000
+SUMMARY:🚗 undefined Car Rental
+UID:rental-5adf9483-9041-4ab8-9d78-62a28ab21b48@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260714
 DTEND;VALUE=DATE:20260715
 SUMMARY:Day 3: Orientation Day 2
@@ -128,10 +133,9 @@ SUMMARY:
 UID:place-0fe30eea-940a-4ec2-a5ca-a124660080eb@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260714T090000
-DTEND:20260714T100000
+DTSTART:20260714T083000
+DTEND:20260714T093000
 SUMMARY:🚗 undefined Car Rental
-DESCRIPTION:Orientation Events Begin
 UID:rental-0ce89002-9e17-48f3-8ee9-ac0e31061544@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
