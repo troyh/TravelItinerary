@@ -1050,7 +1050,7 @@ function AddTravelPanel({
   day, dayLabel, onAdd, onUpdate, onClose, readOnly,
   loadLocGoogle, loadLocApple, getStoredProviderSettings,
   appleAutocomplete, appleFetchPlaceDetails,
-  routeServerUrl,
+  routeServerUrl, aeroDataBoxKey, calendarDate,
   editItem,
 }) {
   const [mode, setMode] = useState(editItem?.mode || "flight");
@@ -1155,6 +1155,56 @@ function AddTravelPanel({
         setLng(place.location?.lng() ?? null);
       }
     } catch { /* ignore */ }
+  }
+
+  const [lookupLoading, setLookupLoading] = useState(false);
+  const [lookupErr,     setLookupErr]     = useState(null);
+  const [lookupResults, setLookupResults] = useState(null); // null | array
+
+  function applyFlightResult(flight) {
+    const dep = flight.departure?.airport;
+    const arr = flight.arrival?.airport;
+    const parseLocalTime = s => {
+      if (!s) return "";
+      const t = s.includes("T") ? s.split("T")[1] : s.split(" ")[1];
+      if (!t) return "";
+      return t.slice(0, 5); // "HH:MM" — matches what <input type="time"> expects
+    };
+    setFromName((dep?.municipalityName ?? dep?.iata) || fromName);
+    setFromCode(dep?.iata ?? fromCode);
+    setToName((arr?.municipalityName ?? arr?.iata) || toName);
+    setToCode(arr?.iata ?? toCode);
+    setFromLat(dep?.location?.lat ?? fromLat);
+    setFromLng(dep?.location?.lon ?? fromLng);
+    setToLat(arr?.location?.lat ?? toLat);
+    setToLng(arr?.location?.lon ?? toLng);
+    setDepartTime(parseLocalTime(flight.departure?.scheduledTime?.local ?? ""));
+    setArriveTime(parseLocalTime(flight.arrival?.scheduledTime?.local ?? ""));
+    setAirline(flight.airline?.name ?? airline);
+    setLookupResults(null);
+    setLookupErr(null);
+  }
+
+  async function lookupFlight() {
+    const fn = flightNum.trim().replace(/\s+/g, "");
+    if (!fn) return;
+    if (!aeroDataBoxKey) { setLookupErr("Add your AeroDataBox API key in Settings → Connections."); return; }
+    const date = calendarDate || departDate;
+    if (!date) { setLookupErr("Set the itinerary departure date first."); return; }
+    setLookupLoading(true); setLookupErr(null); setLookupResults(null);
+    try {
+      const res = await fetch(
+        `https://aerodatabox.p.rapidapi.com/flights/number/${encodeURIComponent(fn)}/${date}`,
+        { headers: { "X-RapidAPI-Key": aeroDataBoxKey, "X-RapidAPI-Host": "aerodatabox.p.rapidapi.com" } }
+      );
+      if (!res.ok) { setLookupErr(`Flight not found for ${fn} on ${date}.`); return; }
+      const data = await res.json();
+      const results = (Array.isArray(data) ? data : [data]).filter(Boolean);
+      if (!results.length) { setLookupErr("No results."); return; }
+      if (results.length === 1) { applyFlightResult(results[0]); }
+      else { setLookupResults(results); }
+    } catch { setLookupErr("Lookup failed — check your API key."); }
+    finally { setLookupLoading(false); }
   }
 
   function handleSwap() {
@@ -1585,6 +1635,19 @@ function AddTravelPanel({
                 ? <><strong style={{ color: ATP.text }}>{routeDuration}</strong>{routeDuration && routeDistance ? " · " : ""}<strong style={{ color: ATP.text }}>{routeDistance}</strong></>
                 : <span style={{ color: ATP.textFaint }}>—</span>}
             </span>
+            {mode === "flight" && aeroDataBoxKey && (
+              <button
+                onClick={lookupFlight}
+                disabled={lookupLoading || !flightNum.trim()}
+                style={{
+                  background: ATP.accentSoft, border: "1px solid " + ATP.accent, borderRadius: 6,
+                  fontSize: 11.5, fontFamily: "inherit", padding: "4px 10px", cursor: "pointer",
+                  fontWeight: 600, whiteSpace: "nowrap", color: ATP.accent,
+                  opacity: !flightNum.trim() ? 0.45 : 1,
+                }}>
+                {lookupLoading ? "Looking up…" : "🔍 Look up flight"}
+              </button>
+            )}
             <button
               onClick={fetchRoute}
               disabled={routeLoading || (!fromName && !fromLat) || (!toName && !toLat)}
@@ -1602,6 +1665,63 @@ function AddTravelPanel({
                 : "🗺 Get directions"}
             </button>
           </div>
+          {/* Lookup error / multi-result picker */}
+          {lookupErr && (
+            <div style={{ marginTop: 6, fontSize: 11.5, color: ATP.red }}>{lookupErr}</div>
+          )}
+          {lookupResults && (
+            <div style={{ marginTop: 8, border: "1px solid " + ATP.border, borderRadius: 7, overflow: "hidden" }}>
+              <div style={{ ...ATP_LABEL, padding: "6px 10px", borderBottom: "1px solid " + ATP.border }}>
+                Multiple flights found — pick one
+              </div>
+              {lookupResults.map((f, i) => {
+                const dep = f.departure?.airport;
+                const arr = f.arrival?.airport;
+                const fmtT = s => { if (!s) return null; const p = s.includes("T") ? s.split("T")[1] : s.split(" ")[1]; return p?.slice(0,5) ?? null; };
+                const depTime = fmtT(f.departure?.scheduledTime?.local);
+                const arrTime = fmtT(f.arrival?.scheduledTime?.local);
+                const airline = f.airline?.name;
+                const status = f.status;
+                return (
+                  <button key={i} onClick={() => applyFlightResult(f)} style={{
+                    display: "block", width: "100%", padding: "10px 14px", background: "none",
+                    border: "none", borderBottom: i < lookupResults.length - 1 ? "1px solid " + ATP.border : "none",
+                    cursor: "pointer", fontFamily: "inherit", textAlign: "left",
+                  }}
+                    onMouseEnter={e => e.currentTarget.style.background = ATP.surface2}
+                    onMouseLeave={e => e.currentTarget.style.background = "none"}
+                  >
+                    {/* Route line */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                      <div>
+                        <span style={{ fontSize: 14, fontWeight: 700, fontFamily: "ui-monospace,monospace" }}>{dep?.iata}</span>
+                        {dep?.municipalityName && <span style={{ fontSize: 12, color: ATP.textMuted, marginLeft: 4 }}>{dep.municipalityName}</span>}
+                      </div>
+                      <span style={{ color: ATP.textFaint, fontSize: 12 }}>→</span>
+                      <div>
+                        <span style={{ fontSize: 14, fontWeight: 700, fontFamily: "ui-monospace,monospace" }}>{arr?.iata}</span>
+                        {arr?.municipalityName && <span style={{ fontSize: 12, color: ATP.textMuted, marginLeft: 4 }}>{arr.municipalityName}</span>}
+                      </div>
+                      {status && status !== "Unknown" && (
+                        <span style={{ marginLeft: "auto", fontSize: 10.5, fontWeight: 600,
+                          padding: "1px 7px", borderRadius: 4,
+                          background: status === "Arrived" ? "#f0fdf4" : status === "Departed" ? "#eff6ff" : ATP.surface2,
+                          color: status === "Arrived" ? "#16a34a" : status === "Departed" ? "#2563eb" : ATP.textMuted }}>
+                          {status}
+                        </span>
+                      )}
+                    </div>
+                    {/* Details line */}
+                    <div style={{ display: "flex", gap: 12, fontSize: 11.5, color: ATP.textMuted }}>
+                      {depTime && <span>Departs {depTime}</span>}
+                      {arrTime && <span>Arrives {arrTime}</span>}
+                      {airline && <span>· {airline}</span>}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* ── Route preview map ── */}
@@ -4349,6 +4469,13 @@ export default function Itinerary() {
               {addPanel.type === "travel" && (() => {
                 const pdi = getDayDate(addPanel.day);
                 const pDay = days.find(x => x.day === addPanel.day);
+                // Compute ISO date for this day (needed for AeroDataBox flight lookup)
+                const departDate = (() => {
+                  if (!startDate) return null;
+                  const [y, m, d0] = startDate.split("-").map(Number);
+                  const dt = new Date(y, m - 1, d0 + addPanel.day - 1);
+                  return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
+                })();
                 const dayLabel = [
                   `Day ${addPanel.day}`,
                   pdi ? `${pdi.dow} ${pdi.month} ${pdi.date}` : null,
@@ -4427,6 +4554,8 @@ export default function Itinerary() {
                     appleAutocomplete={appleAutocomplete}
                     appleFetchPlaceDetails={appleFetchPlaceDetails}
                     routeServerUrl={settings.routeServerUrl ?? "https://waypoint.troyhakala.com"}
+                    aeroDataBoxKey={settings.aeroDataBoxKey ?? ""}
+                    calendarDate={departDate}
                   />
                 );
               })()}
