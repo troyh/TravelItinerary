@@ -2,7 +2,7 @@
   "startDate": "",
   "title": "South Puget Sound Cruise",
   "subtitle": "3-day maritime adventure through Washington's scenic waterways",
-  "itineraryNotes": "???",
+  "itineraryNotes": "A cruise in the south end of Puget Sound. I've never been south of Gig Harbor and would like to go to Olympia.\n",
   "days": [
     {
       "leg": "Tacoma",
@@ -16,6 +16,9 @@
       "tideWarning": false,
       "highlights": [],
       "note": "",
+      "centerName": "Tacoma, WA, United States",
+      "centerLat": 47.2557499,
+      "centerLng": -122.4421437,
       "places": [],
       "directions": [],
       "routes": [
@@ -85,6 +88,9 @@
       "tideWarning": false,
       "highlights": [],
       "note": "",
+      "centerName": "Gig Harbor, WA, United States",
+      "centerLat": 47.3293755,
+      "centerLng": -122.5808901,
       "places": [],
       "directions": [],
       "routes": [
@@ -146,6 +152,9 @@
         "Anchor near McNeil Island for scenic views and historical perspectives"
       ],
       "note": "",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
       "places": [
         {
           "id": "f39e8a31-2631-4152-b11b-315b5e340a20",
@@ -261,9 +270,15 @@
       "highlights": [
         "Visit scenic overlooks at multiple points along the return route",
         "Experience the maritime culture and small-town charm of South Puget Sound",
-        "Witness sunset views over the water as you return to Olympia"
+        "Witness sunset views over the water as you return to Olympia",
+        "Dock your boat at Swantown Marina or nearby moorage for easy waterfront restaurant access",
+        "Stroll the Capitol Lake loop pathway after dinner for evening views and Capitol building reflections",
+        "Visit the Olympia Farmers Market (weekends) just blocks from the waterfront for local provisions"
       ],
       "note": "",
+      "centerName": "Olympia, WA, United States",
+      "centerLat": 47.0458042,
+      "centerLng": -122.8885607,
       "places": [
         {
           "id": "ea184c0a-6dac-419b-b4b3-8528ebc335f6",
@@ -311,6 +326,70 @@
           "category": "activity",
           "notes": "Shore-based walking trail near Olympia marina for stretching your legs after cruising with views of returning boat traffic.",
           "addedAt": "2026-05-15T06:28:47.554Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "fe98bb22-4995-40be-966f-027be1e2fa72",
+          "name": "Budd Bay Cafe",
+          "address": "525 Columbia St NW, Olympia, WA  98501, United States",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "restaurant",
+          "notes": "Waterfront dining with views of the Capitol Lake and marina. Serves Pacific Northwest cuisine with fresh seafood options.",
+          "addedAt": "2026-05-19T03:00:08.106Z",
+          "mapsProvider": null,
+          "lat": 47.048782,
+          "lng": -122.903923,
+          "time": "5:30pm",
+          "duration": "",
+          "confirmation": "",
+          "partySize": "",
+          "bookedVia": "",
+          "dietary": "",
+          "room": "",
+          "guests": "",
+          "stayLength": "",
+          "operator": "",
+          "cost": "",
+          "entry": "",
+          "tickets": "",
+          "activity": ""
+        },
+        {
+          "id": "7e28107c-6b6d-47e0-9671-0275b9d3460c",
+          "name": "The Waterfront at Marina Bay",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "restaurant",
+          "notes": "Casual waterfront spot near the moorage with fresh fish, clams, and local brews. Great for sunset views.",
+          "addedAt": "2026-05-19T03:00:08.106Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "5aa9813c-37e1-4ea7-9d51-074dec5d0ec0",
+          "name": "Percival Landing Public House",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "restaurant",
+          "notes": "Historic riverfront location serving craft beers and pub fare with views of the Capitol Lake and downtown Olympia.",
+          "addedAt": "2026-05-19T03:00:08.106Z",
+          "mapsProvider": null
+        },
+        {
+          "id": "cb49e9b4-72e3-48b3-9f84-8af7dbcbff31",
+          "name": "Latitude 47",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "",
+          "category": "restaurant",
+          "notes": "Farm-to-table restaurant a short walk from the waterfront, emphasizing local ingredients and Pacific Northwest flavors.",
+          "addedAt": "2026-05-19T03:00:08.106Z",
           "mapsProvider": null
         }
       ],
@@ -410,6 +489,9 @@
         "Enjoy calm June waters perfect for photography and wildlife observation"
       ],
       "note": "",
+      "centerName": "Seattle, WA, United States",
+      "centerLat": 47.6037757,
+      "centerLng": -122.3307651,
       "places": [
         {
           "id": "fcd91150-b6c2-4bcb-b492-0d4621c8b166",
