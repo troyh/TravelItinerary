@@ -4201,66 +4201,6 @@ export default function Itinerary() {
                     </div>
                   )}
 
-                  {/* Day actions */}
-                  {!readOnly && (
-                    <div style={{ marginTop:"1.25rem", paddingTop:".85rem", borderTop:"1px solid #1e3a5240",
-                      display:"flex", alignItems:"center", gap:".5rem", flexWrap:"wrap" }}>
-                      {days.length > 1 && (() => {
-                        const idx = days.findIndex(x => x.day === d.day);
-                        return (
-                          <>
-                            <button onClick={() => moveDay(idx, "up")} disabled={idx === 0}
-                              style={{ background:"#ffffff", border:"1px solid #e2e5ea", color:"#5c6470",
-                                borderRadius:4, padding:".3rem .55rem", fontSize:".82rem", fontFamily:"inherit",
-                                cursor: idx === 0 ? "not-allowed" : "pointer", opacity: idx === 0 ? 0.35 : 1 }}>
-                              ↑
-                            </button>
-                            <button onClick={() => moveDay(idx, "down")} disabled={idx === days.length - 1}
-                              style={{ background:"#ffffff", border:"1px solid #e2e5ea", color:"#5c6470",
-                                borderRadius:4, padding:".3rem .55rem", fontSize:".82rem", fontFamily:"inherit",
-                                cursor: idx === days.length - 1 ? "not-allowed" : "pointer", opacity: idx === days.length - 1 ? 0.35 : 1 }}>
-                              ↓
-                            </button>
-                          </>
-                        );
-                      })()}
-                      <button onClick={() => duplicateDay(d.day)}
-                        style={{ background:"#ffffff", border:"1px solid #e2e5ea", color:"#5c6470",
-                          borderRadius:4, padding:".3rem .75rem", fontSize:".72rem", fontFamily:"inherit", cursor:"pointer" }}>
-                        Duplicate day
-                      </button>
-                      <button onClick={() => addBlankDay(d.day)}
-                        style={{ background:"#ffffff", border:"1px solid #e2e5ea", color:"#5c6470",
-                          borderRadius:4, padding:".3rem .75rem", fontSize:".72rem", fontFamily:"inherit", cursor:"pointer" }}>
-                        Insert day after
-                      </button>
-                      <div style={{ marginLeft:"auto", display:"flex", alignItems:"center", gap:".5rem" }}>
-                        {confirmDeleteDay === d.day ? (
-                          <>
-                            <span style={{ fontSize:".72rem", color:"#dc2626", fontFamily:"inherit" }}>Delete Day {d.day}?</span>
-                            <button onClick={() => removeDay(d.day)}
-                              style={{ background:"#fef2f2", border:"1px solid #dc354566", color:"#dc2626",
-                                borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"inherit", cursor:"pointer" }}>
-                              Yes, delete
-                            </button>
-                            <button onClick={() => setConfirmDeleteDay(null)}
-                              style={{ background:"none", border:"1px solid #2e3a4a", color:"#6b7a8a",
-                                borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"inherit", cursor:"pointer" }}>
-                              Cancel
-                            </button>
-                          </>
-                        ) : (
-                          <button onClick={() => setConfirmDeleteDay(d.day)} disabled={days.length <= 1}
-                            style={{ background:"none", border:"1px solid #3a1a1a",
-                              color: days.length <= 1 ? "#3d2020" : "#7a3838",
-                              borderRadius:4, padding:".3rem .65rem", fontSize:".72rem", fontFamily:"inherit",
-                              cursor: days.length <= 1 ? "not-allowed" : "pointer" }}>
-                            Delete day
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  )}
                   </div>
                 </div>
             </div>
