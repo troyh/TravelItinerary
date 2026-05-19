@@ -32,11 +32,18 @@ URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=3
 UID:day-3-20260704@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260704T123000
+DTEND:20260704T133000
+SUMMARY:False Bay
+LOCATION:British Columbia\, Canada
+UID:place-d81d6017-9403-436a-b1d4-b980d12db466@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260705
 DTEND;VALUE=DATE:20260706
 SUMMARY:Day 4: Vancouver → Princess Louisa Inlet
 LOCATION:Princess Louisa Marine Provincial Park (anchor / stern-tie)
-DESCRIPTION:Overnight: Princess Louisa Marine Provincial Park (anchor / stern-tie)\n\nHighlights:\n• Depart Vancouver early — Howe Sound is glassy in the morning before sea breeze fills in\n• North up the Strait of Georgia via Malaspina Strait into Jervis Inlet\n• Jervis Inlet is one of the great fjords of BC — 800m deep\, walls rising to snow\, waterfalls everywhere\n• Time your arrival at Malibu Rapids to the exact slack using XTide\, Navionics\, or the CHS app\n• Anchor inside Princess Louisa Marine Provincial Park — stern-tie rings at the park dock near Chatterbox Falls\n\nNote: Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window.\n\nTODO: Figure out if I’m okay for stern-tying\nTODO: Is the dock there still under construction?
+DESCRIPTION:88.3 NM · ~5.9 hrs\nOvernight: Princess Louisa Marine Provincial Park (anchor / stern-tie)\n\nHighlights:\n• Depart Vancouver early — Howe Sound is glassy in the morning before sea breeze fills in\n• North up the Strait of Georgia via Malaspina Strait into Jervis Inlet\n• Jervis Inlet is one of the great fjords of BC — 800m deep\, walls rising to snow\, waterfalls everywhere\n• Time your arrival at Malibu Rapids to the exact slack using XTide\, Navionics\, or the CHS app\n• Anchor inside Princess Louisa Marine Provincial Park — stern-tie rings at the park dock near Chatterbox Falls\n\nNote: Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window.\n\nTODO: Figure out if I’m okay for stern-tying\nTODO: Is the dock there still under construction?
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=4
 UID:day-4-20260705@travelitinerary
 END:VEVENT
@@ -54,7 +61,7 @@ DTSTART;VALUE=DATE:20260707
 DTEND;VALUE=DATE:20260708
 SUMMARY:Day 6: Princess Louisa → Prideaux Haven (Desolation Sound)
 LOCATION:Prideaux Haven\, Desolation Sound Marine Park
-DESCRIPTION:81.5 NM · ~5.4 hrs\nOvernight: Prideaux Haven\, Desolation Sound Marine Park\n\nHighlights:\n• Exit Malibu at slack tide\, then north through Agamemnon Channel\n• Optional Powell River stopover: bakery\, fuel top-off\, provisions if needed\n• Desolation Sound has the warmest sea water north of Mexico — July temps hit 24°C (75°F)\n• Prideaux Haven: a maze of islets and coves with stern-tie rings throughout the marine park\n• Kayak the labyrinth in the evening light — among BC's finest anchorages\n\nNote: Prideaux fills fast in July — arrive by early afternoon. Tenedos Bay (adjacent) is an excellent overflow anchorage.
+DESCRIPTION:80.6 NM · ~5.4 hrs\nOvernight: Prideaux Haven\, Desolation Sound Marine Park\n\nHighlights:\n• Exit Malibu at slack tide\, then north through Agamemnon Channel\n• Optional Powell River stopover: bakery\, fuel top-off\, provisions if needed\n• Desolation Sound has the warmest sea water north of Mexico — July temps hit 24°C (75°F)\n• Prideaux Haven: a maze of islets and coves with stern-tie rings throughout the marine park\n• Kayak the labyrinth in the evening light — among BC's finest anchorages\n\nNote: Prideaux fills fast in July — arrive by early afternoon. Tenedos Bay (adjacent) is an excellent overflow anchorage.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=6
 UID:day-6-20260707@travelitinerary
 END:VEVENT
@@ -72,7 +79,7 @@ DTSTART;VALUE=DATE:20260709
 DTEND;VALUE=DATE:20260710
 SUMMARY:Day 8: Desolation Sound → Campbell River (fuel) → Port Neville
 LOCATION:Port Neville anchorage or Thurston Bay Marine Park
-DESCRIPTION:61 NM · ~4.1 hrs\nOvernight: Port Neville anchorage or Thurston Bay Marine Park\n\nHighlights:\n• Depart Desolation early (7am) — arrive Campbell River ~10:30am at 15 kts for fuel and a quick stretch\n• Fuel at Discovery Harbour Marina and grab provisions — no overnight here\n• Time departure from Campbell River to hit Seymour Narrows at slack (5 NM north)\n• Once through the Narrows\, the worst is behind you — beautiful Johnstone Strait opens up\n• Port Neville: remote\, peaceful anchorage at the mouth of a long inlet — excellent crabbing and prawning\n\nNote: This is a coordinated day: depart Desolation early\, fuel Campbell River at ~10:30am\, Seymour Narrows at slack midday\, anchor Port Neville by mid-afternoon. At 15 kts this is ~7.5 hrs total but the Narrows wait may be built in. Brief lunch at Campbell River fuel dock.
+DESCRIPTION:69.6 NM · ~4.6 hrs\nOvernight: Port Neville anchorage or Thurston Bay Marine Park\n\nHighlights:\n• Depart Desolation early (7am) — arrive Campbell River ~10:30am at 15 kts for fuel and a quick stretch\n• Fuel at Discovery Harbour Marina and grab provisions — no overnight here\n• Time departure from Campbell River to hit Seymour Narrows at slack (5 NM north)\n• Once through the Narrows\, the worst is behind you — beautiful Johnstone Strait opens up\n• Port Neville: remote\, peaceful anchorage at the mouth of a long inlet — excellent crabbing and prawning\n\nNote: This is a coordinated day: depart Desolation early\, fuel Campbell River at ~10:30am\, Seymour Narrows at slack midday\, anchor Port Neville by mid-afternoon. At 15 kts this is ~7.5 hrs total but the Narrows wait may be built in. Brief lunch at Campbell River fuel dock.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=8
 UID:day-8-20260709@travelitinerary
 END:VEVENT
@@ -81,7 +88,7 @@ DTSTART;VALUE=DATE:20260710
 DTEND;VALUE=DATE:20260711
 SUMMARY:Day 9: Port Neville → Telegraph Cove
 LOCATION:Telegraph Cove Marina or nearby anchorage
-DESCRIPTION:57 NM · ~3.8 hrs\nOvernight: Telegraph Cove Marina or nearby anchorage\n\nHighlights:\n• Easy run through Johnstone Strait — one of the world's premier orca corridors\n• July is peak resident orca season — scan constantly\, pods are frequently sighted\n• Humpbacks\, minkes\, Steller sea lions\, and Dall's porpoises common throughout Johnstone Strait\n• Telegraph Cove: charming historic boardwalk fishing village\, great for a walk and lunch ashore\n• Stubbs Island Whale Watching runs expert-guided orca tours from the dock if you want a guaranteed experience\n• Peak whale-watching season—orcas and humpbacks actively feed in nearby Broughton Strait\n• Authentic 1920s cannery village atmosphere\; one of BC's best-preserved maritime heritage sites\n• Remote Inside Passage location offering pristine wilderness and solitude\n\nNote: Relaxed day after yesterday's long push. Take your time through Johnstone Strait — the orca viewing here is as good as it gets on the BC coast.
+DESCRIPTION:29 NM · ~1.9 hrs\nOvernight: Telegraph Cove Marina or nearby anchorage\n\nHighlights:\n• Peak whale-watching season—orcas and humpbacks actively feed in nearby Broughton Strait\n• Authentic 1920s cannery village atmosphere\; one of BC's best-preserved maritime heritage sites\n• Remote Inside Passage location offering pristine wilderness and solitude\n\nNote: Relaxed day after yesterday's long push. Take your time through Johnstone Strait — the orca viewing here is as good as it gets on the BC coast.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=9
 UID:day-9-20260710@travelitinerary
 END:VEVENT
@@ -90,7 +97,7 @@ DTSTART;VALUE=DATE:20260711
 DTEND;VALUE=DATE:20260712
 SUMMARY:Day 10: Telegraph Cove → Broughtons / Lagoon Cove
 LOCATION:Lagoon Cove Marina\, East Cracroft Island
-DESCRIPTION:257.7 NM · ~17.2 hrs\nOvernight: Lagoon Cove Marina\, East Cracroft Island\n\nHighlights:\n• Short run — arrive Lagoon Cove by late morning\, get settled before the afternoon action\n• Fuel at Lagoon Cove Marina — one of the most beloved stops in the Pacific Northwest\n• Explore the Broughton Archipelago by kayak or dinghy from the marina — countless channels to explore\n• Orca sightings are frequent in this area in July — ask Kelly & Dan for current reports\n• Book Knight Inlet grizzly tour for tomorrow if you haven't already\n• Exceptional marine wildlife viewing—some of BC's best orca encounter rates in July\n• Pristine\, sheltered anchorage in a true wilderness setting with minimal crowds\n• Gateway to explore remote fjords and First Nations cultural heritage\n• Ideal for kayaking\, hiking\, and nature photography in old-growth forests\n\nNote: Arriving early gives you the afternoon to explore and get oriented. Tonight: Kelly & Dan's famous prawn potluck — they supply the prawns\, you bring an appetizer. Unmissable.
+DESCRIPTION:257.7 NM · ~17.2 hrs\nOvernight: Lagoon Cove Marina\, East Cracroft Island\n\nHighlights:\n• Exceptional marine wildlife viewing—some of BC's best orca encounter rates in July\n• Pristine\, sheltered anchorage in a true wilderness setting with minimal crowds\n• Gateway to explore remote fjords and First Nations cultural heritage\n• Ideal for kayaking\, hiking\, and nature photography in old-growth forests\n\nNote: Arriving early gives you the afternoon to explore and get oriented. Tonight: Kelly & Dan's famous prawn potluck — they supply the prawns\, you bring an appetizer. Unmissable.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=10
 UID:day-10-20260711@travelitinerary
 END:VEVENT
@@ -124,7 +131,7 @@ DTSTART;VALUE=DATE:20260714
 DTEND;VALUE=DATE:20260715
 SUMMARY:Day 13: Blind Channel → Squirrel Cove (Cortes Island)
 LOCATION:Squirrel Cove\, Cortes Island
-DESCRIPTION:35.9 NM · ~2.4 hrs\nOvernight: Squirrel Cove\, Cortes Island\n\nHighlights:\n• Squirrel Cove: a classic\, well-sheltered anchorage with a beautiful enclosed tidal lagoon\n• Walk to the Squirrel Cove General Store — ice cream\, basic provisions\, friendly island atmosphere\n• Warm swimming — you're back in Desolation Sound warmth territory here\n• Kayak the inner lagoon at high tide — a gorgeous hidden basin accessible through a narrow passage\n• Fish for coho salmon returning through this corridor in July\n\nNote: Gentle re-entry to the southern waters. The lagoon inside Squirrel Cove is one of those hidden BC gems — explore it by kayak or dinghy at high tide.
+DESCRIPTION:103 NM · ~6.9 hrs\nOvernight: Squirrel Cove\, Cortes Island\n\nHighlights:\n• Squirrel Cove: a classic\, well-sheltered anchorage with a beautiful enclosed tidal lagoon\n• Walk to the Squirrel Cove General Store — ice cream\, basic provisions\, friendly island atmosphere\n• Warm swimming — you're back in Desolation Sound warmth territory here\n• Kayak the inner lagoon at high tide — a gorgeous hidden basin accessible through a narrow passage\n• Fish for coho salmon returning through this corridor in July\n\nNote: Gentle re-entry to the southern waters. The lagoon inside Squirrel Cove is one of those hidden BC gems — explore it by kayak or dinghy at high tide.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=13
 UID:day-13-20260714@travelitinerary
 END:VEVENT
