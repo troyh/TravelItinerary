@@ -12,8 +12,9 @@ import Settings from "./Settings.jsx";
 import { loadFromGitHub, saveToGitHub, deleteFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import ItineraryPicker from "./ItineraryPicker.jsx";
 import HistoryPanel from "./HistoryPanel.jsx";
+import TravelRouteMap from "./TravelRouteMap.jsx";
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
-import { loadMapKit, appleAutocomplete, appleFetchPlaceDetails, getStoredProviderSettings } from "../lib/mapkit.js";
+import { loadMapKit, appleAutocomplete, appleFetchPlaceDetails, appleFetchDirections, getStoredProviderSettings } from "../lib/mapkit.js";
 
 // ── Location autocomplete singletons ──────────────────────────────────────────
 let locGooglePromise = null;
@@ -963,6 +964,945 @@ function AddPlacePanel({
 }
 
 // ── End AddPlacePanel ─────────────────────────────────────────────────────────
+
+// ── AddTravelPanel ────────────────────────────────────────────────────────────
+
+const TRAVEL_MODES = [
+  {
+    id: "flight", label: "Flight",
+    glyph: AddGlyph.flight,
+  },
+  {
+    id: "car", label: "Drive",
+    glyph: <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2.5 11V8.5l1.2-3a1 1 0 011-.7h6.6a1 1 0 011 .7l1.2 3V11" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/><rect x="1.5" y="9.5" width="13" height="3" rx="1" stroke="currentColor" strokeWidth="1.3"/><circle cx="4.5" cy="13" r="1" stroke="currentColor" strokeWidth="1.3"/><circle cx="11.5" cy="13" r="1" stroke="currentColor" strokeWidth="1.3"/></svg>,
+  },
+  {
+    id: "walk", label: "Walk",
+    glyph: <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="2.5" r="1.2" stroke="currentColor" strokeWidth="1.3"/><path d="M8 4l-1.5 3.5 2 1.5-1 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/><path d="M6.5 7.5l-2 1M9 8.5l2 1" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  },
+  {
+    id: "train", label: "Train",
+    glyph: <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="2" width="10" height="10" rx="2" stroke="currentColor" strokeWidth="1.3"/><line x1="3" y1="7" x2="13" y2="7" stroke="currentColor" strokeWidth="1.3"/><path d="M5 13l-1 1.5M11 13l1 1.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/><circle cx="5.5" cy="10" r=".8" fill="currentColor"/><circle cx="10.5" cy="10" r=".8" fill="currentColor"/></svg>,
+  },
+  {
+    id: "ferry", label: "Ferry",
+    glyph: <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1.5 11h13l-1.6 2.7a1 1 0 01-.86.5H4a1 1 0 01-.87-.5L1.5 11z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/><path d="M3.5 11V7.5a1 1 0 011-1h7a1 1 0 011 1V11" stroke="currentColor" strokeWidth="1.3"/><rect x="5.5" y="4" width="2" height="2.5" rx=".5" stroke="currentColor" strokeWidth="1.2"/><rect x="8.5" y="4" width="2" height="2.5" rx=".5" stroke="currentColor" strokeWidth="1.2"/><path d="M8 6.5V4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  },
+  {
+    id: "boat", label: "Boat",
+    glyph: <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2.2L11.6 9.8H8z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/><line x1="8" y1="2" x2="8" y2="10" stroke="currentColor" strokeWidth="1.2"/><path d="M2 11.5h12l-1.3 1.9a1 1 0 01-.83.45H4.13a1 1 0 01-.83-.45L2 11.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/></svg>,
+  },
+  {
+    id: "other", label: "Other",
+    glyph: <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="currentColor" strokeWidth="1.3"/><path d="M8 5v3.5l2 2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  },
+];
+
+const ATP = {
+  accent:     "#0b3d6b",
+  accentSoft: "#e8f1f9",
+  border:     "#e2e5ea",
+  borderSoft: "#eef0f3",
+  surface:    "#ffffff",
+  surface2:   "#f8f9fb",
+  text:       "#0e1014",
+  textMuted:  "#5c6470",
+  textFaint:  "#9ba1ac",
+  amber:      "#f5b544",
+};
+
+const ATP_INPUT = {
+  width: "100%", background: "#fff", border: "1px solid #e2e5ea",
+  color: "#0e1014", borderRadius: 7, padding: "9px 11px",
+  fontSize: 13, fontFamily: "inherit", outline: "none",
+  boxSizing: "border-box",
+};
+
+const ATP_LABEL = {
+  fontSize: 10, fontWeight: 500, textTransform: "uppercase",
+  letterSpacing: 0.8, color: "#5c6470", marginBottom: 4, display: "block",
+};
+
+function AddTravelPanel({
+  day, dayLabel, onAdd, onClose, readOnly,
+  loadLocGoogle, loadLocApple, getStoredProviderSettings,
+  appleAutocomplete, appleFetchPlaceDetails,
+  routeServerUrl,
+  editItem,
+}) {
+  const [mode, setMode] = useState(editItem?.mode || "flight");
+  const [fromName, setFromName] = useState(editItem?.from?.name || "");
+  const [fromCode, setFromCode] = useState(editItem?.from?.code || "");
+  const [fromAddr, setFromAddr] = useState(editItem?.from?.address || "");
+  const [fromLat, setFromLat]   = useState(editItem?.from?.lat || null);
+  const [fromLng, setFromLng]   = useState(editItem?.from?.lng || null);
+  const [fromPreds, setFromPreds] = useState([]);
+  const [toName, setToName]   = useState(editItem?.to?.name || "");
+  const [toCode, setToCode]   = useState(editItem?.to?.code || "");
+  const [toAddr, setToAddr]   = useState(editItem?.to?.address || "");
+  const [toLat, setToLat]     = useState(editItem?.to?.lat || null);
+  const [toLng, setToLng]     = useState(editItem?.to?.lng || null);
+  const [toPreds, setToPreds] = useState([]);
+  const [departDate, setDepartDate] = useState(editItem?.departDate || "");
+  const [departTime, setDepartTime] = useState(editItem?.departTime || "");
+  const [arriveDate, setArriveDate] = useState(editItem?.arriveDate || "");
+  const [arriveTime, setArriveTime] = useState(editItem?.arriveTime || "");
+  const [notes, setNotes] = useState(editItem?.notes || "");
+  const [repeatReturn, setRepeatReturn] = useState(false);
+  // Flight fields
+  const [airline, setAirline]       = useState(editItem?.airline || "");
+  const [flightNum, setFlightNum]   = useState(editItem?.flightNum || "");
+  const [seat, setSeat]             = useState(editItem?.seat || "");
+  const [confirmation, setConfirm]  = useState(editItem?.confirmation || "");
+  const [terminal, setTerminal]     = useState(editItem?.terminal || "");
+  const [bags, setBags]             = useState(editItem?.bags || "");
+  // Car fields
+  const [vehicle, setVehicle]       = useState(editItem?.vehicle || "");
+  const [plate, setPlate]           = useState(editItem?.plate || "");
+  const [parking, setParking]       = useState(editItem?.parking || "");
+  // Train/Ferry common
+  const [operator, setOperator]     = useState(editItem?.operator || "");
+  const [trainNum, setTrainNum]     = useState(editItem?.trainNum || "");
+  const [carSeat, setCarSeat]       = useState(editItem?.carSeat || "");
+  const [platform, setPlatform]     = useState(editItem?.platform || "");
+  const [vessel, setVessel]         = useState(editItem?.vessel || "");
+  const [travelClass, setTravelClass] = useState(editItem?.travelClass || "");
+  const [ticket, setTicket]         = useState(editItem?.ticket || "");
+  // Boat
+  const [boatVessel, setBoatVessel] = useState(editItem?.boatVessel || "");
+  const [cruisingSpeed, setCruisingSpeed] = useState(editItem?.cruisingSpeed || "5.5");
+  const [editingSpeed, setEditingSpeed] = useState(false);
+  // Other
+  const [description, setDescription] = useState(editItem?.description || "");
+
+  // Route result
+  const [routeDuration, setRouteDuration] = useState(editItem?.routeDuration || "");
+  const [routeDistance, setRouteDistance] = useState(editItem?.routeDistance || "");
+  const [routePath,     setRoutePath]     = useState(editItem?.routePath || null);
+  const [routeLoading,  setRouteLoading]  = useState(false);
+
+  const fromDebounce = useRef(null);
+  const toDebounce   = useRef(null);
+
+  function searchPlace(query, setPreds, bias) {
+    if (!query.trim()) { setPreds([]); return; }
+    const { provider } = getStoredProviderSettings();
+    if (provider === "apple") {
+      loadLocApple().then(mk =>
+        appleAutocomplete(mk, query, bias).then(results => setPreds(results))
+      ).catch(() => {});
+    } else {
+      loadLocGoogle().then(lib => {
+        const { AutocompleteSessionToken, AutocompleteSuggestion } = lib;
+        if (!searchPlace._token) searchPlace._token = new AutocompleteSessionToken();
+        return AutocompleteSuggestion.fetchAutocompleteSuggestions({
+          input: query,
+          sessionToken: searchPlace._token,
+          ...(bias ? { locationBias: bias } : {}),
+        });
+      }).then(({ suggestions }) => {
+        const mapped = (suggestions || []).filter(s => s.placePrediction).slice(0, 5).map(s => ({
+          name:     s.placePrediction.mainText.text,
+          subtitle: s.placePrediction.secondaryText?.text ?? "",
+          _data:    s,
+        }));
+        setPreds(mapped);
+      }).catch(() => {});
+    }
+  }
+
+  async function resolvePred(pred, setName, setCode, setAddr, setLat, setLng, setPreds) {
+    setPreds([]);
+    try {
+      const { provider } = getStoredProviderSettings();
+      if (provider === "apple") {
+        const mk = await loadLocApple();
+        const details = await appleFetchPlaceDetails(mk, pred._data);
+        setName(details.name || "");
+        setAddr(details.address || "");
+        setLat(details.lat ?? null);
+        setLng(details.lng ?? null);
+      } else {
+        const lib = await loadLocGoogle();
+        const place = pred._data.placePrediction.toPlace();
+        await place.fetchFields({ fields: ["displayName", "formattedAddress", "location"] });
+        setName(place.displayName ?? pred.name ?? "");
+        setAddr(place.formattedAddress ?? "");
+        setLat(place.location?.lat() ?? null);
+        setLng(place.location?.lng() ?? null);
+      }
+    } catch { /* ignore */ }
+  }
+
+  function handleSwap() {
+    const tmpName = fromName, tmpCode = fromCode, tmpAddr = fromAddr;
+    const tmpLat  = fromLat,  tmpLng  = fromLng;
+    setFromName(toName); setFromCode(toCode); setFromAddr(toAddr);
+    setFromLat(toLat);   setFromLng(toLng);
+    setToName(tmpName);  setToCode(tmpCode);  setToAddr(tmpAddr);
+    setToLat(tmpLat);    setToLng(tmpLng);
+  }
+
+  async function fetchRoute() {
+    if (!fromName && !fromLat) return;
+    if (!toName   && !toLat)   return;
+    setRouteLoading(true);
+    setRouteDuration(""); setRouteDistance(""); setRoutePath(null);
+    try {
+      const { provider } = getStoredProviderSettings();
+      const distUnit = provider === "apple" ? "mi" : "km"; // approximate; we'll convert below
+
+      if (mode === "flight") {
+        // Great-circle distance (Haversine)
+        const toRad = d => d * Math.PI / 180;
+        const R = 3959; // miles
+        const dLat = toRad((toLat || 0) - (fromLat || 0));
+        const dLng = toRad((toLng || 0) - (fromLng || 0));
+        const a = Math.sin(dLat/2)**2 + Math.cos(toRad(fromLat||0)) * Math.cos(toRad(toLat||0)) * Math.sin(dLng/2)**2;
+        const mi = 2 * R * Math.asin(Math.sqrt(a));
+        const hrs = mi / 500 + 0.75; // rough 500mph cruise + boarding buffer
+        const h = Math.floor(hrs), m = Math.round((hrs - h) * 60);
+        setRouteDistance(`${Math.round(mi).toLocaleString()} mi`);
+        setRouteDuration(h > 0 ? `${h}h ${m}m` : `${m}m`);
+
+      } else if (mode === "boat") {
+        if (!fromLat || !toLat) {
+          setRouteDuration("Select From/To locations to get route");
+        } else if (!routeServerUrl) {
+          setRouteDuration("No route server configured");
+        } else {
+          const res = await fetch(`${routeServerUrl.replace(/\/$/, "")}/route`, {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ start: `${fromLat}, ${fromLng}`, end: `${toLat}, ${toLng}` }),
+          });
+          if (res.ok) {
+            const gpxText = await res.text();
+            const doc = new DOMParser().parseFromString(gpxText, "text/xml");
+
+            // Extract waypoints (used for both nm calculation and route path)
+            const ptEls = [...doc.getElementsByTagName("rtept"), ...doc.getElementsByTagName("trkpt")];
+            const path = ptEls
+              .map(p => [parseFloat(p.getAttribute("lat")), parseFloat(p.getAttribute("lon"))])
+              .filter(([a, b]) => !isNaN(a) && !isNaN(b));
+            if (path.length >= 2) setRoutePath(path);
+
+            // Extract nm from <desc> first, fall back to computing from path
+            const desc = doc.getElementsByTagName("desc")[0]?.textContent || "";
+            const descMatch = desc.match(/([\d.]+)\s*nm/i);
+            let nm = descMatch ? parseFloat(descMatch[1]) : null;
+            if (nm == null && path.length >= 2) {
+              const R = 3440.065;
+              let total = 0;
+              for (let i = 1; i < path.length; i++) {
+                const [lat1, lon1] = path[i-1], [lat2, lon2] = path[i];
+                const dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
+                const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+                total += 2*R*Math.asin(Math.sqrt(a));
+              }
+              nm = Math.round(total * 10) / 10;
+            }
+            if (nm != null) {
+              const spd = parseFloat(cruisingSpeed) || 5.5;
+              const hrs = nm / spd;
+              const h = Math.floor(hrs), mn = Math.round((hrs - h) * 60);
+              setRouteDistance(`${nm} nm`);
+              setRouteDuration(h > 0 ? `~${h}h ${mn}m` : `~${mn}m`);
+            }
+          } else {
+            setRouteDuration(`Route server error (${res.status})`);
+          }
+        }
+
+      } else if (provider === "apple") {
+        const appleModeMap = { car:"DRIVING", walk:"WALKING", train:"TRANSIT", ferry:"TRANSIT", other:"DRIVING" };
+        const mk = await loadLocApple();
+        const result = await appleFetchDirections(mk, fromAddr || fromName, toAddr || toName, appleModeMap[mode] || "DRIVING");
+        // appleFetchDirections returns pre-formatted distance/duration strings + routePath
+        if (result?.distance) setRouteDistance(result.distance);
+        if (result?.duration)  setRouteDuration(result.duration);
+        if (result?.routePath?.length >= 2) setRoutePath(result.routePath);
+
+      } else {
+        // Google Directions — load routes library
+        const k = (() => { try { return JSON.parse(localStorage.getItem("travelSettings") || "{}").googleMapsKey ?? ""; } catch { return ""; } })();
+        setOptions({ key: k, version: "weekly" });
+        const routesLib = await importLibrary("routes");
+        const { DirectionsService, TravelMode } = routesLib;
+        const googleModeMap = { car:"DRIVING", walk:"WALKING", train:"TRANSIT", ferry:"TRANSIT", other:"DRIVING" };
+        const origin      = fromLat ? { lat: fromLat, lng: fromLng } : fromAddr || fromName;
+        const destination = toLat   ? { lat: toLat,   lng: toLng   } : toAddr   || toName;
+        const result = await new DirectionsService().route({ origin, destination, travelMode: TravelMode[googleModeMap[mode] || "DRIVING"] });
+        const leg = result.routes[0]?.legs[0];
+        if (leg) {
+          setRouteDistance(leg.distance.text);
+          setRouteDuration(leg.duration.text);
+          // Extract path from step geometry
+          const path = [];
+          (leg.steps || []).forEach(step => {
+            (step.path || []).forEach(pt => {
+              const lat = typeof pt.lat === "function" ? pt.lat() : pt.lat;
+              const lng = typeof pt.lng === "function" ? pt.lng() : pt.lng;
+              if (lat != null && lng != null) path.push([lat, lng]);
+            });
+          });
+          if (path.length >= 2) setRoutePath(path);
+        }
+      }
+    } catch (e) {
+      console.warn("fetchRoute error:", e?.message || e);
+    } finally {
+      setRouteLoading(false);
+    }
+  }
+
+  function handleAdd() {
+    const item = {
+      id: editItem?.id || crypto.randomUUID(),
+      mode,
+      from: { name: fromName, code: fromCode, address: fromAddr, lat: fromLat, lng: fromLng },
+      to:   { name: toName,   code: toCode,   address: toAddr,   lat: toLat,   lng: toLng   },
+      departDate, departTime, arriveDate, arriveTime, notes,
+      airline, flightNum, seat, confirmation, terminal, bags,
+      vehicle, plate, parking, operator, trainNum, carSeat, platform, vessel, travelClass, ticket,
+      boatVessel, cruisingSpeed, description,
+      addedAt: editItem?.addedAt || new Date().toISOString(),
+    };
+    onAdd(item);
+    onClose();
+  }
+
+  const currentMode = TRAVEL_MODES.find(m => m.id === mode) ?? TRAVEL_MODES[0];
+  const modeName = currentMode.label;
+
+  return (
+    <div style={{
+      display: "flex", flexDirection: "column", height: "100%",
+      background: ATP.surface, color: ATP.text, fontFamily: "inherit",
+    }}>
+
+      {/* ── Header ── */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 12,
+        padding: "16px 20px", borderBottom: "1px solid " + ATP.border, flexShrink: 0,
+      }}>
+        <div style={{
+          width: 32, height: 32, borderRadius: 8, flexShrink: 0,
+          background: ATP.accentSoft, color: ATP.accent,
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }}>
+          {currentMode.glyph}
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 15, fontWeight: 600, color: ATP.text, lineHeight: 1.2 }}>Add travel</div>
+          <div style={{
+            fontSize: 11.5, color: ATP.textMuted, marginTop: 2,
+            overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+          }}>{dayLabel}</div>
+        </div>
+        <button onClick={onClose} style={{
+          width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center",
+          background: "none", border: "1px solid " + ATP.border, borderRadius: 6,
+          cursor: "pointer", color: ATP.textMuted, flexShrink: 0,
+        }}>
+          {AddGlyph.close}
+        </button>
+      </div>
+
+      {/* ── Forwarding strip ── */}
+      <div className="add-panel-fwd-strip" style={{
+        display: "flex", alignItems: "center", gap: 10,
+        padding: "12px 20px", background: ATP.surface2, borderBottom: "1px solid " + ATP.border,
+        flexShrink: 0,
+      }}>
+        <span style={{ color: ATP.textMuted, display: "flex", flexShrink: 0 }}>{AddGlyph.forward}</span>
+        <span style={{ fontSize: 12, color: ATP.textMuted, lineHeight: 1.4 }}>
+          Have a confirmation email? Forward to{" "}
+          <span style={{ color: ATP.accent, fontWeight: 500 }}>you@in.travelitinerary.app</span>{" "}
+          <button style={{
+            background: "none", border: "none", color: ATP.accent, fontSize: 12,
+            fontFamily: "inherit", cursor: "pointer", padding: 0, fontWeight: 500,
+          }} onClick={() => {
+            try { navigator.clipboard.writeText("you@in.travelitinerary.app"); } catch {}
+          }}>Copy</button>
+        </span>
+      </div>
+
+      {/* ── Scrollable body ── */}
+      <div style={{ flex: 1, overflowY: "auto" }}>
+
+        {/* ── Mode section ── */}
+        <div style={{ padding: "18px 20px", borderBottom: "1px solid " + ATP.border }}>
+          <div style={{ ...ATP_LABEL, marginBottom: 10 }}>MODE</div>
+          <div style={{
+            display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 6,
+          }}>
+            {TRAVEL_MODES.map(m => (
+              <button key={m.id} onClick={() => setMode(m.id)} style={{
+                display: "flex", flexDirection: "column", alignItems: "center", gap: 5,
+                padding: "10px 4px", borderRadius: 8, cursor: "pointer", fontFamily: "inherit",
+                fontSize: 11, fontWeight: 600, border: "1px solid",
+                background:  mode === m.id ? ATP.accent      : ATP.surface,
+                color:       mode === m.id ? "#fff"           : ATP.text,
+                borderColor: mode === m.id ? ATP.accent       : ATP.border,
+                boxShadow:   mode === m.id ? `0 0 0 3px ${ATP.accentSoft}` : "none",
+              }}>
+                <span style={{ opacity: mode === m.id ? 1 : 0.55 }}>{m.glyph}</span>
+                {m.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Route section ── */}
+        <div style={{ padding: "18px 20px", borderBottom: "1px solid " + ATP.border }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <div style={ATP_LABEL}>ROUTE</div>
+            <button onClick={handleSwap} style={{
+              background: "none", border: "none", color: ATP.accent, fontSize: 12,
+              fontFamily: "inherit", cursor: "pointer", fontWeight: 500, padding: 0,
+            }}>↺ Reverse</button>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "20px 1fr 28px", gap: "0 8px" }}>
+
+            {/* Spine */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", paddingTop: 36 }}>
+              <div style={{
+                width: 9, height: 9, borderRadius: "50%",
+                border: "2px solid currentColor", background: "#fff", flexShrink: 0,
+                color: ATP.text,
+              }} />
+              <div style={{ flex: 1, width: 1.5, background: ATP.border, minHeight: 16, margin: "4px 0" }} />
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ color: ATP.accent }}>
+                <path d="M8 2C5.24 2 3 4.24 3 7c0 3.75 5 9 5 9s5-5.25 5-9c0-2.76-2.24-5-5-5z" fill="#0b3d6b"/>
+                <circle cx="8" cy="7" r="1.8" fill="#fff"/>
+              </svg>
+            </div>
+
+            {/* Inputs */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {/* From */}
+              <div>
+                <label style={ATP_LABEL}>From</label>
+                <div style={{ position: "relative" }}>
+                  <input
+                    type="text"
+                    value={fromCode ? `${fromCode}  ${fromName}` : fromName}
+                    placeholder="City, airport, or address"
+                    style={{ ...ATP_INPUT, fontFamily: fromCode ? "ui-monospace,SFMono-Regular,Menlo,monospace" : "inherit" }}
+                    onChange={e => {
+                      const val = e.target.value;
+                      setFromName(val); setFromCode(""); setFromAddr(""); setFromLat(null); setFromLng(null);
+                      clearTimeout(fromDebounce.current);
+                      fromDebounce.current = setTimeout(() => searchPlace(val, setFromPreds, null), 300);
+                    }}
+                    onFocus={e => {
+                      if (!fromName) return;
+                      clearTimeout(fromDebounce.current);
+                      fromDebounce.current = setTimeout(() => searchPlace(fromName, setFromPreds, null), 300);
+                    }}
+                  />
+                  {fromPreds.length > 0 && (
+                    <div style={{
+                      position: "absolute", zIndex: 50, top: "calc(100% + 4px)", left: 0, right: 0,
+                      background: "#fff", border: "1px solid " + ATP.border, borderRadius: 8,
+                      boxShadow: "0 4px 16px rgba(0,0,0,0.10)", overflow: "hidden",
+                    }}>
+                      {fromPreds.map((p, i) => (
+                        <div key={i}
+                          onMouseDown={e => {
+                            e.preventDefault();
+                            resolvePred(p, setFromName, setFromCode, setFromAddr, setFromLat, setFromLng, setFromPreds);
+                          }}
+                          style={{
+                            padding: "9px 12px", cursor: "pointer",
+                            borderBottom: i < fromPreds.length - 1 ? "1px solid " + ATP.border : "none",
+                          }}
+                          onMouseEnter={e => e.currentTarget.style.background = ATP.surface2}
+                          onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+                        >
+                          <div style={{ fontSize: 13, fontWeight: 600, color: ATP.text }}>{p.name}</div>
+                          {p.subtitle && <div style={{ fontSize: 11.5, color: ATP.textFaint, marginTop: 1 }}>{p.subtitle}</div>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* To */}
+              <div>
+                <label style={ATP_LABEL}>To</label>
+                <div style={{ position: "relative" }}>
+                  <input
+                    type="text"
+                    value={toCode ? `${toCode}  ${toName}` : toName}
+                    placeholder="City, airport, or address"
+                    style={{ ...ATP_INPUT, fontFamily: toCode ? "ui-monospace,SFMono-Regular,Menlo,monospace" : "inherit" }}
+                    onChange={e => {
+                      const val = e.target.value;
+                      setToName(val); setToCode(""); setToAddr(""); setToLat(null); setToLng(null);
+                      clearTimeout(toDebounce.current);
+                      toDebounce.current = setTimeout(() => searchPlace(val, setToPreds, null), 300);
+                    }}
+                    onFocus={e => {
+                      if (!toName) return;
+                      clearTimeout(toDebounce.current);
+                      toDebounce.current = setTimeout(() => searchPlace(toName, setToPreds, null), 300);
+                    }}
+                  />
+                  {toPreds.length > 0 && (
+                    <div style={{
+                      position: "absolute", zIndex: 50, top: "calc(100% + 4px)", left: 0, right: 0,
+                      background: "#fff", border: "1px solid " + ATP.border, borderRadius: 8,
+                      boxShadow: "0 4px 16px rgba(0,0,0,0.10)", overflow: "hidden",
+                    }}>
+                      {toPreds.map((p, i) => (
+                        <div key={i}
+                          onMouseDown={e => {
+                            e.preventDefault();
+                            resolvePred(p, setToName, setToCode, setToAddr, setToLat, setToLng, setToPreds);
+                          }}
+                          style={{
+                            padding: "9px 12px", cursor: "pointer",
+                            borderBottom: i < toPreds.length - 1 ? "1px solid " + ATP.border : "none",
+                          }}
+                          onMouseEnter={e => e.currentTarget.style.background = ATP.surface2}
+                          onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+                        >
+                          <div style={{ fontSize: 13, fontWeight: 600, color: ATP.text }}>{p.name}</div>
+                          {p.subtitle && <div style={{ fontSize: 11.5, color: ATP.textFaint, marginTop: 1 }}>{p.subtitle}</div>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Swap column */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop: 36 }}>
+              <button onClick={handleSwap} style={{
+                width: 28, height: 28, borderRadius: "50%", border: "1px solid " + ATP.border,
+                background: ATP.surface2, cursor: "pointer", display: "flex",
+                alignItems: "center", justifyContent: "center", color: ATP.textMuted,
+                fontSize: 14, fontFamily: "inherit",
+              }}>↕</button>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ── When section ── */}
+        <div style={{ padding: "18px 20px", borderBottom: "1px solid " + ATP.border }}>
+          <div style={{ ...ATP_LABEL, marginBottom: 12 }}>WHEN</div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            {/* Depart */}
+            <div>
+              <label style={ATP_LABEL}>
+                {mode === "boat" ? "Plan to depart · flexible" : "Depart"}
+              </label>
+              <input type="date" value={departDate} onChange={e => setDepartDate(e.target.value)}
+                style={{
+                  width: "100%", border: "none", borderBottom: "1px solid " + ATP.border,
+                  background: "transparent", fontSize: 13, fontFamily: "inherit",
+                  color: ATP.text, outline: "none", padding: "4px 0", boxSizing: "border-box",
+                  marginBottom: 4,
+                }}
+              />
+              <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                <input type="time" value={departTime} onChange={e => setDepartTime(e.target.value)}
+                  style={{
+                    flex: 1, border: "none", borderBottom: "1px solid " + ATP.border,
+                    background: "transparent", fontSize: 13, fontFamily: "inherit",
+                    color: ATP.text, outline: "none", padding: "4px 0", boxSizing: "border-box",
+                  }}
+                />
+                <span style={{ fontSize: 11, color: ATP.textFaint }}>local</span>
+              </div>
+            </div>
+            {/* Arrive */}
+            <div>
+              <label style={ATP_LABEL}>
+                {mode === "flight" ? "Arrive" :
+                 mode === "boat"   ? `ETA · at ${cruisingSpeed} kn cruise` :
+                 "Arrive · estimated"}
+              </label>
+              <input type="date" value={arriveDate} onChange={e => setArriveDate(e.target.value)}
+                style={{
+                  width: "100%", border: "none", borderBottom: "1px solid " + ATP.border,
+                  background: "transparent", fontSize: 13, fontFamily: "inherit",
+                  color: ATP.text, outline: "none", padding: "4px 0", boxSizing: "border-box",
+                  marginBottom: 4,
+                }}
+              />
+              <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                <input type="time" value={arriveTime} onChange={e => setArriveTime(e.target.value)}
+                  style={{
+                    flex: 1, border: "none", borderBottom: "1px solid " + ATP.border,
+                    background: "transparent", fontSize: 13, fontFamily: "inherit",
+                    color: ATP.text, outline: "none", padding: "4px 0", boxSizing: "border-box",
+                  }}
+                />
+                <span style={{ fontSize: 11, color: ATP.textFaint }}>local</span>
+              </div>
+            </div>
+          </div>
+          {/* Metadata strip */}
+          <div style={{
+            marginTop: 10, background: ATP.surface2, border: "1px solid " + ATP.border,
+            borderRadius: 7, padding: "8px 12px",
+            display: "flex", alignItems: "center", gap: 10,
+          }}>
+            <span style={{ fontSize: 12, color: ATP.textMuted, flex: 1, fontVariantNumeric: "tabular-nums" }}>
+              {routeLoading ? "Getting route…" : (routeDuration || routeDistance)
+                ? <><strong style={{ color: ATP.text }}>{routeDuration}</strong>{routeDuration && routeDistance ? " · " : ""}<strong style={{ color: ATP.text }}>{routeDistance}</strong></>
+                : <span style={{ color: ATP.textFaint }}>—</span>}
+            </span>
+            <button
+              onClick={fetchRoute}
+              disabled={routeLoading || (!fromName && !fromLat) || (!toName && !toLat)}
+              style={{
+                background: "none", border: "1px solid " + ATP.border, borderRadius: 6,
+                fontSize: 11.5, fontFamily: "inherit", padding: "4px 10px", cursor: "pointer",
+                fontWeight: 500, whiteSpace: "nowrap",
+                color: routeLoading ? ATP.textFaint : ATP.accent,
+                opacity: (!fromName && !fromLat) || (!toName && !toLat) ? 0.45 : 1,
+              }}>
+              {mode === "flight" ? "📐 Get distance"
+                : mode === "boat" ? "📍 Get route"
+                : mode === "walk" ? "🚶 Get directions"
+                : mode === "train" || mode === "ferry" ? "🚉 Get directions"
+                : "🗺 Get directions"}
+            </button>
+          </div>
+        </div>
+
+        {/* ── Route preview map ── */}
+        {(fromLat && fromLng && toLat && toLng) && (
+          <div style={{ padding: "14px 20px", borderBottom: "1px solid " + ATP.border }}>
+            <div style={{ ...ATP_LABEL, marginBottom: 10 }}>ROUTE PREVIEW</div>
+            <div style={{ borderRadius: 10, overflow: "hidden", border: "1px solid " + ATP.border }}>
+              <TravelRouteMap
+                fromLat={fromLat} fromLng={fromLng} fromName={fromName}
+                toLat={toLat}     toLng={toLng}     toName={toName}
+                routePath={routePath}
+                height={160}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* ── Details section ── */}
+        <div style={{ padding: "18px 20px", borderBottom: "1px solid " + ATP.border }}>
+          <div style={{ ...ATP_LABEL, marginBottom: 12 }}>{modeName} details</div>
+
+          {/* flight details */}
+          {mode === "flight" && (
+            <div>
+              <div style={{ display: "flex", gap: 10, marginBottom: 8 }}>
+                <div style={{ flex: 1 }}>
+                  <label style={ATP_LABEL}>Airline</label>
+                  <input type="text" value={airline} onChange={e => setAirline(e.target.value)}
+                    placeholder="e.g. TAP Air Portugal" style={ATP_INPUT} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={ATP_LABEL}>Flight #</label>
+                  <input type="text" value={flightNum} onChange={e => setFlightNum(e.target.value)}
+                    placeholder="TP 123" style={{ ...ATP_INPUT, fontFamily: "ui-monospace,SFMono-Regular,Menlo,monospace" }} />
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 10, marginBottom: 8 }}>
+                <div style={{ flex: 1 }}>
+                  <label style={ATP_LABEL}>Seat</label>
+                  <input type="text" value={seat} onChange={e => setSeat(e.target.value)}
+                    placeholder="22A" style={{ ...ATP_INPUT, fontFamily: "ui-monospace,SFMono-Regular,Menlo,monospace" }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={ATP_LABEL}>Confirmation</label>
+                  <input type="text" value={confirmation} onChange={e => setConfirm(e.target.value)}
+                    placeholder="ABCDEF" style={{ ...ATP_INPUT, fontFamily: "ui-monospace,SFMono-Regular,Menlo,monospace" }} />
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 10, marginBottom: 10 }}>
+                <div style={{ flex: 1 }}>
+                  <label style={ATP_LABEL}>Terminal / Gate</label>
+                  <input type="text" value={terminal} onChange={e => setTerminal(e.target.value)}
+                    placeholder="T2 · B12" style={ATP_INPUT} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={ATP_LABEL}>Bags</label>
+                  <input type="text" value={bags} onChange={e => setBags(e.target.value)}
+                    placeholder="1 checked" style={ATP_INPUT} />
+                </div>
+              </div>
+              <button style={{
+                width: "100%", border: "1px dashed " + ATP.border, borderRadius: 7,
+                background: "none", color: ATP.textMuted, fontSize: 12,
+                fontFamily: "inherit", padding: "9px 12px", cursor: "pointer",
+              }}>+ Add connection</button>
+            </div>
+          )}
+
+          {/* car details */}
+          {mode === "car" && (
+            <div>
+              <div style={{ display: "flex", gap: 10, marginBottom: 8 }}>
+                <div style={{ flex: 1 }}>
+                  <label style={ATP_LABEL}>Vehicle</label>
+                  <input type="text" value={vehicle} onChange={e => setVehicle(e.target.value)}
+                    placeholder="e.g. Toyota RAV4" style={ATP_INPUT} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={ATP_LABEL}>Plate</label>
+                  <input type="text" value={plate} onChange={e => setPlate(e.target.value)}
+                    placeholder="AB-1234" style={{ ...ATP_INPUT, fontFamily: "ui-monospace,SFMono-Regular,Menlo,monospace" }} />
+                </div>
+              </div>
+              <div style={{ marginBottom: 8 }}>
+                <label style={ATP_LABEL}>Confirmation</label>
+                <input type="text" value={confirmation} onChange={e => setConfirm(e.target.value)}
+                  placeholder="CONF-5678" style={{ ...ATP_INPUT, fontFamily: "ui-monospace,SFMono-Regular,Menlo,monospace" }} />
+              </div>
+              <div>
+                <label style={ATP_LABEL}>Parking</label>
+                <input type="text" value={parking} onChange={e => setParking(e.target.value)}
+                  placeholder="Return to Hertz Terminal 1" style={ATP_INPUT} />
+                <div style={{ fontSize: 11, color: ATP.textFaint, marginTop: 4 }}>
+                  Where to drop off or park at destination
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* walk details */}
+          {mode === "walk" && (
+            <div style={{
+              background: ATP.surface2, border: "1px solid " + ATP.borderSoft,
+              borderRadius: 8, padding: "12px 14px", fontSize: 12,
+              color: ATP.textMuted, lineHeight: 1.5,
+            }}>
+              Route notes and conditions…
+            </div>
+          )}
+
+          {/* train details */}
+          {mode === "train" && (
+            <div>
+              <div style={{ display: "flex", gap: 10, marginBottom: 8 }}>
+                <div style={{ flex: 1 }}>
+                  <label style={ATP_LABEL}>Operator</label>
+                  <input type="text" value={operator} onChange={e => setOperator(e.target.value)}
+                    placeholder="e.g. Renfe" style={ATP_INPUT} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={ATP_LABEL}>Train #</label>
+                  <input type="text" value={trainNum} onChange={e => setTrainNum(e.target.value)}
+                    placeholder="AVE 2093" style={{ ...ATP_INPUT, fontFamily: "ui-monospace,SFMono-Regular,Menlo,monospace" }} />
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 10 }}>
+                <div style={{ flex: 1 }}>
+                  <label style={ATP_LABEL}>Car / Seat</label>
+                  <input type="text" value={carSeat} onChange={e => setCarSeat(e.target.value)}
+                    placeholder="Car 5, Seat 22A" style={ATP_INPUT} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={ATP_LABEL}>Platform</label>
+                  <input type="text" value={platform} onChange={e => setPlatform(e.target.value)}
+                    placeholder="Posted day-of" style={ATP_INPUT} />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ferry details */}
+          {mode === "ferry" && (
+            <div>
+              <div style={{ display: "flex", gap: 10, marginBottom: 8 }}>
+                <div style={{ flex: 1 }}>
+                  <label style={ATP_LABEL}>Operator</label>
+                  <input type="text" value={operator} onChange={e => setOperator(e.target.value)}
+                    placeholder="e.g. Brittany Ferries" style={ATP_INPUT} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={ATP_LABEL}>Vessel</label>
+                  <input type="text" value={vessel} onChange={e => setVessel(e.target.value)}
+                    placeholder="MV Armorique" style={ATP_INPUT} />
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 10 }}>
+                <div style={{ flex: 1 }}>
+                  <label style={ATP_LABEL}>Class</label>
+                  <input type="text" value={travelClass} onChange={e => setTravelClass(e.target.value)}
+                    placeholder="Economy / Cabin" style={ATP_INPUT} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={ATP_LABEL}>Ticket / Confirmation</label>
+                  <input type="text" value={ticket} onChange={e => setTicket(e.target.value)}
+                    placeholder="FRY-9923" style={{ ...ATP_INPUT, fontFamily: "ui-monospace,SFMono-Regular,Menlo,monospace" }} />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* boat details */}
+          {mode === "boat" && (
+            <div>
+              <div style={{ marginBottom: 10 }}>
+                <label style={ATP_LABEL}>Vessel</label>
+                <input type="text" value={boatVessel} onChange={e => setBoatVessel(e.target.value)}
+                  placeholder="S/V Name or Charter · Sunsail 38" style={ATP_INPUT} />
+              </div>
+              <div style={{ marginBottom: 6 }}>
+                <label style={ATP_LABEL}>Cruising speed</label>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  {editingSpeed ? (
+                    <input
+                      type="text"
+                      value={cruisingSpeed}
+                      autoFocus
+                      onChange={e => setCruisingSpeed(e.target.value)}
+                      onBlur={() => setEditingSpeed(false)}
+                      style={{ ...ATP_INPUT, width: 80 }}
+                    />
+                  ) : (
+                    <button onClick={() => setEditingSpeed(true)} style={{
+                      background: "none", border: "none", fontSize: 13,
+                      color: ATP.text, fontFamily: "inherit", cursor: "text",
+                      padding: 0,
+                    }}>{cruisingSpeed} kn</button>
+                  )}
+                </div>
+              </div>
+              <button disabled style={{
+                background: "none", border: "none", color: ATP.textFaint,
+                fontSize: 11.5, fontFamily: "inherit", cursor: "default", padding: 0,
+                marginBottom: 12,
+              }}>+ Save this vessel — coming with logbook</button>
+              <div style={{
+                border: "1px solid " + ATP.border, borderRadius: 8, padding: "14px 16px",
+              }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: ATP.text, marginBottom: 4 }}>
+                  ⛵ Vessel logbook — coming soon
+                </div>
+                <div style={{ fontSize: 12, color: ATP.textMuted, lineHeight: 1.5 }}>
+                  Tide · wind · swell at your departure marina, vessel profiles, and engine/fuel tracking.
+                </div>
+                <a href="#" style={{
+                  fontSize: 12, color: ATP.accent, fontWeight: 500, marginTop: 8,
+                  display: "inline-block", textDecoration: "none",
+                }}>Join the beta →</a>
+              </div>
+            </div>
+          )}
+
+          {/* other details */}
+          {mode === "other" && (
+            <div>
+              <label style={ATP_LABEL}>Describe this leg</label>
+              <input type="text" value={description} onChange={e => setDescription(e.target.value)}
+                placeholder="e.g. tuk-tuk, bike, horseback…" style={ATP_INPUT} />
+            </div>
+          )}
+        </div>
+
+        {/* ── Extras section ── */}
+        <div style={{ padding: "18px 20px", borderBottom: "1px solid " + ATP.border }}>
+          <div style={{ ...ATP_LABEL, marginBottom: 12 }}>EXTRAS</div>
+          <div style={{ marginBottom: 12 }}>
+            <label style={ATP_LABEL}>Notes</label>
+            <textarea
+              value={notes}
+              onChange={e => setNotes(e.target.value)}
+              placeholder="Add any notes…"
+              style={{
+                width: "100%", background: ATP.surface, border: "1px solid " + ATP.border,
+                color: ATP.text, borderRadius: 7, padding: "10px 12px",
+                fontSize: 12.5, fontFamily: "inherit", outline: "none",
+                boxSizing: "border-box", resize: "vertical", minHeight: 56, lineHeight: 1.5,
+              }}
+            />
+          </div>
+          <div style={{ marginBottom: 12 }}>
+            <button style={{
+              display: "flex", alignItems: "center", gap: 8,
+              background: ATP.surface2, border: "1px dashed " + ATP.border,
+              borderRadius: 7, padding: "9px 12px", cursor: "pointer",
+              fontFamily: "inherit", color: ATP.textMuted, fontSize: 12,
+            }}>📎 Attach file</button>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+            <div style={{ display: "flex" }}>
+              {[
+                { initials: "SH", bg: "linear-gradient(135deg,#4a90d9,#0b3d6b)" },
+                { initials: "JY", bg: "linear-gradient(135deg,#f5a623,#e07b2b)" },
+              ].map((av, i) => (
+                <div key={i} style={{
+                  width: 28, height: 28, borderRadius: "50%", background: av.bg,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: "#fff", fontSize: 10, fontWeight: 700,
+                  marginLeft: i === 0 ? 0 : -8, border: "2px solid #fff",
+                  zIndex: 2 - i, position: "relative",
+                }}>{av.initials}</div>
+              ))}
+            </div>
+            <span style={{ fontSize: 12, color: ATP.textMuted, flex: 1 }}>Sam + Jules · all trip travelers</span>
+            <button style={{
+              background: "none", border: "none", color: ATP.accent,
+              fontSize: 12, fontFamily: "inherit", cursor: "pointer", fontWeight: 500,
+            }}>Change</button>
+          </div>
+          <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+            <div
+              onClick={() => setRepeatReturn(r => !r)}
+              style={{
+                width: 16, height: 16, borderRadius: 4, flexShrink: 0,
+                border: "1.5px solid " + (repeatReturn ? ATP.accent : ATP.border),
+                background: repeatReturn ? ATP.accent : "#fff",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                cursor: "pointer",
+              }}
+            >
+              {repeatReturn && (
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                  <path d="M1.5 5l2.5 2.5 4.5-4" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              )}
+            </div>
+            <span style={{ fontSize: 12.5, color: ATP.textMuted }}>Repeat for return trip</span>
+          </label>
+        </div>
+
+      </div>
+      {/* ── Footer ── */}
+      <div style={{
+        padding: "14px 20px", borderTop: "1px solid " + ATP.border,
+        background: ATP.surface2, flexShrink: 0,
+        display: "flex", alignItems: "center", gap: 10,
+      }}>
+        <button onClick={onClose} style={{
+          background: "none", border: "1px solid " + ATP.border, color: ATP.textMuted,
+          borderRadius: 8, padding: "8px 16px", fontSize: 13, fontFamily: "inherit",
+          cursor: "pointer", fontWeight: 500,
+        }}>Cancel</button>
+        <div style={{ flex: 1, textAlign: "center" }}>
+          <span style={{ fontSize: 11.5, color: ATP.textFaint }}>
+            <span style={{ color: ATP.accent }}>●</span> Saving as draft
+          </span>
+        </div>
+        {!readOnly && (
+          <button onClick={handleAdd} style={{
+            background: ATP.accent, border: "none", color: "#fff",
+            borderRadius: 8, padding: "8px 18px", fontSize: 13, fontFamily: "inherit",
+            cursor: "pointer", fontWeight: 600,
+          }}>Add to itinerary</button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── End AddTravelPanel ────────────────────────────────────────────────────────
 
 export default function Itinerary() {
   const [activeTab,        setActiveTab]        = useState("itinerary");
@@ -2062,8 +3002,9 @@ export default function Itinerary() {
       const kind = kindMap[item.category] ?? "see";
       setAddPanel({ day, type:"place", subtype: kind, editItem: item });
     } else {
-      // Travel types — open the component panel showing the list so edit buttons are accessible
-      setAddPanel({ day, type:"travel", subtype: item._type, editItem: item });
+      // Travel types — open the unified AddTravelPanel in edit mode
+      const modeMap = { flight:"flight", direction:"car", route:"boat", rentalcar:"car" };
+      setAddPanel({ day, type:"travel", subtype: undefined, editItem: { ...item, mode: modeMap[item._type] || "flight" } });
     }
   }
   function closeAddPanel() { setAddPanel(null); }
@@ -3472,8 +4413,8 @@ export default function Itinerary() {
         <>
           <div className="add-panel-backdrop" onClick={closeAddPanel} />
           <div className="add-panel">
-            {/* Header — hidden for type='place' which has its own header */}
-            <div className="add-panel-header" style={{ display: addPanel.type === "place" ? "none" : undefined }}>
+            {/* Header — hidden for types that provide their own header */}
+            <div className="add-panel-header" style={{ display: (addPanel.type === "place" || addPanel.type === "travel") ? "none" : undefined }}>
               {addPanel.subtype && (
                 <button className="add-panel-back"
                   onClick={() => setAddPanel(p => ({ ...p, subtype: undefined }))}>‹</button>
@@ -3485,73 +4426,67 @@ export default function Itinerary() {
             {/* Body */}
             <div className="add-panel-body">
 
-              {/* Travel: sub-selection */}
-              {addPanel.type === "travel" && !addPanel.subtype && (
-                <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-                  {[
-                    { sub:"flight",    label:"Flight",          desc:"International or domestic" },
-                    { sub:"direction", label:"Drive / Transit", desc:"Directions with a map route" },
-                    { sub:"route",     label:"Boating route",   desc:"NM, hours, departure time" },
-                    { sub:"rentalcar", label:"Rental car",      desc:"Agency, pickup, drop-off" },
-                  ].map(({ sub, label, desc }) => (
-                    <button key={sub}
-                      onClick={() => setAddPanel(p => ({ ...p, subtype: sub }))}
-                      style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 16px",
-                        background:"#f8f9fb", border:"1px solid #e2e5ea", borderRadius:10,
-                        cursor:"pointer", fontFamily:"inherit", textAlign:"left" }}>
-                      <div style={{ flex:1 }}>
-                        <div style={{ fontWeight:600, fontSize:14, color:"#0e1014" }}>{label}</div>
-                        <div style={{ fontSize:12, color:"#5c6470", marginTop:2 }}>{desc}</div>
-                      </div>
-                      <span style={{ color:"#9ba1ac", fontSize:18 }}>›</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {/* Travel: specific forms */}
-              {addPanel.type === "travel" && addPanel.subtype === "flight" && (
-                <DayFlights
-                  flights={savedFlights[addPanel.day] ?? []}
-                  onAdd={f => { addFlight(addPanel.day, f); closeAddPanel(); }}
-                  onUpdate={(id, u) => updateFlight(addPanel.day, id, u)}
-                  onDelete={id => deleteFlight(addPanel.day, id)}
-                  readOnly={readOnly} startDate={startDate} dayNum={addPanel.day}
-                  aeroDataBoxKey={settings.aeroDataBoxKey ?? ""}
-                  hideList={!addPanel.editItem} autoOpen={!addPanel.editItem}
-                />
-              )}
-              {addPanel.type === "travel" && addPanel.subtype === "direction" && (
-                <DayDirections
-                  directions={savedDirections[addPanel.day] ?? []}
-                  onAdd={dir => { addDirection(addPanel.day, dir); closeAddPanel(); }}
-                  onUpdate={(id, u) => updateDirection(addPanel.day, id, u)}
-                  onDelete={id => deleteDirection(addPanel.day, id)}
-                  readOnly={readOnly} distanceUnit={settings.distanceUnit ?? "km"}
-                  locationBias={dayBiasFor(addPanel.day)}
-                  hideList={!addPanel.editItem} autoOpen={!addPanel.editItem}
-                />
-              )}
-              {addPanel.type === "travel" && addPanel.subtype === "route" && (
-                <DayRoute
-                  routes={savedRoutes[addPanel.day] ?? []}
-                  onAdd={r => { addRoute(addPanel.day, r); closeAddPanel(); }}
-                  onUpdate={(id, u) => updateRoute(addPanel.day, id, u)}
-                  onDelete={id => deleteRoute(addPanel.day, id)}
-                  readOnly={readOnly} routeServerUrl={settings.routeServerUrl ?? "https://waypoint.troyhakala.com"}
-                  hideList={!addPanel.editItem} autoOpen={!addPanel.editItem}
-                />
-              )}
-              {addPanel.type === "travel" && addPanel.subtype === "rentalcar" && (
-                <DayRentalCar
-                  rentalCars={savedRentalCars[addPanel.day] ?? []}
-                  onAdd={c => { addRentalCar(addPanel.day, c); closeAddPanel(); }}
-                  onUpdate={(id, u) => updateRentalCar(addPanel.day, id, u)}
-                  onDelete={id => deleteRentalCar(addPanel.day, id)}
-                  readOnly={readOnly}
-                  hideList={!addPanel.editItem} autoOpen={!addPanel.editItem}
-                />
-              )}
+              {/* Travel — unified AddTravelPanel */}
+              {addPanel.type === "travel" && (() => {
+                const pdi = getDayDate(addPanel.day);
+                const pDay = days.find(x => x.day === addPanel.day);
+                const dayLabel = [
+                  `Day ${addPanel.day}`,
+                  pdi ? `${pdi.dow} ${pdi.month} ${pdi.date}` : null,
+                  pDay?.leg ?? null,
+                ].filter(Boolean).join(" · ");
+                return (
+                  <AddTravelPanel
+                    day={addPanel.day}
+                    dayLabel={dayLabel}
+                    editItem={addPanel.editItem}
+                    onAdd={item => {
+                      // Route to the appropriate data handler based on mode
+                      if (item.mode === "flight") {
+                        addFlight(addPanel.day, {
+                          id: item.id, flightNumber: item.flightNum,
+                          departure: item.from?.code, arrival: item.to?.code,
+                          departureName: item.from?.name, arrivalName: item.to?.name,
+                          departureTime: item.departTime, arrivalTime: item.arriveTime,
+                          airline: item.airline, confirmation: item.confirmation,
+                          departureLat: item.from?.lat, departureLng: item.from?.lng,
+                          arrivalLat: item.to?.lat, arrivalLng: item.to?.lng,
+                          notes: item.notes,
+                        });
+                      } else if (item.mode === "boat") {
+                        addRoute(addPanel.day, {
+                          id: item.id, name: `${item.from?.name} → ${item.to?.name}`,
+                          startName: item.from?.name, endName: item.to?.name,
+                          startLat: item.from?.lat, startLng: item.from?.lng,
+                          endLat: item.to?.lat, endLng: item.to?.lng,
+                          time: item.departTime, nm: null, hrs: null, notes: item.notes,
+                        });
+                      } else {
+                        const modeMap = { car:"DRIVING", walk:"WALKING", train:"TRANSIT", ferry:"TRANSIT", other:"DRIVING" };
+                        addDirection(addPanel.day, {
+                          id: item.id,
+                          origin: { name: item.from?.name || "" },
+                          destination: { name: item.to?.name || "" },
+                          originLat: item.from?.lat, originLng: item.from?.lng,
+                          destinationLat: item.to?.lat, destinationLng: item.to?.lng,
+                          travelMode: modeMap[item.mode] || "DRIVING",
+                          time: item.departTime, notes: item.notes,
+                        });
+                      }
+                      closeAddPanel();
+                    }}
+                    onClose={closeAddPanel}
+                    readOnly={readOnly}
+                    locationBias={dayBiasFor(addPanel.day)}
+                    loadLocGoogle={loadLocGoogle}
+                    loadLocApple={loadLocApple}
+                    getStoredProviderSettings={getStoredProviderSettings}
+                    appleAutocomplete={appleAutocomplete}
+                    appleFetchPlaceDetails={appleFetchPlaceDetails}
+                    routeServerUrl={settings.routeServerUrl ?? "https://waypoint.troyhakala.com"}
+                  />
+                );
+              })()}
 
               {/* Place — uses the new unified AddPlacePanel */}
               {addPanel.type === "place" && (() => {
