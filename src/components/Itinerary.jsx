@@ -450,7 +450,7 @@ function AddPlacePanel({
   initialKind,
 }) {
   const ei = editItem; // shorthand
-  const [kind, setKind]               = useState(initialKind || "eat");
+  const [kind, setKind]               = useState(ei?.placeKind || initialKind || "eat");
   // Place search (Stay/Eat/See) — pre-fill from editItem if editing
   const [search, setSearch]           = useState(ei?.name || "");
   const [preds, setPreds]             = useState([]);
@@ -481,12 +481,13 @@ function AddPlacePanel({
   const [partyDo, setPartyDo]         = useState(ei?.partyDo || "");
   const [noteText, setNoteText]       = useState(ei?.noteText || "");
 
-  // Reset place search when kind changes
-  useEffect(() => {
+  // Reset place search only on explicit kind tab change (not on initial mount)
+  function changeKind(newKind) {
+    setKind(newKind);
     setSearch(""); setPreds([]); setSelected(null);
     setDoSearch(""); setDoPreds([]); setDoSelected(null);
     setDoAttached(false);
-  }, [kind]);
+  }
 
   // Default times per kind
   useEffect(() => {
@@ -541,6 +542,7 @@ function AddPlacePanel({
       lat:          kind === "do" ? (doSelected?.lat ?? null)   : (selected?.lat ?? null),
       lng:          kind === "do" ? (doSelected?.lng ?? null)   : (selected?.lng ?? null),
       category:     kind === "stay" ? "accommodation" : kind === "eat" ? "restaurant" : kind === "see" ? "activity" : kind === "do" ? "activity" : "other",
+      placeKind:    kind,
       time, duration, notes: kind === "note" ? noteText : notes,
       confirmation, partySize, bookedVia, dietary, room, guests, stayLength,
       operator, cost, entry, tickets, activity,
@@ -729,7 +731,7 @@ function AddPlacePanel({
       <>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 6, marginBottom: 20 }}>
         {APP_PANEL_KINDS.map(k => (
-          <button key={k.id} onClick={() => setKind(k.id)} style={{
+          <button key={k.id} onClick={() => changeKind(k.id)} style={{
             display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
             padding: "12px 4px", borderRadius: 8, cursor: "pointer", fontFamily: "inherit",
             fontSize: 12, fontWeight: 600, border: "1px solid",
@@ -837,7 +839,7 @@ function AddPlacePanel({
       <>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 6, marginBottom: 20 }}>
         {APP_PANEL_KINDS.map(k => (
-          <button key={k.id} onClick={() => setKind(k.id)} style={{
+          <button key={k.id} onClick={() => changeKind(k.id)} style={{
             display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
             padding: "12px 4px", borderRadius: 8, cursor: "pointer", fontFamily: "inherit",
             fontSize: 12, fontWeight: 600, border: "1px solid",
@@ -920,7 +922,7 @@ function AddPlacePanel({
         {!isDo && !isNote && (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 6, marginBottom: 20 }}>
             {APP_PANEL_KINDS.map(k => (
-              <button key={k.id} onClick={() => setKind(k.id)} style={{
+              <button key={k.id} onClick={() => changeKind(k.id)} style={{
                 display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
                 padding: "12px 4px", borderRadius: 8, cursor: "pointer", fontFamily: "inherit",
                 fontSize: 12, fontWeight: 600, border: "1px solid",
@@ -1045,7 +1047,7 @@ const ATP_LABEL = {
 };
 
 function AddTravelPanel({
-  day, dayLabel, onAdd, onClose, readOnly,
+  day, dayLabel, onAdd, onUpdate, onClose, readOnly,
   loadLocGoogle, loadLocApple, getStoredProviderSettings,
   appleAutocomplete, appleFetchPlaceDetails,
   routeServerUrl,
@@ -1288,7 +1290,11 @@ function AddTravelPanel({
       boatVessel, cruisingSpeed, description,
       addedAt: editItem?.addedAt || new Date().toISOString(),
     };
-    onAdd(item);
+    if (editItem && onUpdate) {
+      onUpdate(item);
+    } else {
+      onAdd(item);
+    }
     onClose();
   }
 
@@ -1916,7 +1922,7 @@ function AddTravelPanel({
             background: ATP.accent, border: "none", color: "#fff",
             borderRadius: 8, padding: "8px 18px", fontSize: 13, fontFamily: "inherit",
             cursor: "pointer", fontWeight: 600,
-          }}>Add to itinerary</button>
+          }}>{editItem ? "Save changes" : "Add to itinerary"}</button>
         )}
       </div>
     </div>
@@ -2987,12 +2993,49 @@ export default function Itinerary() {
     setMobileSheet(null);
     if (item._type === "place") {
       const kindMap = { accommodation:"stay", restaurant:"eat", activity:"see", other:"see" };
-      const kind = kindMap[item.category] ?? "see";
+      const kind = item.placeKind || (kindMap[item.category] ?? "see");
       setAddPanel({ day, type:"place", subtype: kind, editItem: item });
     } else {
-      // Travel types — open the unified AddTravelPanel in edit mode
-      const modeMap = { flight:"flight", direction:"car", route:"boat", rentalcar:"car" };
-      setAddPanel({ day, type:"travel", subtype: undefined, editItem: { ...item, mode: modeMap[item._type] || "flight" } });
+      // Map stored data format → AddTravelPanel editItem format
+      let editItem;
+      if (item._type === "flight") {
+        editItem = {
+          id: item.id, mode: "flight",
+          from: { name: item.departureName || item.departure || "", code: item.departure || "", lat: item.departureLat || null, lng: item.departureLng || null },
+          to:   { name: item.arrivalName   || item.arrival   || "", code: item.arrival   || "", lat: item.arrivalLat   || null, lng: item.arrivalLng   || null },
+          departTime: item.departureTime || "", arriveTime: item.arrivalTime || "",
+          airline: item.airline || "", flightNum: item.flightNumber || "",
+          seat: item.seat || "", confirmation: item.confirmation || "",
+          terminal: item.terminal || "", bags: item.bags || "",
+          notes: item.notes || "",
+        };
+      } else if (item._type === "direction") {
+        const modeMap = { DRIVING:"car", WALKING:"walk", TRANSIT:"train" };
+        editItem = {
+          id: item.id, mode: modeMap[item.travelMode] || "car",
+          from: { name: item.origin?.name || "", lat: item.originLat || null, lng: item.originLng || null },
+          to:   { name: item.destination?.name || "", lat: item.destinationLat || null, lng: item.destinationLng || null },
+          departTime: item.time || "", notes: item.notes || "",
+        };
+      } else if (item._type === "route") {
+        editItem = {
+          id: item.id, mode: "boat",
+          from: { name: item.startName || "", lat: item.startLat || null, lng: item.startLng || null },
+          to:   { name: item.endName   || "", lat: item.endLat   || null, lng: item.endLng   || null },
+          departTime: item.time || "", boatVessel: item.vessel || "", notes: item.notes || "",
+        };
+      } else if (item._type === "rentalcar") {
+        editItem = {
+          id: item.id, mode: "car",
+          from: { name: item.pickupLocation  || "" },
+          to:   { name: item.dropoffLocation || "" },
+          departTime: item.time || "", vehicle: item.agency || "",
+          confirmation: item.confirmation || "",
+        };
+      } else {
+        editItem = { id: item.id, mode: "other" };
+      }
+      setAddPanel({ day, type:"travel", subtype: undefined, editItem });
     }
   }
   function closeAddPanel() { setAddPanel(null); }
@@ -4349,6 +4392,30 @@ export default function Itinerary() {
                           time: item.departTime, notes: item.notes,
                         });
                       }
+                      closeAddPanel();
+                    }}
+                    onUpdate={item => {
+                      const d = {
+                        flightNumber: item.flightNum, departure: item.from?.code, arrival: item.to?.code,
+                        departureName: item.from?.name, arrivalName: item.to?.name,
+                        departureTime: item.departTime, arrivalTime: item.arriveTime,
+                        airline: item.airline, confirmation: item.confirmation, seat: item.seat,
+                        terminal: item.terminal, bags: item.bags,
+                        departureLat: item.from?.lat, departureLng: item.from?.lng,
+                        arrivalLat: item.to?.lat, arrivalLng: item.to?.lng,
+                        origin: { name: item.from?.name || "" }, destination: { name: item.to?.name || "" },
+                        originLat: item.from?.lat, originLng: item.from?.lng,
+                        destinationLat: item.to?.lat, destinationLng: item.to?.lng,
+                        travelMode: { car:"DRIVING", walk:"WALKING", train:"TRANSIT", ferry:"TRANSIT", other:"DRIVING" }[item.mode] || "DRIVING",
+                        startName: item.from?.name, endName: item.to?.name,
+                        startLat: item.from?.lat, startLng: item.from?.lng,
+                        endLat: item.to?.lat, endLng: item.to?.lng,
+                        time: item.departTime, notes: item.notes, vessel: item.boatVessel,
+                        agency: item.vehicle, pickupLocation: item.from?.name, dropoffLocation: item.to?.name,
+                      };
+                      if (item.mode === "flight") updateFlight(addPanel.day, item.id, d);
+                      else if (item.mode === "boat") updateRoute(addPanel.day, item.id, d);
+                      else updateDirection(addPanel.day, item.id, d);
                       closeAddPanel();
                     }}
                     onClose={closeAddPanel}
