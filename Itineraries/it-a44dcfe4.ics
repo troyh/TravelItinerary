@@ -22,7 +22,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260713
 DTEND;VALUE=DATE:20260714
 SUMMARY:Day 2: Orientation Day 1
-DESCRIPTION:\nNote: -\n\nRental Cars:\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined
+DESCRIPTION:\nNote: -\n\nRental Cars:\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined
 URL:[object Object]?i=https%3A%2F%2Ftroyh.github.io%2FTravelItinerary%2F&day=2
 UID:day-2-20260713@travelitinerary
 END:VEVENT
@@ -100,16 +100,30 @@ DESCRIPTION:Get to know other students through a mix of high-energy and relaxing
 UID:rental-2df80942-8e5e-4193-a9d7-43247ef21d0b@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260713T104500
+DTEND:20260713T114500
+SUMMARY:🚗 undefined Car Rental
+DESCRIPTION:Learn about graduation requirements at UCSB.
+UID:rental-76cb51e2-a7db-47df-a8e2-be93e0628aae@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260713T03NaN00
+DTEND:NaNNaNNaNTNaNNaN00
+SUMMARY:🚗 undefined Car Rental
+DESCRIPTION:**Requires laptops or tablets.** Learn about course registration and receive individual peer academic advising.
+UID:rental-1fc16621-108b-49c4-96fc-f104827c28b7@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260714
 DTEND;VALUE=DATE:20260715
 SUMMARY:Day 3: Orientation Day 2
-DESCRIPTION:\nNote: a\n\nRental Cars:\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined
+DESCRIPTION:\nNote: a\n\nRental Cars:\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined
 URL:[object Object]?i=https%3A%2F%2Ftroyh.github.io%2FTravelItinerary%2F&day=3
 UID:day-3-20260714@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260714T170000
-DTEND:20260714T180000
+DTSTART:20260714T163000
+DTEND:20260714T173000
 SUMMARY:
 UID:place-0fe30eea-940a-4ec2-a5ca-a124660080eb@travelitinerary
 END:VEVENT
@@ -133,8 +147,8 @@ SUMMARY:🚗 undefined Car Rental
 UID:rental-9eaec945-9eca-411d-b5f9-e7e943f4c3a5@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260714TNaNundefined00
-DTEND:NaNNaNNaNTNaNNaN00
+DTSTART:20260714T090000
+DTEND:20260714T100000
 SUMMARY:🚗 undefined Car Rental
 DESCRIPTION:Hear from various departments involved in student safety and wellbeing
 UID:rental-961ff29b-63be-4c8e-831b-cc67cd509ca2@travelitinerary
@@ -161,10 +175,30 @@ DESCRIPTION:Learn strategies to support your student and yourself through the ac
 UID:rental-bb7aa8f5-a673-4e51-aac9-ba769447d522@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260714TNaNundefined00
-DTEND:NaNNaNNaNTNaNNaN00
+DTSTART:20260714T150000
+DTEND:20260714T160000
 SUMMARY:🚗 undefined Car Rental
 DESCRIPTION:Students will conclude their Fall quarter course registration between 3:00 and 4:30 PM which is the conclusion of the Freshman Orientation program
 UID:rental-15f1ffa8-12cb-4fd5-8c9a-2b0ac6c98b05@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260714T090000
+DTEND:20260714T100000
+SUMMARY:🚗 undefined Car Rental
+DESCRIPTION:Understand real college scenarios and support resources
+UID:rental-11848714-8adc-4382-aa27-2515d93b65f5@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260714T101500
+DTEND:20260714T111500
+SUMMARY:🚗 undefined Car Rental
+UID:rental-385e39d4-f406-4578-a141-df67af7a137b@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260714T133000
+DTEND:20260714T143000
+SUMMARY:🚗 undefined Car Rental
+DESCRIPTION:**Requires Laptop** Review our course registration system and register for fall quarter classes.
+UID:rental-f02e6bb2-23a3-430c-a180-9e783cc848f9@travelitinerary
 END:VEVENT
 END:VCALENDAR
