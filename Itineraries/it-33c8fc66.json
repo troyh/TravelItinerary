@@ -10,11 +10,11 @@
       "nm": 0,
       "hrs": 0,
       "tags": [],
-      "highlights": [
-        "Channel crossing to continental Europe",
-        "Explore medieval Calais old town"
-      ],
+      "highlights": [],
       "note": "TODO: train ticket\nTODO: rent 911 in London ",
+      "centerName": "Calais, France",
+      "centerLat": 50.9515999,
+      "centerLng": 1.861237,
       "places": [
         {
           "id": "8d42e3ab-03be-49b9-98c1-c78e1763d1a7",
@@ -1444,6 +1444,22 @@
           "notes": "",
           "addedAt": "2026-05-11T01:34:15.833Z",
           "mapsProvider": "google"
+        },
+        {
+          "id": "5f583580-831a-40a1-bcc4-c2b2fcc6d684",
+          "origin": {
+            "name": "London"
+          },
+          "destination": {
+            "name": "62100 Calais"
+          },
+          "originLat": 51.5033768,
+          "originLng": -0.0795183,
+          "destinationLat": 50.9486106,
+          "destinationLng": 1.8542155,
+          "travelMode": "DRIVING",
+          "time": "",
+          "notes": ""
         }
       ],
       "routes": [],
@@ -1456,11 +1472,11 @@
       "nm": 0,
       "hrs": 0,
       "tags": [],
-      "highlights": [
-        "Champagne house tours in UNESCO Reims",
-        "Drive through prestigious vineyards"
-      ],
+      "highlights": [],
       "note": "",
+      "centerName": "Reims, France",
+      "centerLat": 49.2584239,
+      "centerLng": 4.032022599999999,
       "places": [
         {
           "id": "1cd2af3f-ca13-44c1-9311-045cca021ac5",
@@ -2625,11 +2641,11 @@
       "nm": 0,
       "hrs": 0,
       "tags": [],
-      "highlights": [
-        "Burgundy wine region scenic routes",
-        "Historic Dijon medieval architecture"
-      ],
+      "highlights": [],
       "note": "",
+      "centerName": "Dijon, France",
+      "centerLat": 47.3301275,
+      "centerLng": 5.0480456,
       "places": [
         {
           "id": "35bc5595-f797-40fc-9f0e-e4742c55ef41",
@@ -3813,11 +3829,11 @@
       "nm": 0,
       "hrs": 0,
       "tags": [],
-      "highlights": [
-        "Lyon's Renaissance riverside charm",
-        "Confluence of Rhône and Saône rivers"
-      ],
+      "highlights": [],
       "note": "",
+      "centerName": "Lyon, France",
+      "centerLat": 45.7641228,
+      "centerLng": 4.835502099999999,
       "places": [
         {
           "id": "904ba966-5d54-435b-8477-ccb8a8f0d7d2",
@@ -5132,11 +5148,11 @@
       "nm": 0,
       "hrs": 0,
       "tags": [],
-      "highlights": [
-        "Papal Palace in Avignon",
-        "Provence lavender fields and villages"
-      ],
+      "highlights": [],
       "note": "",
+      "centerName": "Avignon, France",
+      "centerLat": 43.9487075,
+      "centerLng": 4.8059295,
       "places": [
         {
           "id": "a6da8c59-a2d3-4dcf-89f5-61d3c7bb6716",
@@ -6447,11 +6463,11 @@
       "nm": 0,
       "hrs": 0,
       "tags": [],
-      "highlights": [
-        "Arrive at French Riviera",
-        "Antibes old town and yacht-lined harbor"
-      ],
+      "highlights": [],
       "note": "",
+      "centerName": "Antibes, France",
+      "centerLat": 43.5803713,
+      "centerLng": 7.1251728,
       "places": [
         {
           "id": "b4d2355c-1088-4181-970e-17108f6c41e6",
@@ -7747,11 +7763,11 @@
       "nm": 0,
       "hrs": 0,
       "tags": [],
-      "highlights": [
-        "Final coastal drive to Mediterranean",
-        "Menton's Belle Époque seaside charm"
-      ],
+      "highlights": [],
       "note": "",
+      "centerName": "Menton, France",
+      "centerLat": 43.774311,
+      "centerLng": 7.4972996,
       "places": [
         {
           "id": "9ca29a34-59a8-4293-90c2-6704b4323c10",
