@@ -3461,22 +3461,15 @@ export default function Itinerary() {
             {title}
           </h1>
         )}
-        {/* Subtitle — click to edit inline */}
-        {(subtitle || editingHeader) && !readOnly ? (
+        {/* Subtitle — plain controlled input, no editingHeader dependency */}
+        {!readOnly ? (
           <input
-            value={editingHeader ? headerDraft.subtitle : subtitle}
-            onChange={e => {
-              if (!editingHeader) { setEditingHeader(true); setHeaderDraft({ title, subtitle: e.target.value }); }
-              else setHeaderDraft(p => ({ ...p, subtitle: e.target.value }));
-            }}
-            onFocus={() => { if (!editingHeader) { setEditingHeader(true); setHeaderDraft({ title, subtitle }); } }}
-            onBlur={() => { setSubtitle(headerDraft.subtitle); setEditingHeader(false); }}
-            onKeyDown={e => { if (e.key === "Escape") setEditingHeader(false); }}
+            value={subtitle}
+            onChange={e => setSubtitle(e.target.value)}
             placeholder="Add subtitle…"
             className="inline-subtitle-input"
             style={{ display:"block", width:"100%", background:"transparent", border:"none",
-              borderBottom: editingHeader ? "1px solid #e2e5ea" : "none",
-              color:"#9ba1ac", padding:".1rem 0",
+              color: subtitle ? "#9ba1ac" : "#c8cdd4", padding:".1rem 0",
               fontFamily:"inherit", fontStyle:"italic", outline:"none",
               marginBottom:".75rem", cursor:"text", boxSizing:"border-box" }}
           />
@@ -3841,40 +3834,30 @@ export default function Itinerary() {
                       </div>
                     )}
 
-                    {/* Day notes — inline editable, no box */}
+                    {/* Day notes — always-rendered textarea; readOnly gates typing so iOS focus works natively */}
                     {(() => {
                       const note = customNotes[d.day] !== undefined ? customNotes[d.day] : (d.note || "");
                       const isEditing = !readOnly && editingNoteDay === d.day;
-                      if (isEditing) return (
+                      return (
                         <textarea
-                          autoFocus
-                          value={noteDraft}
+                          readOnly={readOnly || !isEditing}
+                          value={isEditing ? noteDraft : note}
+                          onFocus={() => { if (!readOnly && !isEditing) startEditNote(d.day, note); }}
                           onChange={e => setNoteDraft(e.target.value)}
-                          onBlur={() => saveNote(d.day)}
+                          onBlur={e => { if (isEditing) { setCustomNotes(prev => ({ ...prev, [d.day]: e.target.value })); setEditingNoteDay(null); } }}
                           onKeyDown={e => { if (e.key === "Escape") cancelEditNote(); }}
                           placeholder="Add a note…"
                           className="inline-day-notes-textarea"
                           style={{ width:"100%", background:"transparent", border:"none",
-                            borderBottom:"1px solid #e2e5ea", color:"#0e1014",
+                            borderBottom: isEditing ? "1px solid #e2e5ea" : "none",
+                            color: note ? "#5c6470" : "#9ba1ac",
+                            fontStyle: (isEditing || note) ? "normal" : "italic",
                             padding:".1rem 0", fontFamily:"inherit",
-                            lineHeight:1.55, boxSizing:"border-box", outline:"none" }}
+                            lineHeight:1.55, boxSizing:"border-box", outline:"none",
+                            cursor: readOnly ? "default" : "text", resize:"none",
+                            minHeight: isEditing ? 60 : 20, overflow:"hidden" }}
                         />
                       );
-                      if (note) return (
-                        <div onClick={() => !readOnly && startEditNote(d.day, note)}
-                          style={{ fontSize:12, lineHeight:1.55, color:"#5c6470",
-                            cursor: readOnly ? "default" : "text" }}>
-                          <NoteMarkdown>{note}</NoteMarkdown>
-                        </div>
-                      );
-                      if (!readOnly) return (
-                        <div onClick={() => startEditNote(d.day, "")}
-                          style={{ fontSize:12, lineHeight:1.55, color:"#9ba1ac",
-                            fontStyle:"italic", cursor:"text" }}>
-                          Add a note…
-                        </div>
-                      );
-                      return null;
                     })()}
 
                     {/* Tags */}
@@ -4143,7 +4126,6 @@ export default function Itinerary() {
                         <div style={{ display:"flex", gap:8, marginTop:6, flexWrap:"wrap", justifyContent:"center" }}>
                           <AddTypeBtn glyph={AddGlyph.flight} label="Add travel" sub="Flight, drive, walk…"  onClick={() => openAddPanel(d.day,"travel")} />
                           <AddTypeBtn glyph={AddGlyph.pin}    label="Add place"  sub="Stay, eat, see, do"    onClick={() => openAddPanel(d.day,"place")}  accent />
-                          <AddTypeBtn glyph={AddGlyph.note}   label="Add note"   sub="Reminder, thought"     onClick={() => openAddPanel(d.day,"note")} />
                         </div>
                       </div>
                     );
@@ -4161,7 +4143,6 @@ export default function Itinerary() {
                       <div className="day-add-bar" style={{ gap:8, marginTop:14, padding:"4px 0 0" }}>
                         <AddTypeBtn glyph={AddGlyph.flight} label="Add travel" sub="Flight, drive, walk…"  onClick={() => openAddPanel(d.day,"travel")} />
                         <AddTypeBtn glyph={AddGlyph.pin}    label="Add place"  sub="Stay, eat, see, do"    onClick={() => openAddPanel(d.day,"place")} />
-                        <AddTypeBtn glyph={AddGlyph.note}   label="Add note"   sub="Reminder, thought"     onClick={() => openAddPanel(d.day,"note")} />
                         <button title="More: import GPX, paste link, duplicate from another day" style={{
                           width:44, display:"flex", alignItems:"center", justifyContent:"center",
                           borderRadius:8, background:"#ffffff", border:"1px solid #e2e5ea",
