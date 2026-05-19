@@ -5,7 +5,6 @@
   "itineraryNotes": "TODO: Get Canada DTOPS pass sticker\nTODO: Buy [SYC pass](https://www.seattleyachtclub.org/group/pages/annual-outstation-pass) for outstations \n",
   "days": [
     {
-      "day": 1,
       "leg": "Seattle → Victoria, BC",
       "nm": 68.7,
       "hrs": 4.6,
@@ -25,6 +24,9 @@
         "Anchor in Oak Bay for a quiet night away from Inner Harbour ferry traffic"
       ],
       "note": "Depart early — US/Canada customs by water can involve a wait. Passports for everyone aboard.",
+      "centerName": "Victoria, Canada",
+      "centerLat": 48.4165675,
+      "centerLng": -123.3899256,
       "places": [],
       "directions": [],
       "routes": [
@@ -115,7 +117,6 @@
       "rentalCars": []
     },
     {
-      "day": 2,
       "leg": "Victoria → Salt Spring Island → Vancouver",
       "nm": 72.3,
       "hrs": 4.8,
@@ -138,6 +139,9 @@
         "Fuel at False Creek Fuel Dock; major provisioning at Granville Island Public Market"
       ],
       "note": "Depart Salt Spring by 1:30–2pm to arrive Vancouver before evening. If you time it for a Saturday, the Ganges market is not to be missed.",
+      "centerName": "Vancouver, Canada",
+      "centerLat": 49.2604134,
+      "centerLng": -123.1139456,
       "places": [],
       "directions": [],
       "routes": [
@@ -256,7 +260,6 @@
       "rentalCars": []
     },
     {
-      "day": 3,
       "leg": "Vancouver — Layover",
       "nm": 0,
       "hrs": 0,
@@ -278,14 +281,41 @@
         "Confirm Malibu Rapids slack window for Day 4 arrival"
       ],
       "note": "Use today to nail down Malibu Rapids timing. Plan your Day 4 departure from Vancouver to arrive exactly at the slack window — not the other way around.",
-      "places": [],
+      "centerName": "Area G (Saltair / Gulf Islands), Canada",
+      "centerLat": 48.9873709,
+      "centerLng": -123.7203764,
+      "places": [
+        {
+          "id": "d81d6017-9403-436a-b1d4-b980d12db466",
+          "name": "False Bay",
+          "address": "British Columbia, Canada",
+          "lat": 48.9873709,
+          "lng": -123.7203764,
+          "category": "restaurant",
+          "time": "12:30",
+          "duration": "",
+          "notes": "",
+          "confirmation": "",
+          "partySize": "",
+          "bookedVia": "",
+          "dietary": "",
+          "room": "",
+          "guests": "",
+          "stayLength": "",
+          "operator": "",
+          "cost": "",
+          "entry": "",
+          "tickets": "",
+          "activity": "",
+          "addedAt": "2026-05-19T02:02:33.475Z"
+        }
+      ],
       "directions": [],
       "routes": [],
       "flights": [],
       "rentalCars": []
     },
     {
-      "day": 4,
       "leg": "Vancouver → Princess Louisa Inlet",
       "nm": 0,
       "hrs": 0,
@@ -307,6 +337,9 @@
         "Anchor inside Princess Louisa Marine Provincial Park — stern-tie rings at the park dock near Chatterbox Falls"
       ],
       "note": "Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window.\n\nTODO: Figure out if I’m okay for stern-tying\nTODO: Is the dock there still under construction?",
+      "centerName": "Area A (Egmont/Pender Harbour), Canada",
+      "centerLat": 50.1641417,
+      "centerLng": -123.8497139,
       "places": [],
       "directions": [],
       "routes": [
@@ -481,7 +514,6 @@
       "rentalCars": []
     },
     {
-      "day": 5,
       "leg": "Princess Louisa Inlet — Layover",
       "nm": 0,
       "hrs": 0,
@@ -503,6 +535,9 @@
         "Sundowners in the cockpit watching waterfalls — this is the highlight of the whole trip"
       ],
       "note": "One of the most spectacular anchorages in the world. Fully protected from swell. Don't rush it.",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
       "places": [],
       "directions": [],
       "routes": [],
@@ -510,7 +545,6 @@
       "rentalCars": []
     },
     {
-      "day": 6,
       "leg": "Princess Louisa → Prideaux Haven (Desolation Sound)",
       "nm": 81.5,
       "hrs": 5.4,
@@ -533,6 +567,9 @@
         "Kayak the labyrinth in the evening light — among BC's finest anchorages"
       ],
       "note": "Prideaux fills fast in July — arrive by early afternoon. Tenedos Bay (adjacent) is an excellent overflow anchorage.",
+      "centerName": "Area A (Malaspina/Toba), Canada",
+      "centerLat": 50.1416119,
+      "centerLng": -124.6824265,
       "places": [],
       "directions": [],
       "routes": [
@@ -679,7 +716,6 @@
       "rentalCars": []
     },
     {
-      "day": 7,
       "leg": "Desolation Sound — Layover",
       "nm": 0,
       "hrs": 0,
@@ -701,6 +737,9 @@
         "Best stargazing of the trip — minimal light pollution, long July twilight gives way to a spectacular sky"
       ],
       "note": "This layover is well earned. Desolation Sound gets its name from a gloomy 1792 survey — ignore that. In July it's the warmest, most beautiful anchorage on the BC coast.",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
       "places": [],
       "directions": [],
       "routes": [],
@@ -708,7 +747,6 @@
       "rentalCars": []
     },
     {
-      "day": 8,
       "leg": "Desolation Sound → Campbell River (fuel) → Port Neville",
       "nm": 61,
       "hrs": 4.1,
@@ -730,6 +768,9 @@
         "Port Neville: remote, peaceful anchorage at the mouth of a long inlet — excellent crabbing and prawning"
       ],
       "note": "This is a coordinated day: depart Desolation early, fuel Campbell River at ~10:30am, Seymour Narrows at slack midday, anchor Port Neville by mid-afternoon. At 15 kts this is ~7.5 hrs total but the Narrows wait may be built in. Brief lunch at Campbell River fuel dock.",
+      "centerName": "Area C (Discovery Islands/Mainland Inlets), Canada",
+      "centerLat": 50.5244336,
+      "centerLng": -126.0176838,
       "places": [],
       "directions": [],
       "routes": [
@@ -860,7 +901,6 @@
       "rentalCars": []
     },
     {
-      "day": 9,
       "leg": "Port Neville → Telegraph Cove",
       "nm": 57,
       "hrs": 3.8,
@@ -878,6 +918,9 @@
         "Remote Inside Passage location offering pristine wilderness and solitude"
       ],
       "note": "Relaxed day after yesterday's long push. Take your time through Johnstone Strait — the orca viewing here is as good as it gets on the BC coast.",
+      "centerName": "Area D (Nimpkish Valley/Cormorant Island), Canada",
+      "centerLat": 50.55029,
+      "centerLng": -126.82729,
       "places": [
         {
           "id": "2f42371b-258c-4d0f-9155-38df5d20e31e",
@@ -989,7 +1032,6 @@
       "rentalCars": []
     },
     {
-      "day": 10,
       "leg": "Telegraph Cove → Broughtons / Lagoon Cove",
       "nm": 257.7,
       "hrs": 17.2,
@@ -1011,6 +1053,9 @@
         "Ideal for kayaking, hiking, and nature photography in old-growth forests"
       ],
       "note": "Arriving early gives you the afternoon to explore and get oriented. Tonight: Kelly & Dan's famous prawn potluck — they supply the prawns, you bring an appetizer. Unmissable.",
+      "centerName": "Area A (Seymour Inlet/Knight Inlet), Canada",
+      "centerLat": 50.5988905,
+      "centerLng": -126.317367,
       "places": [
         {
           "id": "665d5f2e-476e-4e0a-9297-7bab3f06e16b",
@@ -1366,7 +1411,6 @@
       "rentalCars": []
     },
     {
-      "day": 11,
       "leg": "Broughton Islands — Layover",
       "nm": 0,
       "hrs": 0,
@@ -1388,6 +1432,9 @@
         "Explore Echo Bay — Pierre's floating post office, a slice of remote BC character"
       ],
       "note": "Book Knight Inlet Lodge or Tide Rip Grizzly Tours in advance — this is a genuine bucket-list experience. Seeing a grizzly from the water in its natural habitat with the kids is unforgettable.",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
       "places": [],
       "directions": [],
       "routes": [],
@@ -1395,7 +1442,6 @@
       "rentalCars": []
     },
     {
-      "day": 12,
       "leg": "Lagoon Cove → Blind Channel Resort",
       "nm": 48.5,
       "hrs": 3.2,
@@ -1416,6 +1462,9 @@
         "Well-stocked general store — last good provisioning point before the south run"
       ],
       "note": "Call ahead on VHF 66A to reserve a slip — Blind Channel fills up in summer. Easy run today; enjoy the slow pace.",
+      "centerName": "Area C (Discovery Islands/Mainland Inlets), Canada",
+      "centerLat": 50.413444500000004,
+      "centerLng": -125.50205989999999,
       "places": [],
       "directions": [],
       "routes": [
@@ -1594,7 +1643,6 @@
       "rentalCars": []
     },
     {
-      "day": 13,
       "leg": "Blind Channel → Squirrel Cove (Cortes Island)",
       "nm": 35.9,
       "hrs": 2.4,
@@ -1614,6 +1662,9 @@
         "Fish for coho salmon returning through this corridor in July"
       ],
       "note": "Gentle re-entry to the southern waters. The lagoon inside Squirrel Cove is one of those hidden BC gems — explore it by kayak or dinghy at high tide.",
+      "centerName": "Area B (Cortes Island), Canada",
+      "centerLat": 50.1325644,
+      "centerLng": -124.91703,
       "places": [],
       "directions": [],
       "routes": [
@@ -1796,7 +1847,6 @@
       "rentalCars": []
     },
     {
-      "day": 14,
       "leg": "Squirrel Cove → Montague Harbour (Galiano Island)",
       "nm": 139.4,
       "hrs": 9.3,
@@ -1817,6 +1867,9 @@
         "Hummingbird Pub on Galiano Island for a relaxed family dinner ashore"
       ],
       "note": "Active Pass: narrow channel between Galiano and Mayne Islands with heavy BC Ferries traffic. Reduce speed, hug the correct side, and give ferries wide berth.",
+      "centerName": "Southern Gulf Islands Electoral Area, Canada",
+      "centerLat": 48.8914111,
+      "centerLng": -123.3978415,
       "places": [],
       "directions": [],
       "routes": [
@@ -1923,7 +1976,6 @@
       "rentalCars": []
     },
     {
-      "day": 15,
       "leg": "Gulf Islands — Layover",
       "nm": 0,
       "hrs": 0,
@@ -1946,6 +1998,9 @@
         "Afternoon swim off the shell beach — warm, shallow, ideal for kids"
       ],
       "note": "First full Gulf Islands decompression day. No agenda required.",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
       "places": [],
       "directions": [],
       "routes": [],
@@ -1953,7 +2008,6 @@
       "rentalCars": []
     },
     {
-      "day": 16,
       "leg": "Gulf Islands — Layover",
       "nm": 0,
       "hrs": 0,
@@ -1975,6 +2029,9 @@
         "Move anchorages mid-day if the mood strikes"
       ],
       "note": "Second Gulf Islands layover. No agenda — use it however the family wants. Salt Spring Ganges is excellent if anyone wants shops or a proper meal ashore.",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
       "places": [],
       "directions": [],
       "routes": [],
@@ -1982,7 +2039,6 @@
       "rentalCars": []
     },
     {
-      "day": 17,
       "leg": "Gulf Islands → Victoria (fuel) → Seattle",
       "nm": 92,
       "hrs": 6.1,
@@ -2005,6 +2061,9 @@
         "Optional: brief stop at Roche Harbor (San Juan Islands) to break the final leg"
       ],
       "note": "Slightly over the usual 100 NM preference, but Victoria breaks it naturally into two segments. Register everyone on the CBP ROAM app before leaving Victoria. Shilshole or Lake Union via the locks for Seattle landfall.",
+      "centerName": "Seattle, United States",
+      "centerLat": 47.6302997,
+      "centerLng": -122.3914826,
       "places": [],
       "directions": [],
       "routes": [
