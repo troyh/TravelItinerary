@@ -1725,7 +1725,7 @@
       "centerLat": 34.4136225,
       "centerLng": -119.8525843,
       "highlights": [],
-      "note": "Check-in 7:30-9:10am\n\nWhen you arrive on campus, follow the signs for Orientation and park in the Lot 22 Parking Structure. All vehicles on campus must have a valid campus parking permit. You will enter your vehicle's license plate information to purchase an ePermit from a kiosk in the parking lot. Parking permits cost $8 per day. You will have the option to select an Orientation parking permit to be valid for the entire Orientation program for $16. \n\nFor directions to UCSB, see https://www.ucsb.edu/about/visit",
+      "note": "Check-in 7:30-9:10am\n\nWhen you arrive on campus, follow the signs for Orientation and park in the Lot 22 Parking Structure. All vehicles on campus must have a valid campus parking permit. You will enter your vehicle's license plate information to purchase an ePermit from a kiosk in the parking lot. **Parking permits cost $8 per day. You will have the option to select an Orientation parking permit to be valid for the entire Orientation program for $16.** \n\nFor directions to UCSB, see https://www.ucsb.edu/about/visit",
       "places": [
         {
           "id": "6466d4dd-153a-480b-8b62-f8822de0ad05",
@@ -1789,6 +1789,30 @@
           "tickets": "",
           "activity": "Start of orientation. Where?",
           "addedAt": "2026-05-18T23:25:26.604Z"
+        },
+        {
+          "id": "e3996ba2-1153-4a20-b256-68ea618a4705",
+          "name": "Art, Design & Architecture Museum, UCSB",
+          "address": "552 University Road, Santa Barbara, CA 93106, United States",
+          "lat": 34.4118577,
+          "lng": -119.849081,
+          "category": "activity",
+          "time": "3pm",
+          "duration": "",
+          "notes": "",
+          "confirmation": "",
+          "partySize": "",
+          "bookedVia": "",
+          "dietary": "",
+          "room": "",
+          "guests": "",
+          "stayLength": "",
+          "operator": "",
+          "cost": "",
+          "entry": "",
+          "tickets": "",
+          "activity": "",
+          "addedAt": "2026-05-19T05:18:15.896Z"
         }
       ],
       "directions": [],
