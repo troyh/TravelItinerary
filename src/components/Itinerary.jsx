@@ -3695,7 +3695,7 @@ export default function Itinerary() {
                   padding:"28px 0 36px", borderBottom:"1px solid #e2e5ea" }}>
 
                   {/* Left: day header */}
-                  <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+                  <div style={{ display:"flex", flexDirection:"column", gap:10, minHeight:0 }}>
 
                     {/* Desktop date display */}
                     <div className="day-date-desktop">
@@ -3716,6 +3716,58 @@ export default function Itinerary() {
                       ) : (
                         <div style={{ fontSize:44, fontWeight:700, color:"#0b3d6b", lineHeight:1, fontVariantNumeric:"tabular-nums" }}>
                           {d.day}
+                        </div>
+                      )}
+                      {/* Location — shown next to date */}
+                      {(dayBias !== null || d.centerName) && (
+                        <div style={{ position:"relative", marginTop:6 }}>
+                          <div style={{ display:"flex", alignItems:"center", gap:4 }}>
+                            <span style={{ color:"#9ba1ac", fontSize:11, flexShrink:0 }}>📍</span>
+                            <input
+                              value={d.centerName || ""}
+                              onChange={e => {
+                                setDays(prev => prev.map(x => x.day === d.day ? { ...x, centerName: e.target.value } : x));
+                                fetchLocPreds(d.day, e.target.value, dayBias);
+                                setLocActiveDay(d.day);
+                              }}
+                              onFocus={() => setLocActiveDay(d.day)}
+                              onBlur={() => setTimeout(() => { if (locActiveDay === d.day) { setLocPreds([]); setLocActiveDay(null); } }, 150)}
+                              onKeyDown={e => { if (e.key === "Escape") { setLocPreds([]); setLocActiveDay(null); } }}
+                              placeholder={dayBias ? "Detecting…" : ""}
+                              readOnly={readOnly}
+                              title={d.centerLat ? `${d.centerLat.toFixed(3)}, ${d.centerLng.toFixed(3)}` : ""}
+                              style={{ fontSize:11, color:"#5c6470", background:"none", border:"none", outline:"none",
+                                fontFamily:"inherit", flex:1, cursor: readOnly ? "default" : "text",
+                                padding:0, minWidth:0 }}
+                            />
+                            {!readOnly && d.centerLat !== null && (
+                              <button
+                                onClick={() => setDays(prev => prev.map(x => x.day === d.day
+                                  ? { ...x, centerName: "", centerLat: null, centerLng: null }
+                                  : x))}
+                                title="Reset to auto-detected location"
+                                style={{ background:"none", border:"none", color:"#9ba1ac", cursor:"pointer",
+                                  fontSize:11, padding:0, lineHeight:1, flexShrink:0 }}>
+                                ↺
+                              </button>
+                            )}
+                          </div>
+                          {locActiveDay === d.day && locPreds.length > 0 && (
+                            <div style={{ position:"absolute", top:"100%", left:0, zIndex:200, minWidth:260,
+                              background:"#ffffff", border:"1px solid #e2e5ea", borderRadius:8,
+                              boxShadow:"0 4px 20px rgba(0,0,0,0.1)", overflow:"hidden", marginTop:4 }}>
+                              {locPreds.map((pred, i) => (
+                                <button key={i}
+                                  onMouseDown={e => { e.preventDefault(); selectLocPred(d.day, pred); }}
+                                  style={{ display:"block", width:"100%", textAlign:"left", background:"none",
+                                    border:"none", borderBottom: i < locPreds.length-1 ? "1px solid #f0f1f3" : "none",
+                                    padding:"8px 12px", fontSize:13, cursor:"pointer", fontFamily:"inherit" }}>
+                                  <div style={{ fontWeight:500, color:"#0e1014" }}>{pred.name}</div>
+                                  {pred.subtitle && <div style={{ fontSize:11, color:"#9ba1ac", marginTop:1 }}>{pred.subtitle}</div>}
+                                </button>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -3786,63 +3838,11 @@ export default function Itinerary() {
                             padding:".1rem 0", fontFamily:"inherit",
                             lineHeight:1.55, boxSizing:"border-box", outline:"none",
                             cursor: readOnly ? "default" : "text", resize:"none",
-                            minHeight: isEditing ? 60 : 20, overflow:"hidden" }}
+                            flex:1, minHeight:20, overflow:"auto" }}
                         />
                       );
                     })()}
 
-                    {/* General location — auto-geocoded, user-editable */}
-                    {(dayBias !== null || d.centerName) && (
-                      <div style={{ position:"relative" }}>
-                        <div style={{ display:"flex", alignItems:"center", gap:4 }}>
-                          <span style={{ color:"#9ba1ac", fontSize:12, flexShrink:0 }}>📍</span>
-                          <input
-                            value={d.centerName || ""}
-                            onChange={e => {
-                              setDays(prev => prev.map(x => x.day === d.day ? { ...x, centerName: e.target.value } : x));
-                              fetchLocPreds(d.day, e.target.value, dayBias);
-                              setLocActiveDay(d.day);
-                            }}
-                            onFocus={() => setLocActiveDay(d.day)}
-                            onBlur={() => setTimeout(() => { if (locActiveDay === d.day) { setLocPreds([]); setLocActiveDay(null); } }, 150)}
-                            onKeyDown={e => { if (e.key === "Escape") { setLocPreds([]); setLocActiveDay(null); } }}
-                            placeholder={dayBias ? "Detecting…" : ""}
-                            readOnly={readOnly}
-                            title={d.centerLat ? `${d.centerLat.toFixed(3)}, ${d.centerLng.toFixed(3)}` : ""}
-                            style={{ fontSize:12, color:"#5c6470", background:"none", border:"none", outline:"none",
-                              fontFamily:"inherit", flex:1, cursor: readOnly ? "default" : "text",
-                              padding:0, minWidth:0 }}
-                          />
-                          {!readOnly && d.centerLat !== null && (
-                            <button
-                              onClick={() => setDays(prev => prev.map(x => x.day === d.day
-                                ? { ...x, centerName: "", centerLat: null, centerLng: null }
-                                : x))}
-                              title="Reset to auto-detected location"
-                              style={{ background:"none", border:"none", color:"#9ba1ac", cursor:"pointer",
-                                fontSize:11, padding:0, lineHeight:1, flexShrink:0 }}>
-                              ↺
-                            </button>
-                          )}
-                        </div>
-                        {locActiveDay === d.day && locPreds.length > 0 && (
-                          <div style={{ position:"absolute", top:"100%", left:0, zIndex:200, minWidth:260,
-                            background:"#ffffff", border:"1px solid #e2e5ea", borderRadius:8,
-                            boxShadow:"0 4px 20px rgba(0,0,0,0.1)", overflow:"hidden", marginTop:4 }}>
-                            {locPreds.map((pred, i) => (
-                              <button key={i}
-                                onMouseDown={e => { e.preventDefault(); selectLocPred(d.day, pred); }}
-                                style={{ display:"block", width:"100%", textAlign:"left", background:"none",
-                                  border:"none", borderBottom: i < locPreds.length-1 ? "1px solid #f0f1f3" : "none",
-                                  padding:"8px 12px", fontSize:13, cursor:"pointer", fontFamily:"inherit" }}>
-                                <div style={{ fontWeight:500, color:"#0e1014" }}>{pred.name}</div>
-                                {pred.subtitle && <div style={{ fontSize:11, color:"#9ba1ac", marginTop:1 }}>{pred.subtitle}</div>}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </div>
 
                   {/* Right: content with left border */}
