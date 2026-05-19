@@ -8,100 +8,69 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260712
 DTEND;VALUE=DATE:20260713
 SUMMARY:Day 1: Fly to Santa Barbara
-DESCRIPTION:\nHighlights:\n• Get rental car\n• Drive to hotel\n\nFlights:\n✈ as400: SEA → SBA · 909 mi (Conf: SMEPDX)\n\nRental Cars:\n🚗 Hertz?\n   Pick-up: SBA Airport\n   Drop-off: SBA Airport
-URL:https://troyh.github.io/TravelItinerary/?i=it-a44dcfe4&day=1
+DESCRIPTION:\nNote: t\n\nFlights:\n✈ undefined: undefined → undefined
+URL:[object Object]?i=https%3A%2F%2Ftroyh.github.io%2FTravelItinerary%2F&day=1
 UID:day-1-20260712@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260712T160600
-DTEND:20260712T183800
-SUMMARY:✈ as400: SEA → SBA
-DESCRIPTION:Alaska Airlines · Boeing 737-800\nSeattle → Santa Barbara\nConfirmation: SMEPDX
-UID:flight-5a84feeb-c6bb-4edc-8434-3f815677b44c@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260712T140000
-DTEND:20260712T142700
-SUMMARY:1107 21st Ave E → Seattle-Tacoma Airport
-LOCATION:Seattle-Tacoma Airport
-DESCRIPTION:29.5 km · 27 min
-URL:https://maps.apple.com/?saddr=1107%2021st%20Ave%20E&daddr=Seattle-Tacoma%20Airport&dirflg=d
-UID:dir-3422106b-6b77-4577-89cd-91ffed08b5d7@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260712T190000
-DTEND:20260712T200000
-SUMMARY:🚗 Hertz? Car Rental
-LOCATION:SBA Airport
-DESCRIPTION:Pick-up: SBA Airport\nDrop-off: SBA Airport
-UID:rental-b675ca79-127b-4768-b4b4-4f27a563f6e6@travelitinerary
+DTEND:20260712T150000
+SUMMARY:
+UID:place-3422106b-6b77-4577-89cd-91ffed08b5d7@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260713
 DTEND;VALUE=DATE:20260714
 SUMMARY:Day 2: Orientation Day 1
-DESCRIPTION:\nNote: Check-in 7:30-9:10am\n\nWhen you arrive on campus\, follow the signs for Orientation and park in the Lot 22 Parking Structure. All vehicles on campus must have a valid campus parking permit. You will enter your vehicle's license plate information to purchase an ePermit from a kiosk in the parking lot. Parking permits cost $8 per day. You will have the option to select an Orientation parking permit to be valid for the entire Orientation program for $16. \n\nFor directions to UCSB\, see https://www.ucsb.edu/about/visit
-URL:https://troyh.github.io/TravelItinerary/?i=it-a44dcfe4&day=2
+DESCRIPTION:\nNote: -\n\nRental Cars:\n🚗 undefined\n🚗 undefined\n🚗 undefined
+URL:[object Object]?i=https%3A%2F%2Ftroyh.github.io%2FTravelItinerary%2F&day=2
 UID:day-2-20260713@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T074500
 DTEND:20260713T084500
-SUMMARY:UCSB Parking Lot 22
-LOCATION:22 Ocean Rd\, Santa Barbara\, CA 93106\, United States
-UID:place-6466d4dd-153a-480b-8b62-f8822de0ad05@travelitinerary
+SUMMARY:🚗 undefined Car Rental
+UID:rental-6466d4dd-153a-480b-8b62-f8822de0ad05@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T123000
 DTEND:20260713T133000
-SUMMARY:UCSB Visitors Center
-LOCATION:1234 Ocean Rd\, Goleta\, CA  93106\, United States
+SUMMARY:🚗 undefined Car Rental
 DESCRIPTION:We can eat at some food court or place on campus
-UID:place-16c4e052-3533-4bad-90c8-76899759f745@travelitinerary
+UID:rental-16c4e052-3533-4bad-90c8-76899759f745@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T090000
 DTEND:20260713T100000
-SUMMARY:Start of orientation. Where?
-UID:place-a1916642-bd4a-42a6-bd31-662a69b75b2a@travelitinerary
+SUMMARY:🚗 undefined Car Rental
+UID:rental-a1916642-bd4a-42a6-bd31-662a69b75b2a@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260714
 DTEND;VALUE=DATE:20260715
 SUMMARY:Day 3: Orientation Day 2
-DESCRIPTION:\nHighlights:\n• Attend events\n• Fly home\n\nFlights:\n✈ AS400: SBA → SEA · 909 mi (Conf: SMEPDX)
-URL:https://troyh.github.io/TravelItinerary/?i=it-a44dcfe4&day=3
+DESCRIPTION:\nNote: a\n\nRental Cars:\n🚗 undefined\n🚗 undefined
+URL:[object Object]?i=https%3A%2F%2Ftroyh.github.io%2FTravelItinerary%2F&day=3
 UID:day-3-20260714@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260714T192800
-DTEND:20260714T220000
-SUMMARY:✈ AS400: SBA → SEA
-DESCRIPTION:Alaska Airlines · Boeing 737-800\nSanta Barbara → Seattle\nConfirmation: SMEPDX
-UID:flight-f741e40f-c63f-4ee9-9f85-dc7c01eaaaa6@travelitinerary
+DTSTART:20260714T170000
+DTEND:20260714T180000
+SUMMARY:
+UID:place-0fe30eea-940a-4ec2-a5ca-a124660080eb@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260714T090000
 DTEND:20260714T100000
-SUMMARY:UCSB Parking Lot 22
-LOCATION:22 Ocean Rd\, Santa Barbara\, CA 93106\, United States
+SUMMARY:🚗 undefined Car Rental
 DESCRIPTION:Orientation Events Begin
-UID:place-0ce89002-9e17-48f3-8ee9-ac0e31061544@travelitinerary
+UID:rental-0ce89002-9e17-48f3-8ee9-ac0e31061544@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260714T123000
 DTEND:20260714T133000
-SUMMARY:
+SUMMARY:🚗 undefined Car Rental
 DESCRIPTION:Lunch together?
-UID:place-a53e297b-87f3-484d-945c-d08b4ecf438e@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260714T170000
-DTEND:20260714T170800
-SUMMARY:UCSB Parking Lot 22 → Santa Barbara Airport - SBA
-LOCATION:Santa Barbara Airport - SBA
-DESCRIPTION:4.5 km · 8 min
-URL:https://maps.apple.com/?saddr=UCSB%20Parking%20Lot%2022&daddr=Santa%20Barbara%20Airport%20-%20SBA&dirflg=d
-UID:dir-0fe30eea-940a-4ec2-a5ca-a124660080eb@travelitinerary
+UID:rental-a53e297b-87f3-484d-945c-d08b4ecf438e@travelitinerary
 END:VEVENT
 END:VCALENDAR
