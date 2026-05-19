@@ -1744,7 +1744,7 @@
         },
         {
           "id": "16c4e052-3533-4bad-90c8-76899759f745",
-          "name": "UCSB Visitors Center",
+          "name": "Visitor Center",
           "address": "1234 Ocean Rd, Goleta, CA  93106, United States",
           "lat": 34.4164575,
           "lng": -119.847134,
@@ -1764,7 +1764,8 @@
           "entry": "",
           "tickets": "",
           "activity": "",
-          "addedAt": "2026-05-18T23:23:26.569Z"
+          "addedAt": "2026-05-18T23:23:26.569Z",
+          "placeKind": "eat"
         },
         {
           "id": "a1916642-bd4a-42a6-bd31-662a69b75b2a",
@@ -1788,7 +1789,8 @@
           "entry": "",
           "tickets": "",
           "activity": "Start of orientation. Where?",
-          "addedAt": "2026-05-18T23:25:26.604Z"
+          "addedAt": "2026-05-18T23:25:26.604Z",
+          "placeKind": "do"
         },
         {
           "id": "e3996ba2-1153-4a20-b256-68ea618a4705",
@@ -1812,7 +1814,8 @@
           "entry": "",
           "tickets": "",
           "activity": "",
-          "addedAt": "2026-05-19T05:18:15.896Z"
+          "addedAt": "2026-05-19T05:18:15.896Z",
+          "placeKind": "see"
         }
       ],
       "directions": [],
