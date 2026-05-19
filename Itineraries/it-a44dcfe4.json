@@ -1877,11 +1877,11 @@
         },
         {
           "id": "a53e297b-87f3-484d-945c-d08b4ecf438e",
-          "name": "",
+          "name": "Lunch",
           "address": "",
           "lat": null,
           "lng": null,
-          "category": "other",
+          "category": "activity",
           "time": "12:30",
           "duration": "",
           "notes": "Lunch together?",
@@ -1896,8 +1896,9 @@
           "cost": "",
           "entry": "",
           "tickets": "",
-          "activity": "",
-          "addedAt": "2026-05-18T23:27:42.984Z"
+          "activity": "Lunch",
+          "addedAt": "2026-05-18T23:27:42.984Z",
+          "placeKind": "do"
         }
       ],
       "directions": [
