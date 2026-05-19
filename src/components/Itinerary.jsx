@@ -188,21 +188,18 @@ const PLACE_KINDS = [
 function AddTypeBtn({ glyph, label, sub, onClick, accent = false }) {
   return (
     <button onClick={onClick} style={{
-      display:"flex", alignItems:"center", gap:10, padding:"10px 14px",
+      display:"flex", alignItems:"center", gap:7, padding:"7px 10px",
       background: accent ? "#0b3d6b" : "#ffffff",
       border: accent ? "none" : "1px solid #e2e5ea",
       borderRadius:8, cursor:"pointer", fontFamily:"inherit", textAlign:"left", flex:1, minWidth:0,
     }}>
-      <div style={{
-        width:30, height:30, borderRadius:7, flexShrink:0,
+      <span style={{
+        width:22, height:22, borderRadius:5, flexShrink:0,
         background: accent ? "rgba(255,255,255,0.18)" : "#e8f1f9",
         color: accent ? "#fff" : "#0b3d6b",
         display:"flex", alignItems:"center", justifyContent:"center",
-      }}>{glyph}</div>
-      <div style={{ minWidth:0 }}>
-        <div style={{ fontSize:13, fontWeight:600, color: accent ? "#fff" : "#0e1014", letterSpacing:-0.1 }}>{label}</div>
-        <div style={{ fontSize:11, color: accent ? "rgba(255,255,255,0.7)" : "#9ba1ac", marginTop:1 }}>{sub}</div>
-      </div>
+      }}>{glyph}</span>
+      <span style={{ fontSize:12, fontWeight:600, color: accent ? "#fff" : "#0e1014", letterSpacing:-0.1 }}>{label}</span>
     </button>
   );
 }
@@ -2499,71 +2496,52 @@ export default function Itinerary() {
       {/* ── TITLE + FACTS ── */}
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "1.5rem 2rem 0" }}>
 
-        {/* Title / edit form */}
+        {/* Title — click to edit inline */}
         {editingHeader ? (
-          <div style={{ marginBottom: "1.5rem" }}>
+          <div style={{ marginBottom: subtitle ? ".3rem" : ".75rem" }}>
             <input autoFocus value={headerDraft.title}
               onChange={e => setHeaderDraft(p => ({ ...p, title: e.target.value }))}
+              onBlur={() => { setTitle(headerDraft.title.trim() || title); setEditingHeader(false); }}
               onKeyDown={e => {
                 if (e.key === "Escape") setEditingHeader(false);
-                if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                  setTitle(headerDraft.title.trim() || title);
-                  setSubtitle(headerDraft.subtitle);
-                  setEditingHeader(false);
-                }
+                if (e.key === "Enter") { setTitle(headerDraft.title.trim() || title); setEditingHeader(false); }
               }}
-              style={{ width:"100%", background:"#f0f4f8", border:"1px solid #e2e5ea", color:"#0e1014",
-                borderRadius:8, padding:".45rem .75rem", fontSize:"clamp(1.2rem,3vw,1.8rem)",
-                fontFamily:"inherit", fontWeight:700, letterSpacing:"-.03em",
-                outline:"none", boxSizing:"border-box", marginBottom:".5rem" }} />
-            <input value={headerDraft.subtitle}
-              onChange={e => setHeaderDraft(p => ({ ...p, subtitle: e.target.value }))}
-              onKeyDown={e => {
-                if (e.key === "Escape") setEditingHeader(false);
-                if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                  setTitle(headerDraft.title.trim() || title);
-                  setSubtitle(headerDraft.subtitle);
-                  setEditingHeader(false);
-                }
-              }}
-              placeholder="Subtitle / tagline (optional)"
-              style={{ width:"100%", background:"#f0f4f8", border:"1px solid #e2e5ea", color:"#9ba1ac",
-                borderRadius:8, padding:".4rem .75rem", fontSize:".9rem",
-                fontFamily:"inherit", fontStyle:"italic",
-                outline:"none", boxSizing:"border-box", marginBottom:".6rem" }} />
-            <div style={{ display:"flex", gap:".5rem" }}>
-              <button onClick={() => { setTitle(headerDraft.title.trim() || title); setSubtitle(headerDraft.subtitle); setEditingHeader(false); }}
-                style={{ background:"#0b3d6b", border:"none", color:"#fff",
-                  borderRadius:6, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"inherit", cursor:"pointer" }}>
-                Save
-              </button>
-              <button onClick={() => setEditingHeader(false)}
-                style={{ background:"none", border:"1px solid #e2e5ea", color:"#6b7a8a",
-                  borderRadius:6, padding:".3rem .75rem", fontSize:".75rem", fontFamily:"inherit", cursor:"pointer" }}>
-                Cancel
-              </button>
-            </div>
+              className="inline-title-input"
+              style={{ width:"100%", background:"transparent", border:"none", color:"#0e1014",
+                borderBottom:"2px solid #0b3d6b", padding:".1rem 0",
+                fontFamily:"inherit", outline:"none", boxSizing:"border-box" }} />
           </div>
         ) : (
-          <div style={{ display:"flex", alignItems:"flex-start", gap:".5rem", marginBottom: subtitle ? ".3rem" : ".75rem" }}>
-            <h1 style={{ fontSize:"clamp(1.6rem,4vw,2.4rem)", fontWeight:700, color:"#0e1014",
-              margin:0, letterSpacing:"-.03em", lineHeight:1.15, flex:1 }}>
-              {title}
-            </h1>
-            {!readOnly && (
-              <button onClick={() => { setEditingHeader(true); setHeaderDraft({ title, subtitle }); }}
-                style={{ background:"none", border:"none", color:"#6b7a8a", cursor:"pointer",
-                  fontSize:".7rem", fontFamily:"inherit", padding:0, flexShrink:0, marginTop:".35rem" }}>
-                Edit
-              </button>
-            )}
-          </div>
+          <h1
+            onClick={() => !readOnly && (setEditingHeader(true), setHeaderDraft({ title, subtitle }))}
+            style={{ fontSize:"clamp(1.6rem,4vw,2.4rem)", fontWeight:700, color:"#0e1014",
+              margin:"0 0 " + (subtitle ? ".3rem" : ".75rem"), letterSpacing:"-.03em",
+              lineHeight:1.15, cursor: readOnly ? "default" : "text" }}>
+            {title}
+          </h1>
         )}
-        {subtitle && !editingHeader && (
-          <p style={{ color:"#9ba1ac", margin:"0 0 .75rem", fontSize:".9rem", fontStyle:"italic" }}>
-            {subtitle}
-          </p>
-        )}
+        {/* Subtitle — click to edit inline */}
+        {(subtitle || editingHeader) && !readOnly ? (
+          <input
+            value={editingHeader ? headerDraft.subtitle : subtitle}
+            onChange={e => {
+              if (!editingHeader) { setEditingHeader(true); setHeaderDraft({ title, subtitle: e.target.value }); }
+              else setHeaderDraft(p => ({ ...p, subtitle: e.target.value }));
+            }}
+            onFocus={() => { if (!editingHeader) { setEditingHeader(true); setHeaderDraft({ title, subtitle }); } }}
+            onBlur={() => { setSubtitle(headerDraft.subtitle); setEditingHeader(false); }}
+            onKeyDown={e => { if (e.key === "Escape") setEditingHeader(false); }}
+            placeholder="Add subtitle…"
+            className="inline-subtitle-input"
+            style={{ display:"block", width:"100%", background:"transparent", border:"none",
+              borderBottom: editingHeader ? "1px solid #e2e5ea" : "none",
+              color:"#9ba1ac", padding:".1rem 0",
+              fontFamily:"inherit", fontStyle:"italic", outline:"none",
+              marginBottom:".75rem", cursor:"text", boxSizing:"border-box" }}
+          />
+        ) : subtitle ? (
+          <p style={{ color:"#9ba1ac", margin:"0 0 .75rem", fontSize:".9rem", fontStyle:"italic" }}>{subtitle}</p>
+        ) : null}
         {dateRange && !editingHeader && (
           <div style={{ fontSize:15, color:"#5c6470", marginBottom:"1.5rem", fontVariantNumeric:"tabular-nums" }}>
             {dateRange} · {days.length} {days.length === 1 ? "day" : "days"}
@@ -2571,7 +2549,7 @@ export default function Itinerary() {
         )}
 
         {/* Two-column: stats+notes left, date grid+todos right */}
-        <div style={{ display:"flex", gap:48, alignItems:"flex-start", marginBottom:"1.5rem", flexWrap:"wrap" }}>
+        <div style={{ display:"flex", gap:48, alignItems:"stretch", marginBottom:"1.5rem", flexWrap:"wrap" }}>
 
           {/* Left: stats + notes */}
           <div style={{ flex:1, minWidth:200, display:"flex", flexDirection:"column", gap:16 }}>
@@ -2596,47 +2574,37 @@ export default function Itinerary() {
               );
             })()}
 
-            {/* Notes */}
-            {(itineraryNotes && !editingNotes) && (
-              <div style={{ fontSize:13, lineHeight:1.6, color:"#0e1014" }}>
-                <NoteMarkdown>{itineraryNotes}</NoteMarkdown>
-                {!readOnly && (
-                  <button onClick={() => setEditingNotes(true)}
-                    style={{ background:"none", border:"none", color:"#9ba1ac", cursor:"pointer",
-                      fontSize:11, fontFamily:"inherit", padding:0, marginTop:4, display:"block" }}>
-                    Edit
-                  </button>
-                )}
-              </div>
-            )}
-            {(!itineraryNotes && !readOnly && !editingNotes) && (
-              <button onClick={() => setEditingNotes(true)}
-                style={{ background:"none", border:"1px dashed #e2e5ea", color:"#9ba1ac",
-                  borderRadius:10, padding:"10px 16px", fontSize:12, fontFamily:"inherit",
-                  cursor:"pointer", textAlign:"left", alignSelf:"flex-start" }}>
-                + Add notes
-              </button>
-            )}
-            {editingNotes && (
-              <div>
+            {/* Notes — click to edit inline, auto-save on blur */}
+            {!readOnly ? (
+              editingNotes ? (
                 <textarea
                   autoFocus
                   value={itineraryNotes}
                   onChange={e => setItineraryNotes(e.target.value)}
+                  onBlur={() => setEditingNotes(false)}
                   onKeyDown={e => { if (e.key === "Escape") setEditingNotes(false); }}
                   placeholder="Notes about this trip…"
-                  rows={4}
-                  style={{ width:"100%", background:"#ffffff", border:"1px solid #e2e5ea", color:"#0e1014",
-                    borderRadius:8, padding:".5rem .75rem", fontSize:13, fontFamily:"inherit",
-                    lineHeight:1.6, resize:"vertical", boxSizing:"border-box", outline:"none", marginBottom:6 }}
+                  className="inline-notes-textarea"
+                  style={{ width:"100%", flex:1, background:"transparent", border:"none",
+                    borderBottom:"1px solid #e2e5ea", color:"#0e1014",
+                    padding:".1rem 0", fontFamily:"inherit",
+                    lineHeight:1.6, boxSizing:"border-box", outline:"none",
+                    resize:"none", minHeight:0 }}
                 />
-                <button onClick={() => setEditingNotes(false)}
-                  style={{ background:"#0b3d6b", border:"none", color:"#fff",
-                    borderRadius:6, padding:".3rem .75rem", fontSize:12, fontFamily:"inherit", cursor:"pointer" }}>
-                  Done
-                </button>
+              ) : (
+                <div onClick={() => setEditingNotes(true)}
+                  style={{ fontSize:13, lineHeight:1.6, color: itineraryNotes ? "#0e1014" : "#9ba1ac",
+                    cursor:"text", minHeight:24 }}>
+                  {itineraryNotes
+                    ? <NoteMarkdown>{itineraryNotes}</NoteMarkdown>
+                    : "Add notes about this trip…"}
+                </div>
+              )
+            ) : itineraryNotes ? (
+              <div style={{ fontSize:13, lineHeight:1.6, color:"#0e1014" }}>
+                <NoteMarkdown>{itineraryNotes}</NoteMarkdown>
               </div>
-            )}
+            ) : null}
           </div>
 
           {/* Right: date grid only */}
@@ -2749,39 +2717,6 @@ export default function Itinerary() {
       {/* ── SECONDARY INFO ── */}
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 2rem" }}>
 
-          {/* Day-strip */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
-            {days.map(d => {
-              const lay  = effNm(d) === 0;
-              const fuel = d.fuelStop;
-              const tide = d.tideWarning;
-              const bg   = tide ? "#fee2e2" : fuel ? "#fff7ed" : lay ? "#dcfce7" : "#e2e5ea";
-              const col  = tide ? "#dc2626" : fuel ? "#d97706" : lay ? "#16a34a" : "#5c6470";
-              const info = getDayDate(d.day);
-              return (
-                <div key={d.day}
-                  onClick={() => { setActiveTab("itinerary"); }}
-                  title={info ? `${d.leg} · ${info.dow}, ${info.date}` : d.leg}
-                  style={{ width:32, minHeight:32, borderRadius:4, background:bg,
-                    display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
-                    fontSize:".6rem", color:col, cursor:"pointer", fontFamily:"inherit",
-                    padding: info ? "4px 0" : 0, gap:1,
-                    border: "1px solid transparent" }}>
-                  <span>D{d.day}</span>
-                  {info && <span style={{ fontSize:".5rem", opacity:.9, lineHeight:1 }}>{info.dow}</span>}
-                  {info && <span style={{ fontSize:".5rem", opacity:.7, lineHeight:1 }}>{info.date}</span>}
-                </div>
-              );
-            })}
-            <div style={{ display:"flex", gap:10, marginLeft:8, flexWrap:"wrap", alignItems:"center" }}>
-              {[["#e2e5ea","#5c6470","Underway"],["#dcfce7","#16a34a","Layover"],["#fff7ed","#d97706","⛽ Fuel"],["#fee2e2","#dc2626","⚠ Tides"]].map(([bg,col,lbl])=>(
-                <div key={lbl} style={{ display:"flex", alignItems:"center", gap:4 }}>
-                  <div style={{ width:10, height:10, borderRadius:2, background:bg, border:`1px solid ${col}` }}/>
-                  <span style={{ fontSize:".62rem", color:col, fontFamily:"inherit" }}>{lbl}</span>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
 
       {/* ── CONFLICT BANNER ── */}
@@ -2856,7 +2791,7 @@ export default function Itinerary() {
             <div key={d.day}>
 
               {/* ── Day: two-column layout ── */}
-                <div className="day-expanded-grid" style={{ display:"grid", gridTemplateColumns:"180px 1fr", gap:36,
+                <div className="day-expanded-grid" style={{ display:"grid", gridTemplateColumns:"3fr 2fr", gap:36,
                   padding:"28px 0 36px", borderBottom:"1px solid #e2e5ea" }}>
 
                   {/* Left: day header */}
@@ -2910,36 +2845,20 @@ export default function Itinerary() {
                     {/* Title / edit (hidden on mobile — shown in day-date-mobile row) */}
                     <div className="day-title-desktop">
                     {editingCoreDay === d.day ? (
-                      <div>
-                        <input autoFocus value={coreDraft.leg}
-                          onChange={e => setCoreDraft(p => ({ ...p, leg: e.target.value }))}
-                          onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if ((e.metaKey||e.ctrlKey) && e.key === "Enter") saveCore(d.day); }}
-                          style={{ width:"100%", background:"#ffffff", border:"1px solid #e2e5ea", color:"#0e1014",
-                            borderRadius:6, padding:".4rem .65rem", fontSize:14, fontFamily:"inherit",
-                            outline:"none", boxSizing:"border-box", marginBottom:6 }} />
-                        <div style={{ display:"flex", gap:6 }}>
-                          <button onClick={() => saveCore(d.day)}
-                            style={{ background:"#0b3d6b", border:"none", color:"#fff",
-                              borderRadius:6, padding:".25rem .65rem", fontSize:12, fontFamily:"inherit", cursor:"pointer" }}>
-                            Save
-                          </button>
-                          <button onClick={() => setEditingCoreDay(null)}
-                            style={{ background:"none", border:"1px solid #e2e5ea", color:"#6b7a8a",
-                              borderRadius:6, padding:".25rem .65rem", fontSize:12, fontFamily:"inherit", cursor:"pointer" }}>
-                            Cancel
-                          </button>
-                        </div>
-                      </div>
+                      <input autoFocus value={coreDraft.leg}
+                        onChange={e => setCoreDraft(p => ({ ...p, leg: e.target.value }))}
+                        onBlur={() => saveCore(d.day)}
+                        onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if (e.key === "Enter") saveCore(d.day); }}
+                        className="inline-day-title-input"
+                        style={{ width:"100%", background:"transparent", border:"none",
+                          borderBottom:"2px solid #0b3d6b", color:"#0e1014",
+                          padding:".1rem 0", fontFamily:"inherit", outline:"none", boxSizing:"border-box" }} />
                     ) : (
-                      <div>
-                        <div style={{ fontSize:17, fontWeight:600, letterSpacing:-0.2, lineHeight:1.3 }}>{d.leg}</div>
-                        {!readOnly && (
-                          <button onClick={() => startEditCore(d.day, d)}
-                            style={{ background:"none", border:"none", color:"#9ba1ac", cursor:"pointer",
-                              fontSize:11, fontFamily:"inherit", padding:0, marginTop:4 }}>
-                            Edit title
-                          </button>
-                        )}
+                      <div
+                        onClick={() => !readOnly && startEditCore(d.day, d)}
+                        style={{ fontSize:17, fontWeight:600, letterSpacing:-0.2, lineHeight:1.3,
+                          cursor: readOnly ? "default" : "text" }}>
+                        {d.leg}
                       </div>
                     )}
                     </div>{/* end day-title-desktop */}
@@ -2980,6 +2899,42 @@ export default function Itinerary() {
                         </button>
                       </div>
                     )}
+
+                    {/* Day notes — inline editable, no box */}
+                    {(() => {
+                      const note = customNotes[d.day] !== undefined ? customNotes[d.day] : (d.note || "");
+                      const isEditing = !readOnly && editingNoteDay === d.day;
+                      if (isEditing) return (
+                        <textarea
+                          autoFocus
+                          value={noteDraft}
+                          onChange={e => setNoteDraft(e.target.value)}
+                          onBlur={() => saveNote(d.day)}
+                          onKeyDown={e => { if (e.key === "Escape") cancelEditNote(); }}
+                          placeholder="Add a note…"
+                          className="inline-day-notes-textarea"
+                          style={{ width:"100%", background:"transparent", border:"none",
+                            borderBottom:"1px solid #e2e5ea", color:"#0e1014",
+                            padding:".1rem 0", fontFamily:"inherit",
+                            lineHeight:1.55, boxSizing:"border-box", outline:"none" }}
+                        />
+                      );
+                      if (note) return (
+                        <div onClick={() => !readOnly && startEditNote(d.day, note)}
+                          style={{ fontSize:12, lineHeight:1.55, color:"#5c6470",
+                            cursor: readOnly ? "default" : "text" }}>
+                          <NoteMarkdown>{note}</NoteMarkdown>
+                        </div>
+                      );
+                      if (!readOnly) return (
+                        <div onClick={() => startEditNote(d.day, "")}
+                          style={{ fontSize:12, lineHeight:1.55, color:"#9ba1ac",
+                            fontStyle:"italic", cursor:"text" }}>
+                          Add a note…
+                        </div>
+                      );
+                      return null;
+                    })()}
 
                     {/* Tags */}
                     {(d.tags ?? []).filter(t=>tagConfig[t]).length > 0 && (
@@ -3049,59 +3004,6 @@ export default function Itinerary() {
 
                   {/* Right: content with left border */}
                   <div className="day-expanded-right" style={{ borderLeft:"1px solid #e2e5ea", paddingLeft:32, minWidth:0 }}>
-                  {/* Captain's note */}
-                  {(() => {
-                    const note = customNotes[d.day] !== undefined ? customNotes[d.day] : d.note;
-                    const isEditing = editingNoteDay === d.day;
-                    return (
-                      <div style={{ marginTop:"1rem", padding:".75rem 1rem", background:"#f0f4f8",
-                        borderLeft:"3px solid rgba(11,61,107,0.2)", borderRadius:"0 4px 4px 0" }}>
-                        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:4 }}>
-                          <div style={{ fontSize:".62rem", color:"#0b3d6b", letterSpacing:".1em", textTransform:"uppercase", fontFamily:"inherit" }}>Notes</div>
-                          {!isEditing && !readOnly && (
-                            <button onClick={() => startEditNote(d.day, note)}
-                              style={{ background:"none", border:"none", color:"#6b7a8a", cursor:"pointer",
-                                fontSize:".7rem", fontFamily:"inherit", padding:0 }}>
-                              Edit
-                            </button>
-                          )}
-                        </div>
-                        {isEditing && !readOnly ? (
-                          <>
-                            <textarea
-                              autoFocus
-                              value={noteDraft}
-                              onChange={e => setNoteDraft(e.target.value)}
-                              onKeyDown={e => {
-                                if (e.key === "Escape") cancelEditNote();
-                                if ((e.metaKey || e.ctrlKey) && e.key === "Enter") saveNote(d.day);
-                              }}
-                              style={{ width:"100%", background:"#ffffff", border:"1px solid #e2e5ea",
-                                color:"#0e1014", borderRadius:4, padding:".4rem .65rem",
-                                fontSize:".82rem", fontFamily:"inherit", lineHeight:1.55,
-                                resize:"vertical", minHeight:80, boxSizing:"border-box", outline:"none" }}
-                            />
-                            <div style={{ display:"flex", gap:".5rem", marginTop:".5rem" }}>
-                              <button onClick={() => saveNote(d.day)}
-                                style={{ background:"#f0f4f8", border:"1px solid #2e5070", color:"#0b3d6b",
-                                  borderRadius:4, padding:".3rem .75rem", fontSize:".75rem",
-                                  fontFamily:"inherit", cursor:"pointer" }}>
-                                Save
-                              </button>
-                              <button onClick={cancelEditNote}
-                                style={{ background:"none", border:"1px solid #2e3a4a", color:"#6b7a8a",
-                                  borderRadius:4, padding:".3rem .75rem", fontSize:".75rem",
-                                  fontFamily:"inherit", cursor:"pointer" }}>
-                                Cancel
-                              </button>
-                            </div>
-                          </>
-                        ) : (
-                          <div><NoteMarkdown>{note}</NoteMarkdown></div>
-                        )}
-                      </div>
-                    );
-                  })()}
                   {/* ── Unified timeline (all item types, sorted by time) ── */}
                   {(() => {
                     const distUnit = settings.distanceUnit ?? "km";

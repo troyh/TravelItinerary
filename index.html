@@ -51,6 +51,12 @@
         color: #0e1014;
       }
       input, select, textarea { font-size: 16px !important; font-family: inherit; }
+      /* Inline-edit fields that need their own font size */
+      .inline-title-input  { font-size: clamp(1.6rem,4vw,2.4rem) !important; font-weight: 700 !important; letter-spacing: -.03em !important; }
+      .inline-subtitle-input { font-size: .9rem !important; }
+      .inline-notes-textarea { font-size: 13px !important; }
+      .inline-day-title-input { font-size: 17px !important; font-weight: 600 !important; letter-spacing: -.012em !important; }
+      .inline-day-notes-textarea { font-size: 12px !important; resize: vertical !important; min-height: 60px !important; }
       @media (max-width: 640px) {
         .picker-sidebar { display: none !important; }
         .picker-main { padding: 24px 16px 60px !important; }
