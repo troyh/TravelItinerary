@@ -22,7 +22,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260713
 DTEND;VALUE=DATE:20260714
 SUMMARY:Day 2: Orientation Day 1
-DESCRIPTION:\nNote: -\n\nRental Cars:\n🚗 undefined\n🚗 undefined\n🚗 undefined
+DESCRIPTION:\nNote: -\n\nRental Cars:\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined
 URL:[object Object]?i=https%3A%2F%2Ftroyh.github.io%2FTravelItinerary%2F&day=2
 UID:day-2-20260713@travelitinerary
 END:VEVENT
@@ -44,6 +44,12 @@ DTSTART:20260713T090000
 DTEND:20260713T100000
 SUMMARY:🚗 undefined Car Rental
 UID:rental-a1916642-bd4a-42a6-bd31-662a69b75b2a@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260713TNaNundefined00
+DTEND:NaNNaNNaNTNaNNaN00
+SUMMARY:🚗 undefined Car Rental
+UID:rental-e3996ba2-1153-4a20-b256-68ea618a4705@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260714
