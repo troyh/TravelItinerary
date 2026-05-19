@@ -1677,25 +1677,46 @@
       "routes": [],
       "flights": [
         {
-          "id": "5a84feeb-c6bb-4edc-8434-3f815677b44c",
-          "flightNumber": "as400",
+          "id": "cb1e65ea-7913-4e42-9647-d386d36d8e7c",
+          "flightNumber": "as 400",
           "departure": "SEA",
           "arrival": "SBA",
           "departureName": "Seattle",
           "arrivalName": "Santa Barbara",
-          "departureTime": "4:06 PM",
-          "arrivalTime": "6:38 PM",
+          "departureTime": "16:06",
+          "arrivalTime": "18:38",
           "airline": "Alaska Airlines",
-          "aircraft": "Boeing 737-800",
-          "status": "Expected",
-          "miles": 909,
           "confirmation": "SMEPDX",
           "departureLat": 47.449,
           "departureLng": -122.309,
           "arrivalLat": 34.4262,
           "arrivalLng": -119.84,
           "notes": "",
-          "addedAt": "2026-05-18T03:12:25.713Z"
+          "seat": "4A,4B,4C",
+          "terminal": "",
+          "bags": "",
+          "origin": {
+            "name": "Seattle"
+          },
+          "destination": {
+            "name": "Santa Barbara"
+          },
+          "originLat": 47.449,
+          "originLng": -122.309,
+          "destinationLat": 34.4262,
+          "destinationLng": -119.84,
+          "travelMode": "DRIVING",
+          "startName": "Seattle",
+          "endName": "Santa Barbara",
+          "startLat": 47.449,
+          "startLng": -122.309,
+          "endLat": 34.4262,
+          "endLng": -119.84,
+          "time": "16:06",
+          "vessel": "",
+          "agency": "",
+          "pickupLocation": "Seattle",
+          "dropoffLocation": "Santa Barbara"
         }
       ],
       "rentalCars": [
