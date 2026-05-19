@@ -22,7 +22,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260713
 DTEND;VALUE=DATE:20260714
 SUMMARY:Day 2: Orientation Day 1
-DESCRIPTION:\nNote: -\n\nRental Cars:\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined
+DESCRIPTION:\nNote: -\n\nRental Cars:\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined
 URL:[object Object]?i=https%3A%2F%2Ftroyh.github.io%2FTravelItinerary%2F&day=2
 UID:day-2-20260713@travelitinerary
 END:VEVENT
@@ -84,6 +84,20 @@ DTSTART:20260713TNaNundefined00
 DTEND:NaNNaNNaNTNaNNaN00
 SUMMARY:🚗 undefined Car Rental
 UID:rental-e9a5bcff-c3f9-4cbf-b59e-2754add60b79@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260713TNaNundefined00
+DTEND:NaNNaNNaNTNaNNaN00
+SUMMARY:🚗 undefined Car Rental
+DESCRIPTION:Information about the transition to college life and includes authentic insights from our student panel.
+UID:rental-9914e882-c24e-4981-88d9-f8b20a816ca3@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260713TNaNundefined00
+DTEND:NaNNaNNaNTNaNNaN00
+SUMMARY:🚗 undefined Car Rental
+DESCRIPTION:Get to know other students through a mix of high-energy and relaxing activities.
+UID:rental-2df80942-8e5e-4193-a9d7-43247ef21d0b@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260714
