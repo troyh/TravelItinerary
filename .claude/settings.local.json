@@ -22,7 +22,10 @@
       "Read(//tmp/**)",
       "Bash(mkdir -p /tmp/design-pkg)",
       "Bash(tar -xf /tmp/design -C /tmp/design-pkg)",
-      "Bash(grep -n \"agency.*Car Rental\\\\|Car Rental.*agency\\\\|\\\\`.*Car Rental\" /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)"
+      "Bash(grep -n \"agency.*Car Rental\\\\|Car Rental.*agency\\\\|\\\\`.*Car Rental\" /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)",
+      "Bash(gh api *)",
+      "Bash(curl -s \"https://raw.githubusercontent.com/troyh/TravelItinerary/data/Itineraries/it-a44dcfe4.json\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/troyh/TravelItinerary/data/Itineraries/it-a44dcfe4.ics\")"
     ]
   }
 }

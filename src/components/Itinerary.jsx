@@ -2940,9 +2940,10 @@ export default function Itinerary() {
 
       // Timed event: places
       (savedPlaces?.[d.day] ?? []).forEach(p => {
-        if (!p.time) return;
-        const dtStart = toICSDateTime(dateStr, p.time);
-        const dtEnd   = addMins(dtStart, 60);
+        const time24 = ampmTo24(p.time);
+        if (!time24) return;
+        const dtStart = toICSDateTime(dateStr, time24);
+        const dtEnd   = addMins(dtStart, parseDurMins(p.duration));
         const desc = [
           p.phone ? `Phone: ${p.phone}` : "",
           p.website ? `Website: ${p.website}` : "",
