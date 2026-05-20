@@ -3254,6 +3254,26 @@ export default function Itinerary() {
   }
   function closeAddPanel() { setAddPanel(null); }
 
+  // Esc closes the panel (and prevents browser fullscreen-exit on macOS)
+  useEffect(() => {
+    if (!addPanel && mobileSheet === null) return;
+    const handler = e => {
+      if (e.key !== "Escape") return;
+      e.preventDefault();
+      if (addPanel) closeAddPanel();
+      else setMobileSheet(null);
+    };
+    document.addEventListener("keydown", handler, true);
+    return () => document.removeEventListener("keydown", handler, true);
+  }, [addPanel, mobileSheet]);
+
+  // Lock body scroll while panel is open so the page doesn't scroll behind it
+  useEffect(() => {
+    const shouldLock = !!addPanel || mobileSheet !== null;
+    document.body.style.overflow = shouldLock ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [addPanel, mobileSheet]);
+
   function dayBiasFor(dayNum) {
     const d = days.find(x => x.day === dayNum);
     if (d?.centerLat && d?.centerLng) return { lat: d.centerLat, lng: d.centerLng };

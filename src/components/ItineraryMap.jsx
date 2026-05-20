@@ -246,26 +246,32 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
       );
 
       if (hasFlight) {
+        const flightPopup = f => [
+          [f.flightNumber, f.airline].filter(Boolean).join(" · ") || "Flight",
+          f.departureName && f.arrivalName ? `${f.departureName} → ${f.arrivalName}` : null,
+          f.departure && f.arrival ? `${f.departure} → ${f.arrival}` : null,
+          f.distance ? f.distance : null,
+          f.aircraft ? f.aircraft : null,
+        ].filter(Boolean).join("<br>");
+
         if (flightWithCoords) {
-          // Draw actual airport-to-airport arc using stored coords
           const arcPoints = greatCirclePoints(
             flightWithCoords.departureLat, flightWithCoords.departureLng,
             flightWithCoords.arrivalLat,   flightWithCoords.arrivalLng
           );
-          L.polyline(arcPoints, {
-            color: "#8338e8", weight: 1.5, opacity: 0.7, dashArray: "5,6",
-          }).addTo(map);
-          // Thin dotted connectors from overnight to airport and from airport to overnight
+          L.polyline(arcPoints, { color: "#8338e8", weight: 1.5, opacity: 0.7, dashArray: "5,6" })
+            .bindPopup(flightPopup(flightWithCoords), { className: "leaflet-popup-dark" })
+            .addTo(map);
           L.polyline([[fromC.lat, fromC.lng], [flightWithCoords.departureLat, flightWithCoords.departureLng]],
             { color: "#6b7a8a", weight: 1, opacity: 0.4, dashArray: "2,4" }).addTo(map);
           L.polyline([[flightWithCoords.arrivalLat, flightWithCoords.arrivalLng], [toC.lat, toC.lng]],
             { color: "#6b7a8a", weight: 1, opacity: 0.4, dashArray: "2,4" }).addTo(map);
         } else {
-          // No stored airport coords — draw arc between overnights
           const arcPoints = greatCirclePoints(fromC.lat, fromC.lng, toC.lat, toC.lng);
-          L.polyline(arcPoints, {
-            color: "#8338e8", weight: 1.5, opacity: 0.7, dashArray: "5,6",
-          }).addTo(map);
+          const anyFlight = legFlights[0];
+          L.polyline(arcPoints, { color: "#8338e8", weight: 1.5, opacity: 0.7, dashArray: "5,6" })
+            .bindPopup(anyFlight ? flightPopup(anyFlight) : "Flight", { className: "leaflet-popup-dark" })
+            .addTo(map);
         }
       } else {
         // Skip straight line if a boating route with GPS coords covers this leg
@@ -293,16 +299,25 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
     // Draw driving direction routes
     Object.entries(savedDirections ?? {}).forEach(([, dirList]) => {
       (dirList ?? []).forEach(dir => {
+        const dirPopup = [
+          dir.origin?.name && dir.destination?.name ? `${dir.origin.name} → ${dir.destination.name}` : null,
+          dir.distance ? dir.distance : null,
+          dir.duration ? dir.duration : null,
+        ].filter(Boolean).join("<br>") || "Drive";
+
         if (dir.overviewPolyline) {
           const pts = decodePolyline(dir.overviewPolyline);
-          L.polyline(pts, { color: "#43a047", weight: 3, opacity: 0.75 }).addTo(map);
+          L.polyline(pts, { color: "#43a047", weight: 3, opacity: 0.75 })
+            .bindPopup(dirPopup, { className: "leaflet-popup-dark" }).addTo(map);
           pts.forEach(p => bounds.extend(p));
         } else if (dir.routePath?.length >= 2) {
-          L.polyline(dir.routePath, { color: "#43a047", weight: 3, opacity: 0.75 }).addTo(map);
+          L.polyline(dir.routePath, { color: "#43a047", weight: 3, opacity: 0.75 })
+            .bindPopup(dirPopup, { className: "leaflet-popup-dark" }).addTo(map);
           dir.routePath.forEach(p => bounds.extend(p));
         } else if (dir.originLat && dir.originLng && dir.destinationLat && dir.destinationLng) {
           const pts = [[dir.originLat, dir.originLng], [dir.destinationLat, dir.destinationLng]];
-          L.polyline(pts, { color: "#43a047", weight: 3, opacity: 0.75 }).addTo(map);
+          L.polyline(pts, { color: "#43a047", weight: 3, opacity: 0.75 })
+            .bindPopup(dirPopup, { className: "leaflet-popup-dark" }).addTo(map);
           pts.forEach(p => bounds.extend(p));
         }
       });
