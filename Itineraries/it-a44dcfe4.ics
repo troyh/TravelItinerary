@@ -8,7 +8,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260712
 DTEND;VALUE=DATE:20260713
 SUMMARY:Day 1: Fly to Santa Barbara
-DESCRIPTION:\nNote: t\n\nFlights:\n✈ undefined: undefined → undefined\n\nRental Cars:\n🚗 undefined · Conf: 3471666875
+DESCRIPTION:\nNote: t\n\nFlights:\n✈ :  → \n\nRental Cars:\n🚗 undefined · Conf: 3471666875
 URL:[object Object]?i=https%3A%2F%2Ftroyh.github.io%2FTravelItinerary%2F&day=1
 UID:day-1-20260712@travelitinerary
 END:VEVENT
