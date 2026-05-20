@@ -18,7 +18,7 @@
       "centerLat": 34.420344,
       "centerLng": -119.698886,
       "highlights": [],
-      "note": "",
+      "note": "ddd",
       "places": [
         {
           "id": "85a6a458-bad1-4fcd-a2dd-9e5022c7c11d",
@@ -2528,7 +2528,7 @@
           "category": "activity",
           "time": "7:00pm",
           "duration": "",
-          "notes": "",
+          "notes": "I don't know if we'll have time for this or not.",
           "confirmation": "",
           "partySize": "",
           "bookedVia": "",
