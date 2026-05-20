@@ -236,6 +236,39 @@ function InsertGap({ onInsert, suggestedTime }) {
 
 // ── Timeline time helpers ──────────────────────────────────────────────────
 
+function parseNaturalTime(str) {
+  if (!str?.trim()) return str;
+  const s = str.trim();
+  // Already HH:MM 24-hour
+  if (/^\d{2}:\d{2}$/.test(s)) return s;
+  // H:MM or HH:MM (no suffix → treat as 24-hour)
+  let m = s.match(/^(\d{1,2}):(\d{2})$/);
+  if (m) {
+    const h = +m[1], mn = +m[2];
+    if (h <= 23 && mn <= 59) return `${String(h).padStart(2,"0")}:${String(mn).padStart(2,"0")}`;
+  }
+  // H:MM am/pm or HH:MM am/pm
+  m = s.match(/^(\d{1,2}):(\d{2})\s*(am|pm)$/i);
+  if (m) {
+    let h = +m[1]; const mn = +m[2], ap = m[3].toLowerCase();
+    if (ap === "pm" && h !== 12) h += 12;
+    if (ap === "am" && h === 12) h = 0;
+    if (h <= 23 && mn <= 59) return `${String(h).padStart(2,"0")}:${String(mn).padStart(2,"0")}`;
+  }
+  // Ham/pm or H am/pm (no minutes)
+  m = s.match(/^(\d{1,2})\s*(am|pm)$/i);
+  if (m) {
+    let h = +m[1]; const ap = m[2].toLowerCase();
+    if (ap === "pm" && h !== 12) h += 12;
+    if (ap === "am" && h === 12) h = 0;
+    if (h <= 23) return `${String(h).padStart(2,"0")}:00`;
+  }
+  // Plain hour number (e.g. "15" or "9")
+  m = s.match(/^(\d{1,2})$/);
+  if (m) { const h = +m[1]; if (h <= 23) return `${String(h).padStart(2,"0")}:00`; }
+  return s;
+}
+
 function timeToSortKey(str) {
   if (!str) return "";
   if (/^\d{1,2}:\d{2}$/.test(str)) {
@@ -313,7 +346,7 @@ function EditorSection({ label, children }) {
   );
 }
 
-function FieldRow({ label, value, onChange, placeholder, mono, half, type = "text" }) {
+function FieldRow({ label, value, onChange, onBlur, placeholder, mono, half, type = "text" }) {
   return (
     <div style={{ flex: half ? "0 0 calc(50% - 4px)" : "1 1 100%" }}>
       <div style={{ fontSize: 9.5, textTransform: "uppercase", color: AP.muted, marginBottom: 4, letterSpacing: 0.5 }}>
@@ -323,6 +356,7 @@ function FieldRow({ label, value, onChange, placeholder, mono, half, type = "tex
         type={type}
         value={value}
         onChange={e => onChange(e.target.value)}
+        onBlur={onBlur}
         placeholder={placeholder}
         style={{ ...AP.input, fontFamily: mono ? "monospace" : "inherit" }}
       />
@@ -623,7 +657,7 @@ function AddPlacePanel({
         </EditorSection>
         <EditorSection label="When">
           <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
-            <FieldRow label="Check-in" value={time} onChange={setTime} placeholder="15:00" half />
+            <FieldRow label="Check-in" value={time} onChange={setTime} onBlur={() => setTime(parseNaturalTime(time))} placeholder="3pm or 15:00" half />
             <FieldRow label="Stay length" value={stayLength} onChange={setStayLength} placeholder="3 nights" half />
           </div>
           {stayLength && (
@@ -672,7 +706,7 @@ function AddPlacePanel({
         </EditorSection>
         <EditorSection label="When">
           <div style={{ display: "flex", gap: 8 }}>
-            <FieldRow label="Time" value={time} onChange={setTime} placeholder="12:30" half />
+            <FieldRow label="Time" value={time} onChange={setTime} onBlur={() => setTime(parseNaturalTime(time))} placeholder="7pm or 19:00" half />
             <FieldRow label="Duration" value={duration} onChange={setDuration} placeholder="90 min" half />
           </div>
         </EditorSection>
@@ -710,7 +744,7 @@ function AddPlacePanel({
         </EditorSection>
         <EditorSection label="When">
           <div style={{ display: "flex", gap: 8 }}>
-            <FieldRow label="Time" value={time} onChange={setTime} placeholder="10:00" half />
+            <FieldRow label="Time" value={time} onChange={setTime} onBlur={() => setTime(parseNaturalTime(time))} placeholder="10am or 10:00" half />
             <FieldRow label="Duration" value={duration} onChange={setDuration} placeholder="1h" half />
           </div>
         </EditorSection>
@@ -774,7 +808,7 @@ function AddPlacePanel({
         </EditorSection>
         <EditorSection label="When">
           <div style={{ display: "flex", gap: 8 }}>
-            <FieldRow label="Time" value={time} onChange={setTime} placeholder="—" half />
+            <FieldRow label="Time" value={time} onChange={setTime} onBlur={() => setTime(parseNaturalTime(time))} placeholder="2pm or 14:00" half />
             <FieldRow label="Duration" value={duration} onChange={setDuration} placeholder="—" half />
           </div>
         </EditorSection>
