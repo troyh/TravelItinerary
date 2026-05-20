@@ -1075,6 +1075,7 @@ function AddTravelPanel({
   const [repeatReturn, setRepeatReturn] = useState(false);
   // Flight fields
   const [airline, setAirline]       = useState(editItem?.airline || "");
+  const [aircraft, setAircraft]     = useState(editItem?.aircraft || "");
   const [flightNum, setFlightNum]   = useState(editItem?.flightNum || "");
   const [seat, setSeat]             = useState(editItem?.seat || "");
   const [confirmation, setConfirm]  = useState(editItem?.confirmation || "");
@@ -1215,19 +1216,34 @@ function AddTravelPanel({
       if (!s) return "";
       const t = s.includes("T") ? s.split("T")[1] : s.split(" ")[1];
       if (!t) return "";
-      return t.slice(0, 5); // "HH:MM" — matches what <input type="time"> expects
+      return t.slice(0, 5);
     };
     setFromName((dep?.municipalityName ?? dep?.iata) || fromName);
     setFromCode(dep?.iata ?? fromCode);
     setToName((arr?.municipalityName ?? arr?.iata) || toName);
     setToCode(arr?.iata ?? toCode);
-    setFromLat(dep?.location?.lat ?? fromLat);
-    setFromLng(dep?.location?.lon ?? fromLng);
-    setToLat(arr?.location?.lat ?? toLat);
-    setToLng(arr?.location?.lon ?? toLng);
+    const depLat = dep?.location?.lat, depLng = dep?.location?.lon;
+    const arrLat = arr?.location?.lat, arrLng = arr?.location?.lon;
+    setFromLat(depLat ?? fromLat);
+    setFromLng(depLng ?? fromLng);
+    setToLat(arrLat ?? toLat);
+    setToLng(arrLng ?? toLng);
     setDepartTime(parseLocalTime(flight.departure?.scheduledTime?.local ?? ""));
     setArriveTime(parseLocalTime(flight.arrival?.scheduledTime?.local ?? ""));
     setAirline(flight.airline?.name ?? airline);
+    setAircraft(flight.aircraft?.model ?? "");
+    // Auto-compute great-circle distance from the coordinates the API just gave us
+    if (depLat && depLng && arrLat && arrLng) {
+      const toRad = d => d * Math.PI / 180;
+      const R = 3959;
+      const dLat = toRad(arrLat - depLat), dLng = toRad(arrLng - depLng);
+      const a = Math.sin(dLat/2)**2 + Math.cos(toRad(depLat)) * Math.cos(toRad(arrLat)) * Math.sin(dLng/2)**2;
+      const mi = 2 * R * Math.asin(Math.sqrt(a));
+      const hrs = mi / 500 + 0.75;
+      const h = Math.floor(hrs), m = Math.round((hrs - h) * 60);
+      setRouteDistance(`${Math.round(mi).toLocaleString()} mi`);
+      if (!routeDuration) setRouteDuration(h > 0 ? `${h}h ${m}m` : `${m}m`);
+    }
     setLookupResults(null);
     setLookupErr(null);
   }
@@ -1388,7 +1404,7 @@ function AddTravelPanel({
       from: { name: fromName, code: fromCode, address: fromAddr, lat: fromLat, lng: fromLng },
       to:   { name: toName,   code: toCode,   address: toAddr,   lat: toLat,   lng: toLng   },
       departDate, departTime, arriveDate, arriveTime, notes,
-      airline, flightNum, seat, confirmation, terminal, bags,
+      airline, aircraft, flightNum, seat, confirmation, terminal, bags,
       vehicle, plate, parking, operator, trainNum, carSeat, platform, vessel, travelClass, ticket,
       boatVessel, cruisingSpeed, description,
       routeDistance, routeDuration, routePath,
@@ -2383,6 +2399,7 @@ export default function Itinerary() {
   }
 
   function saveNote(dayNum) {
+    dirtyRef.current = true;
     setCustomNotes(prev => ({ ...prev, [dayNum]: noteDraft }));
     setEditingNoteDay(null);
   }
@@ -3190,9 +3207,10 @@ export default function Itinerary() {
           from: { name: item.departureName || item.departure || "", code: item.departure || "", lat: item.departureLat || null, lng: item.departureLng || null },
           to:   { name: item.arrivalName   || item.arrival   || "", code: item.arrival   || "", lat: item.arrivalLat   || null, lng: item.arrivalLng   || null },
           departTime: item.departureTime || "", arriveTime: item.arrivalTime || "",
-          airline: item.airline || "", flightNum: item.flightNumber || "",
+          airline: item.airline || "", aircraft: item.aircraft || "", flightNum: item.flightNumber || "",
           seat: item.seat || "", confirmation: item.confirmation || "",
           terminal: item.terminal || "", bags: item.bags || "",
+          routeDistance: item.distance || "", routeDuration: item.duration || "",
           notes: item.notes || "",
         };
       } else if (item._type === "direction") {
@@ -3741,7 +3759,7 @@ export default function Itinerary() {
                 <textarea
                   autoFocus
                   value={itineraryNotes}
-                  onChange={e => setItineraryNotes(e.target.value)}
+                  onChange={e => { dirtyRef.current = true; setItineraryNotes(e.target.value); }}
                   onBlur={() => setEditingNotes(false)}
                   onKeyDown={e => { if (e.key === "Escape") setEditingNotes(false); }}
                   placeholder="Notes about this trip…"
@@ -4087,7 +4105,7 @@ export default function Itinerary() {
                           ref={el => el && el.focus()}
                           value={noteDraft}
                           onChange={e => setNoteDraft(e.target.value)}
-                          onBlur={e => { setCustomNotes(prev => ({ ...prev, [d.day]: e.target.value })); setEditingNoteDay(null); }}
+                          onBlur={e => { dirtyRef.current = true; setCustomNotes(prev => ({ ...prev, [d.day]: e.target.value })); setEditingNoteDay(null); }}
                           onKeyDown={e => { if (e.key === "Escape") cancelEditNote(); }}
                           placeholder="Add a note…"
                           className="inline-day-notes-textarea"
@@ -4183,7 +4201,7 @@ export default function Itinerary() {
                               const h = Math.floor(mins / 60), m = mins % 60;
                               return h > 0 && m > 0 ? `${h}h ${m}m` : h > 0 ? `${h}h` : `${m}m`;
                             })();
-                            sub2 = [item.airline, flightDur].filter(Boolean).join(" · ");
+                            sub2 = [item.airline, item.aircraft, flightDur, item.distance].filter(Boolean).join(" · ");
                             badge = item.confirmation || "";
                             onDel = !readOnly ? () => deleteFlight(d.day, item.id) : null;
                           } else if (item._type === "direction") {
@@ -4586,9 +4604,12 @@ export default function Itinerary() {
                           departure: item.from?.code, arrival: item.to?.code,
                           departureName: item.from?.name, arrivalName: item.to?.name,
                           departureTime: item.departTime, arrivalTime: item.arriveTime,
-                          airline: item.airline, confirmation: item.confirmation,
+                          airline: item.airline, aircraft: item.aircraft,
+                          confirmation: item.confirmation,
                           departureLat: item.from?.lat, departureLng: item.from?.lng,
                           arrivalLat: item.to?.lat, arrivalLng: item.to?.lng,
+                          distance: item.routeDistance || "",
+                          miles: item.routeDistance ? Math.round(parseFloat(item.routeDistance.replace(/,/g, ""))) || 0 : 0,
                           notes: item.notes,
                         });
                       } else if (item.mode === "boat") {
@@ -4622,8 +4643,10 @@ export default function Itinerary() {
                         flightNumber: item.flightNum, departure: item.from?.code, arrival: item.to?.code,
                         departureName: item.from?.name, arrivalName: item.to?.name,
                         departureTime: item.departTime, arrivalTime: item.arriveTime,
-                        airline: item.airline, confirmation: item.confirmation, seat: item.seat,
+                        airline: item.airline, aircraft: item.aircraft, confirmation: item.confirmation, seat: item.seat,
                         terminal: item.terminal, bags: item.bags,
+                        distance: item.routeDistance || undefined,
+                        miles: item.routeDistance ? Math.round(parseFloat(item.routeDistance.replace(/,/g, ""))) || undefined : undefined,
                         departureLat: item.from?.lat, departureLng: item.from?.lng,
                         arrivalLat: item.to?.lat, arrivalLng: item.to?.lng,
                         origin: { name: item.from?.name || "" }, destination: { name: item.to?.name || "" },
