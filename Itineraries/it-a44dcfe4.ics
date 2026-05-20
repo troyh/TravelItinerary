@@ -8,215 +8,246 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260712
 DTEND;VALUE=DATE:20260713
 SUMMARY:Day 1: Fly to Santa Barbara
-DESCRIPTION:\nNote: t\n\nRental Cars:\n🚗 undefined · Conf: 3471666875
-URL:[object Object]?i=https%3A%2F%2Ftroyh.github.io%2FTravelItinerary%2F&day=1
+DESCRIPTION:\nNote: TODO: Get dinner reservations at [Aegean SB](http://resy.com/link?venue_id=93967)\n\n\nFlights:\n✈ as 400: SEA → SBA · 909 mi (Conf: SMEPDX)
+URL:https://troyh.github.io/TravelItinerary/?i=it-a44dcfe4&day=1
 UID:day-1-20260712@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260712T133000
-DTEND:20260712T143000
-SUMMARY:
-UID:place-3422106b-6b77-4577-89cd-91ffed08b5d7@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260712T190000
-DTEND:20260712T200000
-SUMMARY:
-UID:place-83cd23d9-2cc8-41cc-8387-81d48b1347d7@travelitinerary
+DTSTART:20260712T160600
+DTEND:20260712T183800
+SUMMARY:✈ as 400: SEA → SBA
+DESCRIPTION:Alaska Airlines · Boeing 737-800\nSeattle → Santa Barbara\nConfirmation: SMEPDX
+UID:flight-cb1e65ea-7913-4e42-9647-d386d36d8e7c@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260712T160000
 DTEND:20260712T170000
-SUMMARY:🚗 undefined Car Rental
-DESCRIPTION:Confirmation: 3471666875\nAmex Trip reference: ZO-AX1050-68433
-UID:rental-85a6a458-bad1-4fcd-a2dd-9e5022c7c11d@travelitinerary
+SUMMARY:🏨 The Leta Santa Barbara Goleta\, Tapestry Collection by Hilton
+LOCATION:5650 Calle Real\, Goleta\, CA  93117\, United States
+DESCRIPTION:Amex Trip reference: ZO-AX1050-68433
+UID:place-85a6a458-bad1-4fcd-a2dd-9e5022c7c11d@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260712T133000
+DTEND:20260712T140300
+SUMMARY:🚗 1107 21st Ave E → Seattle-Tacoma Airport
+LOCATION:Seattle-Tacoma Airport
+DESCRIPTION:16.3 mi · 33 min
+URL:https://maps.apple.com/?saddr=1107%2021st%20Ave%20E&daddr=Seattle-Tacoma%20Airport&dirflg=d
+UID:dir-3422106b-6b77-4577-89cd-91ffed08b5d7@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260712T190000
+DTEND:20260712T190800
+SUMMARY:🚗 Santa Barbara Airport - SBA → The Leta Santa Barbara Goleta\, Tapestry Collection by Hilton
+LOCATION:The Leta Santa Barbara Goleta\, Tapestry Collection by Hilton
+DESCRIPTION:2.2 mi · 8 min
+URL:https://www.google.com/maps/dir/?api=1&origin=Santa%20Barbara%20Airport%20-%20SBA&destination=The%20Leta%20Santa%20Barbara%20Goleta%2C%20Tapestry%20Collection%20by%20Hilton&travelmode=driving
+UID:dir-83cd23d9-2cc8-41cc-8387-81d48b1347d7@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260713
 DTEND;VALUE=DATE:20260714
 SUMMARY:Day 2: Orientation Day 1
-DESCRIPTION:\nNote: -\n\nRental Cars:\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined
-URL:[object Object]?i=https%3A%2F%2Ftroyh.github.io%2FTravelItinerary%2F&day=2
+DESCRIPTION:\nNote: \n\nWhen you arrive on campus\, follow the signs for Orientation and park in the Lot 22 Parking Structure. All vehicles on campus must have a valid campus parking permit. You will enter your vehicle's license plate information to purchase an ePermit from a kiosk in the parking lot. **Parking permits cost $8 per day. You will have the option to select an Orientation parking permit to be valid for the entire Orientation program for $16.** \n\nFor directions to UCSB\, see https://www.ucsb.edu/about/visit\n\n[Parent & Family Schedule](https://orientation.sa.ucsb.edu/parent/freshman-parent-family-orientation-information#parents-program-schedule)\n[Freshman Orientation Program Information](https://orientation.sa.ucsb.edu/freshman/program-information) 
+URL:https://troyh.github.io/TravelItinerary/?i=it-a44dcfe4&day=2
 UID:day-2-20260713@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260713T080000
-DTEND:20260713T090000
-SUMMARY:
-UID:place-c6c8bbab-81b3-4eb1-93dc-1510a119de86@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T07NaN00
 DTEND:NaNNaNNaNTNaNNaN00
-SUMMARY:🚗 undefined Car Rental
+SUMMARY:Art\, Design & Architecture Museum\, UCSB
+LOCATION:552 University Road\, Santa Barbara\, CA 93106\, United States
 DESCRIPTION:I don't know if we'll have time for this or not.
-UID:rental-e3996ba2-1153-4a20-b256-68ea618a4705@travelitinerary
+UID:place-e3996ba2-1153-4a20-b256-68ea618a4705@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T094500
 DTEND:20260713T104500
-SUMMARY:🚗 undefined Car Rental
-UID:rental-ee488ae5-96d1-42ae-8dff-722c3af96cc5@travelitinerary
+SUMMARY:Welcome Assembly
+UID:place-ee488ae5-96d1-42ae-8dff-722c3af96cc5@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T104500
 DTEND:20260713T114500
-SUMMARY:🚗 undefined Car Rental
+SUMMARY:Dean's Address\, Academic Expectations\, and Student Wellbeing
 DESCRIPTION:Hear directly from academic deans and college academic advisors about the academic expectations at UCSB
-UID:rental-f7efaf23-bb7e-4d63-968e-ca94cd214fcc@travelitinerary
+UID:place-f7efaf23-bb7e-4d63-968e-ca94cd214fcc@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T124000
 DTEND:20260713T134000
-SUMMARY:🚗 undefined Car Rental
-UID:rental-a90243b1-65e3-40ed-a563-d66eacc59e2f@travelitinerary
+SUMMARY:Lunch in Carrillo Dining Commons
+UID:place-a90243b1-65e3-40ed-a563-d66eacc59e2f@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T134500
 DTEND:20260713T144500
-SUMMARY:🚗 undefined Car Rental
+SUMMARY:Day One Breakout Sessions
 DESCRIPTION:Sessions held relating to multiple campus resources: the Education Abroad Program\, Recreation Center\, Educational Opportunity Program and more. 
-UID:rental-00a6a518-4336-4709-98fb-2bd6b40e7814@travelitinerary
+UID:place-00a6a518-4336-4709-98fb-2bd6b40e7814@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T151500
 DTEND:20260713T161500
-SUMMARY:🚗 undefined Car Rental
+SUMMARY:Steps to Enrollment Presentation
 DESCRIPTION:Understand academic support\, financial aid\, and student health information
-UID:rental-9f6fa2c4-25bd-4e0c-aa2e-908863d957a2@travelitinerary
+UID:place-9f6fa2c4-25bd-4e0c-aa2e-908863d957a2@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T164500
 DTEND:20260713T174500
-SUMMARY:🚗 undefined Car Rental
+SUMMARY:Housing & Move-In Workshop
 DESCRIPTION:Plan for move-in weekend and the UCSB Housing process for freshman year and beyond
-UID:rental-0cb90434-08be-43c4-8ec9-defc99d5b3a1@travelitinerary
+UID:place-0cb90434-08be-43c4-8ec9-defc99d5b3a1@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T06NaN00
 DTEND:NaNNaNNaNTNaNNaN00
-SUMMARY:🚗 undefined Car Rental
-UID:rental-e9a5bcff-c3f9-4cbf-b59e-2754add60b79@travelitinerary
+SUMMARY:Dinner in Carrillo Dining Commons
+UID:place-e9a5bcff-c3f9-4cbf-b59e-2754add60b79@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T07NaN00
 DTEND:NaNNaNNaNTNaNNaN00
-SUMMARY:🚗 undefined Car Rental
+SUMMARY:Making the Most of Your First Year (Hudson Only)
 DESCRIPTION:Information about the transition to college life and includes authentic insights from our student panel.
-UID:rental-9914e882-c24e-4981-88d9-f8b20a816ca3@travelitinerary
+UID:place-9914e882-c24e-4981-88d9-f8b20a816ca3@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T09NaN00
 DTEND:NaNNaNNaNTNaNNaN00
-SUMMARY:🚗 undefined Car Rental
+SUMMARY:Student Night Social (Hudson Only)
 DESCRIPTION:Get to know other students through a mix of high-energy and relaxing activities.
-UID:rental-2df80942-8e5e-4193-a9d7-43247ef21d0b@travelitinerary
+UID:place-2df80942-8e5e-4193-a9d7-43247ef21d0b@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T104500
 DTEND:20260713T114500
-SUMMARY:🚗 undefined Car Rental
+SUMMARY:Academic Advising I (Hudson Only)
 DESCRIPTION:Learn about graduation requirements at UCSB.
-UID:rental-76cb51e2-a7db-47df-a8e2-be93e0628aae@travelitinerary
+UID:place-76cb51e2-a7db-47df-a8e2-be93e0628aae@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T03NaN00
 DTEND:NaNNaNNaNTNaNNaN00
-SUMMARY:🚗 undefined Car Rental
+SUMMARY:Academic Advising II (Hudson Only)
 DESCRIPTION:**Requires laptops or tablets.** Learn about course registration and receive individual peer academic advising.
-UID:rental-1fc16621-108b-49c4-96fc-f104827c28b7@travelitinerary
+UID:place-1fc16621-108b-49c4-96fc-f104827c28b7@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260713T073000
 DTEND:20260713T083000
-SUMMARY:🚗 undefined Car Rental
-UID:rental-5adf9483-9041-4ab8-9d78-62a28ab21b48@travelitinerary
+SUMMARY:Check-in registration 
+UID:place-5adf9483-9041-4ab8-9d78-62a28ab21b48@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260713T080000
+DTEND:20260713T081000
+SUMMARY:🚗 The Leta Santa Barbara Goleta\, Tapestry Collection by Hilton → UCSB Parking Lot 22
+LOCATION:UCSB Parking Lot 22
+DESCRIPTION:5.2 mi · 10 min
+URL:https://www.google.com/maps/dir/?api=1&origin=The%20Leta%20Santa%20Barbara%20Goleta%2C%20Tapestry%20Collection%20by%20Hilton&destination=UCSB%20Parking%20Lot%2022&travelmode=driving
+UID:dir-c6c8bbab-81b3-4eb1-93dc-1510a119de86@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260714
 DTEND;VALUE=DATE:20260715
 SUMMARY:Day 3: Orientation Day 2
-DESCRIPTION:\nNote: a\n\nRental Cars:\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined\n🚗 undefined
-URL:[object Object]?i=https%3A%2F%2Ftroyh.github.io%2FTravelItinerary%2F&day=3
+DESCRIPTION:\nNote: [Parent & Family Schedule](https://orientation.sa.ucsb.edu/parent/freshman-parent-family-orientation-information#parents-program-schedule)\n[Freshman Orientation Program Information](https://orientation.sa.ucsb.edu/freshman/program-information)\n\nFlights:\n✈ AS400: SBA → SEA · 909 mi (Conf: SMEPDX)
+URL:https://troyh.github.io/TravelItinerary/?i=it-a44dcfe4&day=3
 UID:day-3-20260714@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260714T073000
-DTEND:20260714T083000
-SUMMARY:
-UID:place-22825711-69f7-4b68-a87c-ba9312e4c880@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
-DTSTART:20260714T163000
-DTEND:20260714T173000
-SUMMARY:
-UID:place-7255eb02-687e-4267-bece-70e4d9d0bc89@travelitinerary
+DTSTART:20260714T192800
+DTEND:20260714T220000
+SUMMARY:✈ AS400: SBA → SEA
+DESCRIPTION:Alaska Airlines · Boeing 737-800\nSanta Barbara → Seattle\nConfirmation: SMEPDX
+UID:flight-f741e40f-c63f-4ee9-9f85-dc7c01eaaaa6@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260714T123000
 DTEND:20260714T133000
-SUMMARY:🚗 undefined Car Rental
-UID:rental-a53e297b-87f3-484d-945c-d08b4ecf438e@travelitinerary
+SUMMARY:Lunch in Carrillo Dining Commons
+UID:place-a53e297b-87f3-484d-945c-d08b4ecf438e@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260714T073000
 DTEND:20260714T083000
-SUMMARY:🚗 undefined Car Rental
-UID:rental-9eaec945-9eca-411d-b5f9-e7e943f4c3a5@travelitinerary
+SUMMARY:Breakfast in Carrillo Dining Commons
+UID:place-9eaec945-9eca-411d-b5f9-e7e943f4c3a5@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260714T090000
 DTEND:20260714T100000
-SUMMARY:🚗 undefined Car Rental
+SUMMARY:Safety and Wellbeing Presentation
 DESCRIPTION:Hear from various departments involved in student safety and wellbeing
-UID:rental-961ff29b-63be-4c8e-831b-cc67cd509ca2@travelitinerary
+UID:place-961ff29b-63be-4c8e-831b-cc67cd509ca2@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260714T102000
 DTEND:20260714T112000
-SUMMARY:🚗 undefined Car Rental
+SUMMARY:Student Viewpoint Panel
 DESCRIPTION:Ask questions to current students about life at UCSB and their college transition
-UID:rental-51cfc3b7-8c2e-4580-a229-bfffccb91ae1@travelitinerary
+UID:place-51cfc3b7-8c2e-4580-a229-bfffccb91ae1@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260714T11NaN00
 DTEND:NaNNaNNaNTNaNNaN00
-SUMMARY:🚗 undefined Car Rental
+SUMMARY:Two Breakout Sessions
 DESCRIPTION:Connect with departments at our Student Resource Fair or additional presentations from Fraternity and Sorority Life\, Veterans and Military Dependents and more. 
-UID:rental-95477be8-521d-4d38-99cb-ae65ad52ce56@travelitinerary
+UID:place-95477be8-521d-4d38-99cb-ae65ad52ce56@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260714T133000
 DTEND:20260714T143000
-SUMMARY:🚗 undefined Car Rental
+SUMMARY:Your Student's First Year Presentation
 DESCRIPTION:Learn strategies to support your student and yourself through the academic\, financial\, and social transition to UCSB
-UID:rental-bb7aa8f5-a673-4e51-aac9-ba769447d522@travelitinerary
+UID:place-bb7aa8f5-a673-4e51-aac9-ba769447d522@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260714T150000
 DTEND:20260714T160000
-SUMMARY:🚗 undefined Car Rental
+SUMMARY:End of Program
 DESCRIPTION:Students will conclude their Fall quarter course registration between 3:00 and 4:30 PM which is the conclusion of the Freshman Orientation program
-UID:rental-15f1ffa8-12cb-4fd5-8c9a-2b0ac6c98b05@travelitinerary
+UID:place-15f1ffa8-12cb-4fd5-8c9a-2b0ac6c98b05@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260714T090000
 DTEND:20260714T100000
-SUMMARY:🚗 undefined Car Rental
+SUMMARY:Student Life Workshops (Hudson Only)
 DESCRIPTION:Understand real college scenarios and support resources
-UID:rental-11848714-8adc-4382-aa27-2515d93b65f5@travelitinerary
+UID:place-11848714-8adc-4382-aa27-2515d93b65f5@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260714T101500
 DTEND:20260714T111500
-SUMMARY:🚗 undefined Car Rental
-UID:rental-385e39d4-f406-4578-a141-df67af7a137b@travelitinerary
+SUMMARY:Academic College Presentation (Hudson Only)
+UID:place-385e39d4-f406-4578-a141-df67af7a137b@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260714T133000
 DTEND:20260714T143000
-SUMMARY:🚗 undefined Car Rental
+SUMMARY:Academic Advising III and Course Registration (Hudson Only)
 DESCRIPTION:**Requires Laptop** Review our course registration system and register for fall quarter classes.
-UID:rental-f02e6bb2-23a3-430c-a180-9e783cc848f9@travelitinerary
+UID:place-f02e6bb2-23a3-430c-a180-9e783cc848f9@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260714T073000
+DTEND:20260714T074100
+SUMMARY:🚗 The Leta Santa Barbara Goleta\, Tapestry Collection by Hilton → UCSB Parking Lot 22
+LOCATION:UCSB Parking Lot 22
+DESCRIPTION:5.2 mi · 11 min
+URL:https://www.google.com/maps/dir/?api=1&origin=The%20Leta%20Santa%20Barbara%20Goleta%2C%20Tapestry%20Collection%20by%20Hilton&destination=UCSB%20Parking%20Lot%2022&travelmode=driving
+UID:dir-22825711-69f7-4b68-a87c-ba9312e4c880@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260714T163000
+DTEND:20260714T163800
+SUMMARY:🚗 UCSB Parking Lot 22 → Santa Barbara Airport - SBA
+LOCATION:Santa Barbara Airport - SBA
+DESCRIPTION:2.8 mi · 8 min
+URL:https://www.google.com/maps/dir/?api=1&origin=UCSB%20Parking%20Lot%2022&destination=Santa%20Barbara%20Airport%20-%20SBA&travelmode=driving
+UID:dir-7255eb02-687e-4267-bece-70e4d9d0bc89@travelitinerary
 END:VEVENT
 END:VCALENDAR
