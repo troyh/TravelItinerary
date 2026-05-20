@@ -1051,6 +1051,7 @@ function AddTravelPanel({
   loadLocGoogle, loadLocApple, getStoredProviderSettings,
   appleAutocomplete, appleFetchPlaceDetails,
   routeServerUrl, aeroDataBoxKey, calendarDate,
+  distanceUnit,
   editItem,
 }) {
   const [mode, setMode] = useState(editItem?.mode || "flight");
@@ -1066,9 +1067,9 @@ function AddTravelPanel({
   const [toLat, setToLat]     = useState(editItem?.to?.lat || null);
   const [toLng, setToLng]     = useState(editItem?.to?.lng || null);
   const [toPreds, setToPreds] = useState([]);
-  const [departDate, setDepartDate] = useState(editItem?.departDate || "");
+  const [departDate, setDepartDate] = useState(editItem?.departDate || calendarDate || "");
   const [departTime, setDepartTime] = useState(editItem?.departTime || "");
-  const [arriveDate, setArriveDate] = useState(editItem?.arriveDate || "");
+  const [arriveDate, setArriveDate] = useState(editItem?.arriveDate || editItem?.departDate || calendarDate || "");
   const [arriveTime, setArriveTime] = useState(editItem?.arriveTime || "");
   const [notes, setNotes] = useState(editItem?.notes || "");
   const [repeatReturn, setRepeatReturn] = useState(false);
@@ -1106,6 +1107,52 @@ function AddTravelPanel({
 
   const fromDebounce = useRef(null);
   const toDebounce   = useRef(null);
+  const [departTimeFocused, setDepartTimeFocused] = useState(false);
+  const [arriveTimeFocused, setArriveTimeFocused] = useState(false);
+
+  function convertDist(str) {
+    if (!str) return str;
+    const km = str.match(/^([\d.]+)\s*km$/i);
+    if (km && distanceUnit === "mi") return `${(parseFloat(km[1]) * 0.621371).toFixed(1)} mi`;
+    const mi = str.match(/^([\d.]+)\s*mi(les)?$/i);
+    if (mi && distanceUnit === "km") return `${(parseFloat(mi[1]) * 1.60934).toFixed(1)} km`;
+    return str;
+  }
+
+  function durToMins(str) {
+    if (!str) return 0;
+    let total = 0;
+    const hm = str.match(/(\d+)\s*h/i); const mm = str.match(/(\d+)\s*m/i);
+    if (hm) total += +hm[1] * 60; if (mm) total += +mm[1];
+    return total;
+  }
+
+  function addMinsToTime(hhmm, mins) {
+    if (!hhmm || !mins) return null;
+    const [h, m] = hhmm.split(":").map(Number);
+    const total = h * 60 + m + mins;
+    const ah = Math.floor(total / 60) % 24;
+    const am = total % 60;
+    return { time: `${String(ah).padStart(2, "0")}:${String(am).padStart(2, "0")}`, nextDay: total >= 1440 };
+  }
+
+  function applyEta(dur, explicitDepartTime) {
+    const dt = explicitDepartTime ?? departTime;
+    const mins = durToMins(dur);
+    if (dt && mins) {
+      const eta = addMinsToTime(dt, mins);
+      if (eta) {
+        setArriveTime(eta.time);
+        if (eta.nextDay && departDate) {
+          const [y, mo, d] = departDate.split("-").map(Number);
+          const next = new Date(y, mo - 1, d + 1);
+          setArriveDate(`${next.getFullYear()}-${String(next.getMonth()+1).padStart(2,"0")}-${String(next.getDate()).padStart(2,"0")}`);
+          return;
+        }
+      }
+    }
+    if (departDate) setArriveDate(departDate);
+  }
 
   function searchPlace(query, setPreds, bias) {
     if (!query.trim()) { setPreds([]); return; }
@@ -1291,8 +1338,11 @@ function AddTravelPanel({
         const mk = await loadLocApple();
         const result = await appleFetchDirections(mk, fromAddr || fromName, toAddr || toName, appleModeMap[mode] || "DRIVING");
         // appleFetchDirections returns pre-formatted distance/duration strings + routePath
-        if (result?.distance) setRouteDistance(result.distance);
-        if (result?.duration)  setRouteDuration(result.duration);
+        if (result?.distance) setRouteDistance(convertDist(result.distance));
+        if (result?.duration) {
+          setRouteDuration(result.duration);
+          applyEta(result.duration);
+        }
         if (result?.routePath?.length >= 2) setRoutePath(result.routePath);
 
       } else {
@@ -1307,8 +1357,10 @@ function AddTravelPanel({
         const result = await new DirectionsService().route({ origin, destination, travelMode: TravelMode[googleModeMap[mode] || "DRIVING"] });
         const leg = result.routes[0]?.legs[0];
         if (leg) {
-          setRouteDistance(leg.distance.text);
-          setRouteDuration(leg.duration.text);
+          setRouteDistance(convertDist(leg.distance.text));
+          const dur = leg.duration.text;
+          setRouteDuration(dur);
+          applyEta(dur);
           // Extract path from step geometry
           const path = [];
           (leg.steps || []).forEach(step => {
@@ -1330,6 +1382,7 @@ function AddTravelPanel({
 
   function handleAdd() {
     const item = {
+      _origType: editItem?._origType,
       id: editItem?.id || crypto.randomUUID(),
       mode,
       from: { name: fromName, code: fromCode, address: fromAddr, lat: fromLat, lng: fromLng },
@@ -1338,6 +1391,7 @@ function AddTravelPanel({
       airline, flightNum, seat, confirmation, terminal, bags,
       vehicle, plate, parking, operator, trainNum, carSeat, platform, vessel, travelClass, ticket,
       boatVessel, cruisingSpeed, description,
+      routeDistance, routeDuration, routePath,
       addedAt: editItem?.addedAt || new Date().toISOString(),
     };
     if (editItem && onUpdate) {
@@ -1587,13 +1641,25 @@ function AddTravelPanel({
                 }}
               />
               <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                <input type="time" value={departTime} onChange={e => setDepartTime(e.target.value)}
-                  style={{
-                    flex: 1, border: "none", borderBottom: "1px solid " + ATP.border,
-                    background: "transparent", fontSize: 13, fontFamily: "inherit",
-                    color: ATP.text, outline: "none", padding: "4px 0", boxSizing: "border-box",
-                  }}
-                />
+                <div style={{ position: "relative", flex: 1 }}>
+                  <input type="time" value={departTime}
+                    onChange={e => {
+                      const v = e.target.value;
+                      setDepartTime(v);
+                      if (v && routeDuration) applyEta(routeDuration, v);
+                    }}
+                    onFocus={() => setDepartTimeFocused(true)}
+                    onBlur={() => setDepartTimeFocused(false)}
+                    style={{
+                      width: "100%", border: "none", borderBottom: "1px solid " + ATP.border,
+                      background: "transparent", fontSize: 13, fontFamily: "inherit",
+                      color: (departTime || departTimeFocused) ? ATP.text : "transparent",
+                      outline: "none", padding: "4px 0", boxSizing: "border-box", cursor: "pointer",
+                    }}
+                  />
+                  {!departTime && !departTimeFocused && <span style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", color:ATP.textFaint, fontSize:13, pointerEvents:"none" }}>—</span>}
+                </div>
+                {departTime && <button onClick={() => setDepartTime("")} style={{ background:"none", border:"none", color:ATP.textFaint, cursor:"pointer", fontSize:14, padding:"0 2px", lineHeight:1 }}>×</button>}
                 <span style={{ fontSize: 11, color: ATP.textFaint }}>local</span>
               </div>
             </div>
@@ -1613,13 +1679,20 @@ function AddTravelPanel({
                 }}
               />
               <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                <input type="time" value={arriveTime} onChange={e => setArriveTime(e.target.value)}
-                  style={{
-                    flex: 1, border: "none", borderBottom: "1px solid " + ATP.border,
-                    background: "transparent", fontSize: 13, fontFamily: "inherit",
-                    color: ATP.text, outline: "none", padding: "4px 0", boxSizing: "border-box",
-                  }}
-                />
+                <div style={{ position: "relative", flex: 1 }}>
+                  <input type="time" value={arriveTime} onChange={e => setArriveTime(e.target.value)}
+                    onFocus={() => setArriveTimeFocused(true)}
+                    onBlur={() => setArriveTimeFocused(false)}
+                    style={{
+                      width: "100%", border: "none", borderBottom: "1px solid " + ATP.border,
+                      background: "transparent", fontSize: 13, fontFamily: "inherit",
+                      color: (arriveTime || arriveTimeFocused) ? ATP.text : "transparent",
+                      outline: "none", padding: "4px 0", boxSizing: "border-box", cursor: "pointer",
+                    }}
+                  />
+                  {!arriveTime && !arriveTimeFocused && <span style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", color:ATP.textFaint, fontSize:13, pointerEvents:"none" }}>—</span>}
+                </div>
+                {arriveTime && <button onClick={() => setArriveTime("")} style={{ background:"none", border:"none", color:ATP.textFaint, cursor:"pointer", fontSize:14, padding:"0 2px", lineHeight:1 }}>×</button>}
                 <span style={{ fontSize: 11, color: ATP.textFaint }}>local</span>
               </div>
             </div>
@@ -2970,14 +3043,6 @@ export default function Itinerary() {
       dirtyRef.current = false;
       setShowCommitForm(false);
       setCommitDraft("");
-      // Reload from GitHub after commit to keep localStorage in sync with what was actually saved
-      try {
-        const fresh = await loadFromGitHub({ ...ghSettings, githubFile: currentFile });
-        if (fresh) {
-          applyData(fresh);
-          localStorage.setItem("travelItinerary", JSON.stringify(fresh));
-        }
-      } catch {} // non-fatal — UI already shows committed state
     } catch (err) {
       setSyncStatus(err.message === "conflict" ? "conflict" : "error");
       setSyncError(err.message);
@@ -3120,6 +3185,7 @@ export default function Itinerary() {
       let editItem;
       if (item._type === "flight") {
         editItem = {
+          _origType: "flight",
           id: item.id, mode: "flight",
           from: { name: item.departureName || item.departure || "", code: item.departure || "", lat: item.departureLat || null, lng: item.departureLng || null },
           to:   { name: item.arrivalName   || item.arrival   || "", code: item.arrival   || "", lat: item.arrivalLat   || null, lng: item.arrivalLng   || null },
@@ -3132,13 +3198,19 @@ export default function Itinerary() {
       } else if (item._type === "direction") {
         const modeMap = { DRIVING:"car", WALKING:"walk", TRANSIT:"train" };
         editItem = {
+          _origType: "direction",
           id: item.id, mode: modeMap[item.travelMode] || "car",
           from: { name: item.origin?.name || "", lat: item.originLat || null, lng: item.originLng || null },
           to:   { name: item.destination?.name || "", lat: item.destinationLat || null, lng: item.destinationLng || null },
-          departTime: item.time || "", notes: item.notes || "",
+          departDate: item.departDate || "", departTime: item.time || "",
+          arriveDate: item.arriveDate || "", arriveTime: item.arriveTime || "",
+          routeDistance: item.distance || "", routeDuration: item.duration || "",
+          routePath: item.routePath || null,
+          notes: item.notes || "",
         };
       } else if (item._type === "route") {
         editItem = {
+          _origType: "route",
           id: item.id, mode: "boat",
           from: { name: item.startName || "", lat: item.startLat || null, lng: item.startLng || null },
           to:   { name: item.endName   || "", lat: item.endLat   || null, lng: item.endLng   || null },
@@ -3146,6 +3218,7 @@ export default function Itinerary() {
         };
       } else if (item._type === "rentalcar") {
         editItem = {
+          _origType: "rentalcar",
           id: item.id, mode: "car",
           from: { name: item.pickupLocation  || "" },
           to:   { name: item.dropoffLocation || "" },
@@ -3153,7 +3226,7 @@ export default function Itinerary() {
           confirmation: item.confirmation || "",
         };
       } else {
-        editItem = { id: item.id, mode: "other" };
+        editItem = { _origType: "other", id: item.id, mode: "other" };
       }
       setAddPanel({ day, type:"travel", subtype: undefined, editItem });
     }
@@ -4098,7 +4171,16 @@ export default function Itinerary() {
                             icon = <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}><path d="M2 9.5l5 .5 2.5 3.5 1 .3 0-3.6 4-1.6c.5-.2.7-.7.5-1.2l-.1-.2c-.2-.5-.7-.7-1.2-.5l-3.7 1.5L7 5l-.4-1.1 1-.4-.7-.7L4.4 3.6 4 4.8 2.5 6.3 1.2 6.8c-.4.2-.6.5-.5.8l.1.3c.1.4.5.5.9.4L2 9.5z" stroke="#0b3d6b" strokeWidth="1.3" strokeLinejoin="round"/></svg>;
                             title = [item.flightNumber, item.departure && item.arrival ? `${item.departure} → ${item.arrival}` : ""].filter(Boolean).join(" · ");
                             sub1 = [item.departureName, item.arrivalName].filter(Boolean).join(" → ");
-                            sub2 = [item.airline, item.aircraft].filter(Boolean).join(" · ");
+                            const flightDur = (() => {
+                              if (!item.departureTime || !item.arrivalTime) return "";
+                              const [dh, dm] = item.departureTime.split(":").map(Number);
+                              const [ah, am] = item.arrivalTime.split(":").map(Number);
+                              let mins = (ah * 60 + am) - (dh * 60 + dm);
+                              if (mins <= 0) mins += 1440;
+                              const h = Math.floor(mins / 60), m = mins % 60;
+                              return h > 0 && m > 0 ? `${h}h ${m}m` : h > 0 ? `${h}h` : `${m}m`;
+                            })();
+                            sub2 = [item.airline, flightDur].filter(Boolean).join(" · ");
                             badge = item.confirmation || "";
                             onDel = !readOnly ? () => deleteFlight(d.day, item.id) : null;
                           } else if (item._type === "direction") {
@@ -4111,6 +4193,7 @@ export default function Itinerary() {
                             if (!isNaN(distNum) && rawDist.match(/km/i) && distUnit === "mi") distDisplay = `${Math.round(distNum * 0.621371)} mi`;
                             else if (!isNaN(distNum) && rawDist.match(/mi/i) && distUnit === "km") distDisplay = `${Math.round(distNum * 1.60934)} km`;
                             sub1 = [distDisplay, item.duration].filter(Boolean).join(" · ");
+                            sub2 = item.notes || "";
                             onDel = !readOnly ? () => deleteDirection(d.day, item.id) : null;
                           } else if (item._type === "route") {
                             dotColor = "#0b3d6b";
@@ -4154,7 +4237,7 @@ export default function Itinerary() {
                                       <span style={{ fontSize:14, fontWeight:600, letterSpacing:-0.1, color:"#0e1014" }}>{title}</span>
                                     </div>
                                     {sub1 && <div style={{ fontSize:12.5, color:"#5c6470", lineHeight:1.45, marginBottom:sub2 ? 1 : 0 }}>{sub1}</div>}
-                                    {sub2 && <div style={{ fontSize:12.5, color:"#5c6470", lineHeight:1.45 }}>{sub2}</div>}
+                                    {sub2 && <div style={{ marginTop:1 }}><NoteMarkdown>{sub2}</NoteMarkdown></div>}
                                     {badge && (
                                       <div style={{ marginTop:4, display:"inline-block",
                                         fontFamily:"ui-monospace, 'SF Mono', Menlo, monospace",
@@ -4516,7 +4599,11 @@ export default function Itinerary() {
                           originLat: item.from?.lat, originLng: item.from?.lng,
                           destinationLat: item.to?.lat, destinationLng: item.to?.lng,
                           travelMode: modeMap[item.mode] || "DRIVING",
-                          time: item.departTime, notes: item.notes,
+                          departDate: item.departDate, time: item.departTime,
+                          arriveDate: item.arriveDate, arriveTime: item.arriveTime,
+                          distance: item.routeDistance || "", duration: item.routeDuration || "",
+                          routePath: item.routePath || null,
+                          notes: item.notes,
                         });
                       }
                       closeAddPanel();
@@ -4537,12 +4624,22 @@ export default function Itinerary() {
                         startName: item.from?.name, endName: item.to?.name,
                         startLat: item.from?.lat, startLng: item.from?.lng,
                         endLat: item.to?.lat, endLng: item.to?.lng,
-                        time: item.departTime, notes: item.notes, vessel: item.boatVessel,
+                        departDate: item.departDate, time: item.departTime,
+                        arriveDate: item.arriveDate, arriveTime: item.arriveTime,
+                        notes: item.notes, vessel: item.boatVessel,
                         agency: item.vehicle, pickupLocation: item.from?.name, dropoffLocation: item.to?.name,
+                        distance: item.routeDistance || undefined, duration: item.routeDuration || undefined,
+                        routePath: item.routePath || undefined,
                       };
-                      if (item.mode === "flight") updateFlight(addPanel.day, item.id, d);
-                      else if (item.mode === "boat") updateRoute(addPanel.day, item.id, d);
-                      else updateDirection(addPanel.day, item.id, d);
+                      // Remove undefined keys so they don't overwrite existing values with undefined.
+                      // Exempt time/date fields — those are always explicit (even when empty).
+                      const keepAlways = new Set(["departDate","time","arriveDate","arriveTime"]);
+                      Object.keys(d).forEach(k => !keepAlways.has(k) && d[k] === undefined && delete d[k]);
+                      const origType = item._origType || (item.mode === "flight" ? "flight" : item.mode === "boat" ? "route" : "direction");
+                      if (origType === "flight")    updateFlight(addPanel.day, item.id, d);
+                      else if (origType === "route")     updateRoute(addPanel.day, item.id, d);
+                      else if (origType === "rentalcar") updateRentalCar(addPanel.day, item.id, d);
+                      else                              updateDirection(addPanel.day, item.id, d);
                       closeAddPanel();
                     }}
                     onClose={closeAddPanel}
@@ -4556,6 +4653,7 @@ export default function Itinerary() {
                     routeServerUrl={settings.routeServerUrl ?? "https://waypoint.troyhakala.com"}
                     aeroDataBoxKey={settings.aeroDataBoxKey ?? ""}
                     calendarDate={departDate}
+                    distanceUnit={settings.distanceUnit ?? "km"}
                   />
                 );
               })()}
