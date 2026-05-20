@@ -1,15 +1,15 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Take Hudson to College 🏫//EN
+PRODID:-//DELETE Take Hudson to College 🏫//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-X-WR-CALNAME:Take Hudson to College 🏫
+X-WR-CALNAME:DELETE Take Hudson to College 🏫
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260917
 DTEND;VALUE=DATE:20260918
 SUMMARY:Day 1: Fly to Santa Barbara
 LOCATION:Santa Barbara
-DESCRIPTION:Overnight: Santa Barbara\n\nHighlights:\n• Get rental car\n• Check into hotel\n• Dinner\n\nNote: TODO: Reserve rental car (big SUV)\n\n\n\nFlights:\n✈ as610: SEA → SBA · 909 mi (Conf: LCJDCP)
+DESCRIPTION:Overnight: Santa Barbara\n\nNote: TODO: Reserve rental car (big SUV)\n\n\n\nFlights:\n✈ as610: SEA → SBA · 909 mi (Conf: LCJDCP)
 URL:https://troyh.github.io/TravelItinerary/?i=it-5afa99fe&day=1
 UID:day-1-20260917@travelitinerary
 END:VEVENT
@@ -49,7 +49,7 @@ DTSTART;VALUE=DATE:20260919
 DTEND;VALUE=DATE:20260920
 SUMMARY:Day 3: Move-in Day
 LOCATION:Santa Barbara
-DESCRIPTION:Overnight: Santa Barbara\n\nHighlights:\n• Drive to campus\n• Check-in\n• Unload car\n• Move-in and set up room\n• Shop early morning on move-in day to beat crowds and ensure full stock of popular items\n• Bring a detailed packing list and dorm room dimensions to avoid over-purchasing\n• Check if your college has a move-in essentials list or partnerships with specific retailers for discounts\n• Consider purchasing bulky items (pillows\, mattress pad) before arriving to save luggage space
+DESCRIPTION:Overnight: Santa Barbara
 URL:https://troyh.github.io/TravelItinerary/?i=it-5afa99fe&day=3
 UID:day-3-20260919@travelitinerary
 END:VEVENT
@@ -57,7 +57,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260920
 DTEND;VALUE=DATE:20260921
 SUMMARY:Day 4: Fly to Seattle
-DESCRIPTION:\nHighlights:\n• Check out of hotel\n• Return rental car\n• Go to airport\n\nFlights:\n✈ as618: SBA → SEA · 909 mi
+DESCRIPTION:\nFlights:\n✈ as618: SBA → SEA · 909 mi
 URL:https://troyh.github.io/TravelItinerary/?i=it-5afa99fe&day=4
 UID:day-4-20260920@travelitinerary
 END:VEVENT
