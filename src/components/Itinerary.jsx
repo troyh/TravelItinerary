@@ -4138,6 +4138,38 @@ export default function Itinerary() {
                           Day {d.day} / {days.length}{dayInfo ? ` · ${dayInfo.month.toUpperCase()}` : ""}
                         </div>
                         <div style={{ fontSize:17, fontWeight:600, letterSpacing:-0.2, lineHeight:1.3 }}>{d.leg}</div>
+                        {(dayBias !== null || d.centerName) && (
+                          <div style={{ display:"flex", alignItems:"center", gap:4, marginTop:4 }}>
+                            <span style={{ color:"#9ba1ac", fontSize:11, flexShrink:0 }}>📍</span>
+                            <input
+                              value={d.centerName || ""}
+                              onChange={e => {
+                                setDays(prev => prev.map(x => x.day === d.day ? { ...x, centerName: e.target.value } : x));
+                                fetchLocPreds(d.day, e.target.value, dayBias);
+                                setLocActiveDay(d.day);
+                              }}
+                              onFocus={() => setLocActiveDay(d.day)}
+                              onBlur={() => setTimeout(() => { if (locActiveDay === d.day) { setLocPreds([]); setLocActiveDay(null); } }, 150)}
+                              onKeyDown={e => { if (e.key === "Escape") { setLocPreds([]); setLocActiveDay(null); } }}
+                              placeholder={dayBias ? "Detecting…" : ""}
+                              readOnly={readOnly}
+                              style={{ fontSize:11, color:"#5c6470", background:"none", border:"none", outline:"none",
+                                fontFamily:"inherit", flex:1, cursor: readOnly ? "default" : "text",
+                                padding:0, minWidth:0 }}
+                            />
+                            {!readOnly && d.centerLat !== null && (
+                              <button
+                                onClick={() => setDays(prev => prev.map(x => x.day === d.day
+                                  ? { ...x, centerName: "", centerLat: null, centerLng: null }
+                                  : x))}
+                                title="Reset to auto-detected location"
+                                style={{ background:"none", border:"none", color:"#9ba1ac", cursor:"pointer",
+                                  fontSize:11, padding:0, lineHeight:1, flexShrink:0 }}>
+                                ↺
+                              </button>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
 

@@ -21,7 +21,8 @@
       "Bash(gunzip -f /tmp/design.gz)",
       "Read(//tmp/**)",
       "Bash(mkdir -p /tmp/design-pkg)",
-      "Bash(tar -xf /tmp/design -C /tmp/design-pkg)"
+      "Bash(tar -xf /tmp/design -C /tmp/design-pkg)",
+      "Bash(grep -n \"agency.*Car Rental\\\\|Car Rental.*agency\\\\|\\\\`.*Car Rental\" /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)"
     ]
   }
 }
