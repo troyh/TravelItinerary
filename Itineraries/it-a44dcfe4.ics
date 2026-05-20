@@ -43,6 +43,7 @@ BEGIN:VEVENT
 DTSTART:20260713T07NaN00
 DTEND:NaNNaNNaNTNaNNaN00
 SUMMARY:🚗 undefined Car Rental
+DESCRIPTION:I don't know if we'll have time for this or not.
 UID:rental-e3996ba2-1153-4a20-b256-68ea618a4705@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
