@@ -2228,7 +2228,12 @@
           "vessel": "",
           "agency": "",
           "pickupLocation": "Seattle",
-          "dropoffLocation": "Santa Barbara"
+          "dropoffLocation": "Santa Barbara",
+          "departDate": "2026-07-12",
+          "arriveDate": "2026-07-12",
+          "arriveTime": "18:38",
+          "distance": "909 mi",
+          "duration": "2h 34m"
         }
       ],
       "rentalCars": []
@@ -5486,7 +5491,9 @@
           "vessel": "",
           "agency": "",
           "pickupLocation": "Santa Barbara",
-          "dropoffLocation": "Seattle"
+          "dropoffLocation": "Seattle",
+          "distance": "909 mi",
+          "duration": "2h 34m"
         }
       ],
       "rentalCars": []
