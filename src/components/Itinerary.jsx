@@ -2824,7 +2824,7 @@ export default function Itinerary() {
     setSaveAsName("");
   }
 
-  function buildICSContent(daysArr, sd, ttl, _highlights, notes, fileId, appBase,
+  function buildICSContent(daysArr, sd, ttl, notes, fileId, appBase,
                            flights, rentalCars, savedPlaces, savedDirections, savedRoutes) {
     if (!sd || !daysArr.length) return null;
     const [sy, sm, sday] = sd.split("-").map(Number);
@@ -2846,6 +2846,7 @@ export default function Itinerary() {
     };
     const ampmTo24 = str => {
       if (!str) return null;
+      if (/^\d{2}:\d{2}$/.test(str)) return str; // already HH:MM 24-hour
       const m = str.match(/(\d+):(\d+)\s*(AM|PM)/i);
       if (!m) return null;
       let h = +m[1];
@@ -2886,12 +2887,14 @@ export default function Itinerary() {
         (f.confirmation ? ` (Conf: ${f.confirmation})` : "")
       ).join("\n"));
       const cars = (rentalCars ?? {})[d.day] ?? [];
-      if (cars.length) parts.push("\nRental Cars:\n" + cars.map(c =>
-        `🚗 ${c.agency}` +
-        (c.confirmation ? ` · Conf: ${c.confirmation}` : "") +
-        (c.pickupLocation ? `\n   Pick-up: ${c.pickupLocation}` : "") +
-        (c.dropoffLocation ? `\n   Drop-off: ${c.dropoffLocation}` : "")
-      ).join("\n"));
+      if (cars.length) parts.push("\nRental Cars:\n" + cars.map(c => {
+        const pickup  = c.pickupLocation  || c.origin?.name       || "";
+        const dropoff = c.dropoffLocation || c.destination?.name  || "";
+        return `🚗 ${c.agency || "Rental Car"}` +
+          (c.confirmation ? ` · Conf: ${c.confirmation}` : "") +
+          (pickup   ? `\n   Pick-up: ${pickup}`   : "") +
+          (dropoff  ? `\n   Drop-off: ${dropoff}` : "");
+      }).join("\n"));
 
       // All-day summary event for the day
       cal.push("BEGIN:VEVENT");
@@ -2910,7 +2913,7 @@ export default function Itinerary() {
         const arr24 = ampmTo24(f.arrivalTime);
         if (!dep24) return;
         const dtStart = toICSDateTime(dateStr, dep24);
-        const dtEnd   = arr24 ? toICSDateTime(dateStr, arr24) : addMins(dtStart, 180);
+        const dtEnd   = arr24 ? toICSDateTime(dateStr, arr24) : addMins(dtStart, parseDurMins(f.duration));
         const desc = [
           f.airline && f.aircraft ? `${f.airline} · ${f.aircraft}` : f.airline || f.aircraft || "",
           f.departureName && f.arrivalName ? `${f.departureName} → ${f.arrivalName}` : "",
@@ -2948,35 +2951,46 @@ export default function Itinerary() {
 
       // Timed event: directions
       (savedDirections?.[d.day] ?? []).forEach(dir => {
-        if (!dir.time) return;
-        const dtStart = toICSDateTime(dateStr, dir.time);
-        const dtEnd   = addMins(dtStart, parseDurMins(dir.duration));
+        const depTime = ampmTo24(dir.time || dir.departTime);
+        if (!depTime) return;
+        const dtStart  = toICSDateTime(dateStr, depTime);
+        const arrTime  = ampmTo24(dir.arriveTime);
+        const dtEnd    = arrTime ? toICSDateTime(dateStr, arrTime) : addMins(dtStart, parseDurMins(dir.duration));
+        const originName = dir.origin?.name || "";
+        const destName   = dir.destination?.name || "";
         const desc = [
           [dir.distance, dir.duration].filter(Boolean).join(" · "),
           dir.notes || "",
         ].filter(Boolean).join("\n");
         const TMODE = { DRIVING: "driving", WALKING: "walking", BICYCLING: "bicycling", TRANSIT: "transit" };
-        const mapsUrl = (dir.mapsProvider ?? "google") === "apple"
-          ? `https://maps.apple.com/?saddr=${encodeURIComponent(dir.origin.name)}&daddr=${encodeURIComponent(dir.destination.name)}&dirflg=${dir.travelMode === "WALKING" ? "w" : "d"}`
-          : `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(dir.origin.name)}&destination=${encodeURIComponent(dir.destination.name)}&travelmode=${TMODE[dir.travelMode] ?? "driving"}`;
+        const mapsUrl = originName && destName
+          ? ((dir.mapsProvider ?? "google") === "apple"
+              ? `https://maps.apple.com/?saddr=${encodeURIComponent(originName)}&daddr=${encodeURIComponent(destName)}&dirflg=${dir.travelMode === "WALKING" ? "w" : "d"}`
+              : `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originName)}&destination=${encodeURIComponent(destName)}&travelmode=${TMODE[dir.travelMode] ?? "driving"}`)
+          : null;
         cal.push("BEGIN:VEVENT");
         cal.push(`DTSTART:${dtStart}`);
         cal.push(`DTEND:${dtEnd}`);
-        cal.push(`SUMMARY:${esc(`${dir.origin.name} → ${dir.destination.name}`)}`);
-        cal.push(`LOCATION:${esc(dir.destination.name)}`);
-        if (desc) cal.push(`DESCRIPTION:${esc(desc)}`);
-        cal.push(`URL:${mapsUrl}`);
+        cal.push(`SUMMARY:${esc(originName && destName ? `${originName} → ${destName}` : "Drive")}`);
+        if (destName) cal.push(`LOCATION:${esc(destName)}`);
+        if (desc)     cal.push(`DESCRIPTION:${esc(desc)}`);
+        if (mapsUrl)  cal.push(`URL:${mapsUrl}`);
         cal.push(`UID:dir-${dir.id}@travelitinerary`);
         cal.push("END:VEVENT");
       });
 
       // Timed event: boating routes
       (savedRoutes?.[d.day] ?? []).forEach(r => {
-        if (!r.time) return;
-        const dtStart = toICSDateTime(dateStr, r.time);
-        const dtEnd   = addMins(dtStart, Math.round((r.hrs || 0) * 60));
+        const depTime = ampmTo24(r.time);
+        if (!depTime) return;
+        const dtStart = toICSDateTime(dateStr, depTime);
+        const dtEnd   = addMins(dtStart, Math.round((r.hrs || 1) * 60));
+        const distParts = [];
+        if (r.nm  > 0) distParts.push(`${r.nm} NM`);
+        if (r.hrs > 0) { const h=Math.floor(r.hrs),m=Math.round((r.hrs-h)*60); distParts.push(`~${h>0?`${h}h `:""}${m>0?`${m}m`:""}`); }
         const desc = [
-          `${r.nm} NM at ${r.speedKts} kts · ~${r.hrs} hrs`,
+          distParts.join(" · "),
+          r.startName && r.endName ? `${r.startName} → ${r.endName}` : "",
           r.notes || "",
         ].filter(Boolean).join("\n");
         cal.push("BEGIN:VEVENT");
@@ -2990,21 +3004,27 @@ export default function Itinerary() {
 
       // Timed event: rental cars
       cars.forEach(c => {
-        if (!c.time) return;
-        const dtStart = toICSDateTime(dateStr, c.time);
-        const dtEnd   = addMins(dtStart, 60);
+        const depTime = ampmTo24(c.time || c.departTime);
+        if (!depTime) return;
+        const dtStart  = toICSDateTime(dateStr, depTime);
+        const arrTime  = ampmTo24(c.arriveTime);
+        const dtEnd    = arrTime ? toICSDateTime(dateStr, arrTime) : addMins(dtStart, parseDurMins(c.duration));
+        const pickup   = c.pickupLocation  || c.origin?.name      || "";
+        const dropoff  = c.dropoffLocation || c.destination?.name || "";
         const desc = [
           c.confirmation ? `Confirmation: ${c.confirmation}` : "",
-          c.pickupLocation ? `Pick-up: ${c.pickupLocation}` : "",
-          c.dropoffLocation ? `Drop-off: ${c.dropoffLocation}` : "",
+          pickup   ? `Pick-up: ${pickup}`   : "",
+          dropoff  ? `Drop-off: ${dropoff}` : "",
+          c.distance ? c.distance           : "",
+          c.duration ? c.duration           : "",
           c.notes || "",
         ].filter(Boolean).join("\n");
         cal.push("BEGIN:VEVENT");
         cal.push(`DTSTART:${dtStart}`);
         cal.push(`DTEND:${dtEnd}`);
-        cal.push(`SUMMARY:${esc(`🚗 ${c.agency} Car Rental`)}`);
-        if (c.pickupLocation) cal.push(`LOCATION:${esc(c.pickupLocation)}`);
-        if (desc) cal.push(`DESCRIPTION:${esc(desc)}`);
+        cal.push(`SUMMARY:${esc(`🚗 ${c.agency || "Rental Car"}`)}`);
+        if (pickup) cal.push(`LOCATION:${esc(pickup)}`);
+        if (desc)   cal.push(`DESCRIPTION:${esc(desc)}`);
         cal.push(`UID:rental-${c.id}@travelitinerary`);
         cal.push("END:VEVENT");
       });
