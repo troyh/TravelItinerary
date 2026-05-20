@@ -2233,7 +2233,9 @@
           "arriveDate": "2026-07-12",
           "arriveTime": "18:38",
           "distance": "909 mi",
-          "duration": "2h 34m"
+          "duration": "2h 34m",
+          "aircraft": "Boeing 737-800",
+          "miles": 909
         }
       ],
       "rentalCars": []
