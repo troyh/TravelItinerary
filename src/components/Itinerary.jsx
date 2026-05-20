@@ -3220,10 +3220,13 @@ export default function Itinerary() {
         editItem = {
           _origType: "rentalcar",
           id: item.id, mode: "car",
-          from: { name: item.pickupLocation  || "" },
-          to:   { name: item.dropoffLocation || "" },
-          departTime: item.time || "", vehicle: item.agency || "",
-          confirmation: item.confirmation || "",
+          from: { name: item.origin?.name || item.pickupLocation  || "", lat: item.originLat || null, lng: item.originLng || null },
+          to:   { name: item.destination?.name || item.dropoffLocation || "", lat: item.destinationLat || null, lng: item.destinationLng || null },
+          departDate: item.departDate || "", departTime: item.time || "",
+          arriveDate: item.arriveDate || "", arriveTime: item.arriveTime || "",
+          routeDistance: item.distance || "", routeDuration: item.duration || "",
+          routePath: item.routePath || null,
+          vehicle: item.agency || "", confirmation: item.confirmation || "",
         };
       } else {
         editItem = { _origType: "other", id: item.id, mode: "other" };
@@ -4211,6 +4214,12 @@ export default function Itinerary() {
                             icon = <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}><path d="M2.5 11V8.5l1.2-3a1 1 0 011-.7h6.6a1 1 0 011 .7l1.2 3V11" stroke="#d97706" strokeWidth="1.3" strokeLinejoin="round"/><rect x="2" y="11" width="12" height="2.5" rx=".5" stroke="#d97706" strokeWidth="1.3"/></svg>;
                             title = item.agency || "Rental Car";
                             sub1 = [item.pickupLocation, item.dropoffLocation].filter(Boolean).join(" → ");
+                            const rcRaw = item.distance || "";
+                            const rcNum = parseFloat(rcRaw);
+                            let rcDist = rcRaw;
+                            if (!isNaN(rcNum) && rcRaw.match(/km/i) && distUnit === "mi") rcDist = `${Math.round(rcNum * 0.621371)} mi`;
+                            else if (!isNaN(rcNum) && rcRaw.match(/mi/i) && distUnit === "km") rcDist = `${Math.round(rcNum * 1.60934)} km`;
+                            sub2 = [rcDist, item.duration].filter(Boolean).join(" · ");
                             badge = item.confirmation || "";
                             onDel = !readOnly ? () => deleteRentalCar(d.day, item.id) : null;
                           }
