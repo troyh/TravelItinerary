@@ -2191,6 +2191,7 @@ export default function Itinerary() {
   const [subtitle,         setSubtitle]         = useState(() => _db?.subtitle ?? "Princess Louisa Inlet · Vancouver · Salt Spring · Desolation Sound · Johnstone Strait · Broughtons · Gulf Islands");
   const [itineraryNotes,   setItineraryNotes]   = useState(() => _db?.itineraryNotes ?? "");
   const [editingHeader,    setEditingHeader]    = useState(false);
+  const [editingSubtitle,  setEditingSubtitle]  = useState(false);
   const [headerDraft,      setHeaderDraft]      = useState({});
   const [editingNotes,     setEditingNotes]     = useState(false);
   const [currentFile,      setCurrentFile]      = useState(() => localStorage.getItem("travelCurrentFile"));
@@ -2881,11 +2882,15 @@ export default function Itinerary() {
       const note = notes[d.day] !== undefined ? notes[d.day] : d.note;
       if (note) parts.push(`\nNote: ${note}`);
       const fl = (flights ?? {})[d.day] ?? [];
-      if (fl.length) parts.push("\nFlights:\n" + fl.map(f =>
-        `✈ ${f.flightNumber}: ${f.departure} → ${f.arrival}` +
-        (f.miles ? ` · ${f.miles.toLocaleString()} mi` : "") +
-        (f.confirmation ? ` (Conf: ${f.confirmation})` : "")
-      ).join("\n"));
+      if (fl.length) parts.push("\nFlights:\n" + fl.map(f => {
+        const fSummary = [
+          f.flightNumber || "",
+          f.departure && f.arrival ? `${f.departure} → ${f.arrival}` : (f.departure || f.arrival || ""),
+        ].filter(Boolean).join(": ") || "Flight";
+        return `✈ ${fSummary}` +
+          (f.miles ? ` · ${f.miles.toLocaleString()} mi` : "") +
+          (f.confirmation ? ` (Conf: ${f.confirmation})` : "");
+      }).join("\n"));
       const cars = (rentalCars ?? {})[d.day] ?? [];
       if (cars.length) parts.push("\nRental Cars:\n" + cars.map(c => {
         const pickup  = c.pickupLocation  || c.origin?.name       || "";
@@ -2900,7 +2905,7 @@ export default function Itinerary() {
       cal.push("BEGIN:VEVENT");
       cal.push(`DTSTART;VALUE=DATE:${dateStr}`);
       cal.push(`DTEND;VALUE=DATE:${toICSDate(d.day + 1)}`);
-      cal.push(`SUMMARY:${esc(`Day ${d.day}: ${d.leg}`)}`);
+      cal.push(`SUMMARY:${esc(d.leg ? `Day ${d.day}: ${d.leg}` : `Day ${d.day}`)}`);
       if (d.overnight) cal.push(`LOCATION:${esc(d.overnight)}`);
       if (parts.length) cal.push(`DESCRIPTION:${esc(parts.join("\n"))}`);
       if (fileId && appBase) cal.push(`URL:${appBase}?i=${encodeURIComponent(fileId)}&day=${d.day}`);
@@ -2923,7 +2928,11 @@ export default function Itinerary() {
         cal.push("BEGIN:VEVENT");
         cal.push(`DTSTART:${dtStart}`);
         cal.push(`DTEND:${dtEnd}`);
-        cal.push(`SUMMARY:${esc(`✈ ${f.flightNumber}: ${f.departure} → ${f.arrival}`)}`);
+        const fSum = [
+          f.flightNumber || "",
+          f.departure && f.arrival ? `${f.departure} → ${f.arrival}` : (f.departure || f.arrival || ""),
+        ].filter(Boolean).join(": ") || "Flight";
+        cal.push(`SUMMARY:${esc(`✈ ${fSum}`)}`);
         if (desc) cal.push(`DESCRIPTION:${esc(desc)}`);
         cal.push(`UID:flight-${f.id}@travelitinerary`);
         cal.push("END:VEVENT");
@@ -3741,27 +3750,44 @@ export default function Itinerary() {
           </div>
         ) : (
           <h1
-            onClick={() => !readOnly && (setEditingHeader(true), setHeaderDraft({ title, subtitle }))}
+            onDoubleClick={() => !readOnly && (setEditingHeader(true), setHeaderDraft({ title, subtitle }))}
+            title={readOnly ? undefined : "Double-tap to edit"}
             style={{ fontSize:"clamp(1.6rem,4vw,2.4rem)", fontWeight:700, color:"#0e1014",
               margin:"0 0 " + (subtitle ? ".3rem" : ".75rem"), letterSpacing:"-.03em",
               lineHeight:1.15, cursor: readOnly ? "default" : "text" }}>
             {title}
           </h1>
         )}
-        {/* Subtitle — plain controlled input, no editingHeader dependency */}
-        {!readOnly ? (
-          <input
+        {/* Subtitle — double-tap to edit */}
+        {!readOnly && editingSubtitle ? (
+          <textarea
+            autoFocus
             value={subtitle}
             onChange={e => setSubtitle(e.target.value)}
+            onBlur={() => setEditingSubtitle(false)}
+            onKeyDown={e => { if (e.key === "Escape" || e.key === "Enter") { e.preventDefault(); setEditingSubtitle(false); } }}
             placeholder="Add subtitle…"
+            rows={2}
             className="inline-subtitle-input"
             style={{ display:"block", width:"100%", background:"transparent", border:"none",
-              color: subtitle ? "#9ba1ac" : "#c8cdd4", padding:".1rem 0",
-              fontFamily:"inherit", fontStyle:"italic", outline:"none",
-              marginBottom:".75rem", cursor:"text", boxSizing:"border-box" }}
+              borderBottom:"1px solid #e2e5ea", color:"#9ba1ac", padding:".1rem 0",
+              fontFamily:"inherit", fontStyle:"italic", outline:"none", resize:"none",
+              marginBottom:".75rem", boxSizing:"border-box", lineHeight:1.5 }}
           />
         ) : subtitle ? (
-          <p style={{ color:"#9ba1ac", margin:"0 0 .75rem", fontSize:".9rem", fontStyle:"italic" }}>{subtitle}</p>
+          <p
+            onDoubleClick={() => !readOnly && setEditingSubtitle(true)}
+            title={readOnly ? undefined : "Double-tap to edit"}
+            style={{ color:"#9ba1ac", margin:"0 0 .75rem", fontSize:".9rem", fontStyle:"italic",
+              cursor: readOnly ? "default" : "text", wordBreak:"break-word" }}>
+            {subtitle}
+          </p>
+        ) : !readOnly ? (
+          <p
+            onDoubleClick={() => setEditingSubtitle(true)}
+            style={{ color:"#c8cdd4", margin:"0 0 .75rem", fontSize:".9rem", fontStyle:"italic", cursor:"text" }}>
+            Double-tap to add subtitle…
+          </p>
         ) : null}
         {dateRange && !editingHeader && (
           <div style={{ fontSize:15, color:"#5c6470", marginBottom:"1.5rem", fontVariantNumeric:"tabular-nums" }}>
@@ -3806,14 +3832,15 @@ export default function Itinerary() {
                   onKeyDown={e => { if (e.key === "Escape") setEditingNotes(false); }}
                   placeholder="Notes about this trip…"
                   className="inline-notes-textarea"
-                  style={{ width:"100%", flex:1, background:"transparent", border:"none",
+                  style={{ width:"100%", background:"transparent", border:"none",
                     borderBottom:"1px solid #e2e5ea", color:"#0e1014",
                     padding:".1rem 0", fontFamily:"inherit",
                     lineHeight:1.6, boxSizing:"border-box", outline:"none",
-                    resize:"none", minHeight:0 }}
+                    resize:"vertical", minHeight:"8rem" }}
                 />
               ) : (
-                <div onClick={() => setEditingNotes(true)}
+                <div onDoubleClick={() => setEditingNotes(true)}
+                  title="Double-tap to edit"
                   style={{ fontSize:13, lineHeight:1.6, color: itineraryNotes ? "#0e1014" : "#9ba1ac",
                     cursor:"text", minHeight:24 }}>
                   {itineraryNotes
@@ -4127,7 +4154,8 @@ export default function Itinerary() {
                           padding:".1rem 0", fontFamily:"inherit", outline:"none", boxSizing:"border-box" }} />
                     ) : (
                       <div
-                        onClick={() => !readOnly && startEditCore(d.day, d)}
+                        onDoubleClick={() => !readOnly && startEditCore(d.day, d)}
+                        title={readOnly ? undefined : "Double-tap to edit"}
                         style={{ fontSize:17, fontWeight:600, letterSpacing:-0.2, lineHeight:1.3,
                           cursor: readOnly ? "default" : "text" }}>
                         {d.leg}
@@ -4161,16 +4189,9 @@ export default function Itinerary() {
 
                       return (
                         <div
-                          onClick={e => {
-                            if (readOnly) return;
-                            // Synchronous focus attempt so iOS raises keyboard on tap
-                            const ta = e.currentTarget.querySelector("textarea._note_ta");
-                            if (ta) ta.focus();
-                            startEditNote(d.day, note);
-                          }}
+                          onDoubleClick={() => { if (!readOnly) startEditNote(d.day, note); }}
+                          title={readOnly ? undefined : "Double-tap to edit"}
                           style={{ flex:1, minHeight:20, cursor: readOnly ? "default" : "text" }}>
-                          {/* Hidden textarea keeps iOS focus chain alive during the click */}
-                          {!readOnly && <textarea className="_note_ta" readOnly style={{ position:"absolute", opacity:0, width:1, height:1, pointerEvents:"none" }} />}
                           {note
                             ? <div style={{ fontSize:12, lineHeight:1.55, color:"#5c6470" }}><NoteMarkdown>{note}</NoteMarkdown></div>
                             : <div style={{ fontSize:12, lineHeight:1.55, color:"#9ba1ac", fontStyle:"italic" }}>Add a note…</div>}
