@@ -14,15 +14,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [
-        "Get rental car",
-        "Check into hotel",
-        "Dinner"
-      ],
-      "note": "TODO: Reserve rental car (big SUV)\n\n",
       "centerName": "Santa Barbara, United States",
       "centerLat": 34.417567999999996,
       "centerLng": -119.73995566666667,
+      "highlights": [],
+      "note": "TODO: Reserve rental car (big SUV)\n\n",
       "places": [
         {
           "id": "1ddc2bb3-17f8-4c98-a00d-c2a26492b23d",
@@ -1105,11 +1101,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "Santa Barbara, United States",
       "centerLat": 34.43939734999999,
       "centerLng": -119.74907904999999,
+      "highlights": [],
+      "note": "TODO: dinner reservation?",
       "places": [
         {
           "id": "105c6d26-848e-4121-993b-74ba7bed10b2",
@@ -1155,20 +1151,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [
-        "Drive to campus",
-        "Check-in",
-        "Unload car",
-        "Move-in and set up room",
-        "Shop early morning on move-in day to beat crowds and ensure full stock of popular items",
-        "Bring a detailed packing list and dorm room dimensions to avoid over-purchasing",
-        "Check if your college has a move-in essentials list or partnerships with specific retailers for discounts",
-        "Consider purchasing bulky items (pillows, mattress pad) before arriving to save luggage space"
-      ],
-      "note": "",
       "centerName": "Isla Vista, United States",
       "centerLat": 34.414669599999996,
       "centerLng": -119.84366355,
+      "highlights": [],
+      "note": "TODO: dinner reservation?",
       "places": [
         {
           "id": "d66244c4-cab2-4a64-8eb3-752c11d82bce",
@@ -2040,26 +2027,20 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [
-        "Check out of hotel",
-        "Return rental car",
-        "Go to airport"
-      ],
-      "note": "",
       "centerName": "Santa Barbara, CA, United States",
       "centerLat": 34.420344,
       "centerLng": -119.698886,
+      "highlights": [],
+      "note": "TODO: Lunch \nTODO: activities before flying home?",
       "places": [],
       "directions": [
         {
           "id": "6ab9dc3e-75bd-4625-9d8b-c5c4ebfd6a40",
           "origin": {
-            "name": "Hotel Californian",
-            "placeId": "ChIJL33RqY4T6YARpZWlN590OyM"
+            "name": "Hotel Californian"
           },
           "destination": {
-            "name": "SBA airport (SBA)",
-            "placeId": "ChIJJ79bfX4_6YARXEGp_YImp6A"
+            "name": "SBA airport (SBA)"
           },
           "travelMode": "DRIVING",
           "distance": "10.5 mi",
@@ -2835,10 +2816,41 @@
               "duration": "1 min"
             }
           ],
-          "time": "",
+          "time": "17:00",
           "notes": "",
           "addedAt": "2026-05-11T01:24:21.368Z",
-          "mapsProvider": "google"
+          "mapsProvider": "google",
+          "flightNumber": "",
+          "departure": "",
+          "arrival": "",
+          "departureName": "Hotel Californian",
+          "arrivalName": "SBA airport (SBA)",
+          "departureTime": "17:00",
+          "arrivalTime": "17:14",
+          "airline": "",
+          "aircraft": "",
+          "confirmation": "",
+          "seat": "",
+          "terminal": "",
+          "bags": "",
+          "miles": 11,
+          "departureLat": 34.4133488,
+          "departureLng": -119.6900779,
+          "arrivalLat": 34.4193633,
+          "arrivalLng": -119.8352148,
+          "startName": "Hotel Californian",
+          "endName": "SBA airport (SBA)",
+          "startLat": 34.4133488,
+          "startLng": -119.6900779,
+          "endLat": 34.4193633,
+          "endLng": -119.8352148,
+          "departDate": "2026-09-20",
+          "arriveDate": "2026-09-20",
+          "arriveTime": "17:14",
+          "vessel": "",
+          "agency": "",
+          "pickupLocation": "Hotel Californian",
+          "dropoffLocation": "SBA airport (SBA)"
         }
       ],
       "routes": [],
