@@ -233,15 +233,6 @@ DESCRIPTION:**Requires Laptop** Review our course registration system and regist
 UID:place-f02e6bb2-23a3-430c-a180-9e783cc848f9@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260714T163000
-DTEND:20260714T164700
-SUMMARY:UCSB Parking Lot 22 → Santa Barbara Airport - SBA
-LOCATION:Santa Barbara Airport - SBA
-DESCRIPTION:11.0 mi · 17 min
-URL:https://maps.apple.com/?saddr=UCSB%20Parking%20Lot%2022&daddr=Santa%20Barbara%20Airport%20-%20SBA&dirflg=d
-UID:dir-0fe30eea-940a-4ec2-a5ca-a124660080eb@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
 DTSTART:20260714T073000
 DTEND:20260714T074100
 SUMMARY:The Leta Santa Barbara Goleta\, Tapestry Collection by Hilton → UCSB Parking Lot 22
@@ -249,5 +240,14 @@ LOCATION:UCSB Parking Lot 22
 DESCRIPTION:5.2 mi · 11 min
 URL:https://www.google.com/maps/dir/?api=1&origin=The%20Leta%20Santa%20Barbara%20Goleta%2C%20Tapestry%20Collection%20by%20Hilton&destination=UCSB%20Parking%20Lot%2022&travelmode=driving
 UID:dir-22825711-69f7-4b68-a87c-ba9312e4c880@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260714T163000
+DTEND:20260714T163800
+SUMMARY:UCSB Parking Lot 22 → Santa Barbara Airport - SBA
+LOCATION:Santa Barbara Airport - SBA
+DESCRIPTION:2.8 mi · 8 min
+URL:https://www.google.com/maps/dir/?api=1&origin=UCSB%20Parking%20Lot%2022&destination=Santa%20Barbara%20Airport%20-%20SBA&travelmode=driving
+UID:dir-7255eb02-687e-4267-bece-70e4d9d0bc89@travelitinerary
 END:VEVENT
 END:VCALENDAR
