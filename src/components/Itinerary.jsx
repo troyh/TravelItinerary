@@ -2942,7 +2942,8 @@ export default function Itinerary() {
         cal.push("BEGIN:VEVENT");
         cal.push(`DTSTART:${dtStart}`);
         cal.push(`DTEND:${dtEnd}`);
-        cal.push(`SUMMARY:${esc(p.name)}`);
+        const placeIcon = p.category === "accommodation" ? "🏨 " : p.category === "restaurant" ? "🍽 " : "";
+        cal.push(`SUMMARY:${esc(`${placeIcon}${p.name}`)}`);
         if (p.address) cal.push(`LOCATION:${esc(p.address)}`);
         if (desc) cal.push(`DESCRIPTION:${esc(desc)}`);
         cal.push(`UID:place-${p.id}@travelitinerary`);
@@ -2971,7 +2972,8 @@ export default function Itinerary() {
         cal.push("BEGIN:VEVENT");
         cal.push(`DTSTART:${dtStart}`);
         cal.push(`DTEND:${dtEnd}`);
-        cal.push(`SUMMARY:${esc(originName && destName ? `${originName} → ${destName}` : "Drive")}`);
+        const dirIcon = dir.travelMode === "WALKING" ? "🚶 " : dir.travelMode === "TRANSIT" ? "🚆 " : "🚗 ";
+        cal.push(`SUMMARY:${esc(originName && destName ? `${dirIcon}${originName} → ${destName}` : `${dirIcon}Drive`)}`);
         if (destName) cal.push(`LOCATION:${esc(destName)}`);
         if (desc)     cal.push(`DESCRIPTION:${esc(desc)}`);
         if (mapsUrl)  cal.push(`URL:${mapsUrl}`);
