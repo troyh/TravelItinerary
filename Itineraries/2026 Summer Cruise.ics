@@ -108,15 +108,22 @@ DTSTART;VALUE=DATE:20260731
 DTEND;VALUE=DATE:20260801
 SUMMARY:Day 12: Lagoon Cove → Blind Channel Resort
 LOCATION:Blind Channel Resort\, West Thurlow Island
-DESCRIPTION:69.4 NM · ~5.8 hrs\nOvernight: Blind Channel Resort\, West Thurlow Island\n\nNote: Call ahead on VHF 66A to reserve a slip — Blind Channel fills up in summer. Easy run today\; enjoy the slow pace.
+DESCRIPTION:47.8 NM · ~8.4 hrs\nOvernight: Blind Channel Resort\, West Thurlow Island\n\nNote: Call ahead on VHF 66A to reserve a slip — Blind Channel fills up in summer. Easy run today\; enjoy the slow pace.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=12
 UID:day-12-20260731@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260731T123000
+DTEND:20260731T133000
+SUMMARY:
+DESCRIPTION:It can't route through that channel for some reason.
+UID:place-4a5f7861-eb0b-45b0-ad23-7d9281320535@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART:20260731T100000
-DTEND:20260731T154700
-SUMMARY:🚢 Lagoon Cove → Blind Channel Resort
-DESCRIPTION:69.4 NM · ~5h 47m\nLagoon Cove → Blind Channel Resort
+DTEND:20260731T101400
+SUMMARY:🚢 Lagoon Cove → 50.63592°N 126.32163°W
+DESCRIPTION:2.8 NM · ~14m\nLagoon Cove → 50.63592°N 126.32163°W
 UID:route-df244fbb-2842-47fa-9125-1f006d87ecea@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
