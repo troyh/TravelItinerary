@@ -9,7 +9,7 @@ DTSTART;VALUE=DATE:20260720
 DTEND;VALUE=DATE:20260721
 SUMMARY:Day 1: Seattle → Victoria\, BC
 LOCATION:Oak Bay anchorage or Victoria Harbour
-DESCRIPTION:68.7 NM · ~4.6 hrs\nOvernight: Oak Bay anchorage or Victoria Harbour\n\nNote: Depart early — US/Canada customs by water can involve a wait. Passports for everyone aboard.
+DESCRIPTION:70.4 NM · ~4.7 hrs\nOvernight: Oak Bay anchorage or Victoria Harbour\n\nNote: Depart early — US/Canada customs by water can involve a wait. Passports for everyone aboard.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=1
 UID:day-1-20260720@travelitinerary
 END:VEVENT
@@ -18,7 +18,7 @@ DTSTART;VALUE=DATE:20260721
 DTEND;VALUE=DATE:20260722
 SUMMARY:Day 2: Victoria → Salt Spring Island → Vancouver
 LOCATION:False Creek Fisherman's Wharf or Granville Island Marina
-DESCRIPTION:72.3 NM · ~4.8 hrs\nOvernight: False Creek Fisherman's Wharf or Granville Island Marina\n\nNote: Depart Salt Spring by 1:30–2pm to arrive Vancouver before evening. If you time it for a Saturday\, the Ganges market is not to be missed.
+DESCRIPTION:67.7 NM · ~4.5 hrs\nOvernight: False Creek Fisherman's Wharf or Granville Island Marina\n\nNote: Depart Salt Spring by 1:30–2pm to arrive Vancouver before evening. If you time it for a Saturday\, the Ganges market is not to be missed.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=2
 UID:day-2-20260721@travelitinerary
 END:VEVENT
@@ -34,7 +34,7 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260722T123000
 DTEND:20260722T133000
-SUMMARY:False Bay
+SUMMARY:🍽 False Bay
 LOCATION:British Columbia\, Canada
 UID:place-d81d6017-9403-436a-b1d4-b980d12db466@travelitinerary
 END:VEVENT
@@ -43,7 +43,7 @@ DTSTART;VALUE=DATE:20260723
 DTEND;VALUE=DATE:20260724
 SUMMARY:Day 4: Vancouver → Princess Louisa Inlet
 LOCATION:Princess Louisa Marine Provincial Park (anchor / stern-tie)
-DESCRIPTION:88.3 NM · ~5.9 hrs\nOvernight: Princess Louisa Marine Provincial Park (anchor / stern-tie)\n\nNote: Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window.\n\nTODO: Figure out if I’m okay for stern-tying\nTODO: Is the dock there still under construction?
+DESCRIPTION:87.3 NM · ~8.7 hrs\nOvernight: Princess Louisa Marine Provincial Park (anchor / stern-tie)\n\nNote: Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window.\n\nTODO: Figure out if I’m okay for stern-tying\nTODO: Is the dock there still under construction?
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=4
 UID:day-4-20260723@travelitinerary
 END:VEVENT
@@ -61,7 +61,7 @@ DTSTART;VALUE=DATE:20260725
 DTEND;VALUE=DATE:20260726
 SUMMARY:Day 6: Princess Louisa → Prideaux Haven (Desolation Sound)
 LOCATION:Prideaux Haven\, Desolation Sound Marine Park
-DESCRIPTION:80.6 NM · ~5.4 hrs\nOvernight: Prideaux Haven\, Desolation Sound Marine Park\n\nNote: Prideaux fills fast in July — arrive by early afternoon. Tenedos Bay (adjacent) is an excellent overflow anchorage.
+DESCRIPTION:81.4 NM · ~8.1 hrs\nOvernight: Prideaux Haven\, Desolation Sound Marine Park\n\nNote: Prideaux fills fast in July — arrive by early afternoon. Tenedos Bay (adjacent) is an excellent overflow anchorage.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=6
 UID:day-6-20260725@travelitinerary
 END:VEVENT
@@ -79,7 +79,7 @@ DTSTART;VALUE=DATE:20260727
 DTEND;VALUE=DATE:20260728
 SUMMARY:Day 8: Desolation Sound → Campbell River (fuel) → Port Neville
 LOCATION:Port Neville anchorage or Thurston Bay Marine Park
-DESCRIPTION:69.6 NM · ~4.6 hrs\nOvernight: Port Neville anchorage or Thurston Bay Marine Park\n\nNote: This is a coordinated day: depart Desolation early\, fuel Campbell River at ~10:30am\, Seymour Narrows at slack midday\, anchor Port Neville by mid-afternoon. At 15 kts this is ~7.5 hrs total but the Narrows wait may be built in. Brief lunch at Campbell River fuel dock.
+DESCRIPTION:77.2 NM · ~14.0 hrs\nOvernight: Port Neville anchorage or Thurston Bay Marine Park\n\nNote: This is a coordinated day: depart Desolation early\, fuel Campbell River at ~10:30am\, Seymour Narrows at slack midday\, anchor Port Neville by mid-afternoon. At 15 kts this is ~7.5 hrs total but the Narrows wait may be built in. Brief lunch at Campbell River fuel dock.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=8
 UID:day-8-20260727@travelitinerary
 END:VEVENT
@@ -88,7 +88,7 @@ DTSTART;VALUE=DATE:20260728
 DTEND;VALUE=DATE:20260729
 SUMMARY:Day 9: Port Neville → Telegraph Cove
 LOCATION:Telegraph Cove Marina or nearby anchorage
-DESCRIPTION:29 NM · ~1.9 hrs\nOvernight: Telegraph Cove Marina or nearby anchorage\n\nNote: Relaxed day after yesterday's long push. Take your time through Johnstone Strait — the orca viewing here is as good as it gets on the BC coast.
+DESCRIPTION:33.7 NM · ~2.8 hrs\nOvernight: Telegraph Cove Marina or nearby anchorage\n\nNote: Relaxed day after yesterday's long push. Take your time through Johnstone Strait — the orca viewing here is as good as it gets on the BC coast.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=9
 UID:day-9-20260728@travelitinerary
 END:VEVENT
@@ -97,7 +97,7 @@ DTSTART;VALUE=DATE:20260729
 DTEND;VALUE=DATE:20260730
 SUMMARY:Day 10: Telegraph Cove → Broughtons / Lagoon Cove
 LOCATION:Lagoon Cove Marina\, East Cracroft Island
-DESCRIPTION:257.7 NM · ~17.2 hrs\nOvernight: Lagoon Cove Marina\, East Cracroft Island\n\nNote: Arriving early gives you the afternoon to explore and get oriented. Tonight: Kelly & Dan's famous prawn potluck — they supply the prawns\, you bring an appetizer. Unmissable.
+DESCRIPTION:22.8 NM · ~2.3 hrs\nOvernight: Lagoon Cove Marina\, East Cracroft Island\n\nNote: Arriving early gives you the afternoon to explore and get oriented. Tonight: Kelly & Dan's famous prawn potluck — they supply the prawns\, you bring an appetizer. Unmissable.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=10
 UID:day-10-20260729@travelitinerary
 END:VEVENT
@@ -115,15 +115,15 @@ DTSTART;VALUE=DATE:20260731
 DTEND;VALUE=DATE:20260801
 SUMMARY:Day 12: Lagoon Cove → Blind Channel Resort
 LOCATION:Blind Channel Resort\, West Thurlow Island
-DESCRIPTION:48.5 NM · ~3.2 hrs\nOvernight: Blind Channel Resort\, West Thurlow Island\n\nNote: Call ahead on VHF 66A to reserve a slip — Blind Channel fills up in summer. Easy run today\; enjoy the slow pace.
+DESCRIPTION:69.4 NM · ~5.8 hrs\nOvernight: Blind Channel Resort\, West Thurlow Island\n\nNote: Call ahead on VHF 66A to reserve a slip — Blind Channel fills up in summer. Easy run today\; enjoy the slow pace.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=12
 UID:day-12-20260731@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260731T100000
-DTEND:20260731T131200
-SUMMARY:🚢 Boating Route
-DESCRIPTION:48.5 NM · ~3h 12m\nLagoon Cove Marina → Blind Channel Resort
+DTEND:20260731T154700
+SUMMARY:🚢 Lagoon Cove → Blind Channel Resort
+DESCRIPTION:69.4 NM · ~5h 47m\nLagoon Cove → Blind Channel Resort
 UID:route-df244fbb-2842-47fa-9125-1f006d87ecea@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
@@ -131,7 +131,7 @@ DTSTART;VALUE=DATE:20260801
 DTEND;VALUE=DATE:20260802
 SUMMARY:Day 13: Blind Channel → Squirrel Cove (Cortes Island)
 LOCATION:Squirrel Cove\, Cortes Island
-DESCRIPTION:103 NM · ~6.9 hrs\nOvernight: Squirrel Cove\, Cortes Island\n\nNote: Gentle re-entry to the southern waters. The lagoon inside Squirrel Cove is one of those hidden BC gems — explore it by kayak or dinghy at high tide.
+DESCRIPTION:37 NM · ~3.7 hrs\nOvernight: Squirrel Cove\, Cortes Island\n\nNote: Gentle re-entry to the southern waters. The lagoon inside Squirrel Cove is one of those hidden BC gems — explore it by kayak or dinghy at high tide.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=13
 UID:day-13-20260801@travelitinerary
 END:VEVENT
@@ -140,7 +140,7 @@ DTSTART;VALUE=DATE:20260802
 DTEND;VALUE=DATE:20260803
 SUMMARY:Day 14: Squirrel Cove → Montague Harbour (Galiano Island)
 LOCATION:Montague Harbour Marine Provincial Park\, Galiano Island
-DESCRIPTION:139.4 NM · ~9.3 hrs\nOvernight: Montague Harbour Marine Provincial Park\, Galiano Island\n\nNote: Active Pass: narrow channel between Galiano and Mayne Islands with heavy BC Ferries traffic. Reduce speed\, hug the correct side\, and give ferries wide berth.
+DESCRIPTION:98.9 NM · ~7.1 hrs\nOvernight: Montague Harbour Marine Provincial Park\, Galiano Island\n\nNote: Active Pass: narrow channel between Galiano and Mayne Islands with heavy BC Ferries traffic. Reduce speed\, hug the correct side\, and give ferries wide berth.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=14
 UID:day-14-20260802@travelitinerary
 END:VEVENT
@@ -167,7 +167,7 @@ DTSTART;VALUE=DATE:20260805
 DTEND;VALUE=DATE:20260806
 SUMMARY:Day 17: Gulf Islands → Victoria (fuel) → Seattle
 LOCATION:Home Marina\, Seattle
-DESCRIPTION:92 NM · ~6.1 hrs\nOvernight: Home Marina\, Seattle\n\nNote: Slightly over the usual 100 NM preference\, but Victoria breaks it naturally into two segments. Register everyone on the CBP ROAM app before leaving Victoria. Shilshole or Lake Union via the locks for Seattle landfall.
+DESCRIPTION:90 NM · ~6.0 hrs\nOvernight: Home Marina\, Seattle\n\nNote: Slightly over the usual 100 NM preference\, but Victoria breaks it naturally into two segments. Register everyone on the CBP ROAM app before leaving Victoria. Shilshole or Lake Union via the locks for Seattle landfall.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=17
 UID:day-17-20260805@travelitinerary
 END:VEVENT
