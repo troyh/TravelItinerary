@@ -9,7 +9,7 @@ DTSTART;VALUE=DATE:20260519
 DTEND;VALUE=DATE:20260520
 SUMMARY:Day 1: Eagle Harbor
 LOCATION:Seattle\, WA
-DESCRIPTION:5.4 NM · ~1.0 hrs\nOvernight: Seattle\, WA
+DESCRIPTION:5.4 NM · ~0.5 hrs\nOvernight: Seattle\, WA
 URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=1
 UID:day-1-20260519@travelitinerary
 END:VEVENT
@@ -36,16 +36,16 @@ UID:place-916e561f-e52c-4cf4-a656-09d07b23e0bf@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260519T100000
-DTEND:20260519T105900
+DTEND:20260519T103200
 SUMMARY:🚢 Elliott Bay Marina → Winslow Wharf Marina
-DESCRIPTION:5.4 NM · ~59m\nElliott Bay Marina → Winslow Wharf Marina
+DESCRIPTION:5.4 NM · ~32m\nElliott Bay Marina → Winslow Wharf Marina
 UID:route-5c268373-efdf-42aa-b6fb-0a1ad5a1085b@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260520
 DTEND;VALUE=DATE:20260521
 SUMMARY:Day 2: Poulsbo
-DESCRIPTION:15.5 NM · ~2.8 hrs
+DESCRIPTION:15.5 NM · ~1.6 hrs
 URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=2
 UID:day-2-20260520@travelitinerary
 END:VEVENT
@@ -58,16 +58,16 @@ UID:place-35a2b66b-e3e5-4fe6-a5e2-7eed034f8d84@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260520T100000
-DTEND:20260520T124900
+DTEND:20260520T113300
 SUMMARY:🚢 The Harbour Public House → Poulsbo\, WA
-DESCRIPTION:15.5 NM · ~2h 49m\nThe Harbour Public House → Poulsbo\, WA
+DESCRIPTION:15.5 NM · ~1h 33m\nThe Harbour Public House → Poulsbo\, WA
 UID:route-f9f7e8d5-83f6-4807-9771-fa872f1e515c@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260521
 DTEND;VALUE=DATE:20260522
 SUMMARY:Day 3: Tacoma
-DESCRIPTION:30.2 NM · ~5.5 hrs
+DESCRIPTION:30.2 NM · ~2.5 hrs
 URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=3
 UID:day-3-20260521@travelitinerary
 END:VEVENT
@@ -80,9 +80,9 @@ UID:place-5b68d68d-1e7c-44dd-bee6-997952faa6db@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260521T100000
-DTEND:20260521T152900
+DTEND:20260521T123100
 SUMMARY:🚢 Poulsbo Waterfront Poulsbo → Tacoma Waterfront
-DESCRIPTION:30.2 NM · ~5h 29m\nPoulsbo Waterfront Poulsbo → Tacoma Waterfront
+DESCRIPTION:30.2 NM · ~2h 31m\nPoulsbo Waterfront Poulsbo → Tacoma Waterfront
 UID:route-cfe56de1-dde1-4001-afe9-01280883f4e0@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
