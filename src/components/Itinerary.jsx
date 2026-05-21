@@ -1148,14 +1148,15 @@ function AddTravelPanel({
   appleAutocomplete, appleFetchPlaceDetails,
   routeServerUrl, aeroDataBoxKey, calendarDate,
   distanceUnit,
+  defaultFrom,
   editItem,
 }) {
   const [mode, setMode] = useState(editItem?.mode || "flight");
-  const [fromName, setFromName] = useState(editItem?.from?.name || "");
+  const [fromName, setFromName] = useState(editItem?.from?.name || defaultFrom?.name || "");
   const [fromCode, setFromCode] = useState(editItem?.from?.code || "");
   const [fromAddr, setFromAddr] = useState(editItem?.from?.address || "");
-  const [fromLat, setFromLat]   = useState(editItem?.from?.lat || null);
-  const [fromLng, setFromLng]   = useState(editItem?.from?.lng || null);
+  const [fromLat, setFromLat]   = useState(editItem?.from?.lat  || defaultFrom?.lat  || null);
+  const [fromLng, setFromLng]   = useState(editItem?.from?.lng  || defaultFrom?.lng  || null);
   const [fromPreds, setFromPreds] = useState([]);
   const [toName, setToName]   = useState(editItem?.to?.name || "");
   const [toCode, setToCode]   = useState(editItem?.to?.code || "");
@@ -2425,29 +2426,39 @@ export default function Itinerary() {
 
   useEffect(() => { document.title = title || "Travel Itinerary"; }, [title]);
 
-  // Auto-populate centerName for days that have GPS data but no name yet
+  // Auto-populate centerLat/centerLng/centerName for days that have GPS data but no centroid yet
   const lastCentroidRef = useRef({});
   useEffect(() => {
     if (!days.length) return;
+
+    // Pass 1: set coordinates immediately (no network needed)
+    setDays(prev => prev.map(d => {
+      if (d.centerLat !== null) return d; // user-set — never overwrite
+      const centroid = computeDayCentroid(d.day, savedPlaces, savedFlights, savedDirections, savedRoutes);
+      if (!centroid) return d;
+      const last = lastCentroidRef.current[d.day];
+      const moved = !last || Math.abs(last.lat - centroid.lat) > 0.01 || Math.abs(last.lng - centroid.lng) > 0.01;
+      if (!moved) return d;
+      lastCentroidRef.current[d.day] = centroid;
+      return { ...d, centerLat: centroid.lat, centerLng: centroid.lng };
+    }));
+
+    // Pass 2: reverse-geocode names asynchronously (rate-limited)
     let cancelled = false;
     const timer = setTimeout(async () => {
       for (const d of days) {
         if (cancelled) break;
+        if (d.centerLat !== null && d.centerName) continue; // already named
         const centroid = computeDayCentroid(d.day, savedPlaces, savedFlights, savedDirections, savedRoutes);
         if (!centroid) continue;
-        const last = lastCentroidRef.current[d.day];
-        const moved = !last || Math.abs(last.lat - centroid.lat) > 0.01 || Math.abs(last.lng - centroid.lng) > 0.01;
-        if (!moved) continue;
-        lastCentroidRef.current[d.day] = centroid;
-        if (d.centerLat !== null) continue; // user has manually set coords — don't overwrite
         const name = await reverseGeocode(centroid.lat, centroid.lng);
         if (cancelled || !name) continue;
         setDays(prev => prev.map(x => x.day === d.day
-          ? { ...x, centerName: x.centerName || name, centerLat: centroid.lat, centerLng: centroid.lng }
+          ? { ...x, centerName: x.centerName || name, centerLat: x.centerLat ?? centroid.lat, centerLng: x.centerLng ?? centroid.lng }
           : x));
         await new Promise(r => setTimeout(r, 1100)); // Nominatim rate limit
       }
-    }, 1000);
+    }, 800);
     return () => { cancelled = true; clearTimeout(timer); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedPlaces, savedFlights, savedDirections, savedRoutes]);
@@ -4828,11 +4839,17 @@ export default function Itinerary() {
                   pdi ? `${pdi.dow} ${pdi.month} ${pdi.date}` : null,
                   pDay?.leg ?? null,
                 ].filter(Boolean).join(" · ");
+                // Default From = previous day's centroid (only for new items, not edits)
+                const prevDay = !addPanel.editItem && days.find(x => x.day === addPanel.day - 1);
+                const defaultFrom = prevDay?.centerLat && prevDay?.centerLng
+                  ? { name: prevDay.centerName || "", lat: prevDay.centerLat, lng: prevDay.centerLng }
+                  : null;
                 return (
                   <AddTravelPanel
                     day={addPanel.day}
                     dayLabel={dayLabel}
                     editItem={addPanel.editItem}
+                    defaultFrom={defaultFrom}
                     onAdd={item => {
                       // Route to the appropriate data handler based on mode
                       if (item.mode === "flight") {
