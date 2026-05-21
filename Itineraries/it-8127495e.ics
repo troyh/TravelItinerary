@@ -9,7 +9,7 @@ DTSTART;VALUE=DATE:20260519
 DTEND;VALUE=DATE:20260520
 SUMMARY:Day 1: Eagle Harbor
 LOCATION:Seattle\, WA
-DESCRIPTION:31.4 NM · ~2.1 hrs\nOvernight: Seattle\, WA
+DESCRIPTION:5.6 NM · ~1.0 hrs\nOvernight: Seattle\, WA
 URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=1
 UID:day-1-20260519@travelitinerary
 END:VEVENT
@@ -17,6 +17,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260520
 DTEND;VALUE=DATE:20260521
 SUMMARY:Day 2: Poulsbo
+DESCRIPTION:15.5 NM · ~2.8 hrs
 URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=2
 UID:day-2-20260520@travelitinerary
 END:VEVENT
@@ -24,7 +25,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260521
 DTEND;VALUE=DATE:20260522
 SUMMARY:Day 3: Tacoma
-DESCRIPTION:122 NM · ~22.2 hrs
+DESCRIPTION:30.2 NM · ~5.5 hrs
 URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=3
 UID:day-3-20260521@travelitinerary
 END:VEVENT
@@ -32,7 +33,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260522
 DTEND;VALUE=DATE:20260523
 SUMMARY:Day 4: Olympia
-DESCRIPTION:47.9 NM · ~3.2 hrs
+DESCRIPTION:29.3 NM · ~5.3 hrs
 URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=4
 UID:day-4-20260522@travelitinerary
 END:VEVENT
@@ -40,6 +41,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260523
 DTEND;VALUE=DATE:20260524
 SUMMARY:Day 5: Seattle
+DESCRIPTION:48.6 NM · ~8.8 hrs
 URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=5
 UID:day-5-20260523@travelitinerary
 END:VEVENT
