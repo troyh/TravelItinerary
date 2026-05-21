@@ -227,6 +227,15 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
 
     const bounds = L.latLngBounds([]);
 
+    // Sequential spectrum colors for route lines using golden-angle hue steps
+    let _routeIdx = 0;
+    function nextRouteColor() {
+      const hue = (_routeIdx++ * 137.508) % 360;
+      // Darken yellow-range hues so they stay visible on a light map
+      const lightness = (hue > 45 && hue < 80) ? 34 : 44;
+      return `hsl(${Math.round(hue)}, 70%, ${lightness}%)`;
+    }
+
     // Draw connectors between consecutive stops
     for (let i = 0; i < stops.length - 1; i++) {
       const from  = stops[i];
@@ -247,6 +256,7 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
 
       if (hasFlight) {
         const flightPopup = f => [
+          `<strong>Day ${from.day}</strong>`,
           [f.flightNumber, f.airline].filter(Boolean).join(" · ") || "Flight",
           f.departureName && f.arrivalName ? `${f.departureName} → ${f.arrivalName}` : null,
           f.departure && f.arrival ? `${f.departure} → ${f.arrival}` : null,
@@ -259,7 +269,7 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
             flightWithCoords.departureLat, flightWithCoords.departureLng,
             flightWithCoords.arrivalLat,   flightWithCoords.arrivalLng
           );
-          L.polyline(arcPoints, { color: "#8338e8", weight: 1.5, opacity: 0.7, dashArray: "5,6" })
+          L.polyline(arcPoints, { color: nextRouteColor(), weight: 1.5, opacity: 0.7, dashArray: "5,6" })
             .bindPopup(flightPopup(flightWithCoords), { className: "leaflet-popup-dark" })
             .addTo(map);
           L.polyline([[fromC.lat, fromC.lng], [flightWithCoords.departureLat, flightWithCoords.departureLng]],
@@ -269,7 +279,7 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
         } else {
           const arcPoints = greatCirclePoints(fromC.lat, fromC.lng, toC.lat, toC.lng);
           const anyFlight = legFlights[0];
-          L.polyline(arcPoints, { color: "#8338e8", weight: 1.5, opacity: 0.7, dashArray: "5,6" })
+          L.polyline(arcPoints, { color: nextRouteColor(), weight: 1.5, opacity: 0.7, dashArray: "5,6" })
             .bindPopup(anyFlight ? flightPopup(anyFlight) : "Flight", { className: "leaflet-popup-dark" })
             .addTo(map);
         }
@@ -297,9 +307,11 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
     }
 
     // Draw driving direction routes
-    Object.entries(savedDirections ?? {}).forEach(([, dirList]) => {
+    Object.entries(savedDirections ?? {}).forEach(([dayKey, dirList]) => {
+      const dirDayNum = parseInt(dayKey);
       (dirList ?? []).forEach(dir => {
         const dirPopup = [
+          `<strong>Day ${dirDayNum}</strong>`,
           dir.origin?.name && dir.destination?.name ? `${dir.origin.name} → ${dir.destination.name}` : null,
           dir.distance ? dir.distance : null,
           dir.duration ? dir.duration : null,
@@ -307,7 +319,7 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
 
         if (dir.overviewPolyline) {
           const pts = decodePolyline(dir.overviewPolyline);
-          L.polyline(pts, { color: "#43a047", weight: 3, opacity: 0.75 })
+          L.polyline(pts, { color: nextRouteColor(), weight: 3, opacity: 0.85 })
             .bindPopup(dirPopup, { className: "leaflet-popup-dark" }).addTo(map);
           pts.forEach(p => bounds.extend(p));
         } else if (dir.routePath?.length >= 2) {
@@ -316,7 +328,7 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
           dir.routePath.forEach(p => bounds.extend(p));
         } else if (dir.originLat && dir.originLng && dir.destinationLat && dir.destinationLng) {
           const pts = [[dir.originLat, dir.originLng], [dir.destinationLat, dir.destinationLng]];
-          L.polyline(pts, { color: "#43a047", weight: 3, opacity: 0.75 })
+          L.polyline(pts, { color: nextRouteColor(), weight: 3, opacity: 0.85 })
             .bindPopup(dirPopup, { className: "leaflet-popup-dark" }).addTo(map);
           pts.forEach(p => bounds.extend(p));
         }
@@ -331,14 +343,14 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
         const hasGpx = r.routePath?.length >= 2;
         const pts = hasGpx ? r.routePath : [[r.startLat, r.startLng], [r.endLat, r.endLng]];
         const routeLabel = [
-          r.name || `Day ${dayNum} route`,
-          r.startName && r.endName ? `${r.startName} → ${r.endName}` : null,
+          `<strong>Day ${dayNum}</strong>`,
+          r.name || (r.startName && r.endName ? `${r.startName} → ${r.endName}` : "Route"),
           r.nm > 0 ? `${r.nm} NM` : null,
-          r.hrs > 0 ? `~${(() => { const h=Math.floor(r.hrs),m=Math.round((r.hrs-h)*60); return h===0?`${m}m`:m===0?`${h}h`:`${h}h ${m}m`; })()}` : null,
+          r.hrs > 0 ? `~${(() => { const h=Math.floor(r.hrs),m=Math.round((r.hrs-h)*60); return h===0?`${m}m`:m===0?`${h}h`:`${h}h ${m}m`; })()}` + (r.cruisingSpeed ? ` @ ${r.cruisingSpeed} kn` : "") : null,
           r.time ? `Departs ${(() => { const [h,m]=r.time.split(':').map(Number); return `${h%12||12}:${String(m).padStart(2,'0')} ${h<12?'AM':'PM'}`; })()}` : null,
         ].filter(Boolean).join('<br>');
 
-        L.polyline(pts, { color: "#0b3d6b", weight: 4, opacity: 0.7,
+        L.polyline(pts, { color: nextRouteColor(), weight: 4, opacity: 0.85,
           dashArray: hasGpx ? null : "6,5" })
           .bindPopup(routeLabel, { className: "leaflet-popup-dark" })
           .addTo(map);
