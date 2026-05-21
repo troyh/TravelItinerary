@@ -24,6 +24,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260521
 DTEND;VALUE=DATE:20260522
 SUMMARY:Day 3: Tacoma
+DESCRIPTION:122 NM · ~22.2 hrs
 URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=3
 UID:day-3-20260521@travelitinerary
 END:VEVENT
