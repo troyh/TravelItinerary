@@ -14,6 +14,34 @@ URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=1
 UID:day-1-20260519@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260519T180000
+DTEND:20260519T190000
+SUMMARY:🍽 Proper Fish
+LOCATION:112 Madison Ave N\, Bainbridge Island\, WA 98110\, United States
+DESCRIPTION:Get takeout and eat on the boat\, or anywhere
+UID:place-3b1640be-a94c-4452-8e5b-c7e3f137a824@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260519T143000
+DTEND:20260519T153000
+SUMMARY:🍽 Town & Country Markets
+LOCATION:343 Winslow Way E\, Bainbridge Island\, WA 98110\, United States
+UID:place-b02a0529-7a3e-433f-bdc4-834b59db51ec@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260519T160000
+DTEND:20260519T170000
+SUMMARY:Day hike
+UID:place-916e561f-e52c-4cf4-a656-09d07b23e0bf@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260519T100000
+DTEND:20260519T105900
+SUMMARY:🚢 Elliott Bay Marina → Winslow Wharf Marina
+DESCRIPTION:5.4 NM · ~59m\nElliott Bay Marina → Winslow Wharf Marina
+UID:route-5c268373-efdf-42aa-b6fb-0a1ad5a1085b@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260520
 DTEND;VALUE=DATE:20260521
 SUMMARY:Day 2: Poulsbo
@@ -22,12 +50,40 @@ URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=2
 UID:day-2-20260520@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260520T170000
+DTEND:20260520T180000
+SUMMARY:🍽 Brass Kraken Pub
+LOCATION:18779 Front St NE\, Unit 7407\, Poulsbo\, WA 98370\, United States
+UID:place-35a2b66b-e3e5-4fe6-a5e2-7eed034f8d84@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260520T100000
+DTEND:20260520T124900
+SUMMARY:🚢 The Harbour Public House → Poulsbo\, WA
+DESCRIPTION:15.5 NM · ~2h 49m\nThe Harbour Public House → Poulsbo\, WA
+UID:route-f9f7e8d5-83f6-4807-9771-fa872f1e515c@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260521
 DTEND;VALUE=DATE:20260522
 SUMMARY:Day 3: Tacoma
 DESCRIPTION:30.2 NM · ~5.5 hrs
 URL:https://troyh.github.io/TravelItinerary/?i=it-8127495e&day=3
 UID:day-3-20260521@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260521T083000
+DTEND:20260521T093000
+SUMMARY:🍽 Sluys Poulsbo Bakery
+LOCATION:18924 Front St NE\, Poulsbo\, WA  98370\, United States
+UID:place-5b68d68d-1e7c-44dd-bee6-997952faa6db@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260521T100000
+DTEND:20260521T152900
+SUMMARY:🚢 Poulsbo Waterfront Poulsbo → Tacoma Waterfront
+DESCRIPTION:30.2 NM · ~5h 29m\nPoulsbo Waterfront Poulsbo → Tacoma Waterfront
+UID:route-cfe56de1-dde1-4001-afe9-01280883f4e0@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260522
