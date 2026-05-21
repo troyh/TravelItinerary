@@ -109,7 +109,7 @@
           "endLng": -122.5215339,
           "time": "10:00",
           "nm": 5.4,
-          "hrs": 0.9833333333333333,
+          "hrs": 0.5333333333333333,
           "routePath": [
             [
               47.628,
@@ -135,7 +135,7 @@
           "departureName": "Elliott Bay Marina",
           "arrivalName": "Winslow Wharf Marina",
           "departureTime": "10:00",
-          "arrivalTime": "10:59",
+          "arrivalTime": "10:32",
           "airline": "",
           "aircraft": "",
           "confirmation": "",
@@ -161,12 +161,13 @@
           "travelMode": "DRIVING",
           "departDate": "2026-05-19",
           "arriveDate": "2026-05-19",
-          "arriveTime": "10:59",
+          "arriveTime": "10:32",
           "vessel": "",
           "agency": "",
           "pickupLocation": "Elliott Bay Marina",
           "dropoffLocation": "Winslow Wharf Marina",
-          "duration": "59m"
+          "duration": "~32m",
+          "cruisingSpeed": "10"
         }
       ],
       "flights": [],
@@ -227,7 +228,7 @@
           "endLng": -122.6461772,
           "time": "10:00",
           "nm": 15.5,
-          "hrs": 2.816666666666667,
+          "hrs": 1.55,
           "notes": "",
           "flightNumber": "",
           "departure": "",
@@ -235,7 +236,7 @@
           "departureName": "The Harbour Public House",
           "arrivalName": "Poulsbo, WA",
           "departureTime": "10:00",
-          "arrivalTime": "12:49",
+          "arrivalTime": "11:33",
           "airline": "",
           "aircraft": "",
           "confirmation": "",
@@ -261,12 +262,12 @@
           "travelMode": "DRIVING",
           "departDate": "2026-05-20",
           "arriveDate": "2026-05-20",
-          "arriveTime": "12:49",
+          "arriveTime": "11:33",
           "vessel": "",
           "agency": "",
           "pickupLocation": "The Harbour Public House",
           "dropoffLocation": "Poulsbo, WA",
-          "duration": "2h 49m",
+          "duration": "~1h 33m",
           "routePath": [
             [
               47.62,
@@ -324,7 +325,8 @@
               47.732,
               -122.648
             ]
-          ]
+          ],
+          "cruisingSpeed": "10"
         }
       ],
       "flights": [],
@@ -385,7 +387,7 @@
           "endLng": -122.484452,
           "time": "10:00",
           "nm": 30.2,
-          "hrs": 5.483333333333333,
+          "hrs": 2.5166666666666666,
           "routePath": [
             [
               47.732,
@@ -487,7 +489,7 @@
           "departureName": "Poulsbo Waterfront Poulsbo",
           "arrivalName": "Tacoma Waterfront",
           "departureTime": "10:00",
-          "arrivalTime": "",
+          "arrivalTime": "12:31",
           "airline": "",
           "aircraft": "",
           "confirmation": "",
@@ -513,12 +515,13 @@
           "travelMode": "DRIVING",
           "departDate": "2026-05-21",
           "arriveDate": "2026-05-21",
-          "arriveTime": "",
+          "arriveTime": "12:31",
           "vessel": "",
           "agency": "",
           "pickupLocation": "Poulsbo Waterfront Poulsbo",
           "dropoffLocation": "Tacoma Waterfront",
-          "duration": "5h 29m"
+          "duration": "~2h 31m",
+          "cruisingSpeed": "12"
         }
       ],
       "flights": [],
