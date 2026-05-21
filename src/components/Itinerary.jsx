@@ -4443,7 +4443,14 @@ export default function Itinerary() {
                               const hrsStr = h === 0 ? `${m}m` : m === 0 ? `${h}h` : `${h}h ${m}m`;
                               sub1 = `${item.nm} NM · ~${hrsStr}`;
                             }
-                            if (item.startName && item.endName && item.name) sub2 = `${item.startName} → ${item.endName}`;
+                            const fmtCoord = (lat, lng) => (lat && lng)
+                              ? `${Math.abs(lat).toFixed(4)}°${lat >= 0 ? 'N' : 'S'} ${Math.abs(lng).toFixed(4)}°${lng >= 0 ? 'E' : 'W'}`
+                              : null;
+                            const sc = fmtCoord(item.startLat, item.startLng);
+                            const ec = fmtCoord(item.endLat, item.endLng);
+                            const coordLine = sc && ec ? `${sc} → ${ec}` : sc || ec || null;
+                            const nameLine = item.startName && item.endName && item.name ? `${item.startName} → ${item.endName}` : null;
+                            sub2 = [nameLine, coordLine].filter(Boolean).join("\n");
                             onDel = !readOnly ? () => deleteRoute(d.day, item.id) : null;
                           } else if (item._type === "rentalcar") {
                             dotColor = "#d97706";
