@@ -32,13 +32,6 @@ URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=3
 UID:day-3-20260722@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260722T123000
-DTEND:20260722T133000
-SUMMARY:🍽 False Bay
-LOCATION:British Columbia\, Canada
-UID:place-d81d6017-9403-436a-b1d4-b980d12db466@travelitinerary
-END:VEVENT
-BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260723
 DTEND;VALUE=DATE:20260724
 SUMMARY:Day 4: Vancouver → Princess Louisa Inlet
