@@ -1870,152 +1870,212 @@
       "centerLng": -125.50205989999999,
       "highlights": [],
       "note": "Call ahead on VHF 66A to reserve a slip — Blind Channel fills up in summer. Easy run today; enjoy the slow pace.",
-      "places": [],
+      "places": [
+        {
+          "id": "4a5f7861-eb0b-45b0-ad23-7d9281320535",
+          "name": "",
+          "address": "",
+          "lat": null,
+          "lng": null,
+          "category": "other",
+          "placeKind": "note",
+          "time": "12:30",
+          "duration": "",
+          "notes": "It can't route through that channel for some reason.",
+          "confirmation": "",
+          "partySize": "",
+          "bookedVia": "",
+          "dietary": "",
+          "room": "",
+          "guests": "",
+          "stayLength": "",
+          "operator": "",
+          "cost": "",
+          "entry": "",
+          "tickets": "",
+          "activity": "",
+          "addedAt": "2026-05-21T23:26:49.628Z"
+        }
+      ],
       "directions": [],
       "routes": [
         {
           "id": "df244fbb-2842-47fa-9125-1f006d87ecea",
-          "name": "Lagoon Cove → Blind Channel Resort",
-          "nm": 69.4,
+          "name": "Lagoon Cove → 50.63592°N 126.32163°W",
+          "nm": 2.8,
           "speedKts": 15,
-          "hrs": 5.783333333333333,
+          "hrs": 0.23333333333333334,
           "time": "10:00",
           "notes": "",
           "addedAt": "2026-05-10T23:39:54.556Z",
           "startName": "Lagoon Cove",
           "startLat": 50.5988905,
           "startLng": -126.317367,
-          "endName": "Blind Channel Resort",
-          "endLat": 50.4133309,
-          "endLng": -125.5025125,
+          "endName": "50.63592°N 126.32163°W",
+          "endLat": 50.63591944444445,
+          "endLng": -126.32163333333332,
           "routePath": [
             [
               50.6,
               -126.316
             ],
             [
-              50.608,
-              -126.324
+              50.62,
+              -126.34
             ],
             [
-              50.608,
-              -126.368
+              50.624,
+              -126.34
             ],
             [
-              50.604,
-              -126.372
+              50.632,
+              -126.332
             ],
             [
-              50.604,
-              -126.384
+              50.636,
+              -126.32
+            ]
+          ],
+          "flightNumber": "",
+          "departure": "",
+          "arrival": "",
+          "departureName": "Lagoon Cove",
+          "arrivalName": "50.63592°N 126.32163°W",
+          "departureTime": "10:00",
+          "arrivalTime": "",
+          "airline": "",
+          "aircraft": "",
+          "confirmation": "",
+          "seat": "",
+          "terminal": "",
+          "bags": "",
+          "distance": "2.8 nm",
+          "miles": 3,
+          "departureLat": 50.5988905,
+          "departureLng": -126.317367,
+          "arrivalLat": 50.63591944444445,
+          "arrivalLng": -126.32163333333332,
+          "origin": {
+            "name": "Lagoon Cove"
+          },
+          "destination": {
+            "name": "50.63592°N 126.32163°W"
+          },
+          "originLat": 50.5988905,
+          "originLng": -126.317367,
+          "destinationLat": 50.63591944444445,
+          "destinationLng": -126.32163333333332,
+          "travelMode": "DRIVING",
+          "departDate": "2026-07-31",
+          "arriveDate": "2026-07-31",
+          "arriveTime": "",
+          "vessel": "",
+          "cruisingSpeed": "12",
+          "agency": "",
+          "pickupLocation": "Lagoon Cove",
+          "dropoffLocation": "50.63592°N 126.32163°W",
+          "duration": "~14m"
+        },
+        {
+          "id": "4516d783-0ff6-48a3-8c08-2729ee694f34",
+          "name": "50.63592°N 126.32163°W → 50.58664°N 126.25312°W",
+          "startName": "50.63592°N 126.32163°W",
+          "endName": "50.58664°N 126.25312°W",
+          "startLat": 50.63591944444445,
+          "startLng": -126.32163333333332,
+          "endLat": 50.58663888888889,
+          "endLng": -126.253125,
+          "time": "",
+          "nm": 3.9,
+          "hrs": 0.7166666666666667,
+          "cruisingSpeed": "5.5",
+          "vessel": null,
+          "routePath": [
+            [
+              50.636,
+              -126.32
             ],
             [
-              50.596,
-              -126.392
-            ],
-            [
-              50.592,
-              -126.4
-            ],
-            [
-              50.58,
-              -126.44
-            ],
-            [
-              50.58,
-              -126.476
-            ],
-            [
-              50.572,
-              -126.488
-            ],
-            [
-              50.58,
-              -126.508
-            ],
-            [
-              50.588,
-              -126.516
-            ],
-            [
-              50.588,
-              -126.548
-            ],
-            [
-              50.592,
-              -126.56
-            ],
-            [
-              50.6,
-              -126.572
-            ],
-            [
-              50.6,
-              -126.648
-            ],
-            [
-              50.592,
-              -126.656
-            ],
-            [
-              50.588,
-              -126.656
-            ],
-            [
-              50.584,
-              -126.66
-            ],
-            [
-              50.584,
-              -126.672
-            ],
-            [
-              50.572,
-              -126.684
-            ],
-            [
-              50.548,
-              -126.676
-            ],
-            [
-              50.544,
-              -126.672
-            ],
-            [
-              50.54,
-              -126.632
-            ],
-            [
-              50.532,
-              -126.624
-            ],
-            [
-              50.532,
-              -126.616
-            ],
-            [
-              50.524,
-              -126.608
-            ],
-            [
-              50.516,
-              -126.58
-            ],
-            [
-              50.512,
-              -126.488
-            ],
-            [
-              50.512,
-              -126.3
-            ],
-            [
-              50.508,
+              50.612,
               -126.296
             ],
             [
-              50.508,
+              50.612,
+              -126.292
+            ],
+            [
+              50.608,
+              -126.284
+            ],
+            [
+              50.596,
               -126.272
+            ],
+            [
+              50.596,
+              -126.268
+            ],
+            [
+              50.588,
+              -126.256
+            ]
+          ],
+          "notes": ""
+        },
+        {
+          "id": "0bdb3289-2ac0-4c2c-953c-029b00d4658a",
+          "name": "50.57946°N 126.20559°W → Blind Channel Resort",
+          "startName": "50.57946°N 126.20559°W",
+          "endName": "Blind Channel Resort",
+          "startLat": 50.579458333333335,
+          "startLng": -126.2055888888889,
+          "endLat": 50.4133309,
+          "endLng": -125.5025125,
+          "time": "",
+          "nm": 41.1,
+          "hrs": 7.466666666666667,
+          "cruisingSpeed": "5.5",
+          "vessel": null,
+          "routePath": [
+            [
+              50.58,
+              -126.204
+            ],
+            [
+              50.568,
+              -126.204
+            ],
+            [
+              50.556,
+              -126.216
+            ],
+            [
+              50.552,
+              -126.216
+            ],
+            [
+              50.544,
+              -126.224
+            ],
+            [
+              50.536,
+              -126.244
+            ],
+            [
+              50.536,
+              -126.268
+            ],
+            [
+              50.524,
+              -126.288
+            ],
+            [
+              50.52,
+              -126.288
+            ],
+            [
+              50.516,
+              -126.284
             ],
             [
               50.504,
@@ -2122,45 +2182,7 @@
               -125.5
             ]
           ],
-          "flightNumber": "",
-          "departure": "",
-          "arrival": "",
-          "departureName": "Lagoon Cove",
-          "arrivalName": "Blind Channel Resort",
-          "departureTime": "10:00",
-          "arrivalTime": "15:47",
-          "airline": "",
-          "aircraft": "",
-          "confirmation": "",
-          "seat": "",
-          "terminal": "",
-          "bags": "",
-          "distance": "69.4 nm",
-          "miles": 69,
-          "departureLat": 50.5988905,
-          "departureLng": -126.317367,
-          "arrivalLat": 50.4133309,
-          "arrivalLng": -125.5025125,
-          "origin": {
-            "name": "Lagoon Cove"
-          },
-          "destination": {
-            "name": "Blind Channel Resort"
-          },
-          "originLat": 50.5988905,
-          "originLng": -126.317367,
-          "destinationLat": 50.4133309,
-          "destinationLng": -125.5025125,
-          "travelMode": "DRIVING",
-          "departDate": "2026-07-31",
-          "arriveDate": "2026-07-31",
-          "arriveTime": "15:47",
-          "vessel": "",
-          "cruisingSpeed": "12",
-          "agency": "",
-          "pickupLocation": "Lagoon Cove",
-          "dropoffLocation": "Blind Channel Resort",
-          "duration": "~5h 47m"
+          "notes": ""
         }
       ],
       "flights": [],
