@@ -2112,7 +2112,18 @@ function AddTravelPanel({
                       value={cruisingSpeed}
                       autoFocus
                       onChange={e => setCruisingSpeed(e.target.value)}
-                      onBlur={() => setEditingSpeed(false)}
+                      onBlur={() => {
+                        setEditingSpeed(false);
+                        const nm = parseFloat(routeDistance);
+                        const spd = parseFloat(cruisingSpeed) || 5.5;
+                        if (nm > 0 && spd > 0) {
+                          const hrs = nm / spd;
+                          const h = Math.floor(hrs), m = Math.round((hrs - h) * 60);
+                          const dur = h > 0 ? `~${h}h ${m}m` : `~${m}m`;
+                          setRouteDuration(dur);
+                          applyEta(dur);
+                        }
+                      }}
                       style={{ ...ATP_INPUT, width: 80 }}
                     />
                   ) : (
@@ -3383,7 +3394,8 @@ export default function Itinerary() {
           id: item.id, mode: "boat",
           from: { name: item.startName || "", lat: item.startLat || null, lng: item.startLng || null },
           to:   { name: item.endName   || "", lat: item.endLat   || null, lng: item.endLng   || null },
-          departTime: item.time || "", boatVessel: item.vessel || "", notes: item.notes || "",
+          departTime: item.time || "", boatVessel: item.vessel || "",
+          cruisingSpeed: item.cruisingSpeed || "", notes: item.notes || "",
           routeDistance: item.nm > 0 ? `${item.nm} nm` : "",
           routeDuration: routeDurStr,
           routePath: item.routePath || null,
@@ -4441,7 +4453,8 @@ export default function Itinerary() {
                             if (item.nm > 0) {
                               const h = Math.floor(item.hrs), m = Math.round((item.hrs - h) * 60);
                               const hrsStr = h === 0 ? `${m}m` : m === 0 ? `${h}h` : `${h}h ${m}m`;
-                              sub1 = `${item.nm} NM · ~${hrsStr}`;
+                              const kn = item.cruisingSpeed ? ` @ ${item.cruisingSpeed} kn` : "";
+                              sub1 = `${item.nm} NM · ~${hrsStr}${kn}`;
                             }
                             const fmtCoord = (lat, lng) => (lat && lng)
                               ? `${Math.abs(lat).toFixed(4)}°${lat >= 0 ? 'N' : 'S'} ${Math.abs(lng).toFixed(4)}°${lng >= 0 ? 'E' : 'W'}`
@@ -4449,8 +4462,7 @@ export default function Itinerary() {
                             const sc = fmtCoord(item.startLat, item.startLng);
                             const ec = fmtCoord(item.endLat, item.endLng);
                             const coordLine = sc && ec ? `${sc} → ${ec}` : sc || ec || null;
-                            const nameLine = item.startName && item.endName && item.name ? `${item.startName} → ${item.endName}` : null;
-                            sub2 = [nameLine, coordLine].filter(Boolean).join("\n");
+                            sub2 = coordLine || "";
                             onDel = !readOnly ? () => deleteRoute(d.day, item.id) : null;
                           } else if (item._type === "rentalcar") {
                             dotColor = "#d97706";
@@ -4853,6 +4865,8 @@ export default function Itinerary() {
                           startLat: item.from?.lat, startLng: item.from?.lng,
                           endLat: item.to?.lat, endLng: item.to?.lng,
                           time: item.departTime, nm: boatNm, hrs: boatHrs,
+                          cruisingSpeed: item.cruisingSpeed || null,
+                          vessel: item.boatVessel || null,
                           routePath: item.routePath || null,
                           notes: item.notes,
                         });
@@ -4889,6 +4903,7 @@ export default function Itinerary() {
                         originLat: item.from?.lat, originLng: item.from?.lng,
                         destinationLat: item.to?.lat, destinationLng: item.to?.lng,
                         travelMode: { car:"DRIVING", walk:"WALKING", train:"TRANSIT", ferry:"TRANSIT", other:"DRIVING" }[item.mode] || "DRIVING",
+                        name: item.from?.name && item.to?.name ? `${item.from.name} → ${item.to.name}` : undefined,
                         startName: item.from?.name, endName: item.to?.name,
                         startLat: item.from?.lat, startLng: item.from?.lng,
                         endLat: item.to?.lat, endLng: item.to?.lng,
@@ -4904,6 +4919,7 @@ export default function Itinerary() {
                         departDate: item.departDate, time: item.departTime,
                         arriveDate: item.arriveDate, arriveTime: item.arriveTime,
                         notes: item.notes, vessel: item.boatVessel,
+                        cruisingSpeed: item.cruisingSpeed || undefined,
                         agency: item.vehicle, pickupLocation: item.from?.name, dropoffLocation: item.to?.name,
                         distance: item.routeDistance || undefined, duration: item.routeDuration || undefined,
                         routePath: item.routePath || undefined,
