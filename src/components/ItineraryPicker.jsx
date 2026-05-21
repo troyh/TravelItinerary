@@ -84,6 +84,8 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
   const refreshAllRef  = useRef(false);
   const [loadError,    setLoadError]    = useState(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [pullStatus,   setPullStatus]   = useState("idle"); // "idle"|"pulling"|"done"
+  const [pullProgress, setPullProgress] = useState({ done: 0, total: 0 });
 
   useEffect(() => { document.title = "Travel Itinerary"; }, []);
 
@@ -188,13 +190,84 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
     setLoadingPath(`${f.dbId}:${f.path}`);
     setLoadError(null);
     try {
-      const data = await loadFromGitHub({ ...f.ghs, githubFile: f.path });
+      let data = null;
+      try {
+        data = await loadFromGitHub({ ...f.ghs, githubFile: f.path });
+      } catch {
+        // Network failed — try local pull cache
+        const cached = localStorage.getItem(`itinerary:${f.dbId}:${f.path}`);
+        if (cached) data = JSON.parse(cached);
+      }
+      if (!data) throw new Error("Not found");
       onLoad(f.path, data, f.dbId);
     } catch {
       setLoadError("Failed to load — check your connection and token.");
     } finally {
       setLoadingPath(null);
     }
+  }
+
+  async function handlePull() {
+    if (!files.length || pullStatus === "pulling") return;
+    setPullStatus("pulling");
+    setPullProgress({ done: 0, total: files.length });
+
+    const metaUpdates = {};
+    let done = 0;
+
+    for (const f of files) {
+      try {
+        const data = await loadFromGitHub({ ...f.ghs, githubFile: f.path });
+        if (!data) continue;
+
+        // Cache full JSON
+        try { localStorage.setItem(`itinerary:${f.dbId}:${f.path}`, JSON.stringify(data)); } catch {}
+
+        // Extract metadata (same logic as the details useEffect)
+        const key = `${f.dbId}:${f.path}`;
+        const overnights = data.days?.map(d => d.overnight).filter(Boolean) ?? [];
+        const legs       = data.days?.map(d => d.leg).filter(Boolean) ?? [];
+        const todoLines  = str => (str || "").split("\n")
+          .filter(l => /^TODO:/i.test(l.trim()))
+          .map(l => l.trim().replace(/^TODO:\s*/i, ""));
+        const todos = [
+          ...todoLines(data.itineraryNotes),
+          ...(data.days ?? []).flatMap(d => todoLines(
+            data.notes?.[d.day] !== undefined ? data.notes[d.day] : d.note
+          )),
+        ];
+        let drivingKm = 0;
+        (data.days ?? []).forEach(d => (d.directions ?? []).forEach(dir => {
+          const km = dir.distance?.match(/^([\d.]+)\s*km/i);
+          const mi = dir.distance?.match(/^([\d.]+)\s*mi/i);
+          if (km) drivingKm += parseFloat(km[1]);
+          else if (mi) drivingKm += parseFloat(mi[1]) * 1.60934;
+        }));
+        metaUpdates[key] = {
+          title: data.title || null,
+          startDate: data.startDate,
+          dayCount: data.days?.length ?? 0,
+          locations: overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
+                   : overnights[0] ?? legs[0] ?? null,
+          drivingKm: drivingKm > 0 ? Math.round(drivingKm) : null,
+          todos,
+        };
+      } catch {}
+      done++;
+      setPullProgress({ done, total: files.length });
+    }
+
+    // Persist metadata updates
+    if (Object.keys(metaUpdates).length) {
+      setDetails(prev => ({ ...prev, ...metaUpdates }));
+      try {
+        const meta = JSON.parse(localStorage.getItem("itineraryMetadata") || "{}");
+        localStorage.setItem("itineraryMetadata", JSON.stringify({ ...meta, ...metaUpdates }));
+      } catch {}
+    }
+
+    setPullStatus("done");
+    setTimeout(() => setPullStatus("idle"), 2500);
   }
 
   function handleCreate() {
@@ -476,6 +549,25 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
                   <path d="M13.5 8c0-.28-.02-.56-.06-.83l1.28-1a.5.5 0 0 0 .12-.64l-1.2-2.07a.5.5 0 0 0-.61-.22l-1.5.6a6 6 0 0 0-1.43-.83l-.22-1.58A.5.5 0 0 0 9.38 1H6.62a.5.5 0 0 0-.5.43L5.9 3.01a6 6 0 0 0-1.43.83l-1.5-.6a.5.5 0 0 0-.61.22L1.16 5.53a.5.5 0 0 0 .12.64l1.28 1A5.9 5.9 0 0 0 2.5 8c0 .28.02.56.06.83l-1.28 1a.5.5 0 0 0-.12.64l1.2 2.07a.5.5 0 0 0 .61.22l1.5-.6c.44.32.92.6 1.43.83l.22 1.58c.06.25.27.43.5.43h2.76a.5.5 0 0 0 .5-.43l.22-1.58c.51-.23.99-.5 1.43-.83l1.5.6a.5.5 0 0 0 .61-.22l1.2-2.07a.5.5 0 0 0-.12-.64l-1.28-1c.04-.27.06-.55.06-.83z" stroke="currentColor" strokeWidth="1.4"/>
                 </svg>
               </button>
+              {hasAnyDb && (
+                <button
+                  onClick={handlePull}
+                  disabled={pullStatus === "pulling" || !files.length}
+                  title="Pull all trips from GitHub into local storage"
+                  style={{
+                    ...btn.ghost,
+                    opacity: pullStatus === "pulling" || !files.length ? 0.55 : 1,
+                    color: pullStatus === "done" ? T.accent : T.textMuted,
+                    borderColor: pullStatus === "done" ? T.accent + "66" : T.border,
+                    minWidth: 70,
+                  }}
+                >
+                  {pullStatus === "pulling"
+                    ? `${pullProgress.done}/${pullProgress.total}`
+                    : pullStatus === "done" ? "✓ Pulled"
+                    : "↓ Pull"}
+                </button>
+              )}
               {canWrite && (
                 <button
                   onClick={() => document.getElementById("new-itinerary-input")?.focus()}
