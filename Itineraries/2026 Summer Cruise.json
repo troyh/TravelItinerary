@@ -441,7 +441,7 @@
       "routes": [
         {
           "id": "dbd45f11-9989-4b6f-ac88-9c92eae8af59",
-          "name": "Vancouver BC → Malibu Rapids",
+          "name": "Vancouver BC → Princess Louisa Inlet",
           "nm": 87.3,
           "speedKts": 15,
           "hrs": 8.733333333333333,
@@ -449,9 +449,9 @@
           "startName": "Vancouver BC",
           "startLat": 49.2604134,
           "startLng": -123.1139456,
-          "endName": "Malibu Rapids",
-          "endLat": 50.1641417,
-          "endLng": -123.8497139,
+          "endName": "Princess Louisa Inlet",
+          "endLat": 50.1853206,
+          "endLng": -123.8019316,
           "routePath": [
             [
               49.288,
@@ -708,7 +708,7 @@
           "departure": "",
           "arrival": "",
           "departureName": "Vancouver BC",
-          "arrivalName": "Malibu Rapids",
+          "arrivalName": "Princess Louisa Inlet",
           "departureTime": "",
           "arrivalTime": "",
           "airline": "",
@@ -721,18 +721,18 @@
           "miles": 87,
           "departureLat": 49.2604134,
           "departureLng": -123.1139456,
-          "arrivalLat": 50.1641417,
-          "arrivalLng": -123.8497139,
+          "arrivalLat": 50.1853206,
+          "arrivalLng": -123.8019316,
           "origin": {
             "name": "Vancouver BC"
           },
           "destination": {
-            "name": "Malibu Rapids"
+            "name": "Princess Louisa Inlet"
           },
           "originLat": 49.2604134,
           "originLng": -123.1139456,
-          "destinationLat": 50.1641417,
-          "destinationLng": -123.8497139,
+          "destinationLat": 50.1853206,
+          "destinationLng": -123.8019316,
           "travelMode": "DRIVING",
           "departDate": "2026-07-23",
           "arriveDate": "2026-07-23",
@@ -741,8 +741,8 @@
           "cruisingSpeed": "10",
           "agency": "",
           "pickupLocation": "Vancouver BC",
-          "dropoffLocation": "Malibu Rapids",
-          "duration": "~8h 44m"
+          "dropoffLocation": "Princess Louisa Inlet",
+          "duration": "8h 44m"
         }
       ],
       "flights": [],
