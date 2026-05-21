@@ -14,27 +14,26 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "centerName": "Island County, United States",
-      "centerLat": 48.103026,
-      "centerLng": -122.5965472,
+      "centerName": "Bainbridge Island, Bainbridge Island, WA, United States",
+      "centerLat": 47.6725768,
+      "centerLng": -122.5335299,
       "highlights": [],
       "note": "",
       "places": [],
       "directions": [],
       "routes": [
         {
-          "id": "b70fe2c9-549a-465f-a7ec-9dcf40103ab2",
-          "name": "",
-          "nm": 5.6,
-          "speedKts": 15,
-          "hrs": 1.0166666666666666,
-          "time": "",
+          "id": "5c268373-efdf-42aa-b6fb-0a1ad5a1085b",
+          "name": "Elliott Bay Marina → Winslow Wharf Marina",
           "startName": "Elliott Bay Marina",
+          "endName": "Winslow Wharf Marina",
           "startLat": 47.6302997,
           "startLng": -122.3914826,
-          "endName": "The Harbour Public House",
-          "endLat": 47.6214895,
-          "endLng": -122.5229355,
+          "endLat": 47.6220279,
+          "endLng": -122.5215339,
+          "time": "",
+          "nm": 5.4,
+          "hrs": 0.9833333333333333,
           "routePath": [
             [
               47.628,
@@ -50,49 +49,10 @@
             ],
             [
               47.62,
-              -122.524
+              -122.52
             ]
           ],
-          "notes": "",
-          "addedAt": "2026-05-15T06:20:31.942Z",
-          "flightNumber": "",
-          "departure": "",
-          "arrival": "",
-          "departureName": "Elliott Bay Marina",
-          "arrivalName": "The Harbour Public House",
-          "departureTime": "",
-          "arrivalTime": "",
-          "airline": "",
-          "aircraft": "",
-          "confirmation": "",
-          "seat": "",
-          "terminal": "",
-          "bags": "",
-          "distance": "5.6 nm",
-          "miles": 6,
-          "departureLat": 47.6302997,
-          "departureLng": -122.3914826,
-          "arrivalLat": 47.6214895,
-          "arrivalLng": -122.5229355,
-          "origin": {
-            "name": "Elliott Bay Marina"
-          },
-          "destination": {
-            "name": "The Harbour Public House"
-          },
-          "originLat": 47.6302997,
-          "originLng": -122.3914826,
-          "destinationLat": 47.6214895,
-          "destinationLng": -122.5229355,
-          "travelMode": "DRIVING",
-          "departDate": "2026-05-19",
-          "arriveDate": "2026-05-19",
-          "arriveTime": "",
-          "vessel": "",
-          "agency": "",
-          "pickupLocation": "Elliott Bay Marina",
-          "dropoffLocation": "The Harbour Public House",
-          "duration": "~1h 1m"
+          "notes": ""
         }
       ],
       "flights": [],
@@ -118,7 +78,7 @@
       "routes": [
         {
           "id": "f9f7e8d5-83f6-4807-9771-fa872f1e515c",
-          "name": "Winslow → Kingston, WA",
+          "name": "The Harbour Public House → Poulsbo, WA",
           "startName": "The Harbour Public House",
           "endName": "Poulsbo, WA",
           "startLat": 47.6214895,
