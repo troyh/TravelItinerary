@@ -236,6 +236,68 @@ function InsertGap({ onInsert, suggestedTime }) {
 
 // ── Timeline time helpers ──────────────────────────────────────────────────
 
+// Parse GPS coordinate strings into { lat, lng, name } or null.
+// Handles DMS, DM, and decimal-degree formats with N/S/E/W prefix or suffix.
+function parseCoordinates(str) {
+  if (!str?.trim()) return null;
+  const s = str.trim()
+    .replace(/[''′]/g, "'").replace(/[""″]/g, '"')
+    .replace(/\s+/g, ' ');
+
+  function dms2dec(d, m, sec, dir) {
+    const v = Math.abs(+d) + (+m || 0) / 60 + (+sec || 0) / 3600;
+    return /[SW]/i.test(dir || '') ? -v : v;
+  }
+  function ok(lat, lng) {
+    if (isNaN(lat) || isNaN(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) return null;
+    return {
+      lat, lng,
+      name: `${Math.abs(lat).toFixed(5)}°${lat >= 0 ? 'N' : 'S'} ${Math.abs(lng).toFixed(5)}°${lng >= 0 ? 'E' : 'W'}`,
+    };
+  }
+
+  let m;
+  // N47° 37' 17.30'' W122° 31' 14.68''  (DMS prefix)
+  m = s.match(/^([NS])\s*(\d+)\s*°\s*(\d+)\s*'\s*([\d.]+)\s*["']{0,2}\s+([EW])\s*(\d+)\s*°\s*(\d+)\s*'\s*([\d.]+)\s*["']{0,2}$/i);
+  if (m) return ok(dms2dec(m[2], m[3], m[4], m[1]), dms2dec(m[6], m[7], m[8], m[5]));
+
+  // 47° 37' 17.30'' N, 122° 31' 14.68'' W  (DMS suffix)
+  m = s.match(/^(\d+)\s*°\s*(\d+)\s*'\s*([\d.]+)\s*["']{0,2}\s*([NS])\s*[,\s]+\s*(\d+)\s*°\s*(\d+)\s*'\s*([\d.]+)\s*["']{0,2}\s*([EW])$/i);
+  if (m) return ok(dms2dec(m[1], m[2], m[3], m[4]), dms2dec(m[5], m[6], m[7], m[8]));
+
+  // N47° 37.288' W122° 31.245'  (DM prefix)
+  m = s.match(/^([NS])\s*(\d+)\s*°\s*([\d.]+)\s*'\s+([EW])\s*(\d+)\s*°\s*([\d.]+)\s*'$/i);
+  if (m) return ok(dms2dec(m[2], m[3], 0, m[1]), dms2dec(m[5], m[6], 0, m[4]));
+
+  // 47° 37.288' N, 122° 31.245' W  (DM suffix)
+  m = s.match(/^(\d+)\s*°\s*([\d.]+)\s*'\s*([NS])\s*[,\s]+\s*(\d+)\s*°\s*([\d.]+)\s*'\s*([EW])$/i);
+  if (m) return ok(dms2dec(m[1], m[2], 0, m[3]), dms2dec(m[4], m[5], 0, m[6]));
+
+  // N47.6214 W122.5207  (decimal prefix)
+  m = s.match(/^([NS])\s*([\d.]+)\s+([EW])\s*([\d.]+)$/i);
+  if (m) return ok(dms2dec(m[2], 0, 0, m[1]), dms2dec(m[4], 0, 0, m[3]));
+
+  // 47.6214N 122.5207W  (decimal suffix)
+  m = s.match(/^([\d.]+)\s*([NS])\s*[,\s]+\s*([\d.]+)\s*([EW])$/i);
+  if (m) return ok(dms2dec(m[1], 0, 0, m[2]), dms2dec(m[3], 0, 0, m[4]));
+
+  // 47.6214, -122.5207  or  47.6214 -122.5207  (plain decimal pair)
+  m = s.match(/^(-?[\d.]+)\s*[,\s]+\s*(-?[\d.]+)$/);
+  if (m) return ok(parseFloat(m[1]), parseFloat(m[2]));
+
+  return null;
+}
+
+// Heuristic: does the string look like the user is typing coordinates?
+function looksLikeCoordinates(str) {
+  if (!str) return false;
+  if (/[°]/.test(str)) return true;
+  if (/^[NSEW]\s*\d/i.test(str)) return true;
+  if (/\d\s*[NSEW]/i.test(str)) return true;
+  if (/^-?\d+\.?\d*\s*[,\s]\s*-\d/.test(str)) return true; // lat, -lng
+  return false;
+}
+
 function parseNaturalTime(str) {
   if (!str?.trim()) return str;
   const s = str.trim();
@@ -1568,16 +1630,25 @@ function AddTravelPanel({
                   <input
                     type="text"
                     value={fromCode ? `${fromCode}  ${fromName}` : fromName}
-                    placeholder="City, airport, or address"
+                    placeholder="City, address, or GPS coords"
                     style={{ ...ATP_INPUT, fontFamily: fromCode ? "ui-monospace,SFMono-Regular,Menlo,monospace" : "inherit" }}
                     onChange={e => {
                       const val = e.target.value;
                       setFromName(val); setFromCode(""); setFromAddr(""); setFromLat(null); setFromLng(null);
                       clearTimeout(fromDebounce.current);
-                      fromDebounce.current = setTimeout(() => searchPlace(val, setFromPreds, null), 300);
+                      if (!looksLikeCoordinates(val))
+                        fromDebounce.current = setTimeout(() => searchPlace(val, setFromPreds, null), 300);
+                      else setFromPreds([]);
+                    }}
+                    onBlur={e => {
+                      const coords = parseCoordinates(e.target.value);
+                      if (coords) {
+                        setFromName(coords.name); setFromLat(coords.lat); setFromLng(coords.lng);
+                        setFromPreds([]); clearTimeout(fromDebounce.current);
+                      }
                     }}
                     onFocus={e => {
-                      if (!fromName) return;
+                      if (!fromName || looksLikeCoordinates(fromName)) return;
                       clearTimeout(fromDebounce.current);
                       fromDebounce.current = setTimeout(() => searchPlace(fromName, setFromPreds, null), 300);
                     }}
@@ -1617,16 +1688,25 @@ function AddTravelPanel({
                   <input
                     type="text"
                     value={toCode ? `${toCode}  ${toName}` : toName}
-                    placeholder="City, airport, or address"
+                    placeholder="City, address, or GPS coords"
                     style={{ ...ATP_INPUT, fontFamily: toCode ? "ui-monospace,SFMono-Regular,Menlo,monospace" : "inherit" }}
                     onChange={e => {
                       const val = e.target.value;
                       setToName(val); setToCode(""); setToAddr(""); setToLat(null); setToLng(null);
                       clearTimeout(toDebounce.current);
-                      toDebounce.current = setTimeout(() => searchPlace(val, setToPreds, null), 300);
+                      if (!looksLikeCoordinates(val))
+                        toDebounce.current = setTimeout(() => searchPlace(val, setToPreds, null), 300);
+                      else setToPreds([]);
+                    }}
+                    onBlur={e => {
+                      const coords = parseCoordinates(e.target.value);
+                      if (coords) {
+                        setToName(coords.name); setToLat(coords.lat); setToLng(coords.lng);
+                        setToPreds([]); clearTimeout(toDebounce.current);
+                      }
                     }}
                     onFocus={e => {
-                      if (!toName) return;
+                      if (!toName || looksLikeCoordinates(toName)) return;
                       clearTimeout(toDebounce.current);
                       toDebounce.current = setTimeout(() => searchPlace(toName, setToPreds, null), 300);
                     }}
@@ -3293,12 +3373,20 @@ export default function Itinerary() {
           notes: item.notes || "",
         };
       } else if (item._type === "route") {
+        const routeDurStr = (() => {
+          if (!(item.hrs > 0)) return "";
+          const h = Math.floor(item.hrs), m = Math.round((item.hrs - h) * 60);
+          return h > 0 && m > 0 ? `${h}h ${m}m` : h > 0 ? `${h}h` : `${m}m`;
+        })();
         editItem = {
           _origType: "route",
           id: item.id, mode: "boat",
           from: { name: item.startName || "", lat: item.startLat || null, lng: item.startLng || null },
           to:   { name: item.endName   || "", lat: item.endLat   || null, lng: item.endLng   || null },
           departTime: item.time || "", boatVessel: item.vessel || "", notes: item.notes || "",
+          routeDistance: item.nm > 0 ? `${item.nm} nm` : "",
+          routeDuration: routeDurStr,
+          routePath: item.routePath || null,
         };
       } else if (item._type === "rentalcar") {
         editItem = {
@@ -4743,12 +4831,23 @@ export default function Itinerary() {
                           notes: item.notes,
                         });
                       } else if (item.mode === "boat") {
+                        const boatNm  = item.routeDistance ? parseFloat(item.routeDistance) || null : null;
+                        const boatHrs = (() => {
+                          if (!item.routeDuration) return null;
+                          let t = 0;
+                          const hm = item.routeDuration.match(/(\d+)\s*h/i);
+                          const mm = item.routeDuration.match(/(\d+)\s*m/i);
+                          if (hm) t += +hm[1] * 60; if (mm) t += +mm[1];
+                          return t > 0 ? t / 60 : null;
+                        })();
                         addRoute(addPanel.day, {
                           id: item.id, name: `${item.from?.name} → ${item.to?.name}`,
                           startName: item.from?.name, endName: item.to?.name,
                           startLat: item.from?.lat, startLng: item.from?.lng,
                           endLat: item.to?.lat, endLng: item.to?.lng,
-                          time: item.departTime, nm: null, hrs: null, notes: item.notes,
+                          time: item.departTime, nm: boatNm, hrs: boatHrs,
+                          routePath: item.routePath || null,
+                          notes: item.notes,
                         });
                       } else {
                         const modeMap = { car:"DRIVING", walk:"WALKING", train:"TRANSIT", ferry:"TRANSIT", other:"DRIVING" };
@@ -4786,6 +4885,15 @@ export default function Itinerary() {
                         startName: item.from?.name, endName: item.to?.name,
                         startLat: item.from?.lat, startLng: item.from?.lng,
                         endLat: item.to?.lat, endLng: item.to?.lng,
+                        nm: item.routeDistance ? parseFloat(item.routeDistance) || undefined : undefined,
+                        hrs: (() => {
+                          if (!item.routeDuration) return undefined;
+                          let t = 0;
+                          const hm = item.routeDuration.match(/(\d+)\s*h/i);
+                          const mm = item.routeDuration.match(/(\d+)\s*m/i);
+                          if (hm) t += +hm[1] * 60; if (mm) t += +mm[1];
+                          return t > 0 ? t / 60 : undefined;
+                        })(),
                         departDate: item.departDate, time: item.departTime,
                         arriveDate: item.arriveDate, arriveTime: item.arriveTime,
                         notes: item.notes, vessel: item.boatVessel,
