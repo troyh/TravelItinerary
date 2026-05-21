@@ -2351,6 +2351,7 @@ export default function Itinerary() {
   const inputRef          = useRef(null);
   const syncTimerRef       = useRef(null);
   const dirtyRef           = useRef(false);
+  const justLoadedRef      = useRef(false); // suppresses dirty-marking during post-load cascades
   const skipNextLoadRef    = useRef(false);
   const saveImmediatelyRef = useRef(false);
 
@@ -2416,10 +2417,10 @@ export default function Itinerary() {
         localStorage.setItem("itineraryMetadata", JSON.stringify(meta));
       } catch {}
     }
-    if (dirtyRef.current && ghSettings.githubToken && effectiveRepo && currentFile !== "__local__") {
+    if (dirtyRef.current && !justLoadedRef.current && ghSettings.githubToken && effectiveRepo && currentFile !== "__local__") {
       setSyncStatus("unsaved");
     }
-    dirtyRef.current = true;
+    if (!justLoadedRef.current) dirtyRef.current = true;
   }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, savedFlights, savedRentalCars, customNotes, startDate, title, subtitle, itineraryNotes]);
 
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
@@ -2494,6 +2495,7 @@ export default function Itinerary() {
         const ghs = { githubToken: db.githubToken ?? "", githubRepo: repo, githubBranch: db.githubBranch || "data" };
         const data = await loadFromGitHub({ ...ghs, githubFile: urlLoad.file }).catch(() => null);
         if (!data) continue;
+        markLoadStart();
         applyData(data);
         localStorage.setItem("travelCurrentFile", urlLoad.file);
         localStorage.setItem("travelCurrentDb", db.id);
@@ -2523,6 +2525,7 @@ export default function Itinerary() {
           localStorage.removeItem("travelCurrentFile");
           return;
         }
+        markLoadStart();
         applyData(data);
         setSyncStatus("synced");
       })
@@ -2764,6 +2767,13 @@ export default function Itinerary() {
     }
   }
 
+  function markLoadStart() {
+    dirtyRef.current = false;
+    justLoadedRef.current = true;
+    clearTimeout(justLoadedRef._timer);
+    justLoadedRef._timer = setTimeout(() => { justLoadedRef.current = false; }, 2000);
+  }
+
   function applyData(data) {
     const x = extractPerDayState(data);
     setDays(x.days.length ? x.days : []);
@@ -2780,7 +2790,7 @@ export default function Itinerary() {
   }
 
   function handleLoad(path, data, dbId) {
-    dirtyRef.current = false;
+    markLoadStart();
     if (data) {
       applyData(data);
       localStorage.setItem("travelItinerary", JSON.stringify(data));
@@ -2859,11 +2869,11 @@ export default function Itinerary() {
         localStorage.setItem("itineraryMetadata", JSON.stringify(meta));
       } catch {}
       // Navigate to the duplicate
+      markLoadStart();
       applyData(data);
       setCurrentFile(newPath);
       localStorage.setItem("travelCurrentFile", newPath);
       localStorage.setItem("travelItinerary", JSON.stringify(data));
-      dirtyRef.current = false;
       setSyncStatus("saved");
       setShowMenu(false);
     } catch {
