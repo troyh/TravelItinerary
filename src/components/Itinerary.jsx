@@ -2656,7 +2656,6 @@ export default function Itinerary() {
       const idx = prev.findIndex(d => d.day === afterDayNum);
       return [...prev.slice(0, idx + 1), { ...BLANK_DAY, day: newNum }, ...prev.slice(idx + 1).map(d => ({ ...d, day: d.day + 1 }))];
     });
-    setCustomHighlights(prev => remapKeys(prev, newNum, +1));
     setCustomNotes(prev => remapKeys(prev, newNum, +1));
     setSavedPlaces(prev => remapKeys(prev, newNum, +1));
     setSavedDirections(prev => remapKeys(prev, newNum, +1));
@@ -2670,7 +2669,6 @@ export default function Itinerary() {
   function removeDay(dayNum) {
     if (days.length <= 1) return;
     setDays(prev => prev.filter(d => d.day !== dayNum).map((d, i) => ({ ...d, day: i + 1 })));
-    setCustomHighlights(prev => remapKeys(prev, dayNum, -1));
     setCustomNotes(prev => remapKeys(prev, dayNum, -1));
     setSavedPlaces(prev => remapKeys(prev, dayNum, -1));
     setSavedDirections(prev => remapKeys(prev, dayNum, -1));
@@ -2698,7 +2696,6 @@ export default function Itinerary() {
     setSavedRoutes(     p => swapArr(p, []));
     setSavedFlights(    p => swapArr(p, []));
     setSavedRentalCars( p => swapArr(p, []));
-    setCustomHighlights(p => swapArr(p, []));
     setCustomNotes(     p => swapArr(p, ""));
     setDays(prev => {
       const arr = [...prev];
@@ -2759,12 +2756,6 @@ export default function Itinerary() {
         }))],
       }));
     }
-    if (data.highlights?.length) {
-      setCustomHighlights(prev => ({
-        ...prev,
-        [dayNum]: [...(prev[dayNum] ?? []), ...data.highlights],
-      }));
-    }
   }
 
   function markLoadStart() {
@@ -2808,7 +2799,7 @@ export default function Itinerary() {
     const path = `${ITINERARIES_FOLDER}/it-${crypto.randomUUID().slice(0, 8)}.json`;
     dirtyRef.current = false;
     setDays([]); setSavedPlaces({}); setSavedDirections({}); setSavedRoutes({}); setSavedFlights({}); setSavedRentalCars({});
-    setCustomHighlights({}); setCustomNotes({});
+    setCustomNotes({});
     setStartDate(""); ;
     setTitle(name); setSubtitle(""); setItineraryNotes("");
     localStorage.removeItem("travelItinerary");
