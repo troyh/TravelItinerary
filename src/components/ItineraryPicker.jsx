@@ -39,6 +39,74 @@ function daysBetween(from, to) {
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
+const PinIcon = (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+          stroke="currentColor" strokeWidth="1.6" fill="currentColor" fillOpacity="0.15"/>
+    <circle cx="12" cy="9" r="2.5" stroke="currentColor" strokeWidth="1.6"/>
+  </svg>
+);
+
+const GearIcon = (
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+    <path d="M8 10.5A2.5 2.5 0 1 0 8 5.5a2.5 2.5 0 0 0 0 5z" stroke="currentColor" strokeWidth="1.4"/>
+    <path d="M13.5 8c0-.28-.02-.56-.06-.83l1.28-1a.5.5 0 0 0 .12-.64l-1.2-2.07a.5.5 0 0 0-.61-.22l-1.5.6a6 6 0 0 0-1.43-.83l-.22-1.58A.5.5 0 0 0 9.38 1H6.62a.5.5 0 0 0-.5.43L5.9 3.01a6 6 0 0 0-1.43.83l-1.5-.6a.5.5 0 0 0-.61.22L1.16 5.53a.5.5 0 0 0 .12.64l1.28 1A5.9 5.9 0 0 0 2.5 8c0 .28.02.56.06.83l-1.28 1a.5.5 0 0 0-.12.64l1.2 2.07a.5.5 0 0 0 .61.22l1.5-.6c.44.32.92.6 1.43.83l.22 1.58c.06.25.27.43.5.43h2.76a.5.5 0 0 0 .5-.43l.22-1.58c.51-.23.99-.5 1.43-.83l1.5.6a.5.5 0 0 0 .61-.22l1.2-2.07a.5.5 0 0 0-.12-.64l-1.28-1c.04-.27.06-.55.06-.83z" stroke="currentColor" strokeWidth="1.4"/>
+  </svg>
+);
+
+function NavRow({ label, count, active, onClick }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        width: "100%", padding: "8px 12px", borderRadius: 8, textAlign: "left",
+        border: active ? `1px solid ${T.border}` : "1px solid transparent",
+        background: active ? T.surface : hov ? T.surface3 : "transparent",
+        color: (active || hov) ? T.text : T.textMuted,
+        fontSize: 13, fontWeight: active ? 600 : 500,
+        cursor: "pointer", fontFamily: T.font,
+        transition: "background 0.1s, color 0.1s",
+      }}
+    >
+      <span>{label}</span>
+      <span style={{ fontSize: 11, color: T.textFaint, fontVariantNumeric: "tabular-nums" }}>
+        {count > 99 ? "99+" : count}
+      </span>
+    </button>
+  );
+}
+
+function MobileNavRow({ label, icon, count, active, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        display: "flex", alignItems: "center", gap: 12,
+        width: "100%", padding: "12px 12px", borderRadius: 10, textAlign: "left",
+        border: active ? `1px solid ${T.border}` : "1px solid transparent",
+        background: active ? T.surface : "transparent",
+        color: active ? T.text : T.textMuted,
+        fontSize: 15, fontWeight: active ? 600 : 500, letterSpacing: -0.1,
+        cursor: "pointer", fontFamily: T.font,
+      }}
+    >
+      {icon && (
+        <span style={{ color: active ? T.accent : T.textMuted, flexShrink: 0, display: "flex" }}>
+          {icon}
+        </span>
+      )}
+      <span style={{ flex: 1 }}>{label}</span>
+      <span style={{ fontSize: 12, color: T.textFaint, fontVariantNumeric: "tabular-nums" }}>
+        {count > 99 ? "99+" : count}
+      </span>
+    </button>
+  );
+}
+
 function SectionLabel({ label, count }) {
   return (
     <div style={{
@@ -84,6 +152,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
   const refreshAllRef  = useRef(false);
   const [loadError,    setLoadError]    = useState(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [drawerOpen,   setDrawerOpen]   = useState(false);
   const [pullStatus,   setPullStatus]   = useState("idle"); // "idle"|"pulling"|"done"
   const [pullProgress, setPullProgress] = useState({ done: 0, total: 0 });
 
@@ -303,6 +372,20 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
     .filter(f => !f.d?.startDate)
     .sort((a, b) => (a.d?.title || a.name).localeCompare(b.d?.title || b.name));
 
+  // ── Next-trip card data ────────────────────────────────────────────────────
+
+  const nextTrip = upcoming[0] ?? null;
+  const nextTripCountdown = nextTrip?.d?.startDate ? (() => {
+    const d = nextTrip.d;
+    const gap = daysBetween(todayMidnight, parseDate(d.startDate));
+    if (gap > 1)  return { label: `${gap} days away`, num: gap,   color: T.accent };
+    if (gap === 1) return { label: "tomorrow",          num: null,  color: T.accent };
+    if (gap === 0) return { label: "today",             num: null,  color: T.amber  };
+    // gap < 0 = currently traveling
+    const dayN = -gap + 1;
+    return { label: `day ${dayN} of ${d.dayCount}`, num: null, color: T.amber };
+  })() : null;
+
   // ── Card renderer ──────────────────────────────────────────────────────────
 
   function renderCard(f, { featured = false, dim = false } = {}) {
@@ -465,55 +548,85 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
 
         {/* Sidebar — hidden on mobile */}
         <aside className="picker-sidebar" style={{
-          width: 260, flexShrink: 0,
+          width: 240, flexShrink: 0,
           borderRight: `1px solid ${T.border}`,
           background: T.surface2,
-          padding: "32px 20px",
-          display: "flex", flexDirection: "column", gap: 24,
+          padding: "24px 16px",
+          display: "flex", flexDirection: "column",
           position: "sticky", top: 0, height: "100vh", overflowY: "auto",
         }}>
-          {/* Logo / app name */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {/* Brand mark + wordmark */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
             <div style={{
-              width: 30, height: 30, borderRadius: 8, background: T.accent,
+              width: 28, height: 28, borderRadius: 7, background: T.accent,
               display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
             }}>
-              <svg width="18" height="18" viewBox="0 0 256 256" fill="none">
-                <line x1="128" y1="50" x2="128" y2="206" stroke="white" strokeOpacity="0.5" strokeWidth="14" strokeLinecap="round"/>
-                <circle cx="128" cy="56" r="14" fill="white" stroke="white" strokeWidth="4"/>
-                <circle cx="128" cy="200" r="14" fill="white" stroke="white" strokeWidth="4"/>
-                <circle cx="128" cy="128" r="36" fill={T.amber}/>
+              <svg width="16" height="16" viewBox="0 0 256 256" fill="none">
+                <line x1="128" y1="50" x2="128" y2="206" stroke="white" strokeOpacity="0.5" strokeWidth="18" strokeLinecap="round"/>
+                <circle cx="128" cy="56" r="16" fill="white"/>
+                <circle cx="128" cy="200" r="16" fill="white"/>
+                <circle cx="128" cy="128" r="38" fill={T.amber}/>
               </svg>
             </div>
-            <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: -0.2, color: T.text }}>
-              Travel Itinerary
-            </div>
+            <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: -0.2, color: T.text }}>
+              Itinerary
+            </span>
           </div>
 
-          {/* DB info */}
-          {dbSubtitle && (
-            <div style={{ fontSize: 11, color: T.textMuted, lineHeight: 1.5 }}>
-              {dbSubtitle}
+          {/* Nav list */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <NavRow label="Trips" count={files.length} active />
+          </div>
+
+          {/* Spacer */}
+          <div style={{ flex: 1 }} />
+
+          {/* Next-trip card */}
+          {nextTrip && nextTripCountdown && (
+            <div
+              role="button"
+              onClick={() => handleLoad(nextTrip)}
+              style={{
+                padding: 14, borderRadius: 10, background: T.surface,
+                border: `1px solid ${T.border}`, cursor: "pointer", marginBottom: 8,
+              }}
+            >
+              <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 4 }}>
+                NEXT TRIP
+              </div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: T.text, marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {nextTrip.d?.title || nextTrip.name}
+              </div>
+              {nextTrip.d?.startDate && nextTrip.d?.dayCount && (
+                <div style={{ fontSize: 12, color: T.textMuted, marginBottom: 6 }}>
+                  {formatDateRange(nextTrip.d.startDate, nextTrip.d.dayCount)}
+                </div>
+              )}
+              <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+                <span style={{ fontSize: 22, fontWeight: 700, fontVariantNumeric: "tabular-nums", color: nextTripCountdown.color }}>
+                  {nextTripCountdown.num ?? nextTripCountdown.label}
+                </span>
+                {nextTripCountdown.num != null && (
+                  <span style={{ fontSize: 11, color: T.textMuted }}>days away</span>
+                )}
+              </div>
             </div>
           )}
 
-          {/* Settings */}
-          <div style={{ flex: 1 }} />
+          {/* Settings footer */}
           <button
             onClick={() => setShowSettings(p => !p)}
             style={{
-              ...btn.ghost,
-              display: "flex", alignItems: "center", gap: 8, width: "100%",
-              justifyContent: "flex-start",
+              display: "flex", alignItems: "center", gap: 8,
+              padding: "8px 12px", borderRadius: 8, width: "100%",
+              border: showSettings ? `1px solid ${T.accent}44` : "1px solid transparent",
               background: showSettings ? T.accentSoft : "transparent",
               color: showSettings ? T.accent : T.textMuted,
-              borderColor: showSettings ? T.accent + "44" : T.border,
+              cursor: "pointer", fontFamily: T.font, fontSize: 13, fontWeight: 500,
+              transition: "background 0.1s, color 0.1s",
             }}
           >
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-              <path d="M8 10.5A2.5 2.5 0 1 0 8 5.5a2.5 2.5 0 0 0 0 5z" stroke="currentColor" strokeWidth="1.4"/>
-              <path d="M13.5 8c0-.28-.02-.56-.06-.83l1.28-1a.5.5 0 0 0 .12-.64l-1.2-2.07a.5.5 0 0 0-.61-.22l-1.5.6a6 6 0 0 0-1.43-.83l-.22-1.58A.5.5 0 0 0 9.38 1H6.62a.5.5 0 0 0-.5.43L5.9 3.01a6 6 0 0 0-1.43.83l-1.5-.6a.5.5 0 0 0-.61.22L1.16 5.53a.5.5 0 0 0 .12.64l1.28 1A5.9 5.9 0 0 0 2.5 8c0 .28.02.56.06.83l-1.28 1a.5.5 0 0 0-.12.64l1.2 2.07a.5.5 0 0 0 .61.22l1.5-.6c.44.32.92.6 1.43.83l.22 1.58c.06.25.27.43.5.43h2.76a.5.5 0 0 0 .5-.43l.22-1.58c.51-.23.99-.5 1.43-.83l1.5.6a.5.5 0 0 0 .61-.22l1.2-2.07a.5.5 0 0 0-.12-.64l-1.28-1c.04-.27.06-.55.06-.83z" stroke="currentColor" strokeWidth="1.4"/>
-            </svg>
+            {GearIcon}
             Settings
           </button>
         </aside>
@@ -532,21 +645,17 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
               </h1>
             </div>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              {/* Settings button — visible on mobile where sidebar is hidden */}
+              {/* Hamburger — visible on mobile where sidebar is hidden */}
               <button
                 className="picker-settings-btn"
-                onClick={() => setShowSettings(p => !p)}
-                title="Settings"
-                style={{
-                  ...btn.icon,
-                  background: showSettings ? T.accentSoft : T.surface2,
-                  color: showSettings ? T.accent : T.textMuted,
-                  borderColor: showSettings ? T.accent + "44" : T.border,
-                }}
+                onClick={() => setDrawerOpen(true)}
+                title="Menu"
+                style={{ ...btn.icon, background: T.surface2, color: T.textMuted, borderColor: T.border }}
               >
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                  <path d="M8 10.5A2.5 2.5 0 1 0 8 5.5a2.5 2.5 0 0 0 0 5z" stroke="currentColor" strokeWidth="1.4"/>
-                  <path d="M13.5 8c0-.28-.02-.56-.06-.83l1.28-1a.5.5 0 0 0 .12-.64l-1.2-2.07a.5.5 0 0 0-.61-.22l-1.5.6a6 6 0 0 0-1.43-.83l-.22-1.58A.5.5 0 0 0 9.38 1H6.62a.5.5 0 0 0-.5.43L5.9 3.01a6 6 0 0 0-1.43.83l-1.5-.6a.5.5 0 0 0-.61.22L1.16 5.53a.5.5 0 0 0 .12.64l1.28 1A5.9 5.9 0 0 0 2.5 8c0 .28.02.56.06.83l-1.28 1a.5.5 0 0 0-.12.64l1.2 2.07a.5.5 0 0 0 .61.22l1.5-.6c.44.32.92.6 1.43.83l.22 1.58c.06.25.27.43.5.43h2.76a.5.5 0 0 0 .5-.43l.22-1.58c.51-.23.99-.5 1.43-.83l1.5.6a.5.5 0 0 0 .61-.22l1.2-2.07a.5.5 0 0 0-.12-.64l-1.28-1c.04-.27.06-.55.06-.83z" stroke="currentColor" strokeWidth="1.4"/>
+                <svg width="16" height="14" viewBox="0 0 18 14" fill="none">
+                  <line x1="0" y1="1" x2="18" y2="1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                  <line x1="0" y1="7" x2="18" y2="7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                  <line x1="0" y1="13" x2="18" y2="13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
                 </svg>
               </button>
               {hasAnyDb && (
@@ -718,6 +827,138 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
           )}
         </main>
       </div>
+
+      {/* ── Mobile drawer ─────────────────────────────────────────────────── */}
+      {drawerOpen && (
+        <>
+          {/* Scrim */}
+          <div
+            onClick={() => setDrawerOpen(false)}
+            style={{
+              position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)",
+              zIndex: 1000,
+            }}
+          />
+          {/* Drawer panel */}
+          <div style={{
+            position: "fixed", top: 0, left: 0, bottom: 0,
+            width: "min(86vw, 320px)",
+            background: T.surface2,
+            boxShadow: "8px 0 32px rgba(0,0,0,0.18), 1px 0 4px rgba(0,0,0,0.06)",
+            zIndex: 1001,
+            display: "flex", flexDirection: "column",
+            padding: "max(56px, 18px) 16px max(22px, 12px)",
+            overflowY: "auto",
+            animation: "drawerSlideIn 280ms cubic-bezier(0.22, 1, 0.36, 1) forwards",
+          }}>
+            {/* Header: brand + close */}
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 22 }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: 9, background: T.accent,
+                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+              }}>
+                <svg width="18" height="18" viewBox="0 0 256 256" fill="none">
+                  <line x1="128" y1="50" x2="128" y2="206" stroke="white" strokeOpacity="0.5" strokeWidth="18" strokeLinecap="round"/>
+                  <circle cx="128" cy="56" r="16" fill="white"/>
+                  <circle cx="128" cy="200" r="16" fill="white"/>
+                  <circle cx="128" cy="128" r="38" fill={T.amber}/>
+                </svg>
+              </div>
+              <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: -0.2, color: T.text, flex: 1 }}>
+                Itinerary
+              </span>
+              <button
+                onClick={() => setDrawerOpen(false)}
+                style={{
+                  width: 32, height: 32, borderRadius: 8, border: `1px solid ${T.border}`,
+                  background: "transparent", cursor: "pointer", color: T.textMuted,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 14, fontFamily: T.font,
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Nav rows */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <MobileNavRow
+                label="Trips"
+                icon={PinIcon}
+                count={files.length}
+                active
+                onClick={() => setDrawerOpen(false)}
+              />
+            </div>
+
+            {/* Spacer */}
+            <div style={{ flex: 1 }} />
+
+            {/* Next-trip card (mobile, slightly larger) */}
+            {nextTrip && nextTripCountdown && (
+              <div
+                role="button"
+                onClick={() => { setDrawerOpen(false); setTimeout(() => handleLoad(nextTrip), 80); }}
+                style={{
+                  padding: 16, borderRadius: 12, background: T.surface,
+                  border: `1px solid ${T.border}`, cursor: "pointer", marginBottom: 16,
+                }}
+              >
+                <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 4 }}>
+                  NEXT TRIP
+                </div>
+                <div style={{ fontSize: 15, fontWeight: 600, color: T.text, marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {nextTrip.d?.title || nextTrip.name}
+                </div>
+                {nextTrip.d?.startDate && nextTrip.d?.dayCount && (
+                  <div style={{ fontSize: 12, color: T.textMuted, marginBottom: 6 }}>
+                    {formatDateRange(nextTrip.d.startDate, nextTrip.d.dayCount)}
+                  </div>
+                )}
+                <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+                  <span style={{ fontSize: 24, fontWeight: 700, fontVariantNumeric: "tabular-nums", color: nextTripCountdown.color }}>
+                    {nextTripCountdown.num ?? nextTripCountdown.label}
+                  </span>
+                  {nextTripCountdown.num != null && (
+                    <span style={{ fontSize: 11, color: T.textMuted }}>days away</span>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* User footer */}
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
+                background: `linear-gradient(135deg, ${T.accent}, ${T.amber})`,
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <span style={{ color: "#fff", fontSize: 14, fontWeight: 700 }}>
+                  {(databases[0]?.label || databases[0]?.githubRepo || "?")[0]?.toUpperCase() ?? "?"}
+                </span>
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {databases[0]?.label || databases[0]?.githubRepo || "Not connected"}
+                </div>
+                {databases[0]?.githubBranch && (
+                  <div style={{ fontSize: 11, color: T.textMuted }}>{databases[0].githubBranch}</div>
+                )}
+              </div>
+              <button
+                onClick={() => { setDrawerOpen(false); setShowSettings(true); }}
+                style={{
+                  width: 30, height: 30, borderRadius: 8, border: `1px solid ${T.border}`,
+                  background: "transparent", cursor: "pointer", color: T.textMuted,
+                  display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                }}
+              >
+                {GearIcon}
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

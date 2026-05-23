@@ -26,7 +26,12 @@
       "Bash(gh api *)",
       "Bash(curl -s \"https://raw.githubusercontent.com/troyh/TravelItinerary/data/Itineraries/it-a44dcfe4.json\")",
       "Bash(curl -s \"https://raw.githubusercontent.com/troyh/TravelItinerary/data/Itineraries/it-a44dcfe4.ics\")",
-      "Bash(grep -n \"}\\)}$\" /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)"
+      "Bash(grep -n \"}\\)}$\" /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)",
+      "Bash(cp webfetch-1779571983031-irl1vs.bin design.tar.gz)",
+      "Bash(tar -tzf design.tar.gz)",
+      "Bash(gunzip -c webfetch-1779571983031-irl1vs.bin)",
+      "Bash(tar -t)",
+      "Bash(tar -xf - travel-itinerary/project/docs/sidebar-spec.md travel-itinerary/README.md)"
     ]
   }
 }
