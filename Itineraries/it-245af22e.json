@@ -34,8 +34,8 @@
           "time": "",
           "nm": 187.4,
           "hrs": 9.366666666666667,
-          "cruisingSpeed": "20",
-          "vessel": null,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
           "routePath": [
             [
               47.628,
@@ -330,7 +330,44 @@
               -124.784
             ]
           ],
-          "notes": ""
+          "notes": "",
+          "flightNumber": "",
+          "departure": "",
+          "arrival": "",
+          "departureName": "Elliott Bay Marina",
+          "arrivalName": "Desolation Sound",
+          "departureTime": "",
+          "arrivalTime": "",
+          "airline": "",
+          "aircraft": "",
+          "confirmation": "",
+          "seat": "",
+          "terminal": "",
+          "bags": "",
+          "distance": "187.4 nm",
+          "miles": 187,
+          "departureLat": 47.6302997,
+          "departureLng": -122.3914826,
+          "arrivalLat": 50.1182242,
+          "arrivalLng": -124.7842299,
+          "origin": {
+            "name": "Elliott Bay Marina"
+          },
+          "destination": {
+            "name": "Desolation Sound"
+          },
+          "originLat": 47.6302997,
+          "originLng": -122.3914826,
+          "destinationLat": 50.1182242,
+          "destinationLng": -124.7842299,
+          "travelMode": "DRIVING",
+          "departDate": "",
+          "arriveDate": "",
+          "arriveTime": "",
+          "agency": "",
+          "pickupLocation": "Elliott Bay Marina",
+          "dropoffLocation": "Desolation Sound",
+          "duration": "9h 22m"
         }
       ],
       "flights": [],
@@ -366,8 +403,8 @@
           "time": "",
           "nm": 104.6,
           "hrs": 6.966666666666667,
-          "cruisingSpeed": "15",
-          "vessel": null,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
           "routePath": [
             [
               50.12,
@@ -666,7 +703,44 @@
               -126.752
             ]
           ],
-          "notes": ""
+          "notes": "",
+          "flightNumber": "",
+          "departure": "",
+          "arrival": "",
+          "departureName": "Desolation Sound",
+          "arrivalName": "Broughton Island",
+          "departureTime": "",
+          "arrivalTime": "",
+          "airline": "",
+          "aircraft": "",
+          "confirmation": "",
+          "seat": "",
+          "terminal": "",
+          "bags": "",
+          "distance": "104.6 nm",
+          "miles": 105,
+          "departureLat": 50.1182242,
+          "departureLng": -124.7842299,
+          "arrivalLat": 50.8135234,
+          "arrivalLng": -126.7317481,
+          "origin": {
+            "name": "Desolation Sound"
+          },
+          "destination": {
+            "name": "Broughton Island"
+          },
+          "originLat": 50.1182242,
+          "originLng": -124.7842299,
+          "destinationLat": 50.8135234,
+          "destinationLng": -126.7317481,
+          "travelMode": "DRIVING",
+          "departDate": "",
+          "arriveDate": "",
+          "arriveTime": "",
+          "agency": "",
+          "pickupLocation": "Desolation Sound",
+          "dropoffLocation": "Broughton Island",
+          "duration": "6h 58m"
         }
       ],
       "flights": [],
@@ -702,8 +776,8 @@
           "time": "",
           "nm": 43.3,
           "hrs": 7.866666666666666,
-          "cruisingSpeed": "5.5",
-          "vessel": null,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
           "routePath": [
             [
               50.792,
@@ -814,7 +888,44 @@
               -126.016
             ]
           ],
-          "notes": ""
+          "notes": "",
+          "flightNumber": "",
+          "departure": "",
+          "arrival": "",
+          "departureName": "Area A (Seymour Inlet/Knight Inlet), Canada",
+          "arrivalName": "Port Neville",
+          "departureTime": "",
+          "arrivalTime": "",
+          "airline": "",
+          "aircraft": "",
+          "confirmation": "",
+          "seat": "",
+          "terminal": "",
+          "bags": "",
+          "distance": "43.3 nm",
+          "miles": 43,
+          "departureLat": 50.8135234,
+          "departureLng": -126.7317481,
+          "arrivalLat": 50.5244336,
+          "arrivalLng": -126.0176838,
+          "origin": {
+            "name": "Area A (Seymour Inlet/Knight Inlet), Canada"
+          },
+          "destination": {
+            "name": "Port Neville"
+          },
+          "originLat": 50.8135234,
+          "originLng": -126.7317481,
+          "destinationLat": 50.5244336,
+          "destinationLng": -126.0176838,
+          "travelMode": "DRIVING",
+          "departDate": "",
+          "arriveDate": "",
+          "arriveTime": "",
+          "agency": "",
+          "pickupLocation": "Area A (Seymour Inlet/Knight Inlet), Canada",
+          "dropoffLocation": "Port Neville",
+          "duration": "7h 52m"
         }
       ],
       "flights": [],
@@ -830,11 +941,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "",
       "centerLat": null,
       "centerLng": null,
+      "highlights": [],
+      "note": "",
       "places": [],
       "directions": [],
       "routes": [],
