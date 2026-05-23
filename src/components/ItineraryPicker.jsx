@@ -47,6 +47,31 @@ const PinIcon = (
   </svg>
 );
 
+const NoteIcon = (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" strokeWidth="1.6" fill="currentColor" fillOpacity="0.1"/>
+    <line x1="8" y1="8" x2="16" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    <line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    <line x1="8" y1="16" x2="12" y2="16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+
+const PersonIcon = (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="1.6" fill="currentColor" fillOpacity="0.12"/>
+    <path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+  </svg>
+);
+
+const CarIcon = (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <path d="M5 13l1.5-5h11L19 13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+    <rect x="3" y="13" width="18" height="6" rx="2" stroke="currentColor" strokeWidth="1.6" fill="currentColor" fillOpacity="0.1"/>
+    <circle cx="7.5" cy="19" r="1.5" fill="currentColor"/>
+    <circle cx="16.5" cy="19" r="1.5" fill="currentColor"/>
+  </svg>
+);
+
 const GearIcon = (
   <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
     <path d="M8 10.5A2.5 2.5 0 1 0 8 5.5a2.5 2.5 0 0 0 0 5z" stroke="currentColor" strokeWidth="1.4"/>
@@ -153,6 +178,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
   const [loadError,    setLoadError]    = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [drawerOpen,   setDrawerOpen]   = useState(false);
+  const [activePage,   setActivePage]   = useState("trips");
   const [pullStatus,   setPullStatus]   = useState("idle"); // "idle"|"pulling"|"done"
   const [pullProgress, setPullProgress] = useState({ done: 0, total: 0 });
 
@@ -372,6 +398,23 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
     .filter(f => !f.d?.startDate)
     .sort((a, b) => (a.d?.title || a.name).localeCompare(b.d?.title || b.name));
 
+  // ── Nav items ─────────────────────────────────────────────────────────────
+
+  const NAV_ITEMS = [
+    { id: "trips",    label: "Trips",     icon: PinIcon,    count: files.length },
+    { id: "inbox",    label: "Inbox",     icon: NoteIcon,   count: 0 },
+    { id: "places",   label: "Places",    icon: PinIcon,    count: 0 },
+    { id: "people",   label: "Travelers", icon: PersonIcon, count: 0 },
+    { id: "vehicles", label: "Vehicles",  icon: CarIcon,    count: 0 },
+  ];
+
+  const activeLabel = NAV_ITEMS.find(n => n.id === activePage)?.label ?? "Trips";
+
+  function navigate(id) {
+    setActivePage(id);
+    setDrawerOpen(false);
+  }
+
   // ── Next-trip card data ────────────────────────────────────────────────────
 
   const nextTrip = upcoming[0] ?? null;
@@ -575,7 +618,15 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
 
           {/* Nav list */}
           <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <NavRow label="Trips" count={files.length} active />
+            {NAV_ITEMS.map(item => (
+              <NavRow
+                key={item.id}
+                label={item.label}
+                count={item.count}
+                active={activePage === item.id}
+                onClick={() => navigate(item.id)}
+              />
+            ))}
           </div>
 
           {/* Spacer */}
@@ -641,7 +692,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
                 {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
               </div>
               <h1 style={{ fontSize: 34, fontWeight: 700, margin: 0, letterSpacing: -0.6, color: T.text }}>
-                Trips
+                {activeLabel}
               </h1>
             </div>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -702,6 +753,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
             </div>
           )}
 
+          {activePage === "trips" ? (<>
           {/* Status / errors */}
           {listStatus === "loading" && (
             <div style={{ color: T.textMuted, fontSize: 13, padding: "12px 0" }}>Loading…</div>
@@ -825,6 +877,18 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
               </div>
             </div>
           )}
+          </>) : (
+            <div style={{
+              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+              padding: "80px 0", gap: 12, color: T.textMuted,
+            }}>
+              <div style={{ fontSize: 32, opacity: 0.25 }}>
+                {NAV_ITEMS.find(n => n.id === activePage)?.icon}
+              </div>
+              <div style={{ fontSize: 15, fontWeight: 600, color: T.textMuted }}>{activeLabel}</div>
+              <div style={{ fontSize: 13, color: T.textFaint }}>Coming soon</div>
+            </div>
+          )}
         </main>
       </div>
 
@@ -882,13 +946,16 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
 
             {/* Nav rows */}
             <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <MobileNavRow
-                label="Trips"
-                icon={PinIcon}
-                count={files.length}
-                active
-                onClick={() => setDrawerOpen(false)}
-              />
+              {NAV_ITEMS.map(item => (
+                <MobileNavRow
+                  key={item.id}
+                  label={item.label}
+                  icon={item.icon}
+                  count={item.count}
+                  active={activePage === item.id}
+                  onClick={() => navigate(item.id)}
+                />
+              ))}
             </div>
 
             {/* Spacer */}
