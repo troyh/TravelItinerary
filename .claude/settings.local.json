@@ -31,7 +31,10 @@
       "Bash(tar -tzf design.tar.gz)",
       "Bash(gunzip -c webfetch-1779571983031-irl1vs.bin)",
       "Bash(tar -t)",
-      "Bash(tar -xf - travel-itinerary/project/docs/sidebar-spec.md travel-itinerary/README.md)"
+      "Bash(tar -xf - travel-itinerary/project/docs/sidebar-spec.md travel-itinerary/README.md)",
+      "Bash(gunzip -c webfetch-1779574222151-0bt26q.bin)",
+      "Bash(tar -xf - travel-itinerary/project/docs/vehicles-spec.md travel-itinerary/project/app-vehicles.jsx)",
+      "Bash(grep -n \"^\\\\s*</>\\\\s*$\\\\|blank\\\\|Other pages\\\\|color: T\\\\.textMuted.*Inbox\\\\|Inbox\\\\|activePage ===\" /Users/troy/dev/TravelItinerary/src/components/ItineraryPicker.jsx)"
     ]
   }
 }

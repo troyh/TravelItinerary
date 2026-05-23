@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import NoteMarkdown from "./NoteMarkdown.jsx";
-import { listItineraries, loadFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
+import { listItineraries, loadFromGitHub, saveToGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import Settings from "./Settings.jsx";
 import { T, btn, input } from "../theme.js";
+import VehiclesPage from "./Vehicles.jsx";
 
 const DB_COLORS = ["#0b3d6b", "#2563eb", "#059669", "#dc2626", "#7c3aed", "#0891b2"];
 function dbColor(idx) { return DB_COLORS[idx % DB_COLORS.length]; }
@@ -181,6 +182,9 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
   const [activePage,   setActivePage]   = useState("trips");
   const [pullStatus,   setPullStatus]   = useState("idle"); // "idle"|"pulling"|"done"
   const [pullProgress, setPullProgress] = useState({ done: 0, total: 0 });
+  const [vehiclesByDb,    setVehiclesByDb]    = useState({}); // { [dbId]: Vehicle[] }
+  const [vehiclesDbId,    setVehiclesDbId]    = useState(null);
+  const vehiclesLoadedRef = useRef(false);
 
   useEffect(() => { document.title = "Travel Itinerary"; }, []);
 
@@ -198,6 +202,24 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
   const hasAnyDb    = databases.some(db => db.githubRepo || inferRepo());
   const multiDb     = databases.length > 1;
   const defaultCreateDbId = writableDbs[0]?.id ?? null;
+
+  // Load vehicles.json from all writable DBs once
+  useEffect(() => {
+    if (vehiclesLoadedRef.current || !writableDbs.length) return;
+    vehiclesLoadedRef.current = true;
+    setVehiclesDbId(writableDbs[0].id);
+    Promise.all(
+      writableDbs.map(async db => {
+        const ghs = resolveDb(db);
+        try {
+          const data = await loadFromGitHub({ ...ghs, githubFile: "vehicles.json" });
+          return [db.id, Array.isArray(data) ? data : []];
+        } catch {
+          return [db.id, []];
+        }
+      })
+    ).then(entries => setVehiclesByDb(Object.fromEntries(entries)));
+  }, [writableDbs.length]);
 
   useEffect(() => {
     if (!databases.length) return;
@@ -371,6 +393,22 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
     onCreate(newName.trim(), dbId);
   }
 
+  // ── Vehicle handlers ───────────────────────────────────────────────────────
+
+  function saveVehiclesForDb(dbId, updated) {
+    setVehiclesByDb(prev => ({ ...prev, [dbId]: updated }));
+    const db = writableDbs.find(d => d.id === dbId);
+    if (!db) return;
+    const ghs = resolveDb(db);
+    saveToGitHub(updated, { ...ghs, githubFile: "vehicles.json", message: "Update vehicles" })
+      .catch(() => {});
+  }
+
+  const activeDbVehicles = vehiclesByDb[vehiclesDbId] ?? [];
+  function handleAddVehicle(v)    { saveVehiclesForDb(vehiclesDbId, [...activeDbVehicles, v]); }
+  function handleUpdateVehicle(v) { saveVehiclesForDb(vehiclesDbId, activeDbVehicles.map(x => x.id === v.id ? v : x)); }
+  function handleDeleteVehicle(id){ saveVehiclesForDb(vehiclesDbId, activeDbVehicles.filter(v => v.id !== id)); }
+
   // ── Group files into sections ──────────────────────────────────────────────
 
   const todayMidnight = (() => { const t = new Date(); t.setHours(0, 0, 0, 0); return t; })();
@@ -405,7 +443,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
     { id: "inbox",    label: "Inbox",     icon: NoteIcon,   count: 0 },
     { id: "places",   label: "Places",    icon: PinIcon,    count: 0 },
     { id: "people",   label: "Travelers", icon: PersonIcon, count: 0 },
-    { id: "vehicles", label: "Vehicles",  icon: CarIcon,    count: 0 },
+    { id: "vehicles", label: "Vehicles",  icon: CarIcon,    count: Object.values(vehiclesByDb).reduce((s, a) => s + a.length, 0) },
   ];
 
   const activeLabel = NAV_ITEMS.find(n => n.id === activePage)?.label ?? "Trips";
@@ -877,7 +915,17 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
               </div>
             </div>
           )}
-          </>) : (
+          </>) : activePage === "vehicles" ? (
+            <VehiclesPage
+              vehicles={activeDbVehicles}
+              databases={writableDbs.map(db => ({ id: db.id, label: db.label || db.githubRepo || `DB ${db.id}` }))}
+              activeDbId={vehiclesDbId}
+              onDbChange={setVehiclesDbId}
+              onAdd={handleAddVehicle}
+              onUpdate={handleUpdateVehicle}
+              onDelete={handleDeleteVehicle}
+            />
+          ) : (
             <div style={{
               display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
               padding: "80px 0", gap: 12, color: T.textMuted,
