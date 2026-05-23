@@ -234,27 +234,45 @@ function InsertGap({ onInsert, suggestedTime }) {
   );
 }
 
-function InsertDayGap({ onInsert }) {
+function InsertDayGap({ onInsert, label = "Insert day here" }) {
   const [hovered, setHovered] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!hovered) return;
+    const collapse = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setHovered(false);
+    };
+    document.addEventListener("touchstart", collapse);
+    document.addEventListener("mousedown", collapse);
+    return () => {
+      document.removeEventListener("touchstart", collapse);
+      document.removeEventListener("mousedown", collapse);
+    };
+  }, [hovered]);
+
   return (
     <div
+      ref={ref}
       style={{ height: hovered ? 36 : 8, position:"relative", display:"flex", alignItems:"center",
         transition:"height 0.15s", margin:"0 0" }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onTouchStart={() => setHovered(true)}
     >
       {hovered ? (
         <>
           <div style={{ flex:1, height:1, background:"#0b3d6b", opacity:0.25 }}/>
           <button
             onMouseDown={e => { e.stopPropagation(); onInsert(); }}
+            onTouchEnd={e => { e.stopPropagation(); e.preventDefault(); onInsert(); }}
             style={{
               display:"inline-flex", alignItems:"center", gap:5, padding:"4px 12px",
               borderRadius:999, background:"#0b3d6b", color:"#fff", border:"none",
               cursor:"pointer", fontFamily:"inherit", fontSize:11, fontWeight:600,
               boxShadow:"0 2px 8px rgba(11,61,107,0.28)", whiteSpace:"nowrap", flexShrink:0,
             }}>
-            {AddGlyph.plus} Insert day here
+            {AddGlyph.plus} {label}
           </button>
           <div style={{ flex:1, height:1, background:"#0b3d6b", opacity:0.25 }}/>
         </>
@@ -4290,6 +4308,9 @@ export default function Itinerary() {
           </div>
         )}
         {activeTab === "itinerary" && (<>
+        {!readOnly && days.length > 0 && (
+          <InsertDayGap onInsert={() => addBlankDay(0)} label="Add day to beginning" />
+        )}
         {days.map((d, dayIdx) => {
           const isLayover = effNm(d) === 0;
           const dayInfo   = getDayDate(d.day);
@@ -4807,14 +4828,10 @@ export default function Itinerary() {
           );
         })}
         {!readOnly && (
-          <div style={{ display:"flex", justifyContent:"center", marginTop:"1rem" }}>
-            <button onClick={() => addBlankDay(days.length > 0 ? days[days.length - 1].day : 0)}
-              style={{ background:"none", border:"1px dashed #2e5070", color:"#6b7a8a",
-                borderRadius:6, padding:".55rem 1.5rem", fontSize:".78rem",
-                fontFamily:"inherit", cursor:"pointer", letterSpacing:".05em" }}>
-              + Add day at end
-            </button>
-          </div>
+          <InsertDayGap
+            onInsert={() => addBlankDay(days.length > 0 ? days[days.length - 1].day : 0)}
+            label="Add day to end"
+          />
         )}
         </>)}
 
