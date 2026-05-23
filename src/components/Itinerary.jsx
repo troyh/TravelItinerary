@@ -238,6 +238,22 @@ function InsertGap({ onInsert, suggestedTime }) {
 
 // Parse GPS coordinate strings into { lat, lng, name } or null.
 // Handles DMS, DM, and decimal-degree formats with N/S/E/W prefix or suffix.
+function buildGpx(pts, name) {
+  const safeName = (name || "Route").replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const rtepts = pts.map(([lat, lon]) =>
+    `  <rtept lat="${lat.toFixed(6)}" lon="${lon.toFixed(6)}"/>`
+  ).join("\n");
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Travel Itinerary" xmlns="http://www.topografix.com/GPX/1/1">\n  <rte>\n    <name>${safeName}</name>\n${rtepts}\n  </rte>\n</gpx>`;
+}
+
+function downloadBlob(content, filename, mime) {
+  const url = URL.createObjectURL(new Blob([content], { type: mime }));
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
 function parseCoordinates(str) {
   if (!str?.trim()) return null;
   const s = str.trim()
@@ -4476,6 +4492,19 @@ export default function Itinerary() {
                             const coordLine = sc && ec ? `${sc} → ${ec}` : sc || ec || null;
                             sub2 = coordLine || "";
                             onDel = !readOnly ? () => deleteRoute(d.day, item.id) : null;
+                            // GPX download — use stored path if available, else fall back to start/end pair
+                            (() => {
+                              const pts = item.routePath?.length >= 2
+                                ? item.routePath
+                                : (item.startLat && item.startLng && item.endLat && item.endLng)
+                                  ? [[item.startLat, item.startLng], [item.endLat, item.endLng]]
+                                  : null;
+                              if (pts) {
+                                const gpxName = item.name || [item.startName, item.endName].filter(Boolean).join(" – ") || "route";
+                                // Store on a local variable accessible in the render below
+                                item._gpxHandler = () => downloadBlob(buildGpx(pts, gpxName), `${gpxName}.gpx`, "application/gpx+xml");
+                              }
+                            })();
                           } else if (item._type === "rentalcar") {
                             dotColor = "#d97706";
                             icon = <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}><path d="M2.5 11V8.5l1.2-3a1 1 0 011-.7h6.6a1 1 0 011 .7l1.2 3V11" stroke="#d97706" strokeWidth="1.3" strokeLinejoin="round"/><rect x="2" y="11" width="12" height="2.5" rx=".5" stroke="#d97706" strokeWidth="1.3"/></svg>;
@@ -4524,6 +4553,15 @@ export default function Itinerary() {
                                     )}
                                   </div>
                                   <div style={{ display:"flex", gap:6, alignItems:"center", flexShrink:0 }}>
+                                    {item._gpxHandler && (
+                                      <button onClick={item._gpxHandler}
+                                        title="Download GPX"
+                                        style={{ background:"none", border:"1px solid #e2e5ea", color:"#5c6470",
+                                          cursor:"pointer", fontSize:10, fontWeight:600, fontFamily:"inherit",
+                                          padding:"2px 6px", borderRadius:4, lineHeight:1.4, letterSpacing:0.3 }}>
+                                        GPX
+                                      </button>
+                                    )}
                                     {mapsUrl && (
                                       <a href={mapsUrl} target="_blank" rel="noopener noreferrer"
                                         style={{ fontSize:11, color:"#2563eb", textDecoration:"none" }}>
