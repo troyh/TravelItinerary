@@ -1,0 +1,54 @@
+[
+  {
+    "id": "mpixxfx8p5q6i",
+    "kind": "boat",
+    "name": "Figurati",
+    "make": "Azimut",
+    "model": "60 Fly",
+    "year": 2022,
+    "type": "Powerboat",
+    "berths": 7,
+    "engine": {
+      "type": "Diesel",
+      "hours": 506
+    },
+    "fuel": {
+      "type": "Diesel",
+      "tankSize": 740,
+      "unit": "gal",
+      "curve": [
+        {
+          "rpm": 1000,
+          "gph": 12,
+          "speed": 10
+        },
+        {
+          "rpm": 1800,
+          "gph": 51,
+          "speed": 18
+        },
+        {
+          "rpm": 2400,
+          "gph": 81,
+          "speed": 24
+        },
+        {
+          "rpm": 600,
+          "gph": 2.7,
+          "speed": 6
+        }
+      ],
+      "targetSpeed": 12,
+      "reservePct": 20,
+      "currentPct": 100
+    },
+    "cost": {
+      "perUnit": 0,
+      "currency": "USD"
+    },
+    "photoBg": "linear-gradient(135deg,#0B3D6B 0%,#5BB3E8 100%)",
+    "rentalOf": null,
+    "lastFill": null,
+    "usedOn": []
+  }
+]
