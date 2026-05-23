@@ -25,7 +25,8 @@
       "Bash(grep -n \"agency.*Car Rental\\\\|Car Rental.*agency\\\\|\\\\`.*Car Rental\" /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)",
       "Bash(gh api *)",
       "Bash(curl -s \"https://raw.githubusercontent.com/troyh/TravelItinerary/data/Itineraries/it-a44dcfe4.json\")",
-      "Bash(curl -s \"https://raw.githubusercontent.com/troyh/TravelItinerary/data/Itineraries/it-a44dcfe4.ics\")"
+      "Bash(curl -s \"https://raw.githubusercontent.com/troyh/TravelItinerary/data/Itineraries/it-a44dcfe4.ics\")",
+      "Bash(grep -n \"}\\)}$\" /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)"
     ]
   }
 }

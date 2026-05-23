@@ -234,6 +234,37 @@ function InsertGap({ onInsert, suggestedTime }) {
   );
 }
 
+function InsertDayGap({ onInsert }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      style={{ height: hovered ? 36 : 8, position:"relative", display:"flex", alignItems:"center",
+        transition:"height 0.15s", margin:"0 0" }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {hovered ? (
+        <>
+          <div style={{ flex:1, height:1, background:"#0b3d6b", opacity:0.25 }}/>
+          <button
+            onMouseDown={e => { e.stopPropagation(); onInsert(); }}
+            style={{
+              display:"inline-flex", alignItems:"center", gap:5, padding:"4px 12px",
+              borderRadius:999, background:"#0b3d6b", color:"#fff", border:"none",
+              cursor:"pointer", fontFamily:"inherit", fontSize:11, fontWeight:600,
+              boxShadow:"0 2px 8px rgba(11,61,107,0.28)", whiteSpace:"nowrap", flexShrink:0,
+            }}>
+            {AddGlyph.plus} Insert day here
+          </button>
+          <div style={{ flex:1, height:1, background:"#0b3d6b", opacity:0.25 }}/>
+        </>
+      ) : (
+        <div style={{ position:"absolute", inset:"50% 0 auto 0", height:1, background:"transparent" }}/>
+      )}
+    </div>
+  );
+}
+
 // ── Timeline time helpers ──────────────────────────────────────────────────
 
 // Parse GPS coordinate strings into { lat, lng, name } or null.
@@ -4191,14 +4222,15 @@ export default function Itinerary() {
           </div>
         )}
         {activeTab === "itinerary" && (<>
-        {days.map(d => {
+        {days.map((d, dayIdx) => {
           const isLayover = effNm(d) === 0;
           const dayInfo   = getDayDate(d.day);
           const dayBias   = (d.centerLat && d.centerLng)
             ? { lat: d.centerLat, lng: d.centerLng }
             : computeDayCentroid(d.day, savedPlaces, savedFlights, savedDirections, savedRoutes);
           return (
-            <div key={d.day}>
+            <React.Fragment key={d.day}>
+            <div>
 
               {/* ── Day: two-column layout ── */}
                 <div className="day-expanded-grid" style={{ display:"grid", gridTemplateColumns:"3fr 2fr", gap:36,
@@ -4700,6 +4732,10 @@ export default function Itinerary() {
                   </div>
                 </div>
             </div>
+            {!readOnly && dayIdx < days.length - 1 && (
+              <InsertDayGap onInsert={() => addBlankDay(d.day)} />
+            )}
+            </React.Fragment>
           );
         })}
         {!readOnly && (
