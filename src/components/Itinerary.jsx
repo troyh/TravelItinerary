@@ -590,7 +590,7 @@ function AddPlacePanel({
   locationBias, editItem,
   loadLocGoogle, loadLocApple, getStoredProviderSettings: getProvSettings,
   appleAutocomplete: appleAC, appleFetchPlaceDetails: appleFPD,
-  initialKind,
+  initialKind, days, onMove,
 }) {
   const ei = editItem; // shorthand
   const [kind, setKind]               = useState(ei?.placeKind || initialKind || "eat");
@@ -677,8 +677,11 @@ function AddPlacePanel({
   function clearSelected() { setSelected(null); setPreds([]); }
   function clearDoSelected() { setDoSelected(null); setDoPreds([]); }
 
-  function handleAdd() {
-    const item = {
+  const otherDays = (days || []).filter(d => d.day !== day);
+  const [moveToDay, setMoveToDay] = useState(() => otherDays[0]?.day ?? null);
+
+  function buildPlaceItem() {
+    return {
       id: ei?.id || crypto.randomUUID(),
       name:         kind === "do" ? (activity || "Activity") : (selected?.name || search || ""),
       address:      kind === "do" ? (doSelected?.address ?? "") : (selected?.address ?? ""),
@@ -691,11 +694,22 @@ function AddPlacePanel({
       operator, cost, entry, tickets, activity,
       addedAt: ei?.addedAt || new Date().toISOString(),
     };
+  }
+
+  function handleAdd() {
+    const item = buildPlaceItem();
     if (ei && onUpdate) {
       onUpdate(ei.id, item);
     } else {
       onAdd(item);
     }
+    onClose();
+  }
+
+  function handleMove() {
+    if (!moveToDay || moveToDay === day) return;
+    const item = buildPlaceItem();
+    onMove?.(moveToDay, item);
     onClose();
   }
 
@@ -1089,7 +1103,7 @@ function AddPlacePanel({
       </div>
 
       {/* Footer */}
-      {!readOnly && (
+      {!readOnly && (<>
         <div style={{
           display: "flex", alignItems: "center", gap: 10,
           padding: "14px 20px", borderTop: "1px solid " + AP.border,
@@ -1124,7 +1138,26 @@ function AddPlacePanel({
             {ei ? "Save changes" : `Add to Day ${day}`}
           </button>
         </div>
-      )}
+        {ei && onMove && otherDays.length > 0 && (
+          <div style={{ padding: "10px 20px", borderTop: "1px solid " + AP.border,
+            display: "flex", alignItems: "center", gap: 8, background: AP.surface2 }}>
+            <span style={{ fontSize: 12, color: AP.muted, whiteSpace: "nowrap" }}>Move to</span>
+            <select value={moveToDay ?? ""} onChange={e => setMoveToDay(+e.target.value)}
+              style={{ flex: 1, fontSize: 12, padding: "4px 6px", border: "1px solid " + AP.border,
+                borderRadius: 6, background: AP.surface, fontFamily: "inherit", color: AP.text }}>
+              {otherDays.map(d => (
+                <option key={d.day} value={d.day}>Day {d.day}{d.leg ? ` · ${d.leg}` : ""}</option>
+              ))}
+            </select>
+            <button onClick={handleMove}
+              style={{ fontSize: 12, padding: "4px 10px", border: "1px solid " + AP.border,
+                borderRadius: 6, background: AP.surface2, fontFamily: "inherit", cursor: "pointer",
+                color: AP.text, fontWeight: 500, whiteSpace: "nowrap" }}>
+              Move ↗
+            </button>
+          </div>
+        )}
+      </>)}
     </div>
   );
 }
@@ -1196,6 +1229,8 @@ function AddTravelPanel({
   routeServerUrl, aeroDataBoxKey, calendarDate,
   distanceUnit,
   defaultFrom,
+  days,
+  onMove,
   editItem,
 }) {
   const [mode, setMode] = useState(editItem?.mode || "flight");
@@ -1540,8 +1575,11 @@ function AddTravelPanel({
     }
   }
 
-  function handleAdd() {
-    const item = {
+  const atpOtherDays = (days || []).filter(d => d.day !== day);
+  const [moveToDay, setMoveToDay] = useState(() => atpOtherDays[0]?.day ?? null);
+
+  function buildTravelItem() {
+    return {
       _origType: editItem?._origType,
       id: editItem?.id || crypto.randomUUID(),
       mode,
@@ -1554,11 +1592,22 @@ function AddTravelPanel({
       routeDistance, routeDuration, routePath,
       addedAt: editItem?.addedAt || new Date().toISOString(),
     };
+  }
+
+  function handleAdd() {
+    const item = buildTravelItem();
     if (editItem && onUpdate) {
       onUpdate(item);
     } else {
       onAdd(item);
     }
+    onClose();
+  }
+
+  function handleMove() {
+    if (!moveToDay || moveToDay === day) return;
+    const item = buildTravelItem();
+    onMove?.(moveToDay, item);
     onClose();
   }
 
@@ -2307,6 +2356,25 @@ function AddTravelPanel({
           }}>{editItem ? "Save changes" : "Add to itinerary"}</button>
         )}
       </div>
+      {editItem && onMove && atpOtherDays.length > 0 && (
+        <div style={{ padding: "10px 20px", borderTop: "1px solid " + ATP.border,
+          display: "flex", alignItems: "center", gap: 8, background: ATP.surface2 }}>
+          <span style={{ fontSize: 12, color: ATP.textMuted, whiteSpace: "nowrap" }}>Move to</span>
+          <select value={moveToDay ?? ""} onChange={e => setMoveToDay(+e.target.value)}
+            style={{ flex: 1, fontSize: 12, padding: "4px 6px", border: "1px solid " + ATP.border,
+              borderRadius: 6, background: ATP.surface, fontFamily: "inherit", color: ATP.text }}>
+            {atpOtherDays.map(d => (
+              <option key={d.day} value={d.day}>Day {d.day}{d.leg ? ` · ${d.leg}` : ""}</option>
+            ))}
+          </select>
+          <button onClick={handleMove}
+            style={{ fontSize: 12, padding: "4px 10px", border: "1px solid " + ATP.border,
+              borderRadius: 6, background: "#fff", fontFamily: "inherit", cursor: "pointer",
+              color: ATP.text, fontWeight: 500, whiteSpace: "nowrap" }}>
+            Move ↗
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -5039,6 +5107,21 @@ export default function Itinerary() {
                     aeroDataBoxKey={settings.aeroDataBoxKey ?? ""}
                     calendarDate={departDate}
                     distanceUnit={settings.distanceUnit ?? "km"}
+                    days={days}
+                    onMove={(toDay, item) => {
+                      // Delete from current day
+                      const origType = item._origType || (item.mode === "flight" ? "flight" : item.mode === "boat" ? "route" : "direction");
+                      if (origType === "flight") deleteFlight(addPanel.day, item.id);
+                      else if (origType === "route") deleteRoute(addPanel.day, item.id);
+                      else if (origType === "rentalcar") deleteRentalCar(addPanel.day, item.id);
+                      else deleteDirection(addPanel.day, item.id);
+                      // Add to new day — reuse onAdd routing with toDay
+                      if (item.mode === "flight") addFlight(toDay, { id: item.id, flightNumber: item.flightNum, departure: item.from?.code, arrival: item.to?.code, departureName: item.from?.name, arrivalName: item.to?.name, departureTime: item.departTime, arrivalTime: item.arriveTime, airline: item.airline, aircraft: item.aircraft, confirmation: item.confirmation, departureLat: item.from?.lat, departureLng: item.from?.lng, arrivalLat: item.to?.lat, arrivalLng: item.to?.lng, distance: item.routeDistance || "", miles: item.routeDistance ? Math.round(parseFloat(item.routeDistance.replace(/,/g,""))) || 0 : 0, notes: item.notes });
+                      else if (item.mode === "boat") { const nm = item.routeDistance ? parseFloat(item.routeDistance) || null : null; const hrs = (() => { if (!item.routeDuration) return null; let t=0; const hm=item.routeDuration.match(/(\d+)\s*h/i); const mm=item.routeDuration.match(/(\d+)\s*m/i); if(hm)t+=+hm[1]*60; if(mm)t+=+mm[1]; return t>0?t/60:null; })(); addRoute(toDay, { id: item.id, name: `${item.from?.name} → ${item.to?.name}`, startName: item.from?.name, endName: item.to?.name, startLat: item.from?.lat, startLng: item.from?.lng, endLat: item.to?.lat, endLng: item.to?.lng, time: item.departTime, nm, hrs, cruisingSpeed: item.cruisingSpeed || null, vessel: item.boatVessel || null, routePath: item.routePath || null, notes: item.notes }); }
+                      else if (origType === "rentalcar") addRentalCar(toDay, { id: item.id, agency: item.vehicle, confirmation: item.confirmation, pickupLocation: item.from?.name, dropoffLocation: item.to?.name, origin: { name: item.from?.name || "" }, destination: { name: item.to?.name || "" }, originLat: item.from?.lat, originLng: item.from?.lng, destinationLat: item.to?.lat, destinationLng: item.to?.lng, time: item.departTime, arriveTime: item.arriveTime, notes: item.notes });
+                      else { const modeMap = { car:"DRIVING", walk:"WALKING", train:"TRANSIT", ferry:"TRANSIT", other:"DRIVING" }; addDirection(toDay, { id: item.id, origin: { name: item.from?.name || "" }, destination: { name: item.to?.name || "" }, originLat: item.from?.lat, originLng: item.from?.lng, destinationLat: item.to?.lat, destinationLng: item.to?.lng, travelMode: modeMap[item.mode] || "DRIVING", departDate: item.departDate, time: item.departTime, arriveDate: item.arriveDate, arriveTime: item.arriveTime, distance: item.routeDistance || "", duration: item.routeDuration || "", routePath: item.routePath || null, notes: item.notes }); }
+                      closeAddPanel();
+                    }}
                   />
                 );
               })()}
@@ -5068,6 +5151,12 @@ export default function Itinerary() {
                     getStoredProviderSettings={getStoredProviderSettings}
                     appleAutocomplete={appleAutocomplete}
                     appleFetchPlaceDetails={appleFetchPlaceDetails}
+                    days={days}
+                    onMove={(toDay, place) => {
+                      deletePlace(addPanel.day, place.id);
+                      addPlace(toDay, place);
+                      closeAddPanel();
+                    }}
                   />
                 );
               })()}
