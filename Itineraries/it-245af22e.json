@@ -819,6 +819,27 @@
       ],
       "flights": [],
       "rentalCars": []
+    },
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
     }
   ]
 }
