@@ -33,7 +33,7 @@
           "endLng": -124.7842299,
           "time": "",
           "nm": 187.4,
-          "hrs": 9.366666666666667,
+          "hrs": 15.616666666666667,
           "cruisingSpeed": "12",
           "vessel": "Figurati",
           "routePath": [
@@ -367,10 +367,10 @@
           "agency": "",
           "pickupLocation": "Elliott Bay Marina",
           "dropoffLocation": "Desolation Sound",
-          "duration": "9h 22m",
+          "duration": "~15h 37m",
           "vehicleId": "mpixxfx8p5q6i",
           "fuelGph": 21.75,
-          "fuelGallons": 203.72500000000002,
+          "fuelGallons": 339.6625,
           "fuelUnit": "gal",
           "fuelCurrency": "USD"
         }
@@ -407,7 +407,7 @@
           "endLng": -126.7317481,
           "time": "",
           "nm": 104.6,
-          "hrs": 6.966666666666667,
+          "hrs": 8.716666666666667,
           "cruisingSpeed": "12",
           "vessel": "Figurati",
           "routePath": [
@@ -745,10 +745,10 @@
           "agency": "",
           "pickupLocation": "Desolation Sound",
           "dropoffLocation": "Broughton Island",
-          "duration": "6h 58m",
+          "duration": "~8h 43m",
           "vehicleId": "mpixxfx8p5q6i",
           "fuelGph": 21.75,
-          "fuelGallons": 151.525,
+          "fuelGallons": 189.5875,
           "fuelUnit": "gal",
           "fuelCurrency": "USD"
         }
@@ -785,7 +785,7 @@
           "endLng": -126.0176838,
           "time": "",
           "nm": 43.3,
-          "hrs": 7.866666666666666,
+          "hrs": 3.6,
           "cruisingSpeed": "12",
           "vessel": "Figurati",
           "routePath": [
@@ -935,10 +935,10 @@
           "agency": "",
           "pickupLocation": "Area A (Seymour Inlet/Knight Inlet), Canada",
           "dropoffLocation": "Port Neville",
-          "duration": "7h 52m",
+          "duration": "~3h 36m",
           "vehicleId": "mpixxfx8p5q6i",
           "fuelGph": 21.75,
-          "fuelGallons": 171.1,
+          "fuelGallons": 78.3,
           "fuelUnit": "gal",
           "fuelCurrency": "USD"
         }
