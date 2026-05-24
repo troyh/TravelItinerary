@@ -2006,14 +2006,6 @@ function AddTravelPanel({
               <label style={ATP_LABEL}>
                 {mode === "boat" ? "Plan to depart · flexible" : "Depart"}
               </label>
-              <input type="date" value={departDate} onChange={e => setDepartDate(e.target.value)}
-                style={{
-                  width: "100%", border: "none", borderBottom: "1px solid " + ATP.border,
-                  background: "transparent", fontSize: 13, fontFamily: "inherit",
-                  color: ATP.text, outline: "none", padding: "4px 0", boxSizing: "border-box",
-                  marginBottom: 4,
-                }}
-              />
               <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                 <div style={{ position: "relative", flex: 1 }}>
                   <input type="time" value={departTime}
@@ -2044,14 +2036,6 @@ function AddTravelPanel({
                  mode === "boat"   ? `ETA · at ${cruisingSpeed} kn cruise` :
                  "Arrive · estimated"}
               </label>
-              <input type="date" value={arriveDate} onChange={e => setArriveDate(e.target.value)}
-                style={{
-                  width: "100%", border: "none", borderBottom: "1px solid " + ATP.border,
-                  background: "transparent", fontSize: 13, fontFamily: "inherit",
-                  color: ATP.text, outline: "none", padding: "4px 0", boxSizing: "border-box",
-                  marginBottom: 4,
-                }}
-              />
               <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                 <div style={{ position: "relative", flex: 1 }}>
                   <input type="time" value={arriveTime} onChange={e => setArriveTime(e.target.value)}
