@@ -975,48 +975,6 @@
       "rentalCars": []
     },
     {
-      "leg": "Long Cruise up north, Part 1",
-      "nm": 0,
-      "hrs": 0,
-      "overnight": "",
-      "tags": [
-        "layover"
-      ],
-      "fuelStop": false,
-      "tideWarning": false,
-      "centerName": "",
-      "centerLat": null,
-      "centerLng": null,
-      "highlights": [],
-      "note": "",
-      "places": [],
-      "directions": [],
-      "routes": [],
-      "flights": [],
-      "rentalCars": []
-    },
-    {
-      "leg": "Long Cruise further up north, Part 2",
-      "nm": 0,
-      "hrs": 0,
-      "overnight": "",
-      "tags": [
-        "layover"
-      ],
-      "fuelStop": false,
-      "tideWarning": false,
-      "centerName": "",
-      "centerLat": null,
-      "centerLng": null,
-      "highlights": [],
-      "note": "",
-      "places": [],
-      "directions": [],
-      "routes": [],
-      "flights": [],
-      "rentalCars": []
-    },
-    {
       "leg": "New Day",
       "nm": 0,
       "hrs": 0,
@@ -1203,27 +1161,6 @@
           "fuelCurrency": "USD"
         }
       ],
-      "flights": [],
-      "rentalCars": []
-    },
-    {
-      "leg": "New Day",
-      "nm": 0,
-      "hrs": 0,
-      "overnight": "",
-      "tags": [
-        "layover"
-      ],
-      "fuelStop": false,
-      "tideWarning": false,
-      "centerName": "",
-      "centerLat": null,
-      "centerLng": null,
-      "highlights": [],
-      "note": "",
-      "places": [],
-      "directions": [],
-      "routes": [],
       "flights": [],
       "rentalCars": []
     }
