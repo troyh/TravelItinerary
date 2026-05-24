@@ -18,7 +18,7 @@
       "centerLat": 49.401154,
       "centerLng": -123.5075,
       "highlights": [],
-      "note": "",
+      "note": "Gibsons Marina has a fuel dock. ",
       "places": [
         {
           "id": "84ab4969-a9af-43e7-b0cf-ade39853ca4c",
@@ -921,7 +921,50 @@
               -126.752
             ]
           ],
-          "notes": ""
+          "notes": "",
+          "flightNumber": "",
+          "departure": "",
+          "arrival": "",
+          "departureName": "Desolation Sound",
+          "arrivalName": "Broughton Island",
+          "departureTime": "",
+          "arrivalTime": "",
+          "airline": "",
+          "aircraft": "",
+          "confirmation": "",
+          "seat": "",
+          "terminal": "",
+          "bags": "",
+          "distance": "104.6 nm",
+          "miles": 105,
+          "departureLat": 50.1182242,
+          "departureLng": -124.7842299,
+          "arrivalLat": 50.8135234,
+          "arrivalLng": -126.7317481,
+          "origin": {
+            "name": "Desolation Sound"
+          },
+          "destination": {
+            "name": "Broughton Island"
+          },
+          "originLat": 50.1182242,
+          "originLng": -124.7842299,
+          "destinationLat": 50.8135234,
+          "destinationLng": -126.7317481,
+          "travelMode": "DRIVING",
+          "departDate": "",
+          "arriveDate": "",
+          "arriveTime": "",
+          "vehicleId": "mpixxfx8p5q6i",
+          "vehicleDbId": "cfac83ef-b847-4c0d-82cb-39fe1c21e746",
+          "agency": "",
+          "pickupLocation": "Desolation Sound",
+          "dropoffLocation": "Broughton Island",
+          "duration": "8h 43m",
+          "fuelGph": 17,
+          "fuelGallons": 148.18333333333334,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
         }
       ],
       "flights": [],
