@@ -36,6 +36,26 @@
           "rpm": 600,
           "gph": 2.7,
           "speed": 6
+        },
+        {
+          "rpm": 700,
+          "gph": 4,
+          "speed": 7
+        },
+        {
+          "rpm": 800,
+          "gph": 6.2,
+          "speed": 8
+        },
+        {
+          "rpm": 900,
+          "gph": 8.4,
+          "speed": 9
+        },
+        {
+          "rpm": 1100,
+          "gph": 12,
+          "speed": 11
         }
       ],
       "targetSpeed": 12,
