@@ -9,14 +9,14 @@ DTSTART;VALUE=DATE:20260515
 DTEND;VALUE=DATE:20260516
 SUMMARY:Day 1: Drive to Portland
 LOCATION:Portland
-DESCRIPTION:Overnight: Portland\n\nHighlights:\n• Check into hotel\n• Leave early to avoid Portland traffic!!\n• Dinner at Lang Baan\n\nNote: I made a reservation at 8:15pm at Lang Baan. \n\nI couldn't get a reservation for this night at Le Pigeon. I'm on the **notify me** list\, but doubtful I'll get one. Several other restaurant options below.... Claude likes Coquine as the best "not-Le Pigeon" option but it's a bit out of town.
+DESCRIPTION:Overnight: Portland\n\nNote: I made a reservation at 8:15pm at Lang Baan. \n\nI couldn't get a reservation for this night at Le Pigeon. I'm on the **notify me** list\, but doubtful I'll get one. Several other restaurant options below.... Claude likes Coquine as the best "not-Le Pigeon" option but it's a bit out of town.
 URL:https://troyh.github.io/TravelItinerary/?i=Portland%20Puppy%20Pickup&day=1
 UID:day-1-20260515@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260515T201500
 DTEND:20260515T211500
-SUMMARY:Langbaan
+SUMMARY:🍽 Langbaan
 LOCATION:1818 NW 23rd Pl\, Portland\, OR  97210\, United States
 DESCRIPTION:Booked: LangBaan for 2 on 05/15/26 Fri 8:15 PM.\nHi there\, Langbaan here! \nBefore joining us\, please check out our 'What to know before you go' page at https://www.langbaanportland.com/opentable. Thank you!  \n See more: https://opentable.com/l/PetfJxZbI.
 UID:place-0fb745ea-356f-43bf-b354-bdfb6c132b39@travelitinerary
@@ -24,7 +24,7 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260515T160000
 DTEND:20260515T170000
-SUMMARY:The Nines\, a Luxury Collection Hotel\, Portland
+SUMMARY:🏨 The Nines\, a Luxury Collection Hotel\, Portland
 LOCATION:525 SW Morrison St\, Portland\, OR 97204\, USA
 DESCRIPTION:Phone: (503) 222-9996\nWebsite: https://www.marriott.com/en-us/hotels/pdxln-the-nines-a-luxury-collection-hotel-portland/overview/?scid=f2ae0541-1279-4f24-b197-a979c79310b0\nConfirmation: ZO-AX1045-36178\nHotel confirmation #: 98048433\n[Amex Travel](https://www.americanexpress.com/en-us/travel/my-bookings/trip-overview)
 UID:place-1ae8c071-3cf6-43e5-be62-2fe683f9e4ee@travelitinerary
@@ -32,7 +32,7 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260515T100000
 DTEND:20260515T125200
-SUMMARY:1107 21st Ave E → The Nines Hotel\, Portland
+SUMMARY:🚗 1107 21st Ave E → The Nines Hotel\, Portland
 LOCATION:The Nines Hotel\, Portland
 DESCRIPTION:282.9 km · 2h 52m\n[Google Maps](https://www.google.com/maps/dir/?api=1&origin=1107%2021st%20Ave%20E&destination=The%20Nines%2C%20a%20Luxury%20Collection%20Hotel%2C%20Portland&travelmode=driving)\n\nStop at [PetSmart in Vancouver](https://maps.apple/p/JhGDviQckR1PU0) on the way
 URL:https://maps.apple.com/?saddr=1107%2021st%20Ave%20E&daddr=The%20Nines%20Hotel%2C%20Portland&dirflg=d
@@ -43,7 +43,7 @@ DTSTART;VALUE=DATE:20260516
 DTEND;VALUE=DATE:20260517
 SUMMARY:Day 2: Get Puppy\, Go Home
 LOCATION:Seattle 
-DESCRIPTION:Overnight: Seattle \n\nHighlights:\n• Meet breeder to get puppy\n• Brunch?
+DESCRIPTION:Overnight: Seattle 
 URL:https://troyh.github.io/TravelItinerary/?i=Portland%20Puppy%20Pickup&day=2
 UID:day-2-20260516@travelitinerary
 END:VEVENT
@@ -58,7 +58,7 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260516T103000
 DTEND:20260516T104600
-SUMMARY:The Nines Hotel\, Portland → Luuwit View Park
+SUMMARY:🚗 The Nines Hotel\, Portland → Luuwit View Park
 LOCATION:Luuwit View Park
 DESCRIPTION:15.8 km · 16 min
 URL:https://maps.apple.com/?saddr=The%20Nines%20Hotel%2C%20Portland&daddr=Luuwit%20View%20Park&dirflg=d
@@ -67,7 +67,7 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260516T113000
 DTEND:20260516T141200
-SUMMARY:Luuwit View Park → 1107 21st Ave E
+SUMMARY:🚗 Luuwit View Park → 1107 21st Ave E
 LOCATION:1107 21st Ave E
 DESCRIPTION:284.1 km · 2h 42m
 URL:https://maps.apple.com/?saddr=Luuwit%20View%20Park&daddr=1107%2021st%20Ave%20E&dirflg=d
