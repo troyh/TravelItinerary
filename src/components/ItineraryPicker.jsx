@@ -264,13 +264,18 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
           else if (mi) drivingKm += parseFloat(mi[1]) * 1.60934;
           else if (m)  drivingKm += parseFloat(m[1]) / 1000;
         }));
+        const unplanned0 = (data.days ?? []).filter(d =>
+          !(d.places?.length) && !(d.flights?.length) && !(d.directions?.length) &&
+          !(d.routes?.length) && !(d.rentalCars?.length) && !(d.note)
+        ).length;
         updates[key] = {
-          title:      data.title || null,
-          startDate:  data.startDate,
-          dayCount:   data.days?.length ?? 0,
-          locations:  overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
-                    : overnights[0] ?? legs[0] ?? null,
-          drivingKm:  drivingKm > 0 ? Math.round(drivingKm) : null,
+          title:         data.title || null,
+          startDate:     data.startDate,
+          dayCount:      data.days?.length ?? 0,
+          unplannedDays: unplanned0 || null,
+          locations:     overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
+                       : overnights[0] ?? legs[0] ?? null,
+          drivingKm:     drivingKm > 0 ? Math.round(drivingKm) : null,
           todos,
         };
       }
@@ -355,13 +360,18 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
           if (km) drivingKm += parseFloat(km[1]);
           else if (mi) drivingKm += parseFloat(mi[1]) * 1.60934;
         }));
+        const unplanned1 = (data.days ?? []).filter(d =>
+          !(d.places?.length) && !(d.flights?.length) && !(d.directions?.length) &&
+          !(d.routes?.length) && !(d.rentalCars?.length) && !(d.note)
+        ).length;
         metaUpdates[key] = {
-          title: data.title || null,
-          startDate: data.startDate,
-          dayCount: data.days?.length ?? 0,
-          locations: overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
-                   : overnights[0] ?? legs[0] ?? null,
-          drivingKm: drivingKm > 0 ? Math.round(drivingKm) : null,
+          title:         data.title || null,
+          startDate:     data.startDate,
+          dayCount:      data.days?.length ?? 0,
+          unplannedDays: unplanned1 || null,
+          locations:     overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
+                       : overnights[0] ?? legs[0] ?? null,
+          drivingKm:     drivingKm > 0 ? Math.round(drivingKm) : null,
           todos,
         };
       } catch {}
@@ -535,6 +545,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
                 {dateRange && <span>{dateRange}</span>}
                 {dateRange && daysCount && <span style={{ color: T.textFaint }}>·</span>}
                 {daysCount && <span>{daysCount}</span>}
+                {d?.unplannedDays > 0 && <><span style={{ color: T.textFaint }}>·</span><span style={{ color: T.amber }}>{d.unplannedDays} unplanned</span></>}
               </div>
             )}
 

@@ -2788,7 +2788,15 @@ export default function Itinerary() {
           else if (mi) drivingKm += parseFloat(mi[1]) * 1.60934;
           else if (m)  drivingKm += parseFloat(m[1]) / 1000;
         }));
-        meta[`${currentDbId}:${currentFile}`] = { title, startDate, dayCount: days.length, locations, todos, drivingKm: drivingKm > 0 ? Math.round(drivingKm) : null };
+        const metaUnplanned = days.filter(d =>
+          (savedPlaces[d.day]     ?? []).length === 0 &&
+          (savedFlights[d.day]    ?? []).length === 0 &&
+          (savedDirections[d.day] ?? []).length === 0 &&
+          (savedRoutes[d.day]     ?? []).length === 0 &&
+          (savedRentalCars[d.day] ?? []).length === 0 &&
+          !(customNotes[d.day] ?? d.note ?? "")
+        ).length;
+        meta[`${currentDbId}:${currentFile}`] = { title, startDate, dayCount: days.length, unplannedDays: metaUnplanned || null, locations, todos, drivingKm: drivingKm > 0 ? Math.round(drivingKm) : null };
         localStorage.setItem("itineraryMetadata", JSON.stringify(meta));
       } catch {}
     }
