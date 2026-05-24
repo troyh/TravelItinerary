@@ -689,6 +689,10 @@ function AddVehiclePanel({ onClose, onSave, vehicles, editVehicle }) {
     setCurve(prev => prev.filter((_, idx) => idx !== i));
   }
 
+  function sortCurveByRpm() {
+    setCurve(prev => [...prev].sort((a, b) => Number(a.rpm) - Number(b.rpm)));
+  }
+
   function handleSave() {
     if (mode === "car") {
       onSave({
@@ -874,11 +878,6 @@ function AddVehiclePanel({ onClose, onSave, vehicles, editVehicle }) {
               </label>
             </FormSection>
 
-            <FormSection label="Engine">
-              <div><FieldLabel>Engine type</FieldLabel><SelectRow options={["Gas (petrol)","Diesel","Electric"]} value={engineType} onChange={setEngineType}/></div>
-              <div><FieldLabel>Engine hours · baseline</FieldLabel><TextInput value={engineHours} onChange={setEngineHours} placeholder="1247.5" suffix="h" mono type="number"/></div>
-            </FormSection>
-
             <FormSection label="Fuel & range" hint="Powers leg-level fuel estimate">
               <div style={{ display: "flex", gap: 10 }}>
                 <div style={{ flex: 1 }}><FieldLabel>Fuel type</FieldLabel><SelectRow options={["Diesel","Gas (petrol)","Electric"]} value={boatFuelType} onChange={setBoatFuelType}/></div>
@@ -900,9 +899,9 @@ function AddVehiclePanel({ onClose, onSave, vehicles, editVehicle }) {
               <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                 {curve.map((row, i) => (
                   <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 24px", gap: 8, alignItems: "center", padding: "7px 10px", borderRadius: 7, background: T.surface, border: `1px solid ${T.border}` }}>
-                    <input value={row.rpm} onChange={e => updateCurveRow(i, "rpm", e.target.value)} placeholder="1800" style={{ ...inputStyle, fontFamily: MONO, padding: "5px 8px", fontSize: 12 }} type="number"/>
-                    <input value={row.gph} onChange={e => updateCurveRow(i, "gph", e.target.value)} placeholder="0.55" style={{ ...inputStyle, fontFamily: MONO, padding: "5px 8px", fontSize: 12 }} type="number" step="0.01"/>
-                    <input value={row.speed} onChange={e => updateCurveRow(i, "speed", e.target.value)} placeholder="5.0" style={{ ...inputStyle, fontFamily: MONO, padding: "5px 8px", fontSize: 12 }} type="number" step="0.1"/>
+                    <input value={row.rpm} onChange={e => updateCurveRow(i, "rpm", e.target.value)} onBlur={sortCurveByRpm} placeholder="1800" style={{ ...inputStyle, fontFamily: MONO, padding: "5px 8px", fontSize: 12 }} type="number"/>
+                    <input value={row.gph} onChange={e => updateCurveRow(i, "gph", e.target.value)} onBlur={sortCurveByRpm} placeholder="0.55" style={{ ...inputStyle, fontFamily: MONO, padding: "5px 8px", fontSize: 12 }} type="number" step="0.01"/>
+                    <input value={row.speed} onChange={e => updateCurveRow(i, "speed", e.target.value)} onBlur={sortCurveByRpm} placeholder="5.0" style={{ ...inputStyle, fontFamily: MONO, padding: "5px 8px", fontSize: 12 }} type="number" step="0.1"/>
                     <button onClick={() => removeCurveRow(i)} style={{ background: "transparent", border: "none", color: T.textFaint, cursor: "pointer", fontSize: 16, padding: 0, lineHeight: 1, fontFamily: T.font }}>×</button>
                   </div>
                 ))}

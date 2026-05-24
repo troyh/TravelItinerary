@@ -2288,7 +2288,7 @@ function AddTravelPanel({
                     </div>
                     <div style={{ display: "flex", gap: 20 }}>
                       <div>
-                        <div style={{ fontSize: 17, fontWeight: 700, color: ATP.text }}>{cf.gallons.toFixed(1)} {cf.unit}</div>
+                        <div style={{ fontSize: 17, fontWeight: 700, color: ATP.text }}>{Math.round(cf.gallons)} {cf.unit}</div>
                         <div style={{ fontSize: 11, color: ATP.textMuted }}>
                           {distanceToMiles(routeDistance) > 50 ? `${selV.fuel.mpgHighway || selV.fuel.mpgCombined} mpg highway` : `${selV.fuel.mpgCombined} mpg combined`}
                         </div>
@@ -2458,7 +2458,7 @@ function AddTravelPanel({
                     </div>
                     <div style={{ display: "flex", gap: 20 }}>
                       <div>
-                        <div style={{ fontSize: 17, fontWeight: 700, color: ATP.text }}>{gallons.toFixed(1)} {unit}</div>
+                        <div style={{ fontSize: 17, fontWeight: 700, color: ATP.text }}>{Math.round(gallons)} {unit}</div>
                         <div style={{ fontSize: 11, color: ATP.textMuted }}>{gph.toFixed(2)} gph @ {spd} kn</div>
                       </div>
                       {cost > 0 && (
@@ -3740,7 +3740,7 @@ export default function Itinerary() {
       }
     }
     if (gallons === 0) return null;
-    return { gallons: Math.round(gallons * 10) / 10, cost: Math.round(cost * 100) / 100, unit: unit || "gal", currency };
+    return { gallons: Math.round(gallons), cost: Math.round(cost * 100) / 100, unit: unit || "gal", currency };
   })();
 
   const totalDrivingMiles = Math.round(
@@ -4898,7 +4898,7 @@ export default function Itinerary() {
                               const cf = carFuelFromVehicle(dv, item.distance);
                               if (cf) {
                                 const fSym = CURRENCY_SYM[cf.currency] || "$";
-                                const parts = [`${cf.gallons.toFixed(1)} ${cf.unit}`];
+                                const parts = [`${Math.round(cf.gallons)} ${cf.unit}`];
                                 if (cf.cost > 0) parts.push(`${fSym}${cf.cost.toFixed(2)}`);
                                 sub1 = [sub1, parts.join(" · ")].filter(Boolean).join(" · ");
                               }
@@ -4932,7 +4932,7 @@ export default function Itinerary() {
                               const cost = routeVehicle.cost?.perUnit ? gallons * Number(routeVehicle.cost.perUnit) : 0;
                               const fSym = CURRENCY_SYM[routeVehicle.cost?.currency] || "$";
                               const fUnit = routeVehicle.fuel.unit || "gal";
-                              const fuelParts = [`${gallons.toFixed(1)} ${fUnit}`];
+                              const fuelParts = [`${Math.round(gallons)} ${fUnit}`];
                               if (cost > 0) fuelParts.push(`${fSym}${cost.toFixed(2)}`);
                               sub1 = [sub1, fuelParts.join(" · ")].filter(Boolean).join(" · ");
                             }
