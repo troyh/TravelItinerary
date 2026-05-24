@@ -4721,7 +4721,24 @@ export default function Itinerary() {
                         <div style={{ fontSize:10, fontWeight:600, letterSpacing:1.5, color:"#9ba1ac", textTransform:"uppercase", marginBottom:4 }}>
                           Day {d.day} / {days.length}{dayInfo ? ` · ${dayInfo.month.toUpperCase()}` : ""}
                         </div>
-                        <div style={{ fontSize:17, fontWeight:600, letterSpacing:-0.2, lineHeight:1.3 }}>{d.leg}</div>
+                        {editingCoreDay === d.day ? (
+                          <input autoFocus value={coreDraft.leg}
+                            onChange={e => setCoreDraft(p => ({ ...p, leg: e.target.value }))}
+                            onBlur={() => saveCore(d.day)}
+                            onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if (e.key === "Enter") saveCore(d.day); }}
+                            className="inline-day-title-input"
+                            style={{ width:"100%", background:"transparent", border:"none",
+                              borderBottom:"2px solid #0b3d6b", color:"#0e1014",
+                              padding:".1rem 0", fontFamily:"inherit", outline:"none", boxSizing:"border-box" }} />
+                        ) : (
+                          <div
+                            onDoubleClick={() => !readOnly && startEditCore(d.day, d)}
+                            title={readOnly ? undefined : "Double-tap to edit"}
+                            style={{ fontSize:17, fontWeight:600, letterSpacing:-0.2, lineHeight:1.3,
+                              cursor: readOnly ? "default" : "text" }}>
+                            {d.leg}
+                          </div>
+                        )}
                         {(dayBias !== null || d.centerName) && (
                           <div style={{ display:"flex", alignItems:"center", gap:4, marginTop:4 }}>
                             <span style={{ color:"#9ba1ac", fontSize:11, flexShrink:0 }}>📍</span>
