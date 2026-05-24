@@ -4850,6 +4850,7 @@ export default function Itinerary() {
                           let title = "";
                           let sub1 = "";
                           let sub2 = "";
+                          let noteText = "";
                           let badge = "";
                           let onDel = null;
                           let mapsUrl = null;
@@ -4882,6 +4883,7 @@ export default function Itinerary() {
                               return h > 0 && m > 0 ? `${h}h ${m}m` : h > 0 ? `${h}h` : `${m}m`;
                             })();
                             sub2 = [item.airline, item.aircraft, flightDur, item.distance].filter(Boolean).join(" · ");
+                            noteText = item.notes || "";
                             badge = item.confirmation || "";
                             onDel = !readOnly ? () => deleteFlight(d.day, item.id) : null;
                           } else if (item._type === "direction") {
@@ -4923,6 +4925,7 @@ export default function Itinerary() {
                             const ec = fmtCoord(item.endLat, item.endLng);
                             const coordLine = sc && ec ? `${sc} → ${ec}` : sc || ec || null;
                             sub2 = coordLine || "";
+                            noteText = item.notes || "";
                             const routeVehicle = item.vehicleId
                               ? (vehiclesByDb[item.vehicleDbId] ?? currentDbVehicles).find(v => v.id === item.vehicleId && v.kind === "boat")
                               : null;
@@ -4962,6 +4965,7 @@ export default function Itinerary() {
                             if (!isNaN(rcNum) && rcRaw.match(/km/i) && distUnit === "mi") rcDist = `${Math.round(rcNum * 0.621371)} mi`;
                             else if (!isNaN(rcNum) && rcRaw.match(/mi/i) && distUnit === "km") rcDist = `${Math.round(rcNum * 1.60934)} km`;
                             sub2 = [rcDist, item.duration].filter(Boolean).join(" · ");
+                            noteText = item.notes || "";
                             badge = item.confirmation || "";
                             onDel = !readOnly ? () => deleteRentalCar(d.day, item.id) : null;
                           }
@@ -4989,6 +4993,7 @@ export default function Itinerary() {
                                     </div>
                                     {sub1 && <div style={{ fontSize:12.5, color:"#5c6470", lineHeight:1.45, marginBottom:sub2 ? 1 : 0 }}>{sub1}</div>}
                                     {sub2 && <div style={{ marginTop:1 }}><NoteMarkdown>{sub2}</NoteMarkdown></div>}
+                                    {noteText && <div style={{ marginTop:3 }}><NoteMarkdown>{noteText}</NoteMarkdown></div>}
                                     {badge && (
                                       <div style={{ marginTop:4, display:"inline-block",
                                         fontFamily:"ui-monospace, 'SF Mono', Menlo, monospace",
