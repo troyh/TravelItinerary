@@ -4282,7 +4282,7 @@ export default function Itinerary() {
                 value={saveAsName || title}
                 onChange={e => setSaveAsName(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && handleSaveAs()}
-                placeholder="Itinerary name…"
+                placeholder="Trip name…"
                 style={{ flex: 1, minWidth: 160, background: "#ffffff", border: "1px solid #e2e5ea",
                   color: "#0e1014", borderRadius: 4, padding: ".35rem .65rem",
                   fontSize: ".82rem", fontFamily: "inherit", outline: "none" }}

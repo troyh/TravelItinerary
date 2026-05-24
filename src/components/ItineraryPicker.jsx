@@ -942,7 +942,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
                 </svg>
               </div>
               <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: -0.2, color: T.text, flex: 1 }}>
-                Itinerary
+                Headway.
               </span>
               <button
                 onClick={() => setDrawerOpen(false)}
