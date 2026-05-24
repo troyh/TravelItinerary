@@ -4606,8 +4606,8 @@ export default function Itinerary() {
             <div>
 
               {/* ── Day: two-column layout ── */}
-                <div className="day-expanded-grid" style={{ display:"grid", gridTemplateColumns:"3fr 2fr", gap:36,
-                  padding:"28px 0 36px", borderBottom:"1px solid #e2e5ea" }}>
+                <div className="day-expanded-grid" style={{ display:"grid", gridTemplateColumns:"3fr 2fr", gap:20,
+                  padding:"20px 0 24px", borderBottom:"1px solid #e2e5ea" }}>
 
                   {/* Left: day header */}
                   <div style={{ display:"flex", flexDirection:"column", gap:10, minHeight:0 }}>
@@ -4819,7 +4819,7 @@ export default function Itinerary() {
                   </div>
 
                   {/* Right: content with left border */}
-                  <div className="day-expanded-right" style={{ borderLeft:"1px solid #e2e5ea", paddingLeft:32, minWidth:0 }}>
+                  <div className="day-expanded-right" style={{ borderLeft:"1px solid #e2e5ea", paddingLeft:20, minWidth:0 }}>
                   {/* ── Unified timeline (all item types, sorted by time) ── */}
                   {(() => {
                     const distUnit = settings.distanceUnit ?? "km";
@@ -4936,7 +4936,9 @@ export default function Itinerary() {
                               const cost = routeVehicle.cost?.perUnit ? gallons * Number(routeVehicle.cost.perUnit) : 0;
                               const fSym = CURRENCY_SYM[routeVehicle.cost?.currency] || "$";
                               const fUnit = routeVehicle.fuel.unit || "gal";
-                              const fuelParts = [`${Math.round(gallons)} ${fUnit}`];
+                              const tankSize = routeVehicle.fuel.tankSize;
+                              const pctStr = tankSize > 0 ? ` (${Math.round(gallons / tankSize * 100)}%)` : "";
+                              const fuelParts = [`${Math.round(gallons)} ${fUnit}${pctStr}`];
                               if (cost > 0) fuelParts.push(`${fSym}${cost.toFixed(2)}`);
                               sub1 = [sub1, fuelParts.join(" · ")].filter(Boolean).join(" · ");
                             }
@@ -4990,6 +4992,15 @@ export default function Itinerary() {
                                     <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:2, flexWrap:"wrap" }}>
                                       {icon}
                                       <span style={{ fontSize:14, fontWeight:600, letterSpacing:-0.1, color:"#0e1014" }}>{title}</span>
+                                      {item._gpxHandler && (
+                                        <button onClick={e => { e.stopPropagation(); item._gpxHandler(); }}
+                                          title="Download GPX"
+                                          style={{ background:"none", border:"1px solid #e2e5ea", color:"#5c6470",
+                                            cursor:"pointer", fontSize:10, fontWeight:600, fontFamily:"inherit",
+                                            padding:"2px 6px", borderRadius:4, lineHeight:1.4, letterSpacing:0.3 }}>
+                                          GPX
+                                        </button>
+                                      )}
                                     </div>
                                     {sub1 && <div style={{ fontSize:12.5, color:"#5c6470", lineHeight:1.45, marginBottom:sub2 ? 1 : 0 }}>{sub1}</div>}
                                     {sub2 && <div style={{ marginTop:1 }}><NoteMarkdown>{sub2}</NoteMarkdown></div>}
@@ -5004,15 +5015,6 @@ export default function Itinerary() {
                                     )}
                                   </div>
                                   <div style={{ display:"flex", gap:6, alignItems:"center", flexShrink:0 }}>
-                                    {item._gpxHandler && (
-                                      <button onClick={item._gpxHandler}
-                                        title="Download GPX"
-                                        style={{ background:"none", border:"1px solid #e2e5ea", color:"#5c6470",
-                                          cursor:"pointer", fontSize:10, fontWeight:600, fontFamily:"inherit",
-                                          padding:"2px 6px", borderRadius:4, lineHeight:1.4, letterSpacing:0.3 }}>
-                                        GPX
-                                      </button>
-                                    )}
                                     {mapsUrl && (
                                       <a href={mapsUrl} target="_blank" rel="noopener noreferrer"
                                         style={{ fontSize:11, color:"#2563eb", textDecoration:"none" }}>
