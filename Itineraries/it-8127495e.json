@@ -128,7 +128,7 @@
               -122.52
             ]
           ],
-          "notes": "",
+          "notes": "Here's some notes. **Does it support Markdown?**",
           "flightNumber": "",
           "departure": "",
           "arrival": "",
@@ -170,8 +170,8 @@
           "cruisingSpeed": "12",
           "vehicleId": "mpixxfx8p5q6i",
           "vehicleDbId": "3d1270fe-7626-4267-b9ea-cf91add27bb1",
-          "fuelGph": 21.75,
-          "fuelGallons": 11.6,
+          "fuelGph": 17,
+          "fuelGallons": 9.066666666666666,
           "fuelUnit": "gal",
           "fuelCurrency": "USD"
         }
