@@ -1027,6 +1027,53 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "Area A (Seymour Inlet/Knight Inlet), Canada",
+      "centerLat": 50.5988905,
+      "centerLng": -126.317367,
+      "places": [
+        {
+          "id": "a78e75cd-eeb4-46f7-b85e-1d36dc6e77df",
+          "name": "Lagoon Cove",
+          "address": "Lagoon Cove, Canada",
+          "lat": 50.5988905,
+          "lng": -126.317367,
+          "category": "activity",
+          "placeKind": "see",
+          "time": "12:30",
+          "duration": "",
+          "notes": "",
+          "confirmation": "",
+          "partySize": "",
+          "bookedVia": "",
+          "dietary": "",
+          "room": "",
+          "guests": "",
+          "stayLength": "",
+          "operator": "",
+          "cost": "",
+          "entry": "",
+          "tickets": "",
+          "activity": "",
+          "addedAt": "2026-05-24T23:33:55.532Z"
+        }
+      ],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
+    },
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
       "centerName": "Area C (Discovery Islands/Mainland Inlets), Canada",
       "centerLat": 50.5244336,
       "centerLng": -126.0176838,
@@ -1204,6 +1251,27 @@
           "fuelCurrency": "USD"
         }
       ],
+      "flights": [],
+      "rentalCars": []
+    },
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
+      "places": [],
+      "directions": [],
+      "routes": [],
       "flights": [],
       "rentalCars": []
     }
