@@ -141,27 +141,6 @@
       "rentalCars": []
     },
     {
-      "leg": "New Day",
-      "nm": 0,
-      "hrs": 0,
-      "overnight": "",
-      "tags": [
-        "layover"
-      ],
-      "fuelStop": false,
-      "tideWarning": false,
-      "highlights": [],
-      "note": "",
-      "centerName": "",
-      "centerLat": null,
-      "centerLng": null,
-      "places": [],
-      "directions": [],
-      "routes": [],
-      "flights": [],
-      "rentalCars": []
-    },
-    {
       "leg": "McNeill Island",
       "overnight": "Gig Harbor, WA",
       "nm": 10.5,
