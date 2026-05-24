@@ -79,5 +79,33 @@
     "isDefault": false,
     "lastFill": null,
     "usedOn": []
+  },
+  {
+    "id": "mpj27eyxsx914",
+    "kind": "car",
+    "name": "Rover",
+    "make": "Land Rover",
+    "model": "Range Rover",
+    "year": 2024,
+    "type": "",
+    "plate": "",
+    "fuel": {
+      "type": "Premium",
+      "tankSize": 23.8,
+      "unit": "gal",
+      "mpgCity": 16,
+      "mpgHighway": 22,
+      "mpgCombined": 18,
+      "currentPct": 100
+    },
+    "cost": {
+      "perUnit": 0,
+      "currency": "USD"
+    },
+    "photoBg": "linear-gradient(135deg,#B84A2E 0%,#F5B544 100%)",
+    "rentalOf": null,
+    "isDefault": true,
+    "lastFill": null,
+    "usedOn": []
   }
 ]
