@@ -51,5 +51,33 @@
     "isDefault": true,
     "lastFill": null,
     "usedOn": []
+  },
+  {
+    "id": "mpj20d4lc24jh",
+    "kind": "car",
+    "name": "Carrera",
+    "make": "Porsche",
+    "model": "911",
+    "year": 2009,
+    "type": "Coupe",
+    "plate": "",
+    "fuel": {
+      "type": "Premium",
+      "tankSize": 16.9,
+      "unit": "gal",
+      "mpgCity": 18,
+      "mpgHighway": 25,
+      "mpgCombined": 21,
+      "currentPct": 100
+    },
+    "cost": {
+      "perUnit": 0,
+      "currency": "USD"
+    },
+    "photoBg": "linear-gradient(135deg,#1F5E3A 0%,#5B8C70 100%)",
+    "rentalOf": null,
+    "isDefault": false,
+    "lastFill": null,
+    "usedOn": []
   }
 ]
