@@ -33,8 +33,8 @@
           "endLng": -124.7842299,
           "time": "",
           "nm": 187.4,
-          "hrs": 15.616666666666667,
-          "cruisingSpeed": "12",
+          "hrs": 12.5,
+          "cruisingSpeed": "15",
           "vessel": "Figurati",
           "routePath": [
             [
@@ -367,10 +367,10 @@
           "agency": "",
           "pickupLocation": "Elliott Bay Marina",
           "dropoffLocation": "Desolation Sound",
-          "duration": "~15h 37m",
+          "duration": "~12h 30m",
           "vehicleId": "mpixxfx8p5q6i",
-          "fuelGph": 21.75,
-          "fuelGallons": 339.6625,
+          "fuelGph": 33,
+          "fuelGallons": 412.5,
           "fuelUnit": "gal",
           "fuelCurrency": "USD"
         }
