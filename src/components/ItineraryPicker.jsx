@@ -288,16 +288,30 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
     setLoadingPath(`${f.dbId}:${f.path}`);
     setLoadError(null);
     try {
+      // If we have a pull-cache entry written within the last 10 minutes (e.g. just
+      // after a commit), prefer it — GitHub's CDN can return stale data for several
+      // minutes after a write.
+      const cacheKey = `itinerary:${f.dbId}:${f.path}`;
+      const cachedRaw = localStorage.getItem(cacheKey);
+      if (cachedRaw) {
+        const cached = JSON.parse(cachedRaw);
+        if (cached._savedAt && Date.now() - cached._savedAt < 10 * 60 * 1000) {
+          const { _savedAt, ...clean } = cached;
+          onLoad(f.path, clean, f.dbId);
+          return;
+        }
+      }
+
       let data = null;
       try {
         data = await loadFromGitHub({ ...f.ghs, githubFile: f.path });
       } catch {
         // Network failed — try local pull cache
-        const cached = localStorage.getItem(`itinerary:${f.dbId}:${f.path}`);
-        if (cached) data = JSON.parse(cached);
+        if (cachedRaw) data = JSON.parse(cachedRaw);
       }
       if (!data) throw new Error("Not found");
-      onLoad(f.path, data, f.dbId);
+      const { _savedAt, ...clean } = data;
+      onLoad(f.path, clean, f.dbId);
     } catch {
       setLoadError("Failed to load — check your connection and token.");
     } finally {

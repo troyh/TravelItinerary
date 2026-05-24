@@ -3594,6 +3594,9 @@ export default function Itinerary() {
     };
     try {
       await saveToGitHub(data, { ...ghSettings, githubFile: currentFile, message: msg });
+      // Write committed data to pull cache so re-opening the trip within GitHub's
+      // CDN cache window (several minutes) still shows the just-committed version.
+      try { localStorage.setItem(`itinerary:${currentDbId}:${currentFile}`, JSON.stringify({ ...data, _savedAt: Date.now() })); } catch {}
       const icsContent = buildICSContent(days, startDate, title, customNotes,
         currentFile?.replace(/^.*\//, "").replace(/\.json$/i, ""), appBase, savedFlights, savedRentalCars,
         savedPlaces, savedDirections, savedRoutes);
@@ -3690,6 +3693,15 @@ export default function Itinerary() {
     effNm(d) > 0 ||
     (savedFlights[d.day] ?? []).length > 0 ||
     (savedDirections[d.day] ?? []).length > 0
+  ).length;
+
+  const unplannedDays = days.filter(d =>
+    (savedPlaces[d.day]      ?? []).length === 0 &&
+    (savedFlights[d.day]     ?? []).length === 0 &&
+    (savedDirections[d.day]  ?? []).length === 0 &&
+    (savedRoutes[d.day]      ?? []).length === 0 &&
+    (savedRentalCars[d.day]  ?? []).length === 0 &&
+    !(customNotes[d.day] ?? d.note ?? "")
   ).length;
 
   const totalFlightMiles = Math.round(
@@ -4369,7 +4381,8 @@ export default function Itinerary() {
                 totalFuel             && { label: "Fuel",         val: `${totalFuel.gallons} ${totalFuel.unit}${totalFuel.cost > 0 ? ` · ${CURRENCY_SYM[totalFuel.currency] || "$"}${totalFuel.cost.toLocaleString()}` : ""}` },
                 totalFlightMiles > 0  && { label: "Flying",      val: `${totalFlightMiles.toLocaleString()} mi` },
                 totalDrivingMiles > 0 && { label: "Driving",     val: `${totalDrivingMiles.toLocaleString()} mi` },
-                travelDays > 0        && { label: "Travel days", val: String(travelDays) },
+                travelDays > 0        && { label: "Travel days",   val: String(travelDays) },
+                unplannedDays > 0     && { label: "Unplanned",     val: String(unplannedDays) },
                 days.filter(d => d.fuelStop).length > 0 && { label: "Fuel stops", val: String(days.filter(d => d.fuelStop).length) },
               ].filter(Boolean);
               if (!stats.length) return null;

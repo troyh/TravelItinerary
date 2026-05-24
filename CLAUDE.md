@@ -121,6 +121,24 @@ The day location field (📍 centerName) is rendered in **both** the desktop and
 
 The "↓ Pull" button in the picker header fetches all itinerary JSON files from GitHub and stores each under `localStorage["itinerary:dbId:path"]`. This syncs local storage with GitHub and enables offline fallback: `handleLoad` tries GitHub first, then falls back to the pull cache on network failure.
 
+**⚠️ Stale-read after commit**: GitHub's CDN caches file contents aggressively for several minutes after a write. If the user commits a change and immediately returns to the picker and re-opens the trip, `handleLoad` would fetch from GitHub and get the old version. Fix pattern:
+
+1. In `handleCommit` (after a successful `saveToGitHub`), write the committed data to the pull cache with a timestamp:
+   ```js
+   localStorage.setItem(`itinerary:${currentDbId}:${currentFile}`,
+     JSON.stringify({ ...data, _savedAt: Date.now() }));
+   ```
+2. In `handleLoad`, before hitting GitHub, check if the pull cache entry has `_savedAt` within the last 10 minutes. If so, use it directly and skip the network call:
+   ```js
+   if (cached._savedAt && Date.now() - cached._savedAt < 10 * 60 * 1000) {
+     const { _savedAt, ...clean } = cached;
+     onLoad(f.path, clean, f.dbId);
+     return;
+   }
+   ```
+
+This same pattern applies to any operation that writes to GitHub and then immediately reads back: always prefer the local committed copy over a potentially-stale GitHub response within the cache window.
+
 ---
 
 ## Add/Edit Panel System
