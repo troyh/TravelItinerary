@@ -38,7 +38,7 @@ BEGIN:VEVENT
 DTSTART:20260519T100000
 DTEND:20260519T103200
 SUMMARY:🚢 Elliott Bay Marina → Winslow Wharf Marina
-DESCRIPTION:5.4 NM · ~32m\nElliott Bay Marina → Winslow Wharf Marina
+DESCRIPTION:5.4 NM · ~32m\nElliott Bay Marina → Winslow Wharf Marina\nHere's some notes. **Does it support Markdown?**
 UID:route-5c268373-efdf-42aa-b6fb-0a1ad5a1085b@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
