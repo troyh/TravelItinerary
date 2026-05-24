@@ -319,6 +319,24 @@ function interpolateGph(curve, speed) {
 
 const CURRENCY_SYM = { USD: "$", EUR: "€", GBP: "£", JPY: "¥" };
 
+function distanceToMiles(distStr) {
+  if (!distStr) return 0;
+  const n = parseFloat(distStr);
+  if (!n) return 0;
+  if (/km/i.test(distStr)) return n * 0.621371;
+  return n; // assume miles
+}
+
+function carFuelFromVehicle(v, distStr) {
+  if (!v || !v.fuel?.mpgCombined) return null;
+  const miles = distanceToMiles(distStr);
+  if (!miles) return null;
+  const mpg = miles > 50 ? (v.fuel.mpgHighway || v.fuel.mpgCombined) : v.fuel.mpgCombined;
+  const gallons = miles / mpg;
+  const cost = v.cost?.perUnit ? gallons * Number(v.cost.perUnit) : 0;
+  return { gallons, cost, unit: v.fuel.unit || "gal", currency: v.cost?.currency };
+}
+
 function parseCoordinates(str) {
   if (!str?.trim()) return null;
   const s = str.trim()
@@ -2255,6 +2273,39 @@ function AddTravelPanel({
                   Where to drop off or park at destination
                 </div>
               </div>
+              {(() => {
+                const selV = vehicles.find(v => v.id === selectedVehicleId && v.kind === "car");
+                const cf = carFuelFromVehicle(selV, routeDistance);
+                if (!cf) return null;
+                const sym = CURRENCY_SYM[cf.currency] || cf.currency || "$";
+                return (
+                  <div style={{
+                    border: "1px solid " + ATP.border, borderRadius: 8, padding: "12px 14px",
+                    marginTop: 10, background: "#f8fbff",
+                  }}>
+                    <div style={{ fontSize: 11.5, fontWeight: 600, color: ATP.textMuted, marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                      Fuel estimate
+                    </div>
+                    <div style={{ display: "flex", gap: 20 }}>
+                      <div>
+                        <div style={{ fontSize: 17, fontWeight: 700, color: ATP.text }}>{cf.gallons.toFixed(1)} {cf.unit}</div>
+                        <div style={{ fontSize: 11, color: ATP.textMuted }}>
+                          {distanceToMiles(routeDistance) > 50 ? `${selV.fuel.mpgHighway || selV.fuel.mpgCombined} mpg highway` : `${selV.fuel.mpgCombined} mpg combined`}
+                        </div>
+                      </div>
+                      {cf.cost > 0 && (
+                        <div>
+                          <div style={{ fontSize: 17, fontWeight: 700, color: ATP.text }}>{sym}{cf.cost.toFixed(2)}</div>
+                          <div style={{ fontSize: 11, color: ATP.textMuted }}>{sym}{Number(selV.cost.perUnit).toFixed(2)}/{cf.unit}</div>
+                        </div>
+                      )}
+                      {!routeDistance && (
+                        <div style={{ fontSize: 12, color: ATP.textFaint, alignSelf: "center" }}>Add route distance for totals</div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           )}
 
@@ -3676,6 +3727,18 @@ export default function Itinerary() {
         currency = currency ?? v.cost?.currency;
       }
     }
+    for (const dirs of Object.values(savedDirections)) {
+      for (const r of dirs) {
+        if (!r.vehicleId || r.travelMode !== "DRIVING") continue;
+        const v = (vehiclesByDb[r.vehicleDbId] ?? currentDbVehicles).find(x => x.id === r.vehicleId && x.kind === "car");
+        const cf = carFuelFromVehicle(v, r.distance);
+        if (!cf) continue;
+        gallons += cf.gallons;
+        cost += cf.cost;
+        unit = unit ?? cf.unit;
+        currency = currency ?? cf.currency;
+      }
+    }
     if (gallons === 0) return null;
     return { gallons: Math.round(gallons * 10) / 10, cost: Math.round(cost * 100) / 100, unit: unit || "gal", currency };
   })();
@@ -3753,6 +3816,8 @@ export default function Itinerary() {
           routeDistance: item.distance || "", routeDuration: item.duration || "",
           routePath: item.routePath || null,
           notes: item.notes || "",
+          vehicleId: item.vehicleId || null,
+          vehicleDbId: item.vehicleDbId || null,
         };
       } else if (item._type === "route") {
         const routeDurStr = (() => {
@@ -4828,6 +4893,16 @@ export default function Itinerary() {
                             if (!isNaN(distNum) && rawDist.match(/km/i) && distUnit === "mi") distDisplay = `${Math.round(distNum * 0.621371)} mi`;
                             else if (!isNaN(distNum) && rawDist.match(/mi/i) && distUnit === "km") distDisplay = `${Math.round(distNum * 1.60934)} km`;
                             sub1 = [distDisplay, item.duration].filter(Boolean).join(" · ");
+                            if (item.vehicleId && item.travelMode === "DRIVING") {
+                              const dv = (vehiclesByDb[item.vehicleDbId] ?? currentDbVehicles).find(v => v.id === item.vehicleId && v.kind === "car");
+                              const cf = carFuelFromVehicle(dv, item.distance);
+                              if (cf) {
+                                const fSym = CURRENCY_SYM[cf.currency] || "$";
+                                const parts = [`${cf.gallons.toFixed(1)} ${cf.unit}`];
+                                if (cf.cost > 0) parts.push(`${fSym}${cf.cost.toFixed(2)}`);
+                                sub1 = [sub1, parts.join(" · ")].filter(Boolean).join(" · ");
+                              }
+                            }
                             sub2 = item.notes || "";
                             onDel = !readOnly ? () => deleteDirection(d.day, item.id) : null;
                           } else if (item._type === "route") {
@@ -5324,6 +5399,8 @@ export default function Itinerary() {
                           distance: item.routeDistance || "", duration: item.routeDuration || "",
                           routePath: item.routePath || null,
                           notes: item.notes,
+                          vehicleId: item.vehicleId || null,
+                          vehicleDbId: item.vehicleDbId || null,
                         });
                       }
                       closeAddPanel();
@@ -5360,6 +5437,8 @@ export default function Itinerary() {
                         arriveDate: item.arriveDate, arriveTime: item.arriveTime,
                         notes: item.notes, vessel: item.boatVessel,
                         cruisingSpeed: item.cruisingSpeed || undefined,
+                        vehicleId: item.vehicleId || undefined,
+                        vehicleDbId: item.vehicleDbId || undefined,
                         vehicleId: item.vehicleId || undefined,
                         vehicleDbId: item.vehicleDbId || undefined,
                         agency: item.vehicle, pickupLocation: item.from?.name, dropoffLocation: item.to?.name,

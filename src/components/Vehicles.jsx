@@ -800,7 +800,7 @@ function AddVehiclePanel({ onClose, onSave, vehicles, editVehicle }) {
         {mode === "car" && (
           <>
             <FormSection label="Identity">
-              <div><FieldLabel>Vehicle name</FieldLabel><TextInput value={carName} onChange={setCarName} placeholder="e.g. The Outback" suffix="optional"/></div>
+              <div><FieldLabel>Vehicle name *</FieldLabel><TextInput value={carName} onChange={setCarName} placeholder="e.g. The Outback"/></div>
               <div style={{ display: "flex", gap: 10 }}>
                 <div style={{ flex: 1 }}><FieldLabel>Make</FieldLabel><TextInput value={carMake} onChange={setCarMake} placeholder="Subaru"/></div>
                 <div style={{ flex: 1 }}><FieldLabel>Model</FieldLabel><TextInput value={carModel} onChange={setCarModel} placeholder="Outback"/></div>
