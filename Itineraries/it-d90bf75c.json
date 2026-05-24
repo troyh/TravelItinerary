@@ -14,11 +14,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "Tacoma, WA, United States",
       "centerLat": 47.2557499,
       "centerLng": -122.4421437,
+      "highlights": [],
+      "note": "",
       "places": [],
       "directions": [],
       "routes": [
@@ -86,11 +86,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "Gig Harbor, WA, United States",
       "centerLat": 47.3293755,
       "centerLng": -122.5808901,
+      "highlights": [],
+      "note": "",
       "places": [],
       "directions": [],
       "routes": [
@@ -141,20 +141,37 @@
       "rentalCars": []
     },
     {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
+    },
+    {
       "leg": "McNeill Island",
       "overnight": "Gig Harbor, WA",
       "nm": 10.5,
       "hrs": 0.7,
       "tags": [],
-      "highlights": [
-        "Explore the charming waterfront town of Gig Harbor with boutique shops and galleries",
-        "Cruise past the dramatic sandstone cliffs and protected beaches of Carr Inlet",
-        "Anchor near McNeil Island for scenic views and historical perspectives"
-      ],
+      "centerName": "Pierce County, United States",
+      "centerLat": 47.2079436,
+      "centerLng": -122.6807781,
+      "highlights": [],
       "note": "",
-      "centerName": "",
-      "centerLat": null,
-      "centerLng": null,
       "places": [
         {
           "id": "f39e8a31-2631-4152-b11b-315b5e340a20",
@@ -267,18 +284,11 @@
       "nm": 0,
       "hrs": 0,
       "tags": [],
-      "highlights": [
-        "Visit scenic overlooks at multiple points along the return route",
-        "Experience the maritime culture and small-town charm of South Puget Sound",
-        "Witness sunset views over the water as you return to Olympia",
-        "Dock your boat at Swantown Marina or nearby moorage for easy waterfront restaurant access",
-        "Stroll the Capitol Lake loop pathway after dinner for evening views and Capitol building reflections",
-        "Visit the Olympia Farmers Market (weekends) just blocks from the waterfront for local provisions"
-      ],
-      "note": "",
       "centerName": "Olympia, WA, United States",
       "centerLat": 47.0458042,
       "centerLng": -122.8885607,
+      "highlights": [],
+      "note": "",
       "places": [
         {
           "id": "ea184c0a-6dac-419b-b4b3-8528ebc335f6",
@@ -483,15 +493,11 @@
       "nm": 28.2,
       "hrs": 1.9,
       "tags": [],
-      "highlights": [
-        "Depart from Olympia's waterfront and cruise through Budd Inlet with views of forested shorelines",
-        "Spot bald eagles, seals, and local marine wildlife in their natural habitat",
-        "Enjoy calm June waters perfect for photography and wildlife observation"
-      ],
-      "note": "",
       "centerName": "Seattle, WA, United States",
       "centerLat": 47.6037757,
       "centerLng": -122.3307651,
+      "highlights": [],
+      "note": "",
       "places": [
         {
           "id": "fcd91150-b6c2-4bcb-b492-0d4621c8b166",
@@ -659,6 +665,27 @@
           "addedAt": "2026-05-15T06:36:10.782Z"
         }
       ],
+      "flights": [],
+      "rentalCars": []
+    },
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
+      "places": [],
+      "directions": [],
+      "routes": [],
       "flights": [],
       "rentalCars": []
     }
