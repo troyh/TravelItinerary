@@ -34,7 +34,11 @@
       "Bash(tar -xf - travel-itinerary/project/docs/sidebar-spec.md travel-itinerary/README.md)",
       "Bash(gunzip -c webfetch-1779574222151-0bt26q.bin)",
       "Bash(tar -xf - travel-itinerary/project/docs/vehicles-spec.md travel-itinerary/project/app-vehicles.jsx)",
-      "Bash(grep -n \"^\\\\s*</>\\\\s*$\\\\|blank\\\\|Other pages\\\\|color: T\\\\.textMuted.*Inbox\\\\|Inbox\\\\|activePage ===\" /Users/troy/dev/TravelItinerary/src/components/ItineraryPicker.jsx)"
+      "Bash(grep -n \"^\\\\s*</>\\\\s*$\\\\|blank\\\\|Other pages\\\\|color: T\\\\.textMuted.*Inbox\\\\|Inbox\\\\|activePage ===\" /Users/troy/dev/TravelItinerary/src/components/ItineraryPicker.jsx)",
+      "Bash(awk 'NR>40 && NR<80')",
+      "Bash(awk 'NR>=1300 && NR<=1340' /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)",
+      "Bash(awk 'NR>=50 && NR<=120')",
+      "Bash(grep -n \"sym\\\\|currency\\\\|currencySymbol\\\\|\\\\$\\\\|€\" /Users/troy/dev/TravelItinerary/src/components/Vehicles.jsx)"
     ]
   }
 }

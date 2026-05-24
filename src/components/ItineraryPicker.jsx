@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import NoteMarkdown from "./NoteMarkdown.jsx";
-import { listItineraries, loadFromGitHub, saveToGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
+import { listItineraries, loadFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
 import Settings from "./Settings.jsx";
 import { T, btn, input } from "../theme.js";
 import VehiclesPage from "./Vehicles.jsx";
@@ -153,7 +153,10 @@ function SectionLabel({ label, count }) {
 
 // ── Main component ────────────────────────────────────────────────────────────
 
-export default function ItineraryPicker({ settings, onSettingsChange, onLoad, onCreate, localCache }) {
+export default function ItineraryPicker({ settings, onSettingsChange, onLoad, onCreate, localCache,
+  vehiclesByDb = {}, vehiclesDbId, onVehiclesDbChange,
+  onAddVehicle, onUpdateVehicle, onDeleteVehicle,
+}) {
   const [files,        setFiles]        = useState([]);
   const [deletedPaths] = useState(() => {
     try { return new Set(JSON.parse(localStorage.getItem("itineraryDeletedPaths") || "[]")); }
@@ -182,10 +185,6 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
   const [activePage,   setActivePage]   = useState("trips");
   const [pullStatus,   setPullStatus]   = useState("idle"); // "idle"|"pulling"|"done"
   const [pullProgress, setPullProgress] = useState({ done: 0, total: 0 });
-  const [vehiclesByDb,    setVehiclesByDb]    = useState({}); // { [dbId]: Vehicle[] }
-  const [vehiclesDbId,    setVehiclesDbId]    = useState(null);
-  const vehiclesLoadedRef = useRef(false);
-
   useEffect(() => { document.title = "Travel Itinerary"; }, []);
 
   useEffect(() => {
@@ -202,24 +201,6 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
   const hasAnyDb    = databases.some(db => db.githubRepo || inferRepo());
   const multiDb     = databases.length > 1;
   const defaultCreateDbId = writableDbs[0]?.id ?? null;
-
-  // Load vehicles.json from all writable DBs once
-  useEffect(() => {
-    if (vehiclesLoadedRef.current || !writableDbs.length) return;
-    vehiclesLoadedRef.current = true;
-    setVehiclesDbId(writableDbs[0].id);
-    Promise.all(
-      writableDbs.map(async db => {
-        const ghs = resolveDb(db);
-        try {
-          const data = await loadFromGitHub({ ...ghs, githubFile: "vehicles.json" });
-          return [db.id, Array.isArray(data) ? data : []];
-        } catch {
-          return [db.id, []];
-        }
-      })
-    ).then(entries => setVehiclesByDb(Object.fromEntries(entries)));
-  }, [writableDbs.length]);
 
   useEffect(() => {
     if (!databases.length) return;
@@ -392,22 +373,6 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
     const dbId = createDbId ?? defaultCreateDbId;
     onCreate(newName.trim(), dbId);
   }
-
-  // ── Vehicle handlers ───────────────────────────────────────────────────────
-
-  function saveVehiclesForDb(dbId, updated) {
-    setVehiclesByDb(prev => ({ ...prev, [dbId]: updated }));
-    const db = writableDbs.find(d => d.id === dbId);
-    if (!db) return;
-    const ghs = resolveDb(db);
-    saveToGitHub(updated, { ...ghs, githubFile: "vehicles.json", message: "Update vehicles" })
-      .catch(() => {});
-  }
-
-  const activeDbVehicles = vehiclesByDb[vehiclesDbId] ?? [];
-  function handleAddVehicle(v)    { saveVehiclesForDb(vehiclesDbId, [...activeDbVehicles, v]); }
-  function handleUpdateVehicle(v) { saveVehiclesForDb(vehiclesDbId, activeDbVehicles.map(x => x.id === v.id ? v : x)); }
-  function handleDeleteVehicle(id){ saveVehiclesForDb(vehiclesDbId, activeDbVehicles.filter(v => v.id !== id)); }
 
   // ── Group files into sections ──────────────────────────────────────────────
 
@@ -917,13 +882,13 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
           )}
           </>) : activePage === "vehicles" ? (
             <VehiclesPage
-              vehicles={activeDbVehicles}
+              vehicles={vehiclesByDb[vehiclesDbId] ?? []}
               databases={writableDbs.map(db => ({ id: db.id, label: db.label || db.githubRepo || `DB ${db.id}` }))}
               activeDbId={vehiclesDbId}
-              onDbChange={setVehiclesDbId}
-              onAdd={handleAddVehicle}
-              onUpdate={handleUpdateVehicle}
-              onDelete={handleDeleteVehicle}
+              onDbChange={onVehiclesDbChange}
+              onAdd={onAddVehicle}
+              onUpdate={onUpdateVehicle}
+              onDelete={onDeleteVehicle}
             />
           ) : (
             <div style={{

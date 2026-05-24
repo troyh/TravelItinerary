@@ -661,6 +661,10 @@ function AddVehiclePanel({ onClose, onSave, vehicles, editVehicle }) {
   const [boatPrice,       setBoatPrice]       = useState(isEdit && editVehicle.kind === "boat" ? String(editVehicle.cost.perUnit) : "");
   const [boatCurrency,    setBoatCurrency]    = useState(isEdit && editVehicle.kind === "boat" ? editVehicle.cost.currency      : "USD");
 
+  // ── Rental state (shared) ──
+  const [isRental,    setIsRental]    = useState(!!editVehicle?.rentalOf);
+  const [rentalFrom,  setRentalFrom]  = useState(editVehicle?.rentalOf || "");
+
   const numericCurve = curve.map(p => ({ rpm: Number(p.rpm), gph: Number(p.gph), speed: Number(p.speed) })).filter(p => p.speed > 0 && p.gph >= 0);
   const ts = Number(targetSpeed) || 0;
   const previewGph = numericCurve.length >= 2 ? interpolateGph(numericCurve, ts) : 0;
@@ -705,7 +709,7 @@ function AddVehiclePanel({ onClose, onSave, vehicles, editVehicle }) {
         },
         cost: { perUnit: Number(carPrice), currency: carCurrency },
         photoBg: editVehicle?.photoBg || pickBg("car", vehicles),
-        rentalOf: editVehicle?.rentalOf || null,
+        rentalOf: isRental ? (rentalFrom.trim() || "rental") : null,
         lastFill: editVehicle?.lastFill || null,
         usedOn: editVehicle?.usedOn || [],
       });
@@ -731,7 +735,7 @@ function AddVehiclePanel({ onClose, onSave, vehicles, editVehicle }) {
         },
         cost: { perUnit: Number(boatPrice), currency: boatCurrency },
         photoBg: editVehicle?.photoBg || pickBg("boat", vehicles),
-        rentalOf: editVehicle?.rentalOf || null,
+        rentalOf: isRental ? (rentalFrom.trim() || "rental") : null,
         lastFill: editVehicle?.lastFill || null,
         usedOn: editVehicle?.usedOn || [],
       });
@@ -802,6 +806,11 @@ function AddVehiclePanel({ onClose, onSave, vehicles, editVehicle }) {
                 <div style={{ flex: 1 }}><FieldLabel>Body type</FieldLabel><TextInput value={carType} onChange={setCarType} placeholder="AWD wagon"/></div>
               </div>
               <div><FieldLabel>License plate</FieldLabel><TextInput value={carPlate} onChange={setCarPlate} placeholder="CA · 8RPN322" mono suffix="optional"/></div>
+              <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, cursor: "pointer" }}>
+                <input type="checkbox" checked={isRental} onChange={e => setIsRental(e.target.checked)} style={{ width: 15, height: 15 }}/>
+                <span style={{ color: T.text }}>Rental vehicle</span>
+              </label>
+              {isRental && <div><FieldLabel>Rented from</FieldLabel><TextInput value={rentalFrom} onChange={setRentalFrom} placeholder="e.g. Enterprise" suffix="optional"/></div>}
             </FormSection>
 
             <FormSection label="Fuel">
@@ -846,6 +855,11 @@ function AddVehiclePanel({ onClose, onSave, vehicles, editVehicle }) {
                 <div style={{ flex: 1 }}><FieldLabel>Berths</FieldLabel><TextInput value={boatBerths} onChange={setBoatBerths} placeholder="4" mono type="number"/></div>
               </div>
               <div><FieldLabel>Type</FieldLabel><SelectRow options={["Sailboat","Powerboat"]} value={boatType} onChange={setBoatType}/></div>
+              <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, cursor: "pointer" }}>
+                <input type="checkbox" checked={isRental} onChange={e => setIsRental(e.target.checked)} style={{ width: 15, height: 15 }}/>
+                <span style={{ color: T.text }}>Charter / rental</span>
+              </label>
+              {isRental && <div><FieldLabel>Chartered from</FieldLabel><TextInput value={rentalFrom} onChange={setRentalFrom} placeholder="e.g. Sunsail, Moorings" suffix="optional"/></div>}
             </FormSection>
 
             <FormSection label="Engine">
