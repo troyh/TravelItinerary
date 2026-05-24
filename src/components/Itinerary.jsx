@@ -1274,7 +1274,7 @@ function VehicleSelector({ options, selectedId, onSelect, onClear }) {
               color: active ? T2.accent : T2.textMuted,
               cursor: "pointer", fontFamily: T2.font,
             }}>
-              {v.name}{v.rentalOf ? ` · ${v.rentalOf}` : ""}
+              {v.name}{v.rentalOf ? ` · ${v.rentalOf}` : ""}{v.isDefault ? " ·  ★" : ""}
             </button>
           );
         })}
@@ -1308,7 +1308,7 @@ function VehicleSelector({ options, selectedId, onSelect, onClear }) {
       <option value="">— Select vehicle —</option>
       {options.map(v => (
         <option key={v.id} value={v.id}>
-          {v.name}{v.rentalOf ? ` (${v.rentalOf})` : ""}
+          {v.name}{v.rentalOf ? ` (${v.rentalOf})` : ""}{v.isDefault ? " ★" : ""}
         </option>
       ))}
       <option value="">Enter manually…</option>
@@ -1392,13 +1392,18 @@ function AddTravelPanel({
   const [departTimeFocused, setDepartTimeFocused] = useState(false);
   const [arriveTimeFocused, setArriveTimeFocused] = useState(false);
 
-  // Auto-select when opening a new (non-edit) item and exactly one vehicle matches
+  // Auto-select when mode changes or vehicles finish loading.
+  // Guard: skip if we already have a vehicle of the right kind selected (user made a choice).
   useEffect(() => {
-    if (editItem || selectedVehicleId) return;
+    if (editItem) return;
+    if (mode !== "boat" && mode !== "car") return;
     const kind = mode === "boat" ? "boat" : "car";
+    const currentVehicle = vehicles.find(v => v.id === selectedVehicleId);
+    if (currentVehicle?.kind === kind) return;
     const matches = vehicles.filter(v => v.kind === kind);
-    if (matches.length === 1) doSelectVehicle(matches[0]);
-  }, []);
+    const pick = matches.find(v => v.isDefault) ?? (matches.length === 1 ? matches[0] : null);
+    if (pick) doSelectVehicle(pick);
+  }, [mode, vehicles.length]);
 
   function doSelectVehicle(v) {
     setSelectedVehicleId(v.id);
@@ -2687,8 +2692,17 @@ export default function Itinerary() {
     const ghs = resolveDbForVehicles(db);
     saveToGitHub(updated, { ...ghs, githubFile: "vehicles.json", message: "Update vehicles" }).catch(() => {});
   }
-  function handleAddVehicle(v)     { saveVehiclesForDb(vehiclesDbId, [...(vehiclesByDb[vehiclesDbId] ?? []), v]); }
-  function handleUpdateVehicle(v)  { saveVehiclesForDb(vehiclesDbId, (vehiclesByDb[vehiclesDbId] ?? []).map(x => x.id === v.id ? v : x)); }
+  function clearOtherDefaults(list, v) {
+    return v.isDefault ? list.map(x => x.kind === v.kind && x.id !== v.id ? { ...x, isDefault: false } : x) : list;
+  }
+  function handleAddVehicle(v) {
+    const list = clearOtherDefaults([...(vehiclesByDb[vehiclesDbId] ?? [])], v);
+    saveVehiclesForDb(vehiclesDbId, [...list, v]);
+  }
+  function handleUpdateVehicle(v) {
+    const list = clearOtherDefaults((vehiclesByDb[vehiclesDbId] ?? []).map(x => x.id === v.id ? v : x), v);
+    saveVehiclesForDb(vehiclesDbId, list);
+  }
   function handleDeleteVehicle(id) { saveVehiclesForDb(vehiclesDbId, (vehiclesByDb[vehiclesDbId] ?? []).filter(v => v.id !== id)); }
 
   const currentDbVehicles = vehiclesByDb[currentDb?.id] ?? vehiclesByDb[vehiclesDbId] ?? [];

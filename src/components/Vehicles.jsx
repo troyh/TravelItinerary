@@ -349,6 +349,7 @@ function VehicleDetail({ vehicle, onEdit }) {
             <Chip tone={v.rentalOf ? "amber" : "soft"}>
               {v.rentalOf ? `Rental · ${v.rentalOf}` : isBoat ? "Your boat" : "Daily driver"}
             </Chip>
+            {v.isDefault && <Chip tone="accent">Default</Chip>}
           </div>
           <div style={{ fontSize: 12.5, color: T.textMuted, fontVariantNumeric: "tabular-nums" }}>
             {[v.year, v.make, v.model, v.type].filter(Boolean).join(" · ")}
@@ -664,6 +665,7 @@ function AddVehiclePanel({ onClose, onSave, vehicles, editVehicle }) {
   // ── Rental state (shared) ──
   const [isRental,    setIsRental]    = useState(!!editVehicle?.rentalOf);
   const [rentalFrom,  setRentalFrom]  = useState(editVehicle?.rentalOf || "");
+  const [isDefault,   setIsDefault]   = useState(!!editVehicle?.isDefault);
 
   const numericCurve = curve.map(p => ({ rpm: Number(p.rpm), gph: Number(p.gph), speed: Number(p.speed) })).filter(p => p.speed > 0 && p.gph >= 0);
   const ts = Number(targetSpeed) || 0;
@@ -710,6 +712,7 @@ function AddVehiclePanel({ onClose, onSave, vehicles, editVehicle }) {
         cost: { perUnit: Number(carPrice), currency: carCurrency },
         photoBg: editVehicle?.photoBg || pickBg("car", vehicles),
         rentalOf: isRental ? (rentalFrom.trim() || "rental") : null,
+        isDefault,
         lastFill: editVehicle?.lastFill || null,
         usedOn: editVehicle?.usedOn || [],
       });
@@ -736,6 +739,7 @@ function AddVehiclePanel({ onClose, onSave, vehicles, editVehicle }) {
         cost: { perUnit: Number(boatPrice), currency: boatCurrency },
         photoBg: editVehicle?.photoBg || pickBg("boat", vehicles),
         rentalOf: isRental ? (rentalFrom.trim() || "rental") : null,
+        isDefault,
         lastFill: editVehicle?.lastFill || null,
         usedOn: editVehicle?.usedOn || [],
       });
@@ -811,6 +815,10 @@ function AddVehiclePanel({ onClose, onSave, vehicles, editVehicle }) {
                 <span style={{ color: T.text }}>Rental vehicle</span>
               </label>
               {isRental && <div><FieldLabel>Rented from</FieldLabel><TextInput value={rentalFrom} onChange={setRentalFrom} placeholder="e.g. Enterprise" suffix="optional"/></div>}
+              <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, cursor: "pointer" }}>
+                <input type="checkbox" checked={isDefault} onChange={e => setIsDefault(e.target.checked)} style={{ width: 15, height: 15 }}/>
+                <span style={{ color: T.text }}>Default for drive legs</span>
+              </label>
             </FormSection>
 
             <FormSection label="Fuel">
@@ -860,6 +868,10 @@ function AddVehiclePanel({ onClose, onSave, vehicles, editVehicle }) {
                 <span style={{ color: T.text }}>Charter / rental</span>
               </label>
               {isRental && <div><FieldLabel>Chartered from</FieldLabel><TextInput value={rentalFrom} onChange={setRentalFrom} placeholder="e.g. Sunsail, Moorings" suffix="optional"/></div>}
+              <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, cursor: "pointer" }}>
+                <input type="checkbox" checked={isDefault} onChange={e => setIsDefault(e.target.checked)} style={{ width: 15, height: 15 }}/>
+                <span style={{ color: T.text }}>Default for boat legs</span>
+              </label>
             </FormSection>
 
             <FormSection label="Engine">
