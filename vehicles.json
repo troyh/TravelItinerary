@@ -18,21 +18,6 @@
       "unit": "gal",
       "curve": [
         {
-          "rpm": 1000,
-          "gph": 12,
-          "speed": 10
-        },
-        {
-          "rpm": 1800,
-          "gph": 51,
-          "speed": 18
-        },
-        {
-          "rpm": 2400,
-          "gph": 81,
-          "speed": 24
-        },
-        {
           "rpm": 600,
           "gph": 2.7,
           "speed": 6
@@ -53,9 +38,79 @@
           "speed": 9
         },
         {
+          "rpm": 1000,
+          "gph": 12,
+          "speed": 10
+        },
+        {
           "rpm": 1100,
           "gph": 12,
           "speed": 11
+        },
+        {
+          "rpm": 1200,
+          "gph": 17,
+          "speed": 12
+        },
+        {
+          "rpm": 1300,
+          "gph": 23,
+          "speed": 13
+        },
+        {
+          "rpm": 1400,
+          "gph": 28,
+          "speed": 14
+        },
+        {
+          "rpm": 1500,
+          "gph": 33,
+          "speed": 15
+        },
+        {
+          "rpm": 1600,
+          "gph": 38,
+          "speed": 16
+        },
+        {
+          "rpm": 1700,
+          "gph": 44,
+          "speed": 17
+        },
+        {
+          "rpm": 1800,
+          "gph": 51,
+          "speed": 18
+        },
+        {
+          "rpm": 1900,
+          "gph": 57,
+          "speed": 19
+        },
+        {
+          "rpm": 2000,
+          "gph": 61,
+          "speed": 20
+        },
+        {
+          "rpm": 2100,
+          "gph": 0,
+          "speed": 21
+        },
+        {
+          "rpm": 2200,
+          "gph": 0,
+          "speed": 22
+        },
+        {
+          "rpm": 2300,
+          "gph": 78,
+          "speed": 23
+        },
+        {
+          "rpm": 2400,
+          "gph": 81,
+          "speed": 24
         }
       ],
       "targetSpeed": 12,
