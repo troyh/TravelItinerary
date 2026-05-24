@@ -185,7 +185,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
   const [activePage,   setActivePage]   = useState("trips");
   const [pullStatus,   setPullStatus]   = useState("idle"); // "idle"|"pulling"|"done"
   const [pullProgress, setPullProgress] = useState({ done: 0, total: 0 });
-  useEffect(() => { document.title = "Travel Itinerary"; }, []);
+  useEffect(() => { document.title = "Headway."; }, []);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -615,7 +615,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
               </svg>
             </div>
             <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: -0.2, color: T.text }}>
-              Itinerary
+              Headway.
             </span>
           </div>
 

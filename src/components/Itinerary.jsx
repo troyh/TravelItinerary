@@ -292,7 +292,7 @@ function buildGpx(pts, name) {
   const rtepts = pts.map(([lat, lon]) =>
     `  <rtept lat="${lat.toFixed(6)}" lon="${lon.toFixed(6)}"/>`
   ).join("\n");
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Travel Itinerary" xmlns="http://www.topografix.com/GPX/1/1">\n  <rte>\n    <name>${safeName}</name>\n${rtepts}\n  </rte>\n</gpx>`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Headway." xmlns="http://www.topografix.com/GPX/1/1">\n  <rte>\n    <name>${safeName}</name>\n${rtepts}\n  </rte>\n</gpx>`;
 }
 
 function downloadBlob(content, filename, mime) {
@@ -2816,7 +2816,7 @@ export default function Itinerary() {
 
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
 
-  useEffect(() => { document.title = title || "Travel Itinerary"; }, [title]);
+  useEffect(() => { document.title = title || "Headway."; }, [title]);
 
   // Auto-populate centerLat/centerLng/centerName for days that have GPS data but no centroid yet
   const lastCentroidRef = useRef({});
@@ -3393,9 +3393,9 @@ export default function Itinerary() {
 
     const cal = [
       "BEGIN:VCALENDAR", "VERSION:2.0",
-      `PRODID:-//${esc(ttl || "Travel Itinerary")}//EN`,
+      `PRODID:-//${esc(ttl || "Headway.")}//EN`,
       "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
-      `X-WR-CALNAME:${esc(ttl || "Travel Itinerary")}`,
+      `X-WR-CALNAME:${esc(ttl || "Headway.")}`,
     ];
 
     daysArr.forEach(d => {
