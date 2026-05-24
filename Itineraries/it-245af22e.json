@@ -191,11 +191,48 @@
               -123.504
             ]
           ],
-          "notes": "",
+          "notes": "Where to stop for Customs?",
           "fuelGph": 17,
           "fuelGallons": 170.28333333333336,
           "fuelUnit": "gal",
-          "fuelCurrency": "USD"
+          "fuelCurrency": "USD",
+          "flightNumber": "",
+          "departure": "",
+          "arrival": "",
+          "departureName": "Elliott Bay Marina",
+          "arrivalName": "Gibsons BC",
+          "departureTime": "",
+          "arrivalTime": "",
+          "airline": "",
+          "aircraft": "",
+          "confirmation": "",
+          "seat": "",
+          "terminal": "",
+          "bags": "",
+          "distance": "120.2 nm",
+          "miles": 120,
+          "departureLat": 47.6302997,
+          "departureLng": -122.3914826,
+          "arrivalLat": 49.401154,
+          "arrivalLng": -123.5075,
+          "origin": {
+            "name": "Elliott Bay Marina"
+          },
+          "destination": {
+            "name": "Gibsons BC"
+          },
+          "originLat": 47.6302997,
+          "originLng": -122.3914826,
+          "destinationLat": 49.401154,
+          "destinationLng": -123.5075,
+          "travelMode": "DRIVING",
+          "departDate": "",
+          "arriveDate": "",
+          "arriveTime": "",
+          "agency": "",
+          "pickupLocation": "Elliott Bay Marina",
+          "dropoffLocation": "Gibsons BC",
+          "duration": "10h 1m"
         }
       ],
       "flights": [],
@@ -479,7 +516,7 @@
               -124.784
             ]
           ],
-          "notes": "Where to stop for Customs?",
+          "notes": "",
           "flightNumber": "",
           "departure": "",
           "arrival": "",
