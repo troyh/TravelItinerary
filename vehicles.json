@@ -48,6 +48,7 @@
     },
     "photoBg": "linear-gradient(135deg,#0B3D6B 0%,#5BB3E8 100%)",
     "rentalOf": null,
+    "isDefault": true,
     "lastFill": null,
     "usedOn": []
   }
