@@ -31,6 +31,56 @@ Return ONLY valid JSON (no markdown, no explanation):
 
 Suggest 2–5 places and 2–4 highlights. Be specific and practical.`;
 
+export function buildConciergeSystem({ title, subtitle, startDate, days, vehicles = [] }) {
+  const dateStr = startDate
+    ? (() => {
+        const [y, m, d] = startDate.split("-").map(Number);
+        const end = new Date(y, m - 1, d + days.length - 1);
+        const fmt = (dt, yr) => dt.toLocaleDateString("en-US", { month: "short", day: "numeric", ...(yr ? { year: "numeric" } : {}) });
+        return `${fmt(new Date(y, m - 1, d))} – ${fmt(end, true)}`;
+      })()
+    : "dates TBD";
+
+  const dayLines = days.map(d =>
+    `Day ${d.day}: ${d.leg || "untitled"}${d.overnight ? ` · ${d.overnight}` : ""}`
+  ).join("\n");
+
+  const vehicleStr = vehicles.length
+    ? `\nVehicles: ${vehicles.map(v => v.name).join(", ")}`
+    : "";
+
+  return `You are a knowledgeable travel concierge for the trip "${title}${subtitle ? ` — ${subtitle}` : ""}".
+Dates: ${dateStr} (${days.length} ${days.length === 1 ? "day" : "days"})
+
+${dayLines}${vehicleStr}
+
+Help the user plan: suggest places, draft days, answer travel questions, create packing lists. Be direct and opinionated — give specific recommendations with reasons. You cannot book reservations or make payments. Do not start responses with "I" or filler phrases like "Of course!" or "Great question!". Format responses as plain prose; use short lists when listing places or items.`;
+}
+
+export async function chatClaude({ messages, system, apiKey, model = "claude-sonnet-4-6" }) {
+  const res = await fetch(API, {
+    method: "POST",
+    headers: {
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+      "anthropic-dangerous-direct-browser-access": "true",
+    },
+    body: JSON.stringify({
+      model,
+      max_tokens: 1500,
+      system,
+      messages,
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error?.message ?? `API error ${res.status}`);
+  }
+  const data = await res.json();
+  return data.content?.[0]?.text ?? "";
+}
+
 export async function askClaude({ prompt, system, apiKey, model = "claude-sonnet-4-6", maxTokens = 2000 }) {
   const res = await fetch(API, {
     method: "POST",

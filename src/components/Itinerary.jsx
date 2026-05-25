@@ -7,6 +7,8 @@ import DayRoute from "./DayRoute.jsx";
 import DayFlights from "./DayFlights.jsx";
 import DayRentalCar from "./DayRentalCar.jsx";
 import ClaudePrompt from "./ClaudePrompt.jsx";
+import { ConciergeRail, ConciergeBar, PeekSheet, ConciergeToggleButton } from "./Concierge.jsx";
+import { chatClaude, buildConciergeSystem } from "../lib/claude.js";
 import ItineraryMap from "./ItineraryMap.jsx";
 import Settings from "./Settings.jsx";
 import { loadFromGitHub, saveToGitHub, deleteFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
@@ -2680,6 +2682,12 @@ export default function Itinerary() {
   const [vehiclesDbId,     setVehiclesDbId]     = useState(null);
   const vehiclesLoadedRef  = useRef(false);
 
+  const [conciergeOpen,    setConciergeOpen]    = useState(false);
+  const [cmdKOpen,         setCmdKOpen]         = useState(false);
+  const [peekState,        setPeekState]        = useState("peek");
+  const [conciergeThread,  setConciergeThread]  = useState([]);
+  const [conciergeSending, setConciergeSending] = useState(false);
+
   const databases     = settings.databases ?? [];
   const currentDb     = databases.find(db => db.id === currentDbId) ?? databases[0] ?? {};
   const effectiveRepo   = currentDb.githubRepo   || inferRepo() || "";
@@ -2697,6 +2705,19 @@ export default function Itinerary() {
   function resolveDbForVehicles(db) {
     return { ...db, githubRepo: db.githubRepo || inferRepo() || "", githubBranch: db.githubBranch || "data" };
   }
+
+  // Load concierge thread per trip
+  useEffect(() => {
+    if (!currentFile || currentFile === "__local__") { setConciergeThread([]); return; }
+    try { setConciergeThread(JSON.parse(localStorage.getItem(`concierge:${currentFile}`) || "[]")); }
+    catch { setConciergeThread([]); }
+  }, [currentFile]);
+
+  // Persist concierge thread
+  useEffect(() => {
+    if (!currentFile || currentFile === "__local__") return;
+    localStorage.setItem(`concierge:${currentFile}`, JSON.stringify(conciergeThread));
+  }, [conciergeThread, currentFile]);
 
   useEffect(() => {
     if (vehiclesLoadedRef.current || !writableDbs.length) return;
@@ -3862,6 +3883,31 @@ export default function Itinerary() {
   }
   function closeAddPanel() { setAddPanel(null); }
 
+  async function handleConciergeSend(text) {
+    if (!text.trim() || conciergeSending) return;
+    const newMsg = { role: "user", content: text.trim() };
+    const updatedThread = [...conciergeThread, newMsg];
+    setConciergeThread(updatedThread);
+    setConciergeSending(true);
+    try {
+      const system = buildConciergeSystem({
+        title, subtitle, startDate, days,
+        vehicles: allVehiclesTagged,
+      });
+      const reply = await chatClaude({
+        messages: updatedThread,
+        system,
+        apiKey: settings.anthropicKey,
+        model: settings.claudeModel || "claude-sonnet-4-6",
+      });
+      setConciergeThread(prev => [...prev, { role: "assistant", content: reply }]);
+    } catch (err) {
+      setConciergeThread(prev => [...prev, { role: "assistant", content: `⚠ ${err.message}` }]);
+    } finally {
+      setConciergeSending(false);
+    }
+  }
+
   // Esc closes the panel (and prevents browser fullscreen-exit on macOS)
   useEffect(() => {
     if (!addPanel && mobileSheet === null) return;
@@ -3874,6 +3920,18 @@ export default function Itinerary() {
     document.addEventListener("keydown", handler, true);
     return () => document.removeEventListener("keydown", handler, true);
   }, [addPanel, mobileSheet]);
+
+  // ⌘K / Ctrl+K opens concierge command bar
+  useEffect(() => {
+    const handler = e => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k" && currentFile) {
+        e.preventDefault();
+        setCmdKOpen(v => !v);
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [currentFile]);
 
   // Lock body scroll while panel is open so the page doesn't scroll behind it
   useEffect(() => {
@@ -4164,6 +4222,12 @@ export default function Itinerary() {
                     cursor:"pointer", fontSize:".95rem", padding:0, lineHeight:1 }}>
                   ⬆
                 </button>
+              )}
+              {settings.anthropicKey && currentFile && (
+                <ConciergeToggleButton
+                  open={conciergeOpen}
+                  onClick={() => setConciergeOpen(v => !v)}
+                />
               )}
               <button onClick={() => { setShowSettings(p => !p); setShowHistory(false); setShowMenu(false); }} title="Settings"
                 style={{ background:"none", border:"none", color: showSettings ? "#0b3d6b" : "#5c6470",
@@ -5162,19 +5226,6 @@ export default function Itinerary() {
                     </button>
                   )}
 
-                  {/* Claude suggestions */}
-                  {settings.anthropicKey && !readOnly && (
-                    <ClaudePrompt
-                      mode="day"
-                      dayNum={d.day}
-                      dayContext={{ leg: d.leg, overnight: d.overnight }}
-                      itineraryContext={{ title, startDate, days }}
-                      onApplyDay={applyClaudeDaySuggestions}
-                      apiKey={settings.anthropicKey}
-                      model={settings.claudeModel ?? "claude-sonnet-4-6"}
-                    />
-                  )}
-
                   {/* Tide warning */}
                   {d.tideWarning && d.tideNote && (
                     <div style={{ marginTop:".75rem", padding:".75rem 1rem", background:"#fef2f2",
@@ -5643,6 +5694,44 @@ export default function Itinerary() {
             </div>
           </div>
         </>
+      )}
+
+      {/* ── CONCIERGE RAIL (desktop) ── */}
+      <ConciergeRail
+        open={conciergeOpen}
+        onClose={() => setConciergeOpen(false)}
+        thread={conciergeThread}
+        sending={conciergeSending}
+        onSend={handleConciergeSend}
+        onClearThread={() => setConciergeThread([])}
+        tripContext={{ title, currentDay: days[days.length - 1] }}
+        hasApiKey={!!settings.anthropicKey}
+      />
+
+      {/* ── CONCIERGE BAR (⌘K) ── */}
+      <ConciergeBar
+        open={cmdKOpen}
+        onClose={() => setCmdKOpen(false)}
+        thread={conciergeThread}
+        sending={conciergeSending}
+        onSend={handleConciergeSend}
+        onClearThread={() => setConciergeThread([])}
+        tripContext={{ title, currentDay: days[days.length - 1] }}
+        hasApiKey={!!settings.anthropicKey}
+      />
+
+      {/* ── PEEK SHEET (mobile) ── */}
+      {currentFile && (
+        <PeekSheet
+          peekState={peekState}
+          onPeekStateChange={setPeekState}
+          thread={conciergeThread}
+          sending={conciergeSending}
+          onSend={handleConciergeSend}
+          onClearThread={() => setConciergeThread([])}
+          tripContext={{ title, currentDay: days[days.length - 1] }}
+          hasApiKey={!!settings.anthropicKey}
+        />
       )}
 
     </div>

@@ -38,7 +38,21 @@
       "Bash(awk 'NR>40 && NR<80')",
       "Bash(awk 'NR>=1300 && NR<=1340' /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)",
       "Bash(awk 'NR>=50 && NR<=120')",
-      "Bash(grep -n \"sym\\\\|currency\\\\|currencySymbol\\\\|\\\\$\\\\|€\" /Users/troy/dev/TravelItinerary/src/components/Vehicles.jsx)"
+      "Bash(grep -n \"sym\\\\|currency\\\\|currencySymbol\\\\|\\\\$\\\\|€\" /Users/troy/dev/TravelItinerary/src/components/Vehicles.jsx)",
+      "Bash(curl -s \"https://api.anthropic.com/v1/design/h/DK8NAjYCi2hpCXK_IfTTWA?open_file=docs%2Fconcierge-spec.md\")",
+      "Bash(gunzip)",
+      "Bash(grep -v \"^$\")",
+      "Bash(tar -xO \"travel-itinerary/project/docs/concierge-spec.md\")",
+      "Bash(curl -s \"https://api.anthropic.com/v1/design/h/DK8NAjYCi2hpCXK_IfTTWA?open_file=docs%2Fconcierge-spec.md\" | gunzip 2>/dev/null | tar -xO \"travel-itinerary/project/docs/concierge-spec.md\" 2>/dev/null > /tmp/concierge-spec.md && wc -c /tmp/concierge-spec.md)",
+      "Bash(tar -xO \"travel-itinerary/project/claude-flows.jsx\")",
+      "Bash(tar -xO \"travel-itinerary/project/claude-surfaces.jsx\")",
+      "Bash(tar -xO \"travel-itinerary/project/claude-mobile-peek.jsx\")",
+      "Bash(tar -xO \"travel-itinerary/project/claude-overlay.jsx\")",
+      "Bash(tar -xO \"travel-itinerary/chats/chat6.md\")",
+      "Bash(tar -xO \"travel-itinerary/chats/chat5.md\")"
+    ],
+    "additionalDirectories": [
+      "/tmp"
     ]
   }
 }
