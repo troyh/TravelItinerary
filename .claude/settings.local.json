@@ -49,7 +49,11 @@
       "Bash(tar -xO \"travel-itinerary/project/claude-mobile-peek.jsx\")",
       "Bash(tar -xO \"travel-itinerary/project/claude-overlay.jsx\")",
       "Bash(tar -xO \"travel-itinerary/chats/chat6.md\")",
-      "Bash(tar -xO \"travel-itinerary/chats/chat5.md\")"
+      "Bash(tar -xO \"travel-itinerary/chats/chat5.md\")",
+      "Bash(curl -s \"https://api.anthropic.com/v1/design/h/s4cxZ-P9UN3wLZ2DO4pzrA?open_file=docs%2Fsettings-spec.md\")",
+      "Bash(tar -xO)",
+      "Bash(tar -xO travel-itinerary/project/docs/settings-spec.md)",
+      "Bash(tar -xO travel-itinerary/project/settings-page.jsx)"
     ],
     "additionalDirectories": [
       "/tmp"

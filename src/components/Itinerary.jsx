@@ -4126,7 +4126,7 @@ export default function Itinerary() {
               })()}
               {ghSettings.githubToken && currentFile && currentFile !== "__local__" && (
                 <div style={{ position: "relative" }}>
-                  <button onClick={() => { setShowMenu(p => !p); setShowSettings(false); setShowHistory(false); setConfirmDelete(false); }}
+                  <button onClick={() => { setShowMenu(p => !p); setShowHistory(false); setConfirmDelete(false); }}
                     title="More options"
                     style={{ background:"none", border:"none", color: showMenu ? "#0b3d6b" : "#5c6470",
                       cursor:"pointer", fontSize:"1rem", padding:0, lineHeight:1, letterSpacing:".05em" }}>
@@ -4237,22 +4237,9 @@ export default function Itinerary() {
                   onClick={() => setConciergeOpen(v => !v)}
                 />
               )}
-              <button onClick={() => { setShowSettings(p => !p); setShowHistory(false); setShowMenu(false); }} title="Settings"
-                style={{ background:"none", border:"none", color: showSettings ? "#0b3d6b" : "#5c6470",
-                  cursor:"pointer", fontSize:"1rem", padding:0, lineHeight:1 }}>
-                ⚙
-              </button>
             </div>
           </div>
 
-          {/* Settings panel */}
-          {showSettings && (
-            <Settings
-              settings={settings}
-              onSave={draft => { setSettings(draft); setShowSettings(false); }}
-              onClose={() => setShowSettings(false)}
-            />
-          )}
 
           {/* History panel */}
           {showHistory && (

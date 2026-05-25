@@ -770,15 +770,13 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
             </div>
           </div>
 
-          {/* Settings panel (inline, full-width) */}
+          {/* Settings full-screen overlay */}
           {showSettings && (
-            <div style={{ marginBottom: 28, padding: "20px 24px", background: T.surface2, border: `1px solid ${T.border}`, borderRadius: 12 }}>
-              <Settings
-                settings={settings}
-                onSave={draft => { onSettingsChange(draft); setShowSettings(false); }}
-                onClose={() => setShowSettings(false)}
-              />
-            </div>
+            <Settings
+              settings={settings}
+              onSave={draft => onSettingsChange(draft)}
+              onClose={() => setShowSettings(false)}
+            />
           )}
 
           {activePage === "trips" ? (<>
