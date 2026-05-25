@@ -3890,9 +3890,17 @@ export default function Itinerary() {
     setConciergeThread(updatedThread);
     setConciergeSending(true);
     try {
+      // Only include vehicles actually referenced in this itinerary's routes/rentals
+      const usedVehicleIds = new Set([
+        ...Object.values(savedRoutes).flat().map(r => r.vehicleId),
+        ...Object.values(savedRentalCars).flat().map(r => r.vehicleId),
+      ].filter(Boolean));
+      const usedVehicles = usedVehicleIds.size > 0
+        ? allVehiclesTagged.filter(v => usedVehicleIds.has(v.id))
+        : [];
       const system = buildConciergeSystem({
         title, subtitle, startDate, days,
-        vehicles: allVehiclesTagged,
+        vehicles: usedVehicles,
       });
       const reply = await chatClaude({
         messages: updatedThread,
