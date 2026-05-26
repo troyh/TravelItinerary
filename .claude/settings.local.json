@@ -53,7 +53,23 @@
       "Bash(curl -s \"https://api.anthropic.com/v1/design/h/s4cxZ-P9UN3wLZ2DO4pzrA?open_file=docs%2Fsettings-spec.md\")",
       "Bash(tar -xO)",
       "Bash(tar -xO travel-itinerary/project/docs/settings-spec.md)",
-      "Bash(tar -xO travel-itinerary/project/settings-page.jsx)"
+      "Bash(tar -xO travel-itinerary/project/settings-page.jsx)",
+      "Bash(curl -s --compressed \"https://api.anthropic.com/v1/design/h/0M0U3Djw3n4yzJPJ4r6Djg?open_file=Dark+Mode+Spec.html\")",
+      "Bash(curl -sv \"https://api.anthropic.com/v1/design/h/0M0U3Djw3n4yzJPJ4r6Djg?open_file=Dark+Mode+Spec.html\" -o /dev/null)",
+      "Bash(curl -s \"https://api.anthropic.com/v1/design/h/0M0U3Djw3n4yzJPJ4r6Djg?open_file=Dark+Mode+Spec.html\" -o handoff.tar.gz)",
+      "Bash(tar -tzf handoff.tar.gz)",
+      "Bash(tar -xzf handoff.tar.gz \"travel-itinerary/project/Dark Mode Spec.html\")",
+      "Bash(sed -i '' 's/\"#0b3d6b\"/\"var\\(--accent\\)\"/g' src/components/Itinerary.jsx)",
+      "Bash(sed -i '' 's/\"#e8f1f9\"/\"var\\(--accent-soft\\)\"/g' src/components/Itinerary.jsx)",
+      "Bash(sed -i '' 's/\"#0e1014\"/\"var\\(--text\\)\"/g' src/components/Itinerary.jsx)",
+      "Bash(sed -i '' 's/\"#5c6470\"/\"var\\(--text-muted\\)\"/g' src/components/Itinerary.jsx)",
+      "Bash(sed -i '' 's/\"#9ba1ac\"/\"var\\(--text-faint\\)\"/g' src/components/Itinerary.jsx)",
+      "Bash(sed -i '' 's/kind === k\\\\.id ? AP\\\\.accent      : \"#fff\"/kind === k.id ? AP.accent      : \"var\\(--surface\\)\"/g' /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)",
+      "Bash(sed -i '' 's/kind === k\\\\.id ? AP\\\\.accent : \"#fff\"/kind === k.id ? AP.accent : \"var\\(--surface\\)\"/g' /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)",
+      "Bash(sed -i '' 's/repeatReturn ? ATP\\\\.accent : \"#fff\"/repeatReturn ? ATP.accent : \"var\\(--surface\\)\"/g' /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)",
+      "Bash(grep -n '\"#[0-9a-fA-F]\\\\{3,6\\\\}\"' /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)",
+      "Bash(sed -i '' 's/#e2e5ea/var\\(--border\\)/g' /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)",
+      "Bash(sed -i '' 's/#ffffff/var\\(--surface\\)/g' /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)"
     ],
     "additionalDirectories": [
       "/tmp"

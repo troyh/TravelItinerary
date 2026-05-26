@@ -2,23 +2,24 @@ import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { testConnection, inferRepo } from "../lib/github.js";
 import { CLAUDE_MODELS } from "../lib/claude.js";
 
-// ── Design tokens ────────────────────────────────────────────────────────────
+// ── Design tokens (CSS vars so dark mode propagates automatically) ────────────
 const T = {
-  text: "#0e1014", textMuted: "#5c6470", textFaint: "#9ba1ac",
-  accent: "#0b3d6b", accentSoft: "#e8f1f9", amber: "#f5b544",
-  bg: "#ffffff", surface: "#ffffff", surface2: "#f8f9fb",
-  border: "#e2e5ea", borderSoft: "#1e3a5220",
+  text: "var(--text)", textMuted: "var(--text-muted)", textFaint: "var(--text-faint)",
+  accent: "var(--accent)", accentSoft: "var(--accent-soft)", amber: "var(--amber)",
+  bg: "var(--bg)", surface: "var(--surface)", surface2: "var(--surface2)",
+  border: "var(--border)", borderSoft: "var(--border-soft)",
 };
 
 const MobileCtx = createContext(false);
 
 // ── Sections ─────────────────────────────────────────────────────────────────
 const SECTIONS = [
-  { id: "maps",      label: "Maps & navigation", num: "01" },
-  { id: "flights",   label: "Flights",           num: "02" },
-  { id: "claude",    label: "Claude",            num: "03" },
-  { id: "databases", label: "Databases",         num: "04" },
-  { id: "about",     label: "About",             num: "05" },
+  { id: "appearance", label: "Appearance",        num: "01" },
+  { id: "maps",       label: "Maps & navigation", num: "02" },
+  { id: "flights",    label: "Flights",            num: "03" },
+  { id: "claude",     label: "Claude",             num: "04" },
+  { id: "databases",  label: "Databases",          num: "05" },
+  { id: "about",      label: "About",              num: "06" },
 ];
 
 // ── Helper ───────────────────────────────────────────────────────────────────
@@ -348,6 +349,7 @@ export default function Settings({ settings, onSave, onClose }) {
 
   // ── Draft state ─────────────────────────────────────────────────────────────
   const [draft, setDraft] = useState({
+    colorScheme:      settings.colorScheme      ?? "auto",
     mapsProvider:     settings.mapsProvider     ?? "google",
     googleMapsKey:    settings.googleMapsKey    ?? "",
     appleMapKitToken: settings.appleMapKitToken ?? "",
@@ -385,6 +387,7 @@ export default function Settings({ settings, onSave, onClose }) {
     if (isFirstRender.current) { isFirstRender.current = false; return; }
     onSave({
       ...settings,
+      colorScheme:      draft.colorScheme,
       mapsProvider:     draft.mapsProvider,
       googleMapsKey:    draft.googleMapsKey,
       appleMapKitToken: draft.appleMapKitToken,
@@ -510,8 +513,24 @@ export default function Settings({ settings, onSave, onClose }) {
           {/* Content */}
           <div style={{ display: "flex", flexDirection: "column", gap: isMobile ? 0 : 28 }}>
 
+            {/* Appearance */}
+            <Card id="appearance" eyebrow={SECTIONS[0].num} title={SECTIONS[0].label}>
+              <Field label="Color scheme"
+                hint="Auto follows your device's system preference.">
+                <Seg
+                  options={[
+                    { value: "auto",  label: "Auto"  },
+                    { value: "light", label: "Light" },
+                    { value: "dark",  label: "Dark"  },
+                  ]}
+                  value={draft.colorScheme}
+                  onChange={v => set("colorScheme", v)}
+                />
+              </Field>
+            </Card>
+
             {/* Maps & navigation */}
-            <Card id="maps" eyebrow={SECTIONS[0].num} title={SECTIONS[0].label}
+            <Card id="maps" eyebrow={SECTIONS[1].num} title={SECTIONS[1].label}
               action={<StatusDot status={mapsCardStatus} />}>
               <Field label="Maps provider">
                 <Seg
@@ -581,7 +600,7 @@ export default function Settings({ settings, onSave, onClose }) {
             </Card>
 
             {/* Flights */}
-            <Card id="flights" eyebrow={SECTIONS[1].num} title={SECTIONS[1].label}>
+            <Card id="flights" eyebrow={SECTIONS[2].num} title={SECTIONS[2].label}>
               <Field label="AeroDataBox API key" optional
                 hint={<>From RapidAPI → AeroDataBox. Enables automatic flight lookup by flight number.</>}>
                 <KeyInput
@@ -595,7 +614,7 @@ export default function Settings({ settings, onSave, onClose }) {
             </Card>
 
             {/* Claude */}
-            <Card id="claude" eyebrow={SECTIONS[2].num} title={SECTIONS[2].label}>
+            <Card id="claude" eyebrow={SECTIONS[3].num} title={SECTIONS[3].label}>
               <Field label="Anthropic API key" optional
                 hint={<>From console.anthropic.com. Enables the Claude concierge, ⌘K bar, and Plan with Claude.</>}>
                 <KeyInput
@@ -620,7 +639,7 @@ export default function Settings({ settings, onSave, onClose }) {
             </Card>
 
             {/* Databases */}
-            <Card id="databases" eyebrow={SECTIONS[3].num} title={SECTIONS[3].label}>
+            <Card id="databases" eyebrow={SECTIONS[4].num} title={SECTIONS[4].label}>
               {dbs.length === 0 && editingDbId !== "new" && (
                 <div style={{ fontSize: 13, color: T.textMuted, fontStyle: "italic" }}>
                   No databases configured. Add one to enable GitHub sync.
@@ -686,7 +705,7 @@ export default function Settings({ settings, onSave, onClose }) {
             </Card>
 
             {/* About */}
-            <Card id="about" eyebrow={SECTIONS[4].num} title={SECTIONS[4].label}>
+            <Card id="about" eyebrow={SECTIONS[5].num} title={SECTIONS[5].label}>
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 <div style={{ display: "flex", gap: 16, fontSize: 13 }}>
                   <span style={{ color: T.textMuted, width: 80, flexShrink: 0 }}>Version</span>

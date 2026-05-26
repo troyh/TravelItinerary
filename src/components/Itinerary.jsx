@@ -192,17 +192,17 @@ function AddTypeBtn({ glyph, label, sub, onClick, accent = false }) {
   return (
     <button onClick={onClick} style={{
       display:"flex", alignItems:"center", gap:7, padding:"7px 10px",
-      background: accent ? "#0b3d6b" : "#ffffff",
-      border: accent ? "none" : "1px solid #e2e5ea",
+      background: accent ? "var(--accent)" : "var(--surface)",
+      border: accent ? "none" : "1px solid var(--border)",
       borderRadius:8, cursor:"pointer", fontFamily:"inherit", textAlign:"left", flex:1, minWidth:0,
     }}>
       <span style={{
         width:22, height:22, borderRadius:5, flexShrink:0,
-        background: accent ? "rgba(255,255,255,0.18)" : "#e8f1f9",
-        color: accent ? "#fff" : "#0b3d6b",
+        background: accent ? "rgba(255,255,255,0.18)" : "var(--accent-soft)",
+        color: accent ? "#fff" : "var(--accent)",
         display:"flex", alignItems:"center", justifyContent:"center",
       }}>{glyph}</span>
-      <span style={{ fontSize:12, fontWeight:600, color: accent ? "#fff" : "#0e1014", letterSpacing:-0.1 }}>{label}</span>
+      <span style={{ fontSize:12, fontWeight:600, color: accent ? "#fff" : "var(--text)", letterSpacing:-0.1 }}>{label}</span>
     </button>
   );
 }
@@ -218,16 +218,16 @@ function InsertGap({ onInsert, suggestedTime }) {
     >
       {hovered ? (
         <>
-          <div style={{ flex:1, height:1, background:"#0b3d6b", opacity:0.35 }}/>
+          <div style={{ flex:1, height:1, background:"var(--accent)", opacity:0.35 }}/>
           <button onMouseDown={e => { e.stopPropagation(); onInsert?.(suggestedTime); }} style={{
             display:"inline-flex", alignItems:"center", gap:6, padding:"5px 11px",
-            borderRadius:999, background:"#0b3d6b", color:"#fff", border:"none",
+            borderRadius:999, background:"var(--accent)", color:"#fff", border:"none",
             cursor:"pointer", fontFamily:"inherit", fontSize:11.5, fontWeight:600,
             boxShadow:"0 2px 8px rgba(11,61,107,0.33)", whiteSpace:"nowrap", flexShrink:0,
           }}>
             {AddGlyph.plus} Insert here{suggestedTime ? ` · ${suggestedTime}` : ""}
           </button>
-          <div style={{ flex:1, height:1, background:"#0b3d6b", opacity:0.35 }}/>
+          <div style={{ flex:1, height:1, background:"var(--accent)", opacity:0.35 }}/>
         </>
       ) : (
         <div style={{ position:"absolute", inset:"50% 0 auto 0", height:1, background:"transparent" }}/>
@@ -264,19 +264,19 @@ function InsertDayGap({ onInsert, label = "Insert day here" }) {
     >
       {hovered ? (
         <>
-          <div style={{ flex:1, height:1, background:"#0b3d6b", opacity:0.25 }}/>
+          <div style={{ flex:1, height:1, background:"var(--accent)", opacity:0.25 }}/>
           <button
             onMouseDown={e => { e.stopPropagation(); onInsert(); }}
             onTouchEnd={e => { e.stopPropagation(); e.preventDefault(); onInsert(); }}
             style={{
               display:"inline-flex", alignItems:"center", gap:5, padding:"4px 12px",
-              borderRadius:999, background:"#0b3d6b", color:"#fff", border:"none",
+              borderRadius:999, background:"var(--accent)", color:"#fff", border:"none",
               cursor:"pointer", fontFamily:"inherit", fontSize:11, fontWeight:600,
               boxShadow:"0 2px 8px rgba(11,61,107,0.28)", whiteSpace:"nowrap", flexShrink:0,
             }}>
             {AddGlyph.plus} {label}
           </button>
-          <div style={{ flex:1, height:1, background:"#0b3d6b", opacity:0.25 }}/>
+          <div style={{ flex:1, height:1, background:"var(--accent)", opacity:0.25 }}/>
         </>
       ) : (
         <div style={{ position:"absolute", inset:"50% 0 auto 0", height:1, background:"transparent" }}/>
@@ -475,22 +475,22 @@ const DO_QUICK_PICKS = [
 
 // Shared style tokens
 const AP = {
-  accent:     "#0b3d6b",
-  accentSoft: "#e8f1f9",
-  surface2:   "#f8f9fb",
-  border:     "#e2e5ea",
-  muted:      "#9ba1ac",
-  text:       "#0e1014",
-  amber:      "#f5b544",
+  accent:     "var(--accent)",
+  accentSoft: "var(--accent-soft)",
+  surface2:   "var(--surface2)",
+  border:     "var(--border)",
+  muted:      "var(--text-faint)",
+  text:       "var(--text)",
+  amber:      "var(--amber)",
   input: {
-    width: "100%", background: "#fff", border: "1px solid #e2e5ea",
-    color: "#0e1014", borderRadius: 6, padding: "10px 12px",
+    width: "100%", background: "var(--surface)", border: "1px solid var(--border)",
+    color: "var(--text)", borderRadius: 6, padding: "10px 12px",
     fontSize: 13, fontFamily: "inherit", outline: "none",
     boxSizing: "border-box",
   },
   textarea: {
-    width: "100%", background: "#f8f9fb", border: "1px solid #e2e5ea",
-    color: "#0e1014", borderRadius: 6, padding: "10px 12px",
+    width: "100%", background: "var(--surface2)", border: "1px solid var(--border)",
+    color: "var(--text)", borderRadius: 6, padding: "10px 12px",
     fontSize: 13, fontFamily: "inherit", outline: "none",
     boxSizing: "border-box", resize: "vertical", minHeight: 56,
     lineHeight: 1.5,
@@ -618,16 +618,16 @@ function PlaceSearchField({ search, setSearch, preds, onSelect, selected, onClea
       {preds.length > 0 && !selected && (
         <div style={{
           position: "absolute", zIndex: 50, top: "calc(100% + 4px)", left: 0, right: 0,
-          background: "#fff", border: "1px solid " + AP.border, borderRadius: 8,
+          background: "var(--surface)", border: "1px solid " + AP.border, borderRadius: 8,
           boxShadow: "0 4px 16px rgba(0,0,0,0.10)", overflow: "hidden",
         }}>
           {preds.map((p, i) => (
             <div key={i} onClick={() => { setSearch(p.name); onSelect(p); }} style={{
               padding: "9px 12px", cursor: "pointer", borderBottom: i < preds.length - 1 ? "1px solid " + AP.border : "none",
-              background: "#fff",
+              background: "var(--surface)",
             }}
               onMouseEnter={e => e.currentTarget.style.background = AP.surface2}
-              onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+              onMouseLeave={e => e.currentTarget.style.background = "var(--surface)"}
             >
               <div style={{ fontSize: 13, fontWeight: 600, color: AP.text }}>{p.name}</div>
               {p.subtitle && <div style={{ fontSize: 11.5, color: AP.muted, marginTop: 1 }}>{p.subtitle}</div>}
@@ -946,7 +946,7 @@ function AddPlacePanel({
             display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
             padding: "12px 4px", borderRadius: 8, cursor: "pointer", fontFamily: "inherit",
             fontSize: 12, fontWeight: 600, border: "1px solid",
-            background:   kind === k.id ? AP.accent      : "#fff",
+            background:   kind === k.id ? AP.accent      : "var(--surface)",
             color:        kind === k.id ? "#fff"          : AP.text,
             borderColor:  kind === k.id ? AP.accent       : AP.border,
             boxShadow:    kind === k.id ? `0 0 0 3px ${AP.accentSoft}` : "none",
@@ -1054,7 +1054,7 @@ function AddPlacePanel({
             display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
             padding: "12px 4px", borderRadius: 8, cursor: "pointer", fontFamily: "inherit",
             fontSize: 12, fontWeight: 600, border: "1px solid",
-            background:   kind === k.id ? AP.accent      : "#fff",
+            background:   kind === k.id ? AP.accent      : "var(--surface)",
             color:        kind === k.id ? "#fff"          : AP.text,
             borderColor:  kind === k.id ? AP.accent       : AP.border,
             boxShadow:    kind === k.id ? `0 0 0 3px ${AP.accentSoft}` : "none",
@@ -1086,7 +1086,7 @@ function AddPlacePanel({
   return (
     <div style={{
       display: "flex", flexDirection: "column", height: "100%",
-      fontFamily: "inherit", color: AP.text, background: "#fff",
+      fontFamily: "inherit", color: AP.text, background: "var(--surface)",
     }}>
       {/* Header */}
       <div style={{
@@ -1137,7 +1137,7 @@ function AddPlacePanel({
                 display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
                 padding: "12px 4px", borderRadius: 8, cursor: "pointer", fontFamily: "inherit",
                 fontSize: 12, fontWeight: 600, border: "1px solid",
-                background:   kind === k.id ? AP.accent : "#fff",
+                background:   kind === k.id ? AP.accent : "var(--surface)",
                 color:        kind === k.id ? "#fff"    : AP.text,
                 borderColor:  kind === k.id ? AP.accent : AP.border,
                 boxShadow:    kind === k.id ? `0 0 0 3px ${AP.accentSoft}` : "none",
@@ -1252,32 +1252,32 @@ const TRAVEL_MODES = [
 ];
 
 const ATP = {
-  accent:     "#0b3d6b",
-  accentSoft: "#e8f1f9",
-  border:     "#e2e5ea",
-  borderSoft: "#eef0f3",
-  surface:    "#ffffff",
-  surface2:   "#f8f9fb",
-  text:       "#0e1014",
-  textMuted:  "#5c6470",
-  textFaint:  "#9ba1ac",
-  amber:      "#f5b544",
+  accent:     "var(--accent)",
+  accentSoft: "var(--accent-soft)",
+  border:     "var(--border)",
+  borderSoft: "var(--border-soft)",
+  surface:    "var(--surface)",
+  surface2:   "var(--surface2)",
+  text:       "var(--text)",
+  textMuted:  "var(--text-muted)",
+  textFaint:  "var(--text-faint)",
+  amber:      "var(--amber)",
 };
 
 const ATP_INPUT = {
-  width: "100%", background: "#fff", border: "1px solid #e2e5ea",
-  color: "#0e1014", borderRadius: 7, padding: "9px 11px",
+  width: "100%", background: "var(--surface)", border: "1px solid var(--border)",
+  color: "var(--text)", borderRadius: 7, padding: "9px 11px",
   fontSize: 13, fontFamily: "inherit", outline: "none",
   boxSizing: "border-box",
 };
 
 const ATP_LABEL = {
   fontSize: 10, fontWeight: 500, textTransform: "uppercase",
-  letterSpacing: 0.8, color: "#5c6470", marginBottom: 4, display: "block",
+  letterSpacing: 0.8, color: "var(--text-muted)", marginBottom: 4, display: "block",
 };
 
 function VehicleSelector({ options, selectedId, onSelect, onClear }) {
-  const T2 = { accent: "#0b3d6b", accentSoft: "#e8f1f9", border: "#e2e5ea", textMuted: "#5c6470", surface: "#f8f9fb", font: "inherit" };
+  const T2 = { accent: "var(--accent)", accentSoft: "var(--accent-soft)", border: "var(--border)", textMuted: "var(--text-muted)", surface: "var(--surface2)", font: "inherit" };
   const selectedVehicle = options.find(v => v.id === selectedId);
   if (options.length === 0) return null;
 
@@ -1321,7 +1321,7 @@ function VehicleSelector({ options, selectedId, onSelect, onClear }) {
       style={{
         width: "100%", padding: "8px 10px", borderRadius: 8, fontSize: 13,
         border: `1px solid ${T2.border}`, background: T2.surface,
-        color: selectedId ? "#0e1014" : T2.textMuted,
+        color: selectedId ? "var(--text)" : T2.textMuted,
         fontFamily: T2.font, marginBottom: 6,
       }}
     >
@@ -1857,12 +1857,12 @@ function AddTravelPanel({
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", paddingTop: 36 }}>
               <div style={{
                 width: 9, height: 9, borderRadius: "50%",
-                border: "2px solid currentColor", background: "#fff", flexShrink: 0,
+                border: "2px solid currentColor", background: "var(--surface)", flexShrink: 0,
                 color: ATP.text,
               }} />
               <div style={{ flex: 1, width: 1.5, background: ATP.border, minHeight: 16, margin: "4px 0" }} />
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ color: ATP.accent }}>
-                <path d="M8 2C5.24 2 3 4.24 3 7c0 3.75 5 9 5 9s5-5.25 5-9c0-2.76-2.24-5-5-5z" fill="#0b3d6b"/>
+                <path d="M8 2C5.24 2 3 4.24 3 7c0 3.75 5 9 5 9s5-5.25 5-9c0-2.76-2.24-5-5-5z" fill="var(--accent)"/>
                 <circle cx="8" cy="7" r="1.8" fill="#fff"/>
               </svg>
             </div>
@@ -1902,7 +1902,7 @@ function AddTravelPanel({
                   {fromPreds.length > 0 && (
                     <div style={{
                       position: "absolute", zIndex: 50, top: "calc(100% + 4px)", left: 0, right: 0,
-                      background: "#fff", border: "1px solid " + ATP.border, borderRadius: 8,
+                      background: "var(--surface)", border: "1px solid " + ATP.border, borderRadius: 8,
                       boxShadow: "0 4px 16px rgba(0,0,0,0.10)", overflow: "hidden",
                     }}>
                       {fromPreds.map((p, i) => (
@@ -1916,7 +1916,7 @@ function AddTravelPanel({
                             borderBottom: i < fromPreds.length - 1 ? "1px solid " + ATP.border : "none",
                           }}
                           onMouseEnter={e => e.currentTarget.style.background = ATP.surface2}
-                          onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+                          onMouseLeave={e => e.currentTarget.style.background = "var(--surface)"}
                         >
                           <div style={{ fontSize: 13, fontWeight: 600, color: ATP.text }}>{p.name}</div>
                           {p.subtitle && <div style={{ fontSize: 11.5, color: ATP.textFaint, marginTop: 1 }}>{p.subtitle}</div>}
@@ -1960,7 +1960,7 @@ function AddTravelPanel({
                   {toPreds.length > 0 && (
                     <div style={{
                       position: "absolute", zIndex: 50, top: "calc(100% + 4px)", left: 0, right: 0,
-                      background: "#fff", border: "1px solid " + ATP.border, borderRadius: 8,
+                      background: "var(--surface)", border: "1px solid " + ATP.border, borderRadius: 8,
                       boxShadow: "0 4px 16px rgba(0,0,0,0.10)", overflow: "hidden",
                     }}>
                       {toPreds.map((p, i) => (
@@ -1974,7 +1974,7 @@ function AddTravelPanel({
                             borderBottom: i < toPreds.length - 1 ? "1px solid " + ATP.border : "none",
                           }}
                           onMouseEnter={e => e.currentTarget.style.background = ATP.surface2}
-                          onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+                          onMouseLeave={e => e.currentTarget.style.background = "var(--surface)"}
                         >
                           <div style={{ fontSize: 13, fontWeight: 600, color: ATP.text }}>{p.name}</div>
                           {p.subtitle && <div style={{ fontSize: 11.5, color: ATP.textFaint, marginTop: 1 }}>{p.subtitle}</div>}
@@ -2501,7 +2501,7 @@ function AddTravelPanel({
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
             <div style={{ display: "flex" }}>
               {[
-                { initials: "SH", bg: "linear-gradient(135deg,#4a90d9,#0b3d6b)" },
+                { initials: "SH", bg: "linear-gradient(135deg,#4a90d9,var(--accent))" },
                 { initials: "JY", bg: "linear-gradient(135deg,#f5a623,#e07b2b)" },
               ].map((av, i) => (
                 <div key={i} style={{
@@ -2525,7 +2525,7 @@ function AddTravelPanel({
               style={{
                 width: 16, height: 16, borderRadius: 4, flexShrink: 0,
                 border: "1.5px solid " + (repeatReturn ? ATP.accent : ATP.border),
-                background: repeatReturn ? ATP.accent : "#fff",
+                background: repeatReturn ? ATP.accent : "var(--surface)",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 cursor: "pointer",
               }}
@@ -2578,7 +2578,7 @@ function AddTravelPanel({
           </select>
           <button onClick={handleMove}
             style={{ fontSize: 12, padding: "4px 10px", border: "1px solid " + ATP.border,
-              borderRadius: 6, background: "#fff", fontFamily: "inherit", cursor: "pointer",
+              borderRadius: 6, background: "var(--surface)", fontFamily: "inherit", cursor: "pointer",
               color: ATP.text, fontWeight: 500, whiteSpace: "nowrap" }}>
             Move ↗
           </button>
@@ -2627,9 +2627,24 @@ export default function Itinerary() {
         }
       }
       if (p.databases?.length) localStorage.setItem("travelSettings", JSON.stringify(p));
+      // Migrate old darkMode boolean to colorScheme string
+      if (!p.colorScheme) {
+        if (p.darkMode === true) p.colorScheme = "dark";
+        else if ("darkMode" in p) p.colorScheme = "light";
+        else p.colorScheme = "auto";
+      }
+      // Apply immediately to avoid flash
+      const scheme = p.colorScheme;
+      const sysDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (scheme === "dark" || (scheme === "auto" && sysDark)) {
+        document.documentElement.classList.add("dark");
+      }
       return p;
     } catch { return {}; }
   });
+  const [isDark, setIsDark] = useState(() =>
+    document.documentElement.classList.contains("dark")
+  );
   const [showSettings,     setShowSettings]     = useState(false);
   const [showHistory,      setShowHistory]      = useState(false);
   const [showCommitForm,   setShowCommitForm]   = useState(false);
@@ -2828,6 +2843,22 @@ export default function Itinerary() {
   }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, savedFlights, savedRentalCars, customNotes, startDate, title, subtitle, itineraryNotes]);
 
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
+
+  useEffect(() => {
+    const scheme = settings.colorScheme ?? "auto";
+    const apply = (dark) => {
+      document.documentElement.classList.toggle("dark", dark);
+      setIsDark(dark);
+    };
+    if (scheme === "light") { apply(false); return; }
+    if (scheme === "dark")  { apply(true);  return; }
+    // "auto" — follow system preference
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    apply(mq.matches);
+    const handler = (e) => apply(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, [settings.colorScheme]);
 
   useEffect(() => { document.title = title || "Headway."; }, [title]);
 
@@ -4018,7 +4049,7 @@ export default function Itinerary() {
   if (urlLoad?.status === "loading") {
     return (
       <div style={{ display:"flex", justifyContent:"center", alignItems:"center",
-        minHeight:"100vh", background:"#ffffff", color:"#5c6470",
+        minHeight:"100vh", background:"var(--surface)", color:"var(--text-muted)",
         fontFamily:"inherit", fontSize:".9rem" }}>
         Loading…
       </div>
@@ -4029,11 +4060,11 @@ export default function Itinerary() {
     const name = urlLoad.file.replace(/^.*\//, "").replace(/\.json$/i, "");
     return (
       <div style={{ display:"flex", flexDirection:"column", justifyContent:"center",
-        alignItems:"center", minHeight:"100vh", background:"#ffffff",
+        alignItems:"center", minHeight:"100vh", background:"var(--surface)",
         fontFamily:"inherit", gap:"1rem", padding:"2rem" }}>
-        <div style={{ fontSize:".62rem", color:"#0b3d6b", letterSpacing:".2em",
+        <div style={{ fontSize:".62rem", color:"var(--accent)", letterSpacing:".2em",
           textTransform:"uppercase" }}>Not Found</div>
-        <div style={{ fontSize:"1.1rem", color:"#5c6470", textAlign:"center" }}>
+        <div style={{ fontSize:"1.1rem", color:"var(--text-muted)", textAlign:"center" }}>
           "{name}" doesn't exist.
         </div>
         <button onClick={() => {
@@ -4071,21 +4102,21 @@ export default function Itinerary() {
   }
 
   return (
-    <div style={{ fontFamily: "inherit", background: "#ffffff", minHeight: "100vh", color: "#0e1014" }}>
+    <div style={{ fontFamily: "inherit", background: "var(--surface)", minHeight: "100vh", color: "var(--text)" }}>
 
       {/* ── HEADER ── */}
-      <div style={{ background: "#ffffff", borderBottom: "1px solid #e2e5ea", padding: ".75rem 2rem" }}>
+      <div style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)", padding: ".75rem 2rem" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           {/* Breadcrumb: Trips / Title */}
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
             <div style={{ display:"flex", alignItems:"center", gap:8, fontSize:13, minWidth:0 }}>
               <button onClick={handleCloseRequest}
-                style={{ background:"none", border:"none", color:"#5c6470", cursor:"pointer",
+                style={{ background:"none", border:"none", color:"var(--text-muted)", cursor:"pointer",
                   fontSize:13, fontFamily:"inherit", padding:0, flexShrink:0 }}>
                 Trips
               </button>
-              <span style={{ color:"#9ba1ac" }}>/</span>
-              <span style={{ color:"#0e1014", fontWeight:500, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
+              <span style={{ color:"var(--text-faint)" }}>/</span>
+              <span style={{ color:"var(--text)", fontWeight:500, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
                 {title}
               </span>
               {currentFile === "__local__" &&
@@ -4094,7 +4125,7 @@ export default function Itinerary() {
             <div style={{ display:"flex", alignItems:"center", gap:".75rem" }}>
               {syncStatus !== "idle" && (() => {
                 const map = {
-                  loading:  ["Loading…",        "#5c6470"],
+                  loading:  ["Loading…",        "var(--text-muted)"],
                   saving:   ["Saving…",          "#d97706"],
                   saved:    ["● Synced",         "#16a34a"],
                   synced:   ["● Synced",         "#16a34a"],
@@ -4103,7 +4134,7 @@ export default function Itinerary() {
                   error:    ["⚠ Error",          "#dc2626"],
                   conflict: ["⚠ Conflict",       "#dc2626"],
                 };
-                const [label, color] = map[syncStatus] ?? ["", "#5c6470"];
+                const [label, color] = map[syncStatus] ?? ["", "var(--text-muted)"];
                 const canCommit = ghSettings.githubToken && effectiveRepo && syncStatus !== "saving";
                 const showCommit = ["unsaved", "error", "conflict"].includes(syncStatus) && canCommit;
                 return (
@@ -4114,8 +4145,8 @@ export default function Itinerary() {
                     </span>
                     {showCommit && (
                       <button onClick={() => setShowCommitForm(p => !p)}
-                        style={{ background: showCommitForm ? "#f0f4f8" : "none",
-                          border:"1px solid #2e5070", color:"#0b3d6b",
+                        style={{ background: showCommitForm ? "var(--surface3)" : "none",
+                          border:"1px solid #2e5070", color:"var(--accent)",
                           borderRadius:3, padding:".15rem .5rem", fontSize:".62rem",
                           fontFamily:"inherit", cursor:"pointer", whiteSpace:"nowrap" }}>
                         Commit{showCommitForm ? " ▲" : "…"}
@@ -4128,13 +4159,13 @@ export default function Itinerary() {
                 <div style={{ position: "relative" }}>
                   <button onClick={() => { setShowMenu(p => !p); setShowHistory(false); setConfirmDelete(false); }}
                     title="More options"
-                    style={{ background:"none", border:"none", color: showMenu ? "#0b3d6b" : "#5c6470",
+                    style={{ background:"none", border:"none", color: showMenu ? "var(--accent)" : "var(--text-muted)",
                       cursor:"pointer", fontSize:"1rem", padding:0, lineHeight:1, letterSpacing:".05em" }}>
                     ···
                   </button>
                   {showMenu && (
                     <div style={{ position:"absolute", right:0, top:"1.6rem", zIndex:100,
-                      background:"#ffffff", border:"1px solid #e2e5ea", borderRadius:6,
+                      background:"var(--surface)", border:"1px solid var(--border)", borderRadius:6,
                       minWidth:140, boxShadow:"0 4px 20px rgba(0,0,0,0.1)", overflow:"hidden" }}>
                       {!confirmDelete ? (
                         <>
@@ -4142,7 +4173,7 @@ export default function Itinerary() {
                             <button onClick={() => { setShowHistory(p => !p); setShowMenu(false); }}
                               style={{ display:"block", width:"100%", textAlign:"left",
                                 background:"none", border:"none", borderBottom:"1px solid #1e3a5230",
-                                color: showHistory ? "#0b3d6b" : "#0e1014", fontFamily:"inherit", fontSize:".82rem",
+                                color: showHistory ? "var(--accent)" : "var(--text)", fontFamily:"inherit", fontSize:".82rem",
                                 padding:".65rem 1rem", cursor:"pointer" }}>
                               History
                             </button>
@@ -4150,7 +4181,7 @@ export default function Itinerary() {
                           <button onClick={handleDuplicate} disabled={menuWorking}
                             style={{ display:"block", width:"100%", textAlign:"left",
                               background:"none", border:"none", borderBottom:"1px solid #1e3a5230",
-                              color:"#0e1014", fontFamily:"inherit", fontSize:".82rem",
+                              color:"var(--text)", fontFamily:"inherit", fontSize:".82rem",
                               padding:".65rem 1rem", cursor:"pointer", opacity: menuWorking ? 0.5 : 1 }}>
                             {menuWorking ? "Duplicating…" : "Duplicate"}
                           </button>
@@ -4159,7 +4190,7 @@ export default function Itinerary() {
                               <button onClick={() => setMoveToDbId("pick")} disabled={menuWorking}
                                 style={{ display:"block", width:"100%", textAlign:"left",
                                   background:"none", border:"none",
-                                  color:"#0e1014", fontFamily:"inherit", fontSize:".82rem",
+                                  color:"var(--text)", fontFamily:"inherit", fontSize:".82rem",
                                   padding:".65rem 1rem", cursor:"pointer", opacity: menuWorking ? 0.5 : 1 }}>
                                 Move to…
                               </button>
@@ -4167,11 +4198,11 @@ export default function Itinerary() {
                           )}
                           {databases.length > 1 && moveToDbId === "pick" && (
                             <div style={{ padding:".5rem 1rem", borderBottom:"1px solid #1e3a5230" }}>
-                              <div style={{ fontSize:".72rem", color:"#5c6470", fontFamily:"inherit", marginBottom:".4rem" }}>Move to:</div>
+                              <div style={{ fontSize:".72rem", color:"var(--text-muted)", fontFamily:"inherit", marginBottom:".4rem" }}>Move to:</div>
                               <div style={{ display:"flex", flexDirection:"column", gap:".25rem" }}>
                                 {databases.filter(d => d.id !== currentDbId).map(d => (
                                   <button key={d.id} onClick={() => handleMoveItinerary(d.id)} disabled={menuWorking}
-                                    style={{ background:"none", border:"1px solid #2e5070", color:"#0e1014",
+                                    style={{ background:"none", border:"1px solid #2e5070", color:"var(--text)",
                                       borderRadius:4, padding:".3rem .75rem", fontSize:".75rem",
                                       fontFamily:"inherit", cursor:"pointer", textAlign:"left",
                                       opacity: menuWorking ? 0.5 : 1 }}>
@@ -4179,7 +4210,7 @@ export default function Itinerary() {
                                   </button>
                                 ))}
                                 <button onClick={() => setMoveToDbId(null)} disabled={menuWorking}
-                                  style={{ background:"none", border:"none", color:"#9ba1ac",
+                                  style={{ background:"none", border:"none", color:"var(--text-faint)",
                                     fontFamily:"inherit", fontSize:".72rem", cursor:"pointer",
                                     textAlign:"left", padding:".2rem 0" }}>
                                   Cancel
@@ -4226,7 +4257,7 @@ export default function Itinerary() {
                 <button
                   onClick={() => navigator.share({ title, url: window.location.href })}
                   title="Share itinerary"
-                  style={{ background:"none", border:"none", color:"#5c6470",
+                  style={{ background:"none", border:"none", color:"var(--text-muted)",
                     cursor:"pointer", fontSize:".95rem", padding:0, lineHeight:1 }}>
                   ⬆
                 </button>
@@ -4254,9 +4285,9 @@ export default function Itinerary() {
 
           {/* Commit form */}
           {showCommitForm && (
-            <div style={{ margin: ".75rem 0 1rem", padding: ".75rem 1rem", background: "#f0f4f8",
+            <div style={{ margin: ".75rem 0 1rem", padding: ".75rem 1rem", background: "var(--surface3)",
               border: "1px solid #2e5070", borderRadius: 6 }}>
-              <div style={{ fontSize: ".62rem", color: "#0b3d6b", letterSpacing: ".1em",
+              <div style={{ fontSize: ".62rem", color: "var(--accent)", letterSpacing: ".1em",
                 textTransform: "uppercase", fontFamily: "inherit", marginBottom: ".6rem" }}>
                 Commit to GitHub
               </div>
@@ -4270,13 +4301,13 @@ export default function Itinerary() {
                     if (e.key === "Escape") { setShowCommitForm(false); setCommitDraft(""); }
                   }}
                   placeholder="Commit message (optional)"
-                  style={{ flex: 1, minWidth: 180, background: "#ffffff", border: "1px solid #e2e5ea",
-                    color: "#0e1014", borderRadius: 4, padding: ".35rem .65rem",
+                  style={{ flex: 1, minWidth: 180, background: "var(--surface)", border: "1px solid var(--border)",
+                    color: "var(--text)", borderRadius: 4, padding: ".35rem .65rem",
                     fontSize: ".82rem", fontFamily: "inherit", outline: "none" }}
                 />
                 <button onClick={() => handleCommit(commitDraft)}
                   disabled={syncStatus === "saving"}
-                  style={{ background: "#f0f4f8", border: "1px solid #2e5070", color: "#0b3d6b",
+                  style={{ background: "var(--surface3)", border: "1px solid #2e5070", color: "var(--accent)",
                     borderRadius: 4, padding: ".35rem .85rem", fontSize: ".75rem",
                     fontFamily: "inherit", cursor: "pointer", whiteSpace: "nowrap",
                     opacity: syncStatus === "saving" ? 0.5 : 1 }}>
@@ -4300,20 +4331,20 @@ export default function Itinerary() {
           {showCloseWarn && (
             <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 2000,
               display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
-              <div style={{ background: "#ffffff", border: "1px solid #e2e5ea", borderRadius: 8,
+              <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8,
                 padding: "1.5rem", maxWidth: 360, width: "100%", fontFamily: "inherit" }}>
-                <div style={{ fontSize: ".88rem", color: "#0e1014", marginBottom: ".75rem",
+                <div style={{ fontSize: ".88rem", color: "var(--text)", marginBottom: ".75rem",
                   fontWeight: 500 }}>
                   Uncommitted changes
                 </div>
-                <div style={{ fontSize: ".78rem", color: "#5c6470", marginBottom: "1.25rem",
+                <div style={{ fontSize: ".78rem", color: "var(--text-muted)", marginBottom: "1.25rem",
                   lineHeight: 1.5 }}>
                   You have local changes that haven't been committed to GitHub. They're saved in
                   your browser but will be lost if you clear your data.
                 </div>
                 <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
                   <button onClick={() => { setShowCloseWarn(false); setShowCommitForm(true); }}
-                    style={{ background: "#f0f4f8", border: "1px solid #2e5070", color: "#0b3d6b",
+                    style={{ background: "var(--surface3)", border: "1px solid #2e5070", color: "var(--accent)",
                       borderRadius: 4, padding: ".4rem .9rem", fontSize: ".78rem", cursor: "pointer" }}>
                     Commit now
                   </button>
@@ -4323,7 +4354,7 @@ export default function Itinerary() {
                     Leave anyway
                   </button>
                   <button onClick={() => setShowCloseWarn(false)}
-                    style={{ background: "none", border: "none", color: "#9ba1ac",
+                    style={{ background: "none", border: "none", color: "var(--text-faint)",
                       fontSize: ".78rem", cursor: "pointer", padding: ".4rem .5rem" }}>
                     Cancel
                   </button>
@@ -4346,14 +4377,14 @@ export default function Itinerary() {
                 onChange={e => setSaveAsName(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && handleSaveAs()}
                 placeholder="Trip name…"
-                style={{ flex: 1, minWidth: 160, background: "#ffffff", border: "1px solid #e2e5ea",
-                  color: "#0e1014", borderRadius: 4, padding: ".35rem .65rem",
+                style={{ flex: 1, minWidth: 160, background: "var(--surface)", border: "1px solid var(--border)",
+                  color: "var(--text)", borderRadius: 4, padding: ".35rem .65rem",
                   fontSize: ".82rem", fontFamily: "inherit", outline: "none" }}
               />
               <button onClick={handleSaveAs}
                 disabled={!ghSettings.githubToken || !effectiveRepo}
                 title={(!ghSettings.githubToken || !effectiveRepo) ? "Configure GitHub in Settings ⚙ first" : ""}
-                style={{ background: "#f0f4f8", border: "1px solid #2e5070", color: "#0b3d6b",
+                style={{ background: "var(--surface3)", border: "1px solid #2e5070", color: "var(--accent)",
                   borderRadius: 4, padding: ".35rem .85rem", fontSize: ".75rem",
                   fontFamily: "inherit", cursor: "pointer", whiteSpace: "nowrap",
                   opacity: (!ghSettings.githubToken || !effectiveRepo) ? 0.45 : 1 }}>
@@ -4367,8 +4398,8 @@ export default function Itinerary() {
 
       {/* ── MAP ── */}
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "1.25rem 2rem 0" }}>
-        <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid #e2e5ea" }}>
-          <ItineraryMap days={days} savedFlights={savedFlights} savedDirections={savedDirections} savedPlaces={savedPlaces} savedRoutes={savedRoutes} />
+        <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid var(--border)" }}>
+          <ItineraryMap days={days} savedFlights={savedFlights} savedDirections={savedDirections} savedPlaces={savedPlaces} savedRoutes={savedRoutes} dark={isDark} />
         </div>
       </div>
 
@@ -4386,15 +4417,15 @@ export default function Itinerary() {
                 if (e.key === "Enter") { setTitle(headerDraft.title.trim() || title); setEditingHeader(false); }
               }}
               className="inline-title-input"
-              style={{ width:"100%", background:"transparent", border:"none", color:"#0e1014",
-                borderBottom:"2px solid #0b3d6b", padding:".1rem 0",
+              style={{ width:"100%", background:"transparent", border:"none", color:"var(--text)",
+                borderBottom:"2px solid var(--accent)", padding:".1rem 0",
                 fontFamily:"inherit", outline:"none", boxSizing:"border-box" }} />
           </div>
         ) : (
           <h1
             onDoubleClick={() => !readOnly && (setEditingHeader(true), setHeaderDraft({ title, subtitle }))}
             title={readOnly ? undefined : "Double-tap to edit"}
-            style={{ fontSize:"clamp(1.6rem,4vw,2.4rem)", fontWeight:700, color:"#0e1014",
+            style={{ fontSize:"clamp(1.6rem,4vw,2.4rem)", fontWeight:700, color:"var(--text)",
               margin:"0 0 " + (subtitle ? ".3rem" : ".75rem"), letterSpacing:"-.03em",
               lineHeight:1.15, cursor: readOnly ? "default" : "text" }}>
             {title}
@@ -4412,7 +4443,7 @@ export default function Itinerary() {
             rows={2}
             className="inline-subtitle-input"
             style={{ display:"block", width:"100%", background:"transparent", border:"none",
-              borderBottom:"1px solid #e2e5ea", color:"#9ba1ac", padding:".1rem 0",
+              borderBottom:"1px solid var(--border)", color:"var(--text-faint)", padding:".1rem 0",
               fontFamily:"inherit", fontStyle:"italic", outline:"none", resize:"none",
               marginBottom:".75rem", boxSizing:"border-box", lineHeight:1.5 }}
           />
@@ -4420,7 +4451,7 @@ export default function Itinerary() {
           <p
             onDoubleClick={() => !readOnly && setEditingSubtitle(true)}
             title={readOnly ? undefined : "Double-tap to edit"}
-            style={{ color:"#9ba1ac", margin:"0 0 .75rem", fontSize:".9rem", fontStyle:"italic",
+            style={{ color:"var(--text-faint)", margin:"0 0 .75rem", fontSize:".9rem", fontStyle:"italic",
               cursor: readOnly ? "default" : "text", wordBreak:"break-word" }}>
             {subtitle}
           </p>
@@ -4432,7 +4463,7 @@ export default function Itinerary() {
           </p>
         ) : null}
         {dateRange && !editingHeader && (
-          <div style={{ fontSize:15, color:"#5c6470", marginBottom:"1.5rem", fontVariantNumeric:"tabular-nums" }}>
+          <div style={{ fontSize:15, color:"var(--text-muted)", marginBottom:"1.5rem", fontVariantNumeric:"tabular-nums" }}>
             {dateRange} · {days.length} {days.length === 1 ? "day" : "days"}
           </div>
         )}
@@ -4457,8 +4488,8 @@ export default function Itinerary() {
                 <div style={{ display:"flex", gap:24, flexWrap:"wrap" }}>
                   {stats.map(s => (
                     <div key={s.label}>
-                      <div style={{ fontSize:"1.4rem", fontWeight:700, color:"#0b3d6b", letterSpacing:"-.02em", fontVariantNumeric:"tabular-nums" }}>{s.val}</div>
-                      <div style={{ fontSize:11, color:"#9ba1ac", letterSpacing:".08em", textTransform:"uppercase", marginTop:2 }}>{s.label}</div>
+                      <div style={{ fontSize:"1.4rem", fontWeight:700, color:"var(--accent)", letterSpacing:"-.02em", fontVariantNumeric:"tabular-nums" }}>{s.val}</div>
+                      <div style={{ fontSize:11, color:"var(--text-faint)", letterSpacing:".08em", textTransform:"uppercase", marginTop:2 }}>{s.label}</div>
                     </div>
                   ))}
                 </div>
@@ -4477,7 +4508,7 @@ export default function Itinerary() {
                   placeholder="Notes about this trip…"
                   className="inline-notes-textarea"
                   style={{ width:"100%", background:"transparent", border:"none",
-                    borderBottom:"1px solid #e2e5ea", color:"#0e1014",
+                    borderBottom:"1px solid var(--border)", color:"var(--text)",
                     padding:".1rem 0", fontFamily:"inherit",
                     lineHeight:1.6, boxSizing:"border-box", outline:"none",
                     resize:"vertical", minHeight:"8rem" }}
@@ -4485,7 +4516,7 @@ export default function Itinerary() {
               ) : (
                 <div onDoubleClick={() => setEditingNotes(true)}
                   title="Double-tap to edit"
-                  style={{ fontSize:13, lineHeight:1.6, color: itineraryNotes ? "#0e1014" : "#9ba1ac",
+                  style={{ fontSize:13, lineHeight:1.6, color: itineraryNotes ? "var(--text)" : "var(--text-faint)",
                     cursor:"text", minHeight:24 }}>
                   {itineraryNotes
                     ? <NoteMarkdown>{itineraryNotes}</NoteMarkdown>
@@ -4493,7 +4524,7 @@ export default function Itinerary() {
                 </div>
               )
             ) : itineraryNotes ? (
-              <div style={{ fontSize:13, lineHeight:1.6, color:"#0e1014" }}>
+              <div style={{ fontSize:13, lineHeight:1.6, color:"var(--text)" }}>
                 <NoteMarkdown>{itineraryNotes}</NoteMarkdown>
               </div>
             ) : null}
@@ -4513,22 +4544,22 @@ export default function Itinerary() {
                 <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
                   <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
                     {/* Days */}
-                    <div style={{ padding:"10px 12px", borderRadius:8, background:"#f8f9fb", border:"1px solid #e2e5ea" }}>
-                      <div style={{ fontSize:9, fontWeight:600, letterSpacing:".12em", color:"#9ba1ac", marginBottom:3, textTransform:"uppercase" }}>Days</div>
-                      <div style={{ fontSize:15, fontWeight:600, color:"#0e1014", fontVariantNumeric:"tabular-nums" }}>{days.length}</div>
+                    <div style={{ padding:"10px 12px", borderRadius:8, background:"var(--surface2)", border:"1px solid var(--border)" }}>
+                      <div style={{ fontSize:9, fontWeight:600, letterSpacing:".12em", color:"var(--text-faint)", marginBottom:3, textTransform:"uppercase" }}>Days</div>
+                      <div style={{ fontSize:15, fontWeight:600, color:"var(--text)", fontVariantNumeric:"tabular-nums" }}>{days.length}</div>
                     </div>
                     {/* Stops */}
-                    <div style={{ padding:"10px 12px", borderRadius:8, background:"#f8f9fb", border:"1px solid #e2e5ea" }}>
-                      <div style={{ fontSize:9, fontWeight:600, letterSpacing:".12em", color:"#9ba1ac", marginBottom:3, textTransform:"uppercase" }}>Stops</div>
-                      <div style={{ fontSize:15, fontWeight:600, color:"#0e1014", fontVariantNumeric:"tabular-nums" }}>{stops}</div>
+                    <div style={{ padding:"10px 12px", borderRadius:8, background:"var(--surface2)", border:"1px solid var(--border)" }}>
+                      <div style={{ fontSize:9, fontWeight:600, letterSpacing:".12em", color:"var(--text-faint)", marginBottom:3, textTransform:"uppercase" }}>Stops</div>
+                      <div style={{ fontSize:15, fontWeight:600, color:"var(--text)", fontVariantNumeric:"tabular-nums" }}>{stops}</div>
                     </div>
                     {/* Start — date picker */}
-                    <div style={{ padding:"10px 12px", borderRadius:8, background:"#f8f9fb",
-                      border: hasDate ? "1px solid #e2e5ea" : "1px dashed #d1d5db",
+                    <div style={{ padding:"10px 12px", borderRadius:8, background:"var(--surface2)",
+                      border: hasDate ? "1px solid var(--border)" : "1px dashed #d1d5db",
                       position:"relative", cursor: readOnly ? "default" : "pointer" }}>
-                      <div style={{ fontSize:9, fontWeight:600, letterSpacing:".12em", color:"#9ba1ac", marginBottom:3, textTransform:"uppercase" }}>Start</div>
+                      <div style={{ fontSize:9, fontWeight:600, letterSpacing:".12em", color:"var(--text-faint)", marginBottom:3, textTransform:"uppercase" }}>Start</div>
                       <div style={{ fontSize:15, fontWeight:600, fontVariantNumeric:"tabular-nums",
-                        color: hasDate ? "#0e1014" : "#9ba1ac" }}>
+                        color: hasDate ? "var(--text)" : "var(--text-faint)" }}>
                         {hasDate ? fmt(start) : "Set date"}
                       </div>
                       {!readOnly && (
@@ -4538,9 +4569,9 @@ export default function Itinerary() {
                       )}
                     </div>
                     {/* End */}
-                    <div style={{ padding:"10px 12px", borderRadius:8, background:"#f8f9fb", border:"1px solid #e2e5ea" }}>
-                      <div style={{ fontSize:9, fontWeight:600, letterSpacing:".12em", color:"#9ba1ac", marginBottom:3, textTransform:"uppercase" }}>End</div>
-                      <div style={{ fontSize:15, fontWeight:600, color: hasDate ? "#0e1014" : "#9ba1ac", fontVariantNumeric:"tabular-nums" }}>
+                    <div style={{ padding:"10px 12px", borderRadius:8, background:"var(--surface2)", border:"1px solid var(--border)" }}>
+                      <div style={{ fontSize:9, fontWeight:600, letterSpacing:".12em", color:"var(--text-faint)", marginBottom:3, textTransform:"uppercase" }}>End</div>
+                      <div style={{ fontSize:15, fontWeight:600, color: hasDate ? "var(--text)" : "var(--text-faint)", fontVariantNumeric:"tabular-nums" }}>
                         {hasDate ? fmt(end) : "—"}
                       </div>
                     </div>
@@ -4550,7 +4581,7 @@ export default function Itinerary() {
                   {hasDate && days.length > 0 && (
                     <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
                       <button onClick={generateICS}
-                        style={{ background:"none", border:"1px solid #e2e5ea", color:"#5c6470",
+                        style={{ background:"none", border:"1px solid var(--border)", color:"var(--text-muted)",
                           cursor:"pointer", fontSize:11, fontFamily:"inherit",
                           padding:"4px 10px", borderRadius:6 }}>
                         Export .ics
@@ -4563,8 +4594,8 @@ export default function Itinerary() {
                             setCopiedICS(true);
                             setTimeout(() => setCopiedICS(false), 2000);
                           }}
-                          style={{ background:"none", border:"1px solid #e2e5ea",
-                            color: copiedICS ? "#16a34a" : "#5c6470",
+                          style={{ background:"none", border:"1px solid var(--border)",
+                            color: copiedICS ? "#16a34a" : "var(--text-muted)",
                             cursor:"pointer", fontSize:11, fontFamily:"inherit",
                             padding:"4px 10px", borderRadius:6 }}>
                           {copiedICS ? "Copied!" : "Subscribe URL"}
@@ -4588,7 +4619,7 @@ export default function Itinerary() {
                   {todos.map((t, i) => (
                     <li key={i}
                       onClick={t.day != null ? () => { setActiveTab("itinerary"); } : undefined}
-                      style={{ fontSize:12, color:"#0e1014", lineHeight:1.5,
+                      style={{ fontSize:12, color:"var(--text)", lineHeight:1.5,
                         cursor: t.day != null ? "pointer" : "default" }}>
                       {t.day != null && (
                         <span style={{ fontSize:10, color:"#d97706", marginRight:4, opacity:.8 }}>
@@ -4628,13 +4659,13 @@ export default function Itinerary() {
       )}
 
       {/* ── TABS ── */}
-      <div style={{ borderBottom:"1px solid #e2e5ea", background:"#ffffff" }}>
+      <div style={{ borderBottom:"1px solid var(--border)", background:"var(--surface)" }}>
         <div style={{ maxWidth:1100, margin:"0 auto", display:"flex" }}>
           {[["itinerary","Day by Day"],["fuel","Fuel Plan"],["tides","Tide Warnings"]].map(([t,lbl])=>(
             <button key={t} onClick={()=>setActiveTab(t)} style={{
               background:"none", border:"none",
-              borderBottom: activeTab===t ? "2px solid #0b3d6b" : "2px solid transparent",
-              color: activeTab===t ? "#0b3d6b" : "#5c6470",
+              borderBottom: activeTab===t ? "2px solid var(--accent)" : "2px solid transparent",
+              color: activeTab===t ? "var(--accent)" : "var(--text-muted)",
               padding:".85rem 1.5rem", fontSize:".78rem", letterSpacing:".12em",
               textTransform:"uppercase", cursor:"pointer", fontFamily:"inherit" }}>
               {lbl}
@@ -4663,7 +4694,7 @@ export default function Itinerary() {
             )}
             <div style={{ textAlign: "center", marginTop: "1.25rem" }}>
               <button onClick={() => { setDays(initialDays); ; }}
-                style={{ background: "#f0f4f8", border: "1px solid #2e5070", color: "#0b3d6b",
+                style={{ background: "var(--surface3)", border: "1px solid #2e5070", color: "var(--accent)",
                   borderRadius: 6, padding: ".55rem 1.5rem", fontSize: ".82rem",
                   fontFamily: "inherit", cursor: "pointer" }}>
                 Load sample itinerary
@@ -4687,29 +4718,29 @@ export default function Itinerary() {
 
               {/* ── Day: two-column layout ── */}
                 <div className="day-expanded-grid" style={{ display:"grid", gridTemplateColumns:"3fr 2fr", gap:20,
-                  padding:"20px 0 24px", borderBottom:"1px solid #e2e5ea" }}>
+                  padding:"20px 0 24px", borderBottom:"1px solid var(--border)" }}>
 
                   {/* Left: day header */}
                   <div style={{ display:"flex", flexDirection:"column", gap:10, minHeight:0 }}>
 
                     {/* Desktop date display */}
                     <div className="day-date-desktop">
-                      <div style={{ fontSize:10, fontWeight:600, letterSpacing:1.5, color:"#9ba1ac", textTransform:"uppercase", marginBottom:4 }}>
+                      <div style={{ fontSize:10, fontWeight:600, letterSpacing:1.5, color:"var(--text-faint)", textTransform:"uppercase", marginBottom:4 }}>
                         Day {d.day} / {days.length}
                       </div>
                       {dayInfo ? (
                         <div style={{ display:"flex", alignItems:"baseline", gap:8 }}>
-                          <div style={{ fontSize:52, fontWeight:700, color:"#0b3d6b", lineHeight:1,
+                          <div style={{ fontSize:52, fontWeight:700, color:"var(--accent)", lineHeight:1,
                             letterSpacing:-2, fontVariantNumeric:"tabular-nums" }}>
                             {dayInfo.date}
                           </div>
                           <div>
                             <div style={{ fontSize:13, fontWeight:600 }}>{dayInfo.dow}</div>
-                            <div style={{ fontSize:11, color:"#9ba1ac", letterSpacing:1 }}>{dayInfo.month.toUpperCase()}</div>
+                            <div style={{ fontSize:11, color:"var(--text-faint)", letterSpacing:1 }}>{dayInfo.month.toUpperCase()}</div>
                           </div>
                         </div>
                       ) : (
-                        <div style={{ fontSize:44, fontWeight:700, color:"#0b3d6b", lineHeight:1, fontVariantNumeric:"tabular-nums" }}>
+                        <div style={{ fontSize:44, fontWeight:700, color:"var(--accent)", lineHeight:1, fontVariantNumeric:"tabular-nums" }}>
                           {d.day}
                         </div>
                       )}
@@ -4717,7 +4748,7 @@ export default function Itinerary() {
                       {(dayBias !== null || d.centerName) && (
                         <div style={{ position:"relative", marginTop:6 }}>
                           <div style={{ display:"flex", alignItems:"center", gap:4 }}>
-                            <span style={{ color:"#9ba1ac", fontSize:11, flexShrink:0 }}>📍</span>
+                            <span style={{ color:"var(--text-faint)", fontSize:11, flexShrink:0 }}>📍</span>
                             <input
                               value={d.centerName || ""}
                               onChange={e => {
@@ -4731,7 +4762,7 @@ export default function Itinerary() {
                               placeholder={dayBias ? "Detecting…" : ""}
                               readOnly={readOnly}
                               title={d.centerLat ? `${d.centerLat.toFixed(3)}, ${d.centerLng.toFixed(3)}` : ""}
-                              style={{ fontSize:11, color:"#5c6470", background:"none", border:"none", outline:"none",
+                              style={{ fontSize:11, color:"var(--text-muted)", background:"none", border:"none", outline:"none",
                                 fontFamily:"inherit", flex:1, cursor: readOnly ? "default" : "text",
                                 padding:0, minWidth:0 }}
                             />
@@ -4741,7 +4772,7 @@ export default function Itinerary() {
                                   ? { ...x, centerName: "", centerLat: null, centerLng: null }
                                   : x))}
                                 title="Reset to auto-detected location"
-                                style={{ background:"none", border:"none", color:"#9ba1ac", cursor:"pointer",
+                                style={{ background:"none", border:"none", color:"var(--text-faint)", cursor:"pointer",
                                   fontSize:11, padding:0, lineHeight:1, flexShrink:0 }}>
                                 ↺
                               </button>
@@ -4749,7 +4780,7 @@ export default function Itinerary() {
                           </div>
                           {locActiveDay === d.day && locPreds.length > 0 && (
                             <div style={{ position:"absolute", top:"100%", left:0, zIndex:200, minWidth:260,
-                              background:"#ffffff", border:"1px solid #e2e5ea", borderRadius:8,
+                              background:"var(--surface)", border:"1px solid var(--border)", borderRadius:8,
                               boxShadow:"0 4px 20px rgba(0,0,0,0.1)", overflow:"hidden", marginTop:4 }}>
                               {locPreds.map((pred, i) => (
                                 <button key={i}
@@ -4757,8 +4788,8 @@ export default function Itinerary() {
                                   style={{ display:"block", width:"100%", textAlign:"left", background:"none",
                                     border:"none", borderBottom: i < locPreds.length-1 ? "1px solid #f0f1f3" : "none",
                                     padding:"8px 12px", fontSize:13, cursor:"pointer", fontFamily:"inherit" }}>
-                                  <div style={{ fontWeight:500, color:"#0e1014" }}>{pred.name}</div>
-                                  {pred.subtitle && <div style={{ fontSize:11, color:"#9ba1ac", marginTop:1 }}>{pred.subtitle}</div>}
+                                  <div style={{ fontWeight:500, color:"var(--text)" }}>{pred.name}</div>
+                                  {pred.subtitle && <div style={{ fontSize:11, color:"var(--text-faint)", marginTop:1 }}>{pred.subtitle}</div>}
                                 </button>
                               ))}
                             </div>
@@ -4770,7 +4801,7 @@ export default function Itinerary() {
                     {/* Mobile date + title row */}
                     <div className="day-date-mobile" style={{ alignItems:"flex-start", gap:12 }}>
                       <div style={{
-                        width:56, height:56, borderRadius:12, background:"#0b3d6b", color:"#fff",
+                        width:56, height:56, borderRadius:12, background:"var(--accent)", color:"#fff",
                         display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
                         flexShrink:0, gap:2,
                       }}>
@@ -4782,7 +4813,7 @@ export default function Itinerary() {
                         </div>
                       </div>
                       <div style={{ flex:1, minWidth:0 }}>
-                        <div style={{ fontSize:10, fontWeight:600, letterSpacing:1.5, color:"#9ba1ac", textTransform:"uppercase", marginBottom:4 }}>
+                        <div style={{ fontSize:10, fontWeight:600, letterSpacing:1.5, color:"var(--text-faint)", textTransform:"uppercase", marginBottom:4 }}>
                           Day {d.day} / {days.length}{dayInfo ? ` · ${dayInfo.month.toUpperCase()}` : ""}
                         </div>
                         {editingCoreDay === d.day ? (
@@ -4792,7 +4823,7 @@ export default function Itinerary() {
                             onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if (e.key === "Enter") saveCore(d.day); }}
                             className="inline-day-title-input"
                             style={{ width:"100%", background:"transparent", border:"none",
-                              borderBottom:"2px solid #0b3d6b", color:"#0e1014",
+                              borderBottom:"2px solid var(--accent)", color:"var(--text)",
                               padding:".1rem 0", fontFamily:"inherit", outline:"none", boxSizing:"border-box" }} />
                         ) : (
                           <div
@@ -4805,7 +4836,7 @@ export default function Itinerary() {
                         )}
                         {(dayBias !== null || d.centerName) && (
                           <div style={{ display:"flex", alignItems:"center", gap:4, marginTop:4 }}>
-                            <span style={{ color:"#9ba1ac", fontSize:11, flexShrink:0 }}>📍</span>
+                            <span style={{ color:"var(--text-faint)", fontSize:11, flexShrink:0 }}>📍</span>
                             <input
                               value={d.centerName || ""}
                               onChange={e => {
@@ -4818,7 +4849,7 @@ export default function Itinerary() {
                               onKeyDown={e => { if (e.key === "Escape") { setLocPreds([]); setLocActiveDay(null); } }}
                               placeholder={dayBias ? "Detecting…" : ""}
                               readOnly={readOnly}
-                              style={{ fontSize:11, color:"#5c6470", background:"none", border:"none", outline:"none",
+                              style={{ fontSize:11, color:"var(--text-muted)", background:"none", border:"none", outline:"none",
                                 fontFamily:"inherit", flex:1, cursor: readOnly ? "default" : "text",
                                 padding:0, minWidth:0 }}
                             />
@@ -4828,7 +4859,7 @@ export default function Itinerary() {
                                   ? { ...x, centerName: "", centerLat: null, centerLng: null }
                                   : x))}
                                 title="Reset to auto-detected location"
-                                style={{ background:"none", border:"none", color:"#9ba1ac", cursor:"pointer",
+                                style={{ background:"none", border:"none", color:"var(--text-faint)", cursor:"pointer",
                                   fontSize:11, padding:0, lineHeight:1, flexShrink:0 }}>
                                 ↺
                               </button>
@@ -4847,7 +4878,7 @@ export default function Itinerary() {
                         onKeyDown={e => { if (e.key === "Escape") setEditingCoreDay(null); if (e.key === "Enter") saveCore(d.day); }}
                         className="inline-day-title-input"
                         style={{ width:"100%", background:"transparent", border:"none",
-                          borderBottom:"2px solid #0b3d6b", color:"#0e1014",
+                          borderBottom:"2px solid var(--accent)", color:"var(--text)",
                           padding:".1rem 0", fontFamily:"inherit", outline:"none", boxSizing:"border-box" }} />
                     ) : (
                       <div
@@ -4877,7 +4908,7 @@ export default function Itinerary() {
                           placeholder="Add a note…"
                           className="inline-day-notes-textarea"
                           style={{ width:"100%", background:"transparent", border:"none",
-                            borderBottom:"1px solid #e2e5ea", color:"#0e1014",
+                            borderBottom:"1px solid var(--border)", color:"var(--text)",
                             padding:".1rem 0", fontFamily:"inherit",
                             lineHeight:1.55, boxSizing:"border-box", outline:"none",
                             resize:"none", flex:1, minHeight:60, overflow:"auto" }}
@@ -4890,8 +4921,8 @@ export default function Itinerary() {
                           title={readOnly ? undefined : "Double-tap to edit"}
                           style={{ flex:1, minHeight:20, cursor: readOnly ? "default" : "text" }}>
                           {note
-                            ? <div style={{ fontSize:12, lineHeight:1.55, color:"#5c6470" }}><NoteMarkdown>{note}</NoteMarkdown></div>
-                            : <div style={{ fontSize:12, lineHeight:1.55, color:"#9ba1ac", fontStyle:"italic" }}>Add a note…</div>}
+                            ? <div style={{ fontSize:12, lineHeight:1.55, color:"var(--text-muted)" }}><NoteMarkdown>{note}</NoteMarkdown></div>
+                            : <div style={{ fontSize:12, lineHeight:1.55, color:"var(--text-faint)", fontStyle:"italic" }}>Add a note…</div>}
                         </div>
                       );
                     })()}
@@ -4899,7 +4930,7 @@ export default function Itinerary() {
                   </div>
 
                   {/* Right: content with left border */}
-                  <div className="day-expanded-right" style={{ borderLeft:"1px solid #e2e5ea", paddingLeft:20, minWidth:0 }}>
+                  <div className="day-expanded-right" style={{ borderLeft:"1px solid var(--border)", paddingLeft:20, minWidth:0 }}>
                   {/* ── Unified timeline (all item types, sorted by time) ── */}
                   {(() => {
                     const distUnit = settings.distanceUnit ?? "km";
@@ -4925,7 +4956,7 @@ export default function Itinerary() {
                           const isLast = idx === all.length - 1;
 
                           // Dot color + icon per type
-                          let dotColor = "#0b3d6b";
+                          let dotColor = "var(--accent)";
                           let icon = null;
                           let title = "";
                           let sub1 = "";
@@ -4949,8 +4980,8 @@ export default function Itinerary() {
                                 : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name)}&query_place_id=${encodeURIComponent(item.placeId)}`;
                             }
                           } else if (item._type === "flight") {
-                            dotColor = "#0b3d6b";
-                            icon = <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}><path d="M2 9.5l5 .5 2.5 3.5 1 .3 0-3.6 4-1.6c.5-.2.7-.7.5-1.2l-.1-.2c-.2-.5-.7-.7-1.2-.5l-3.7 1.5L7 5l-.4-1.1 1-.4-.7-.7L4.4 3.6 4 4.8 2.5 6.3 1.2 6.8c-.4.2-.6.5-.5.8l.1.3c.1.4.5.5.9.4L2 9.5z" stroke="#0b3d6b" strokeWidth="1.3" strokeLinejoin="round"/></svg>;
+                            dotColor = "var(--accent)";
+                            icon = <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}><path d="M2 9.5l5 .5 2.5 3.5 1 .3 0-3.6 4-1.6c.5-.2.7-.7.5-1.2l-.1-.2c-.2-.5-.7-.7-1.2-.5l-3.7 1.5L7 5l-.4-1.1 1-.4-.7-.7L4.4 3.6 4 4.8 2.5 6.3 1.2 6.8c-.4.2-.6.5-.5.8l.1.3c.1.4.5.5.9.4L2 9.5z" stroke="var(--accent)" strokeWidth="1.3" strokeLinejoin="round"/></svg>;
                             title = [item.flightNumber, item.departure && item.arrival ? `${item.departure} → ${item.arrival}` : ""].filter(Boolean).join(" · ");
                             sub1 = [item.departureName, item.arrivalName].filter(Boolean).join(" → ");
                             const flightDur = (() => {
@@ -4989,8 +5020,8 @@ export default function Itinerary() {
                             sub2 = item.notes || "";
                             onDel = !readOnly ? () => deleteDirection(d.day, item.id) : null;
                           } else if (item._type === "route") {
-                            dotColor = "#0b3d6b";
-                            icon = <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3 4.5 8 4.5 8s4.5-5 4.5-8c0-2.5-2-4.5-4.5-4.5z" stroke="#0b3d6b" strokeWidth="1.3" strokeLinejoin="round"/><circle cx="8" cy="6" r="1.5" stroke="#0b3d6b" strokeWidth="1.3"/></svg>;
+                            dotColor = "var(--accent)";
+                            icon = <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3 4.5 8 4.5 8s4.5-5 4.5-8c0-2.5-2-4.5-4.5-4.5z" stroke="var(--accent)" strokeWidth="1.3" strokeLinejoin="round"/><circle cx="8" cy="6" r="1.5" stroke="var(--accent)" strokeWidth="1.3"/></svg>;
                             title = item.name || [item.startName, item.endName].filter(Boolean).join(" → ") || "Route";
                             if (item.nm > 0) {
                               const h = Math.floor(item.hrs), m = Math.round((item.hrs - h) * 60);
@@ -5057,12 +5088,12 @@ export default function Itinerary() {
                             <li style={{ display:"flex", gap:14, position:"relative" }}>
                               {/* Time */}
                               <div style={{ width:52, flexShrink:0, textAlign:"right", paddingTop:1, fontVariantNumeric:"tabular-nums" }}>
-                                <div style={{ fontSize:12, color:"#5c6470", fontWeight:500, letterSpacing:-0.1 }}>{item._disp}</div>
+                                <div style={{ fontSize:12, color:"var(--text-muted)", fontWeight:500, letterSpacing:-0.1 }}>{item._disp}</div>
                               </div>
                               {/* Dot + connector */}
                               <div style={{ width:18, flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", position:"relative" }}>
-                                <div style={{ width:10, height:10, borderRadius:5, background:"#ffffff", border:`2px solid ${dotColor}`, marginTop:4, zIndex:1, flexShrink:0 }}/>
-                                {!isLast && <div style={{ position:"absolute", top:14, bottom:-14, width:1.5, background:"#e2e5ea" }}/>}
+                                <div style={{ width:10, height:10, borderRadius:5, background:"var(--surface)", border:`2px solid ${dotColor}`, marginTop:4, zIndex:1, flexShrink:0 }}/>
+                                {!isLast && <div style={{ position:"absolute", top:14, bottom:-14, width:1.5, background:"var(--border)" }}/>}
                               </div>
                               {/* Content */}
                               <div style={{ flex:1, minWidth:0, paddingBottom: isLast ? 0 : 14 }}>
@@ -5071,25 +5102,25 @@ export default function Itinerary() {
                                     onClick={() => openEditPanel(d.day, item)}>
                                     <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:2, flexWrap:"wrap" }}>
                                       {icon}
-                                      <span style={{ fontSize:14, fontWeight:600, letterSpacing:-0.1, color:"#0e1014" }}>{title}</span>
+                                      <span style={{ fontSize:14, fontWeight:600, letterSpacing:-0.1, color:"var(--text)" }}>{title}</span>
                                       {item._gpxHandler && (
                                         <button onClick={e => { e.stopPropagation(); item._gpxHandler(); }}
                                           title="Download GPX"
-                                          style={{ background:"none", border:"1px solid #e2e5ea", color:"#5c6470",
+                                          style={{ background:"none", border:"1px solid var(--border)", color:"var(--text-muted)",
                                             cursor:"pointer", fontSize:10, fontWeight:600, fontFamily:"inherit",
                                             padding:"2px 6px", borderRadius:4, lineHeight:1.4, letterSpacing:0.3 }}>
                                           GPX
                                         </button>
                                       )}
                                     </div>
-                                    {sub1 && <div style={{ fontSize:12.5, color:"#5c6470", lineHeight:1.45, marginBottom:sub2 ? 1 : 0 }}>{sub1}</div>}
+                                    {sub1 && <div style={{ fontSize:12.5, color:"var(--text-muted)", lineHeight:1.45, marginBottom:sub2 ? 1 : 0 }}>{sub1}</div>}
                                     {sub2 && <div style={{ marginTop:1 }}><NoteMarkdown>{sub2}</NoteMarkdown></div>}
                                     {noteText && <div style={{ marginTop:3 }}><NoteMarkdown>{noteText}</NoteMarkdown></div>}
                                     {badge && (
                                       <div style={{ marginTop:4, display:"inline-block",
                                         fontFamily:"ui-monospace, 'SF Mono', Menlo, monospace",
                                         fontSize:11, padding:"3px 8px", borderRadius:5,
-                                        background:"#f0f4f8", border:"1px solid #e2e5ea", color:"#5c6470" }}>
+                                        background:"var(--surface3)", border:"1px solid var(--border)", color:"var(--text-muted)" }}>
                                         {badge}
                                       </div>
                                     )}
@@ -5103,7 +5134,7 @@ export default function Itinerary() {
                                     )}
                                     {onDel && (
                                       <button onClick={onDel}
-                                        style={{ background:"none", border:"none", color:"#9ba1ac",
+                                        style={{ background:"none", border:"none", color:"var(--text-faint)",
                                           cursor:"pointer", fontSize:14, lineHeight:1, padding:0 }}>
                                         ×
                                       </button>
@@ -5155,19 +5186,19 @@ export default function Itinerary() {
                     if (allItems.length > 0) return null;
                     return (
                       <div style={{
-                        border:"1px dashed #e2e5ea", borderRadius:14,
-                        background:"#f8f9fb", padding:"32px 28px",
+                        border:"1px dashed var(--border)", borderRadius:14,
+                        background:"var(--surface2)", padding:"32px 28px",
                         display:"flex", flexDirection:"column", alignItems:"center", gap:14, textAlign:"center",
                         marginTop:8,
                       }}>
                         <div style={{
                           width:44, height:44, borderRadius:22,
-                          background:"#ffffff", border:"1px solid #e2e5ea",
-                          color:"#9ba1ac", display:"flex", alignItems:"center", justifyContent:"center",
+                          background:"var(--surface)", border:"1px solid var(--border)",
+                          color:"var(--text-faint)", display:"flex", alignItems:"center", justifyContent:"center",
                         }}>{AddGlyph.plus}</div>
                         <div>
                           <div style={{ fontSize:15, fontWeight:600, letterSpacing:-0.2, marginBottom:4 }}>Nothing planned yet.</div>
-                          <div style={{ fontSize:12.5, color:"#5c6470", maxWidth:320 }}>
+                          <div style={{ fontSize:12.5, color:"var(--text-muted)", maxWidth:320 }}>
                             Add a flight, a place to visit, or a note.
                           </div>
                         </div>
@@ -5178,12 +5209,12 @@ export default function Itinerary() {
                         {days.length > 1 && (
                           confirmDeleteDay === d.day ? (
                             <div style={{ display:"flex", alignItems:"center", gap:8, marginTop:14 }}>
-                              <span style={{ fontSize:12.5, color:"#5c6470" }}>Delete Day {d.day}?</span>
+                              <span style={{ fontSize:12.5, color:"var(--text-muted)" }}>Delete Day {d.day}?</span>
                               <button onClick={() => removeDay(d.day)} style={{ fontSize:12.5, padding:"3px 10px", borderRadius:6, border:"1px solid #fecaca", background:"#fef2f2", color:"#dc2626", cursor:"pointer", fontFamily:"inherit" }}>Delete</button>
-                              <button onClick={() => setConfirmDeleteDay(null)} style={{ fontSize:12.5, padding:"3px 10px", borderRadius:6, border:"1px solid #e2e5ea", background:"none", color:"#5c6470", cursor:"pointer", fontFamily:"inherit" }}>Cancel</button>
+                              <button onClick={() => setConfirmDeleteDay(null)} style={{ fontSize:12.5, padding:"3px 10px", borderRadius:6, border:"1px solid var(--border)", background:"none", color:"var(--text-muted)", cursor:"pointer", fontFamily:"inherit" }}>Cancel</button>
                             </div>
                           ) : (
-                            <button onClick={() => setConfirmDeleteDay(d.day)} style={{ marginTop:14, fontSize:12.5, color:"#9ba1ac", background:"none", border:"none", cursor:"pointer", fontFamily:"inherit", textDecoration:"underline", padding:0 }}>
+                            <button onClick={() => setConfirmDeleteDay(d.day)} style={{ marginTop:14, fontSize:12.5, color:"var(--text-faint)", background:"none", border:"none", cursor:"pointer", fontFamily:"inherit", textDecoration:"underline", padding:0 }}>
                               Delete this day
                             </button>
                           )
@@ -5206,8 +5237,8 @@ export default function Itinerary() {
                         <AddTypeBtn glyph={AddGlyph.pin}    label="Add place"  sub="Stay, eat, see, do"    onClick={() => openAddPanel(d.day,"place")} />
                         <button title="More: import GPX, paste link, duplicate from another day" style={{
                           width:44, display:"flex", alignItems:"center", justifyContent:"center",
-                          borderRadius:8, background:"#ffffff", border:"1px solid #e2e5ea",
-                          color:"#9ba1ac", cursor:"pointer", fontFamily:"inherit", flexShrink:0,
+                          borderRadius:8, background:"var(--surface)", border:"1px solid var(--border)",
+                          color:"var(--text-faint)", cursor:"pointer", fontFamily:"inherit", flexShrink:0,
                         }}>{AddGlyph.more}</button>
                       </div>
                     );
@@ -5250,28 +5281,28 @@ export default function Itinerary() {
         {/* ── FUEL TAB ── */}
         {activeTab === "fuel" && (
           <div>
-            <div style={{ marginBottom:"1.5rem", padding:"1.25rem", background:"#f8f9fb", border:"1px solid #1e3a52", borderRadius:6 }}>
-              <div style={{ fontSize:".7rem", color:"#0b3d6b", letterSpacing:".15em", textTransform:"uppercase", marginBottom:"1rem", fontFamily:"inherit" }}>Fuel Plan Summary</div>
+            <div style={{ marginBottom:"1.5rem", padding:"1.25rem", background:"var(--surface2)", border:"1px solid #1e3a52", borderRadius:6 }}>
+              <div style={{ fontSize:".7rem", color:"var(--accent)", letterSpacing:".15em", textTransform:"uppercase", marginBottom:"1rem", fontFamily:"inherit" }}>Fuel Plan Summary</div>
               {fuelSummary.map(f => (
                 <div key={f.label} style={{ display:"flex", justifyContent:"space-between", padding:".6rem 0", borderBottom:"1px solid #1e3a5240", fontFamily:"inherit" }}>
-                  <span style={{ fontSize:".85rem", color:"#5c6470" }}>{f.label}</span>
-                  <span style={{ fontSize:".85rem", color:"#0e1014" }}>{f.value}</span>
+                  <span style={{ fontSize:".85rem", color:"var(--text-muted)" }}>{f.label}</span>
+                  <span style={{ fontSize:".85rem", color:"var(--text)" }}>{f.value}</span>
                 </div>
               ))}
             </div>
-            <div style={{ padding:"1.25rem", background:"#f8f9fb", border:"1px solid #e8553844", borderRadius:6, marginBottom:"1rem" }}>
+            <div style={{ padding:"1.25rem", background:"var(--surface2)", border:"1px solid #e8553844", borderRadius:6, marginBottom:"1rem" }}>
               <div style={{ fontSize:".7rem", color:"#d97706", letterSpacing:".15em", textTransform:"uppercase", marginBottom:".75rem", fontFamily:"inherit" }}>⛽ Fuel Stop Details</div>
               {fuelStops.map(s => (
                 <div key={s.stop} style={{ marginBottom:"1.25rem", paddingBottom:"1.25rem", borderBottom:"1px solid #1e3a5230" }}>
-                  <div style={{ fontSize:".9rem", color:"#0e1014", fontFamily:"inherit", marginBottom:4 }}>{s.stop}</div>
-                  <div style={{ fontSize:".8rem", color:"#9ba1ac", fontFamily:"inherit", marginBottom:3 }}>{s.marina}</div>
-                  <div style={{ fontSize:".75rem", color:"#5c6470", fontFamily:"inherit", marginBottom:6 }}>VHF: {s.vhf}</div>
+                  <div style={{ fontSize:".9rem", color:"var(--text)", fontFamily:"inherit", marginBottom:4 }}>{s.stop}</div>
+                  <div style={{ fontSize:".8rem", color:"var(--text-faint)", fontFamily:"inherit", marginBottom:3 }}>{s.marina}</div>
+                  <div style={{ fontSize:".75rem", color:"var(--text-muted)", fontFamily:"inherit", marginBottom:6 }}>VHF: {s.vhf}</div>
                   <div style={{ fontSize:".8rem", color:"#7a9ab8", fontFamily:"inherit", fontStyle:"italic" }}>{s.notes}</div>
                 </div>
               ))}
             </div>
-            <div style={{ padding:".85rem 1rem", background:"#f0f4f8", border:"1px solid #c9a84c33", borderRadius:6, fontSize:".8rem", color:"#5c6470", fontFamily:"inherit", lineHeight:1.6 }}>
-              <strong style={{ color:"#0b3d6b" }}>Note:</strong> All calculations assume 15 kts / 33 gal·hr. Running at 20 kts increases consumption ~50–70%. Maintain a 15–20% reserve minimum. Fuel Stop #4 at Victoria on Day 17 is easy insurance — you're stopping there for lunch anyway.
+            <div style={{ padding:".85rem 1rem", background:"var(--surface3)", border:"1px solid #c9a84c33", borderRadius:6, fontSize:".8rem", color:"var(--text-muted)", fontFamily:"inherit", lineHeight:1.6 }}>
+              <strong style={{ color:"var(--accent)" }}>Note:</strong> All calculations assume 15 kts / 33 gal·hr. Running at 20 kts increases consumption ~50–70%. Maintain a 15–20% reserve minimum. Fuel Stop #4 at Victoria on Day 17 is easy insurance — you're stopping there for lunch anyway.
             </div>
           </div>
         )}
@@ -5283,13 +5314,13 @@ export default function Itinerary() {
               <strong style={{ color:"#dc2626" }}>Critical:</strong> This route has two non-negotiable tidal rapids (Malibu and Seymour) and one high-traffic channel (Active Pass). Plan exact passage times the night before using official CHS tables. Cross-check with at least two sources.
             </div>
             {tideWarnings.map(t => (
-              <div key={t.passage} style={{ marginBottom:".75rem", padding:"1.1rem 1.25rem", background:"#f8f9fb", border:"1px solid #dc354533", borderRadius:6 }}>
-                <div style={{ fontSize:".9rem", color:"#0e1014", fontFamily:"inherit", marginBottom:".4rem" }}>{t.passage}</div>
-                <div style={{ fontSize:".82rem", color:"#9ba1ac", fontFamily:"inherit", lineHeight:1.55 }}>{t.detail}</div>
+              <div key={t.passage} style={{ marginBottom:".75rem", padding:"1.1rem 1.25rem", background:"var(--surface2)", border:"1px solid #dc354533", borderRadius:6 }}>
+                <div style={{ fontSize:".9rem", color:"var(--text)", fontFamily:"inherit", marginBottom:".4rem" }}>{t.passage}</div>
+                <div style={{ fontSize:".82rem", color:"var(--text-faint)", fontFamily:"inherit", lineHeight:1.55 }}>{t.detail}</div>
               </div>
             ))}
-            <div style={{ marginTop:"1.5rem", padding:"1.25rem", background:"#f8f9fb", border:"1px solid #1e3a52", borderRadius:6 }}>
-              <div style={{ fontSize:".7rem", color:"#0b3d6b", letterSpacing:".15em", textTransform:"uppercase", marginBottom:".85rem", fontFamily:"inherit" }}>Apps & Resources</div>
+            <div style={{ marginTop:"1.5rem", padding:"1.25rem", background:"var(--surface2)", border:"1px solid #1e3a52", borderRadius:6 }}>
+              <div style={{ fontSize:".7rem", color:"var(--accent)", letterSpacing:".15em", textTransform:"uppercase", marginBottom:".85rem", fontFamily:"inherit" }}>Apps & Resources</div>
               {[
                 ["Navionics Boating App",      "Best all-in-one: charts, tides, ActiveCaptain community notes"],
                 ["XTide / Tides Near Me",       "Precise slack water timing for BC passages"],
@@ -5299,10 +5330,10 @@ export default function Itinerary() {
                 ["CBP ROAM App (US Customs)",   "Required for US re-entry — register all passengers before departure"],
               ].map(([tool,desc]) => (
                 <div key={tool} style={{ display:"flex", gap:".75rem", marginBottom:".7rem", fontFamily:"inherit" }}>
-                  <span style={{ color:"#0b3d6b", flexShrink:0, marginTop:2 }}>◆</span>
+                  <span style={{ color:"var(--accent)", flexShrink:0, marginTop:2 }}>◆</span>
                   <div>
-                    <div style={{ fontSize:".85rem", color:"#0e1014" }}>{tool}</div>
-                    <div style={{ fontSize:".78rem", color:"#5c6470", marginTop:1 }}>{desc}</div>
+                    <div style={{ fontSize:".85rem", color:"var(--text)" }}>{tool}</div>
+                    <div style={{ fontSize:".78rem", color:"var(--text-muted)", marginTop:1 }}>{desc}</div>
                   </div>
                 </div>
               ))}
@@ -5322,7 +5353,7 @@ export default function Itinerary() {
             </span>
             <div onClick={toggleLock}
               style={{ width: 44, height: 26, borderRadius: 13, cursor: "pointer",
-                background: isLocked ? "#e2e5ea" : "#2e7050", position: "relative",
+                background: isLocked ? "var(--border)" : "#2e7050", position: "relative",
                 flexShrink: 0, transition: "background 0.2s",
                 border: `1px solid ${isLocked ? "#3a4a5a" : "#3a8060"}` }}>
               <div style={{
@@ -5346,7 +5377,7 @@ export default function Itinerary() {
           <div className="add-sheet-backdrop" onClick={() => setMobileSheet(null)} />
           <div className="add-sheet">
             <div className="add-sheet-handle" />
-            <div style={{ fontSize:15, fontWeight:600, padding:"0 20px 14px", color:"#0e1014" }}>
+            <div style={{ fontSize:15, fontWeight:600, padding:"0 20px 14px", color:"var(--text)" }}>
               {(() => {
                 const info = getDayDate(mobileSheet);
                 return `Add to Day ${mobileSheet}${info ? ` · ${info.dow} ${info.date} ${info.month}` : ""}`;
@@ -5361,16 +5392,16 @@ export default function Itinerary() {
               <button key={type} className="add-sheet-row"
                 onClick={() => type === "paste" ? null : openAddPanel(mobileSheet, type)}>
                 <div className="add-sheet-row-icon" style={{
-                  background: amber ? "rgba(245,181,68,0.16)" : "#e8f1f9",
-                  color: amber ? "#f5b544" : "#0b3d6b",
+                  background: amber ? "rgba(245,181,68,0.16)" : "var(--accent-soft)",
+                  color: amber ? "var(--amber)" : "var(--accent)",
                 }}>
                   {glyph}
                 </div>
                 <div>
-                  <div style={{ fontWeight:600, fontSize:15, color:"#0e1014" }}>{label}</div>
-                  <div style={{ fontSize:13, color:"#5c6470", marginTop:2 }}>{sub}</div>
+                  <div style={{ fontWeight:600, fontSize:15, color:"var(--text)" }}>{label}</div>
+                  <div style={{ fontSize:13, color:"var(--text-muted)", marginTop:2 }}>{sub}</div>
                 </div>
-                <span style={{ marginLeft:"auto", color:"#9ba1ac" }}>›</span>
+                <span style={{ marginLeft:"auto", color:"var(--text-faint)" }}>›</span>
               </button>
             ))}
           </div>
@@ -5527,8 +5558,6 @@ export default function Itinerary() {
                         cruisingSpeed: item.cruisingSpeed || undefined,
                         vehicleId: item.vehicleId || undefined,
                         vehicleDbId: item.vehicleDbId || undefined,
-                        vehicleId: item.vehicleId || undefined,
-                        vehicleDbId: item.vehicleDbId || undefined,
                         agency: item.vehicle, pickupLocation: item.from?.name, dropoffLocation: item.to?.name,
                         distance: item.routeDistance || undefined, duration: item.routeDuration || undefined,
                         routePath: item.routePath || undefined,
@@ -5655,22 +5684,22 @@ export default function Itinerary() {
                           onFocus={() => { if (!isEditing) startEditNote(addPanel.day, note); }}
                           placeholder="Add a note for this day…"
                           rows={6}
-                          style={{ width:"100%", background:"#f8f9fb", border:"1px solid #e2e5ea",
-                            color:"#0e1014", borderRadius:8, padding:".6rem .85rem", fontSize:14,
+                          style={{ width:"100%", background:"var(--surface2)", border:"1px solid var(--border)",
+                            color:"var(--text)", borderRadius:8, padding:".6rem .85rem", fontSize:14,
                             fontFamily:"inherit", lineHeight:1.6, resize:"vertical",
                             boxSizing:"border-box", outline:"none" }}
                         />
                         <div style={{ display:"flex", gap:8, marginTop:10 }}>
                           <button
                             onClick={() => { saveNote(addPanel.day); closeAddPanel(); }}
-                            style={{ background:"#0b3d6b", border:"none", color:"#fff",
+                            style={{ background:"var(--accent)", border:"none", color:"#fff",
                               borderRadius:8, padding:"8px 18px", fontSize:13,
                               fontFamily:"inherit", cursor:"pointer", fontWeight:600 }}>
                             Save
                           </button>
                           <button
                             onClick={() => { cancelEditNote(); closeAddPanel(); }}
-                            style={{ background:"none", border:"1px solid #e2e5ea", color:"#5c6470",
+                            style={{ background:"none", border:"1px solid var(--border)", color:"var(--text-muted)",
                               borderRadius:8, padding:"8px 14px", fontSize:13,
                               fontFamily:"inherit", cursor:"pointer" }}>
                             Cancel
@@ -5678,7 +5707,7 @@ export default function Itinerary() {
                         </div>
                       </>
                     ) : (
-                      <div style={{ fontSize:14, lineHeight:1.6, color:"#0e1014" }}>
+                      <div style={{ fontSize:14, lineHeight:1.6, color:"var(--text)" }}>
                         <NoteMarkdown>{note}</NoteMarkdown>
                       </div>
                     )}

@@ -109,7 +109,7 @@ function markerIcon(n) {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export default function ItineraryMap({ days, savedFlights, savedDirections, savedPlaces, savedRoutes }) {
+export default function ItineraryMap({ days, savedFlights, savedDirections, savedPlaces, savedRoutes, dark }) {
   const mapElRef   = useRef(null);
   const leafletRef = useRef(null);
   const dragRef    = useRef(null);  // { startY, startH }
@@ -160,24 +160,26 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [days.map(d => d.overnight).join("|"), placeAddressesToGeocode.join("|")]);
 
-  // Inject dark theme styles for Leaflet tooltips and popups (once)
+  // Inject theme styles for Leaflet tooltips and popups (updates when dark changes)
   useEffect(() => {
-    if (document.getElementById("leaflet-dark-styles")) return;
-    const s = document.createElement("style");
-    s.id = "leaflet-dark-styles";
+    let s = document.getElementById("leaflet-dark-styles");
+    if (!s) { s = document.createElement("style"); s.id = "leaflet-dark-styles"; document.head.appendChild(s); }
+    const bg = dark ? "#15181e" : "#ffffff";
+    const border = dark ? "#262a33" : "#e2e5ea";
+    const text = dark ? "#f2f3f5" : "#0e1014";
+    const close = dark ? "#5c6470" : "#9ba1ac";
     s.textContent = `
-      .leaflet-tooltip-dark { background:#ffffff; border:1px solid #e2e5ea; color:#0e1014;
+      .leaflet-tooltip-dark { background:${bg}; border:1px solid ${border}; color:${text};
         font-family:inherit; font-size:.75rem; padding:3px 8px; border-radius:6px;
         box-shadow:0 2px 8px rgba(0,0,0,0.08); }
       .leaflet-tooltip-dark::before { display:none; }
-      .leaflet-popup-dark .leaflet-popup-content-wrapper { background:#ffffff;
-        border:1px solid #e2e5ea; color:#0e1014; font-family:inherit;
+      .leaflet-popup-dark .leaflet-popup-content-wrapper { background:${bg};
+        border:1px solid ${border}; color:${text}; font-family:inherit;
         font-size:.78rem; line-height:1.5; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.1); }
-      .leaflet-popup-dark .leaflet-popup-tip { background:#ffffff; }
-      .leaflet-popup-dark .leaflet-popup-close-button { color:#9ba1ac; }
+      .leaflet-popup-dark .leaflet-popup-tip { background:${bg}; }
+      .leaflet-popup-dark .leaflet-popup-close-button { color:${close}; }
     `;
-    document.head.appendChild(s);
-  }, []);
+  }, [dark]);
 
   // Build / rebuild Leaflet map whenever coords or open changes
   useEffect(() => {
@@ -220,10 +222,13 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
     const map = L.map(el, { zoomControl: true, attributionControl: true });
     leafletRef.current = map;
 
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-      { attribution: "© <a href='https://openstreetmap.org'>OpenStreetMap</a> © <a href='https://carto.com'>CARTO</a>", maxZoom: 19 }
-    ).addTo(map);
+    const tileUrl = dark
+      ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+      : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+    L.tileLayer(tileUrl, {
+      attribution: "© <a href='https://openstreetmap.org'>OpenStreetMap</a> © <a href='https://carto.com'>CARTO</a>",
+      maxZoom: 19,
+    }).addTo(map);
 
     const bounds = L.latLngBounds([]);
 
@@ -231,8 +236,10 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
     let _routeIdx = 0;
     function nextRouteColor() {
       const hue = (_routeIdx++ * 137.508) % 360;
-      // Darken yellow-range hues so they stay visible on a light map
-      const lightness = (hue > 45 && hue < 80) ? 34 : 44;
+      // Lighten in dark mode, darken yellow-range in light mode
+      const lightness = dark
+        ? 65
+        : (hue > 45 && hue < 80) ? 34 : 44;
       return `hsl(${Math.round(hue)}, 70%, ${lightness}%)`;
     }
 
