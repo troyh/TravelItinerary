@@ -3,5 +3,147 @@
   "title": "Canada Cruise 2026 🇨🇦 v3",
   "subtitle": "Gulf Islands and SJIs",
   "itineraryNotes": "Instead of the Broughtons, stay in the Gulf Islands and the SJIs",
-  "days": []
+  "days": [
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "Victoria, Canada",
+      "centerLat": 48.4284756,
+      "centerLng": -123.3670221,
+      "places": [
+        {
+          "id": "b71381bf-a9de-4135-921e-18785fc1e10e",
+          "name": "Victoria BC",
+          "address": "Victoria BC, Canada",
+          "lat": 48.4284756,
+          "lng": -123.3670221,
+          "category": "activity",
+          "placeKind": "see",
+          "time": "12:30",
+          "duration": "",
+          "notes": "",
+          "confirmation": "",
+          "partySize": "",
+          "bookedVia": "",
+          "dietary": "",
+          "room": "",
+          "guests": "",
+          "stayLength": "",
+          "operator": "",
+          "cost": "",
+          "entry": "",
+          "tickets": "",
+          "activity": "",
+          "addedAt": "2026-05-26T22:06:01.948Z"
+        }
+      ],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
+    },
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "San Juan County, United States",
+      "centerLat": 48.6106169,
+      "centerLng": -123.1470482,
+      "places": [
+        {
+          "id": "f92828f2-7a64-4916-a475-2450efa3b083",
+          "name": "Roche Harbor",
+          "address": "Roche Harbor, WA, United States",
+          "lat": 48.6106169,
+          "lng": -123.1470482,
+          "category": "activity",
+          "placeKind": "see",
+          "time": "12:30",
+          "duration": "",
+          "notes": "",
+          "confirmation": "",
+          "partySize": "",
+          "bookedVia": "",
+          "dietary": "",
+          "room": "",
+          "guests": "",
+          "stayLength": "",
+          "operator": "",
+          "cost": "",
+          "entry": "",
+          "tickets": "",
+          "activity": "",
+          "addedAt": "2026-05-26T22:06:40.259Z"
+        }
+      ],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
+    },
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "Salt Spring Island Electoral Area, Canada",
+      "centerLat": 48.8089984,
+      "centerLng": -123.478464,
+      "places": [
+        {
+          "id": "45cc9eea-cafb-4070-9615-d56caec0a806",
+          "name": "Salt Spring Island",
+          "address": "Salt Spring Island BC, Canada",
+          "lat": 48.8089984,
+          "lng": -123.478464,
+          "category": "activity",
+          "placeKind": "see",
+          "time": "12:30",
+          "duration": "",
+          "notes": "",
+          "confirmation": "",
+          "partySize": "",
+          "bookedVia": "",
+          "dietary": "",
+          "room": "",
+          "guests": "",
+          "stayLength": "",
+          "operator": "",
+          "cost": "",
+          "entry": "",
+          "tickets": "",
+          "activity": "",
+          "addedAt": "2026-05-26T22:07:47.635Z"
+        }
+      ],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": []
+    }
+  ]
 }
