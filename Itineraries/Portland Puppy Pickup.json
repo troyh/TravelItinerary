@@ -1,7 +1,7 @@
 {
   "startDate": "2026-05-15",
   "title": "Portland Puppy Pickup 🐶",
-  "subtitle": "",
+  "subtitle": "Wout pickup in Portland",
   "itineraryNotes": "Our new puppy 🐶 is in Eugene and the breeder can meet us in Portland and we will make a mini-visit to Portland out of it.\n\n\n\nFrom the breeder:\n> The puppies are currently being fed Redbarn Ancient Grain Puppy Food – Lamb Recipe, which they are thriving on. You can find this food on Chewy here:\nhttps://www.chewy.com/redbarn-whole-grain-puppy-recipe-dry/dp/1605990  ",
   "days": [
     {
@@ -14,11 +14,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "I made a reservation at 8:15pm at Lang Baan. \n\nI couldn't get a reservation for this night at Le Pigeon. I'm on the **notify me** list, but doubtful I'll get one. Several other restaurant options below.... Claude likes Coquine as the best \"not-Le Pigeon\" option but it's a bit out of town.",
       "centerName": "Portland, United States",
       "centerLat": 45.520317,
       "centerLng": -122.67118043333333,
+      "highlights": [],
+      "note": "I made a reservation at 8:15pm at Lang Baan. \n\nI couldn't get a reservation for this night at Le Pigeon. I'm on the **notify me** list, but doubtful I'll get one. Several other restaurant options below.... Claude likes Coquine as the best \"not-Le Pigeon\" option but it's a bit out of town.",
       "places": [
         {
           "id": "032ae7fe-c133-49c4-8f45-0bc21570f70d",
@@ -6472,11 +6472,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "Cowlitz County, United States",
       "centerLat": 46.242588866666665,
       "centerLng": -122.45538376666666,
+      "highlights": [],
+      "note": "",
       "places": [
         {
           "id": "e7e18f5e-9514-4fa2-ad21-138cb367ed0b",
