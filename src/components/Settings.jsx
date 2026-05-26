@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { testConnection, inferRepo } from "../lib/github.js";
 import { CLAUDE_MODELS } from "../lib/claude.js";
 
@@ -9,6 +9,8 @@ const T = {
   bg: "#ffffff", surface: "#ffffff", surface2: "#f8f9fb",
   border: "#e2e5ea", borderSoft: "#1e3a5220",
 };
+
+const MobileCtx = createContext(false);
 
 // ── Sections ─────────────────────────────────────────────────────────────────
 const SECTIONS = [
@@ -45,10 +47,12 @@ function StatusDot({ status }) {
 }
 
 function Seg({ options, value, onChange, fullWidth }) {
+  const mobile = useContext(MobileCtx);
+  const fw = fullWidth || mobile;
   return (
     <div style={{ display: "inline-flex", padding: 3, borderRadius: 8,
       background: T.surface2, border: `1px solid ${T.border}`,
-      width: fullWidth ? "100%" : "auto" }}>
+      width: fw ? "100%" : "auto" }}>
       {options.map(opt => {
         const selected = opt.value === value;
         return (
@@ -59,7 +63,7 @@ function Seg({ options, value, onChange, fullWidth }) {
               color: selected ? T.text : T.textMuted,
               fontWeight: selected ? 600 : 400,
               boxShadow: selected ? "0 1px 3px rgba(0,0,0,0.06)" : "none",
-              flex: fullWidth ? 1 : "none",
+              flex: fw ? 1 : "none",
             }}>
             {opt.label}
           </button>
@@ -158,9 +162,34 @@ function Field({ label, optional, hint, children }) {
 }
 
 function Card({ id, eyebrow, title, action, children, danger }) {
+  const mobile = useContext(MobileCtx);
   const headerBg = danger ? "rgba(184,74,46,0.06)" : T.bg;
   const eyebrowColor = danger ? "#B84A2E" : T.textFaint;
   const titleColor = danger ? "#B84A2E" : T.text;
+  if (mobile) {
+    return (
+      <div id={`settings-${id}`} style={{ marginBottom: 28 }}>
+        <div style={{ padding: "0 16px 8px", display: "flex", alignItems: "center", gap: 8 }}>
+          {eyebrow && (
+            <div style={{ fontSize: 9.5, fontWeight: 600, letterSpacing: 1.4,
+              color: eyebrowColor, textTransform: "uppercase" }}>
+              {eyebrow}
+            </div>
+          )}
+          <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 0.8,
+            color: titleColor, textTransform: "uppercase" }}>
+            {title}
+          </div>
+          {action && <div style={{ marginLeft: "auto" }}>{action}</div>}
+        </div>
+        <div style={{ margin: "0 14px", padding: "14px 16px", borderRadius: 14,
+          background: T.surface, border: `1px solid ${T.border}`,
+          display: "flex", flexDirection: "column", gap: 18 }}>
+          {children}
+        </div>
+      </div>
+    );
+  }
   return (
     <div id={`settings-${id}`} style={{ borderRadius: 12, border: `1px solid ${T.border}`,
       overflow: "hidden" }}>
@@ -310,6 +339,12 @@ export default function Settings({ settings, onSave, onClose }) {
   const inferredRepo = inferRepo();
   const [activeSection, setActiveSection] = useState("maps");
   const scrollRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 640);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth <= 640);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
 
   // ── Draft state ─────────────────────────────────────────────────────────────
   const [draft, setDraft] = useState({
@@ -416,35 +451,64 @@ export default function Settings({ settings, onSave, onClose }) {
 
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
+    <MobileCtx.Provider value={isMobile}>
     <div style={{ position: "fixed", inset: 0, zIndex: 1050, background: T.bg,
-      display: "flex", flexDirection: "column" }}>
+      display: "flex", flexDirection: "column", fontFamily: "inherit" }}>
 
       {/* Top bar */}
-      <div style={{ height: 52, flexShrink: 0, borderBottom: `1px solid ${T.border}`,
-        display: "flex", alignItems: "center", padding: "0 24px",
-        background: T.bg }}>
-        <div style={{ flex: 1, fontSize: 15, fontWeight: 600, color: T.text,
-          letterSpacing: -0.2 }}>
+      <div style={{
+        flexShrink: 0, borderBottom: `1px solid ${T.border}`,
+        display: "grid", gridTemplateColumns: isMobile ? "72px 1fr 72px" : "1fr auto",
+        alignItems: "center", gap: 8,
+        padding: isMobile ? "max(52px,12px) 8px 12px" : "0 24px",
+        height: isMobile ? "auto" : 52,
+        background: T.bg,
+      }}>
+        {isMobile && (
+          <button onClick={onClose} style={{
+            display: "inline-flex", alignItems: "center", gap: 2,
+            background: "none", border: "none", color: T.accent,
+            fontSize: 14, fontWeight: 500, cursor: "pointer", fontFamily: "inherit",
+            padding: "6px 8px",
+          }}>
+            <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
+              <path d="M7 1L1 7l6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Back
+          </button>
+        )}
+        <div style={{
+          fontSize: isMobile ? 16 : 15, fontWeight: 700, letterSpacing: -0.2, color: T.text,
+          textAlign: isMobile ? "center" : "left",
+        }}>
           Settings
         </div>
-        <button onClick={onClose}
-          style={{ padding: "8px 18px", borderRadius: 8, border: `1px solid ${T.border}`,
-            background: T.surface2, color: T.text, fontWeight: 600, fontSize: 13.5,
-            cursor: "pointer", fontFamily: "inherit" }}>
-          Done
-        </button>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <button onClick={onClose} style={{
+            padding: isMobile ? "6px 12px" : "8px 18px", borderRadius: 8,
+            border: isMobile ? "none" : `1px solid ${T.border}`,
+            background: isMobile ? "transparent" : T.surface2,
+            color: T.accent, fontWeight: 600,
+            fontSize: isMobile ? 14 : 13.5,
+            cursor: "pointer", fontFamily: "inherit",
+          }}>
+            Done
+          </button>
+        </div>
       </div>
 
       {/* Body */}
-      <div ref={scrollRef} style={{ flex: 1, overflowY: "auto", padding: "32px 48px 64px" }}>
-        <div style={{ maxWidth: 1080, margin: "0 auto", display: "grid",
+      <div ref={scrollRef} style={{ flex: 1, overflowY: "auto", background: isMobile ? T.surface2 : T.bg,
+        padding: isMobile ? "20px 0 48px" : "32px 48px 64px" }}>
+        <div style={{ maxWidth: isMobile ? "100%" : 1080, margin: "0 auto",
+          display: isMobile ? "block" : "grid",
           gridTemplateColumns: "220px 1fr", gap: 40 }}>
 
-          {/* Left nav */}
-          <LeftNav activeSection={activeSection} onNav={navTo} />
+          {/* Left nav — desktop only */}
+          {!isMobile && <LeftNav activeSection={activeSection} onNav={navTo} />}
 
           {/* Content */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: isMobile ? 0 : 28 }}>
 
             {/* Maps & navigation */}
             <Card id="maps" eyebrow={SECTIONS[0].num} title={SECTIONS[0].label}
@@ -643,5 +707,6 @@ export default function Settings({ settings, onSave, onClose }) {
         </div>
       </div>
     </div>
+    </MobileCtx.Provider>
   );
 }
