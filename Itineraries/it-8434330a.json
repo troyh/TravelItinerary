@@ -1,5 +1,5 @@
 {
-  "startDate": "",
+  "startDate": "2026-07-06",
   "title": "Canada Cruise 2026 🇨🇦 v3",
   "subtitle": "Gulf Islands and SJIs",
   "itineraryNotes": "Instead of the Broughtons, stay in the Gulf Islands and the SJIs",
@@ -158,11 +158,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "Salt Spring Island Electoral Area, Canada",
       "centerLat": 48.9422289,
       "centerLng": -123.5536601,
+      "highlights": [],
+      "note": "",
       "places": [
         {
           "id": "1be8bf4a-13ab-4803-9d61-a84347610a90",
