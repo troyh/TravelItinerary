@@ -181,7 +181,8 @@
         }
       ],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Victoria → Salt Spring Island → Vancouver",
@@ -403,7 +404,8 @@
         }
       ],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Vancouver — Layover",
@@ -427,7 +429,8 @@
       "directions": [],
       "routes": [],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Vancouver → Princess Louisa Inlet",
@@ -764,7 +767,63 @@
         }
       ],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": [
+        {
+          "id": "2849f809-61ad-4eb8-9d55-2d3b1dd91e52",
+          "kind": "currents",
+          "name": "Atkinson Lighthouse",
+          "lat": 49.3305691,
+          "lng": -123.2644121,
+          "time": "17:56",
+          "timeZoneId": "America/Vancouver",
+          "station": "Strait of Georgia, 4.5 nm SW of Point Roberts",
+          "stationDistNm": 23.8,
+          "extremes": [],
+          "events": [
+            {
+              "time": "2026-07-23T00:56:07.638707465Z",
+              "speed_kts": 0,
+              "type": "slack"
+            },
+            {
+              "time": "2026-07-23T04:54:00Z",
+              "speed_kts": 0.59,
+              "type": "max_flood"
+            },
+            {
+              "time": "2026-07-23T07:42:15.231230148Z",
+              "speed_kts": 0,
+              "type": "slack"
+            },
+            {
+              "time": "2026-07-23T11:30:00Z",
+              "speed_kts": -0.82,
+              "type": "max_ebb"
+            },
+            {
+              "time": "2026-07-23T15:13:46.583750768Z",
+              "speed_kts": 0,
+              "type": "slack"
+            },
+            {
+              "time": "2026-07-23T18:06:00Z",
+              "speed_kts": 0.6,
+              "type": "max_flood"
+            },
+            {
+              "time": "2026-07-23T21:38:31.212872255Z",
+              "speed_kts": 0,
+              "type": "slack"
+            },
+            {
+              "time": "2026-07-23T23:12:00Z",
+              "speed_kts": -0.12,
+              "type": "max_ebb"
+            }
+          ]
+        }
+      ]
     },
     {
       "leg": "Princess Louisa Inlet — Layover",
@@ -789,7 +848,8 @@
       "directions": [],
       "routes": [],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Princess Louisa → Prideaux Haven (Desolation Sound)",
@@ -1131,7 +1191,8 @@
         }
       ],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Desolation Sound — Layover",
@@ -1156,7 +1217,8 @@
       "directions": [],
       "routes": [],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Desolation Sound → Campbell River (fuel) → Port Neville",
@@ -1496,7 +1558,8 @@
         }
       ],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Port Neville → Telegraph Cove",
@@ -1724,7 +1787,8 @@
         }
       ],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Telegraph Cove → Broughtons / Lagoon Cove",
@@ -1947,7 +2011,8 @@
         }
       ],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Broughton Islands — Layover",
@@ -1972,7 +2037,8 @@
       "directions": [],
       "routes": [],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Lagoon Cove → Blind Channel Resort",
@@ -2400,7 +2466,8 @@
         }
       ],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Blind Channel → Squirrel Cove (Cortes Island)",
@@ -2599,7 +2666,8 @@
         }
       ],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Squirrel Cove → Montague Harbour (Galiano Island)",
@@ -2791,7 +2859,8 @@
         }
       ],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Gulf Islands — Layover",
@@ -2817,7 +2886,8 @@
       "directions": [],
       "routes": [],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Gulf Islands — Layover",
@@ -2842,7 +2912,8 @@
       "directions": [],
       "routes": [],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Gulf Islands → Victoria (fuel) → Seattle",
@@ -3063,7 +3134,8 @@
         }
       ],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     }
   ]
 }
