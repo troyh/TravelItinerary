@@ -770,56 +770,96 @@
       "rentalCars": [],
       "tideChecks": [
         {
-          "id": "2849f809-61ad-4eb8-9d55-2d3b1dd91e52",
+          "id": "9d2ce849-274b-451b-b081-c84dba9d0455",
+          "kind": "tides",
+          "name": "Point Atkinson, West Vancouver, Metro Vancouver Regional District, British Columbia, V7W 3H2, Canada",
+          "lat": 49.3298069,
+          "lng": -123.265052,
+          "time": "00:11",
+          "timeZoneId": "America/Vancouver",
+          "station": "Point Atkinson",
+          "stationDistNm": 0.6,
+          "stationMn": null,
+          "extremes": [
+            {
+              "time": "2026-07-09T07:11:00Z",
+              "height_m": 4.44,
+              "type": "H"
+            },
+            {
+              "time": "2026-07-09T14:50:00Z",
+              "height_m": 1.33,
+              "type": "L"
+            },
+            {
+              "time": "2026-07-09T22:17:00Z",
+              "height_m": 3.69,
+              "type": "H"
+            },
+            {
+              "time": "2026-07-10T02:08:00Z",
+              "height_m": 3.35,
+              "type": "L"
+            }
+          ],
+          "events": []
+        },
+        {
+          "id": "fc4697b7-90a7-4fd8-953b-8eaa10895d0c",
           "kind": "currents",
-          "name": "Atkinson Lighthouse",
-          "lat": 49.3305691,
-          "lng": -123.2644121,
-          "time": "17:56",
+          "name": "Point Atkinson, West Vancouver, Metro Vancouver Regional District, British Columbia, V7W 3H2, Canada",
+          "lat": 49.3298069,
+          "lng": -123.265052,
+          "time": "00:34",
           "timeZoneId": "America/Vancouver",
           "station": "Strait of Georgia, 4.5 nm SW of Point Roberts",
           "stationDistNm": 23.8,
+          "stationMn": null,
           "extremes": [],
           "events": [
             {
-              "time": "2026-07-23T00:56:07.638707465Z",
+              "time": "2026-07-09T07:34:32.733677054Z",
               "speed_kts": 0,
               "type": "slack"
             },
             {
-              "time": "2026-07-23T04:54:00Z",
-              "speed_kts": 0.59,
-              "type": "max_flood"
+              "time": "2026-07-09T11:00:00Z",
+              "speed_kts": -1.17,
+              "type": "max_ebb",
+              "direction_deg": 129
             },
             {
-              "time": "2026-07-23T07:42:15.231230148Z",
+              "time": "2026-07-09T14:31:18.189387559Z",
               "speed_kts": 0,
               "type": "slack"
             },
             {
-              "time": "2026-07-23T11:30:00Z",
-              "speed_kts": -0.82,
-              "type": "max_ebb"
+              "time": "2026-07-09T17:48:00Z",
+              "speed_kts": 1.05,
+              "type": "max_flood",
+              "direction_deg": 332
             },
             {
-              "time": "2026-07-23T15:13:46.583750768Z",
+              "time": "2026-07-09T20:56:05.160930126Z",
               "speed_kts": 0,
               "type": "slack"
             },
             {
-              "time": "2026-07-23T18:06:00Z",
-              "speed_kts": 0.6,
-              "type": "max_flood"
+              "time": "2026-07-09T23:36:00Z",
+              "speed_kts": -0.74,
+              "type": "max_ebb",
+              "direction_deg": 129
             },
             {
-              "time": "2026-07-23T21:38:31.212872255Z",
+              "time": "2026-07-10T02:18:58.806144026Z",
               "speed_kts": 0,
               "type": "slack"
             },
             {
-              "time": "2026-07-23T23:12:00Z",
-              "speed_kts": -0.12,
-              "type": "max_ebb"
+              "time": "2026-07-10T05:24:00Z",
+              "speed_kts": 0.9,
+              "type": "max_flood",
+              "direction_deg": 332
             }
           ]
         }
