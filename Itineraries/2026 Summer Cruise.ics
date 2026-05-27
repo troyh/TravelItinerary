@@ -66,6 +66,13 @@ URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=6
 UID:day-6-20260725@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260725T090000
+DTEND:20260725T170800
+SUMMARY:🚢 Princess Louisa Inlet → Prideaux Haven
+DESCRIPTION:81.4 NM · ~8h 8m\nPrincess Louisa Inlet → Prideaux Haven
+UID:route-2aa02d77-5b47-45f1-ab61-189a591cd862@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260726
 DTEND;VALUE=DATE:20260727
 SUMMARY:Day 7: Desolation Sound — Layover
