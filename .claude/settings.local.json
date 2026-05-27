@@ -77,7 +77,13 @@
       "Bash(python3 -m json.tool)",
       "Bash(curl -s \"https://waypoint.troyhakala.com/tides?lat=48.4135&lon=-122.6432&date=2026-07-24\")",
       "Bash(curl -s \"https://waypoint.troyhakala.com/tides?lat=48.4135&lon=-122.6432&date=2026-07-22\")",
-      "Bash(curl -s \"https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date=20260722&end_date=20260724&station=9448614&product=predictions&datum=MLLW&time_zone=lst_ldt&interval=hilo&units=english&application=web_services&format=json\")"
+      "Bash(curl -s \"https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date=20260722&end_date=20260724&station=9448614&product=predictions&datum=MLLW&time_zone=lst_ldt&interval=hilo&units=english&application=web_services&format=json\")",
+      "Bash(awk 'NR>=1419 && NR<=1535 { *)",
+      "Bash(curl -s \"https://waypoint.troyhakala.com/currents?lat=48.4135&lon=-122.6432&date=2026-07-23\")",
+      "Bash(curl -s \"https://waypoint.troyhakala.com/currents?lat=48.4135&lon=-122.6432&date=2026-07-25\")",
+      "Bash(curl -s \"https://waypoint.troyhakala.com/tides?lat=48.4135&lon=-122.6432&date=2026-07-25\")",
+      "Bash(curl -s \"https://waypoint.troyhakala.com/currents?lat=47.6&lon=-122.4&date=2026-07-25\")",
+      "Bash(curl -s \"https://waypoint.troyhakala.com/currents?lat=48.4135&lon=-122.6432&date=2026-07-26\")"
     ],
     "additionalDirectories": [
       "/tmp"

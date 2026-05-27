@@ -1397,6 +1397,7 @@ function TidesAddPanel({ day, dayDate, locationBias, onAdd, onClose }) {
       timeZoneId: timeZoneId ?? null,
       station: result.station?.name ?? "",
       stationDistNm: result.station?.distance_nm ?? null,
+      stationMn:     kind === "tides" ? (result.station?.mn ?? null) : null,
       extremes: kind === "tides"    ? (result.extremes ?? []) : [],
       events:   kind === "currents" ? (result.events   ?? []) : [],
     };
@@ -1410,11 +1411,17 @@ function TidesAddPanel({ day, dayDate, locationBias, onAdd, onClose }) {
     ...(timeZoneId ? { timeZone: timeZoneId } : {}),
   });
 
+  const dayLabel = dayDate ? (() => {
+    const [y, m, d] = dayDate.split("-").map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+  })() : null;
+
   return (
-    <div style={{ padding: "16px 20px", display: "flex", flexDirection: "column", gap: 14 }}>
+    <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
+    <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 14 }}>
       <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
-        Tides &amp; Currents for Day {day}
-        {!dayDate && <span style={{ color: "#dc2626" }}> — set a trip start date first</span>}.
+        Tides &amp; Currents for Day {day}{dayLabel ? <span style={{ color: "var(--text-faint)" }}> ({dayLabel})</span> : ""}
+        {!dayDate && <span style={{ color: "#dc2626" }}> — set a trip start date first</span>}
       </div>
 
       {/* Nominatim location search */}
@@ -1503,6 +1510,9 @@ function TidesAddPanel({ day, dayDate, locationBias, onAdd, onClose }) {
               {(tidesResult.extremes ?? []).map((e, i) => (
                 <div key={i}>{e.type === "H" ? "↑ H" : "↓ L"} {fmtT(e.time)} {(e.height_m * 3.28084).toFixed(1)} ft</div>
               ))}
+              {tidesResult.station?.mn != null && (
+                <div style={{ marginTop: 2, color: "var(--text-faint)" }}>Mean range {(tidesResult.station.mn * 3.28084).toFixed(1)} ft</div>
+              )}
             </div>
           )}
           {/* Currents preview */}
@@ -1518,61 +1528,66 @@ function TidesAddPanel({ day, dayDate, locationBias, onAdd, onClose }) {
               {(currentsResult.events ?? []).map((e, i) => (
                 <div key={i}>
                   {e.type === "max_flood" ? "↑ Flood" : e.type === "slack" ? "— Slack" : "↓ Ebb"}{" "}
-                  {fmtT(e.time)}{e.type !== "slack" ? ` ${Math.abs(e.speed_kts).toFixed(2)} kts` : ""}
+                  {fmtT(e.time)}{e.type !== "slack" ? ` ${Math.abs(e.speed_kts).toFixed(2)} kts${e.direction_deg != null ? ` · ${e.direction_deg}°` : ""}` : ""}
                 </div>
               ))}
             </div>
           )}
         </div>
       )}
+    </div>
 
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        {status === "done" ? (
-          <>
-            <button onClick={doAddTides} disabled={tidesAdded} style={{
-              flex: 1, padding: "9px 0", borderRadius: 8, border: "none", fontFamily: "inherit",
-              cursor: tidesAdded ? "default" : "pointer",
-              background: tidesAdded ? "var(--green-soft)" : "var(--accent)",
-              color: tidesAdded ? "var(--green)" : "#fff",
-              fontSize: 13, fontWeight: 600, minWidth: 100,
-            }}>
-              {tidesAdded ? "✓ Tides added" : "Add Tides"}
-            </button>
-            <button onClick={doAddCurrents} disabled={currentsAdded} style={{
-              flex: 1, padding: "9px 0", borderRadius: 8, border: "none", fontFamily: "inherit",
-              cursor: currentsAdded ? "default" : "pointer",
-              background: currentsAdded ? "var(--green-soft)" : "var(--accent)",
-              color: currentsAdded ? "var(--green)" : "#fff",
-              fontSize: 13, fontWeight: 600, minWidth: 100,
-            }}>
-              {currentsAdded ? "✓ Currents added" : "Add Currents"}
-            </button>
-            <button onClick={onClose} style={{
-              padding: "9px 14px", borderRadius: 8, border: "1px solid var(--border)",
-              cursor: "pointer", background: "none", color: "var(--text-muted)", fontSize: 13, fontFamily: "inherit",
-            }}>
-              Close
-            </button>
-          </>
-        ) : (
-          <>
-            <button onClick={doFetch} disabled={!selected || !dayDate || status === "loading"} style={{
-              flex: 1, padding: "9px 0", borderRadius: 8, border: "none", fontFamily: "inherit",
-              cursor: (!selected || !dayDate || status === "loading") ? "not-allowed" : "pointer",
-              background: (!selected || !dayDate || status === "loading") ? "var(--border)" : "var(--accent)",
-              color: "#fff", fontSize: 13.5, fontWeight: 600,
-            }}>
-              {status === "loading" ? "Fetching…" : "Fetch Tides & Currents"}
-            </button>
-            <button onClick={onClose} style={{
-              padding: "9px 14px", borderRadius: 8, border: "1px solid var(--border)",
-              cursor: "pointer", background: "none", color: "var(--text-muted)", fontSize: 13, fontFamily: "inherit",
-            }}>
-              Cancel
-            </button>
-          </>
-        )}
-      </div>
+    {/* Button bar — pinned at bottom so it's always reachable on mobile */}
+    <div style={{
+      flexShrink: 0, display: "flex", gap: 8, flexWrap: "wrap",
+      padding: "12px 20px", borderTop: "1px solid var(--border)", background: "var(--surface)",
+    }}>
+      {status === "done" ? (
+        <>
+          <button onClick={doAddTides} disabled={tidesAdded} style={{
+            flex: 1, padding: "9px 0", borderRadius: 8, border: "none", fontFamily: "inherit",
+            cursor: tidesAdded ? "default" : "pointer",
+            background: tidesAdded ? "var(--green-soft)" : "var(--accent)",
+            color: tidesAdded ? "var(--green)" : "#fff",
+            fontSize: 13, fontWeight: 600, minWidth: 100,
+          }}>
+            {tidesAdded ? "✓ Tides added" : "Add Tides"}
+          </button>
+          <button onClick={doAddCurrents} disabled={currentsAdded} style={{
+            flex: 1, padding: "9px 0", borderRadius: 8, border: "none", fontFamily: "inherit",
+            cursor: currentsAdded ? "default" : "pointer",
+            background: currentsAdded ? "var(--green-soft)" : "var(--accent)",
+            color: currentsAdded ? "var(--green)" : "#fff",
+            fontSize: 13, fontWeight: 600, minWidth: 100,
+          }}>
+            {currentsAdded ? "✓ Currents added" : "Add Currents"}
+          </button>
+          <button onClick={onClose} style={{
+            padding: "9px 14px", borderRadius: 8, border: "1px solid var(--border)",
+            cursor: "pointer", background: "none", color: "var(--text-muted)", fontSize: 13, fontFamily: "inherit",
+          }}>
+            Close
+          </button>
+        </>
+      ) : (
+        <>
+          <button onClick={doFetch} disabled={!selected || !dayDate || status === "loading"} style={{
+            flex: 1, padding: "9px 0", borderRadius: 8, border: "none", fontFamily: "inherit",
+            cursor: (!selected || !dayDate || status === "loading") ? "not-allowed" : "pointer",
+            background: (!selected || !dayDate || status === "loading") ? "var(--border)" : "var(--accent)",
+            color: "#fff", fontSize: 13.5, fontWeight: 600,
+          }}>
+            {status === "loading" ? "Fetching…" : "Fetch Tides & Currents"}
+          </button>
+          <button onClick={onClose} style={{
+            padding: "9px 14px", borderRadius: 8, border: "1px solid var(--border)",
+            cursor: "pointer", background: "none", color: "var(--text-muted)", fontSize: 13, fontFamily: "inherit",
+          }}>
+            Cancel
+          </button>
+        </>
+      )}
+    </div>
     </div>
   );
 }
@@ -5404,12 +5419,13 @@ export default function Itinerary() {
                             _isHigh: e.type === "max_flood",
                             _isSlack: e.type === "slack",
                             _label: e.type === "max_flood" ? "Max Flood" : e.type === "slack" ? "Slack" : "Max Ebb",
-                            _value: e.type !== "slack" ? `${Math.abs(e.speed_kts).toFixed(2)} kts` : "",
+                            _value: e.type !== "slack" ? `${Math.abs(e.speed_kts).toFixed(2)} kts${e.direction_deg != null ? ` · ${e.direction_deg}°` : ""}` : "",
                             _hhmm: isoToHHMM(e.time, tz),
                           }));
                       return evts.map(ev => ({
                         _type: "tidecheck", _sort: timeToSortKey(ev._hhmm), _disp: fmtTime12(ev._hhmm),
                         _parentId: t.id, kind: t.kind, name: t.name, station: t.station, stationDistNm: t.stationDistNm,
+                        stationMn: t.stationMn ?? null,
                         ...ev,
                       }));
                     });
@@ -5570,6 +5586,9 @@ export default function Itinerary() {
                                 </svg>;
                             title = item._label;
                             sub1 = [item._value, item.name].filter(Boolean).join(" · ");
+                            sub2 = (item.kind === "tides" && item.stationMn != null)
+                              ? `Mean range ${(item.stationMn * 3.28084).toFixed(1)} ft`
+                              : "";
                             onDel = !readOnly ? () => deleteTideCheck(d.day, item._parentId) : null;
                             item._isTidecheck = true;
                           }
@@ -5944,7 +5963,7 @@ export default function Itinerary() {
       {addPanel && (
         <>
           <div className="add-panel-backdrop" onClick={closeAddPanel} />
-          <div className="add-panel">
+          <div className={`add-panel${addPanel.type === "tides" ? " add-panel-tides" : ""}`}>
             {/* Header — hidden for types that provide their own header */}
             <div className="add-panel-header" style={{ display: (addPanel.type === "place" || addPanel.type === "travel") ? "none" : undefined }}>
               {addPanel.subtype && (
@@ -6257,7 +6276,7 @@ export default function Itinerary() {
                 return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
               })();
               return (
-                <div style={{ flex:1, minHeight:0 }}>
+                <div style={{ flex:1, minHeight:0, display:"flex", flexDirection:"column", overflow:"hidden" }}>
                   <TidesAddPanel
                     day={addPanel.day}
                     dayDate={dayDate}
