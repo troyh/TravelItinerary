@@ -822,40 +822,6 @@
               "type": "max_ebb"
             }
           ]
-        },
-        {
-          "id": "ce5417d7-e2bb-43e7-a142-6724332e74c0",
-          "kind": "tides",
-          "name": "Seattle, WA",
-          "lat": 47.6037757,
-          "lng": -122.3307651,
-          "time": "17:36",
-          "timeZoneId": "America/Los_Angeles",
-          "station": "SEATTLE (Madison St.), Elliott Bay",
-          "stationDistNm": 0.4,
-          "extremes": [
-            {
-              "time": "2026-07-23T00:36:00Z",
-              "height_m": 4.28,
-              "type": "L"
-            },
-            {
-              "time": "2026-07-23T06:54:00Z",
-              "height_m": 5.74,
-              "type": "H"
-            },
-            {
-              "time": "2026-07-23T14:24:00Z",
-              "height_m": 2.75,
-              "type": "L"
-            },
-            {
-              "time": "2026-07-23T22:30:00Z",
-              "height_m": 4.9,
-              "type": "H"
-            }
-          ],
-          "events": []
         }
       ]
     },
@@ -914,7 +880,7 @@
           "nm": 81.4,
           "speedKts": 15,
           "hrs": 8.133333333333333,
-          "time": "",
+          "time": "09:00",
           "startName": "Princess Louisa Inlet",
           "startLat": 50.1853206,
           "startLng": -123.8019316,
@@ -1182,8 +1148,8 @@
           "arrival": "",
           "departureName": "Princess Louisa Inlet",
           "arrivalName": "Prideaux Haven",
-          "departureTime": "",
-          "arrivalTime": "",
+          "departureTime": "09:00",
+          "arrivalTime": "17:08",
           "airline": "",
           "aircraft": "",
           "confirmation": "",
@@ -1209,7 +1175,7 @@
           "travelMode": "DRIVING",
           "departDate": "2026-07-25",
           "arriveDate": "2026-07-25",
-          "arriveTime": "",
+          "arriveTime": "17:08",
           "vessel": "Figurati",
           "cruisingSpeed": "12",
           "agency": "",
@@ -1218,15 +1184,65 @@
           "duration": "8h 8m",
           "vehicleId": "mpixxfx8p5q6i",
           "vehicleDbId": "3d1270fe-7626-4267-b9ea-cf91add27bb1",
-          "fuelGph": 21.75,
-          "fuelGallons": 176.89999999999998,
+          "fuelGph": 17,
+          "fuelGallons": 138.26666666666665,
           "fuelUnit": "gal",
           "fuelCurrency": "USD"
         }
       ],
       "flights": [],
       "rentalCars": [],
-      "tideChecks": []
+      "tideChecks": [
+        {
+          "id": "198520a2-5349-4e5c-829c-eda94ed1e0ca",
+          "kind": "currents",
+          "name": "Point Atkinson Lighthouse, West Beach Trail, Eagle Harbour, West Vancouver, Metro Vancouver Regional District, British Columbia, V7W 3C0, Canada",
+          "lat": 49.3303944,
+          "lng": -123.2645858,
+          "time": "17:18",
+          "timeZoneId": "America/Vancouver",
+          "station": "Strait of Georgia, 4.5 nm SW of Point Roberts",
+          "stationDistNm": 23.8,
+          "extremes": [],
+          "events": [
+            {
+              "time": "2026-07-25T00:18:00Z",
+              "speed_kts": -0.01,
+              "type": "max_ebb"
+            },
+            {
+              "time": "2026-07-25T00:44:30.213551193Z",
+              "speed_kts": 0,
+              "type": "slack"
+            },
+            {
+              "time": "2026-07-25T06:12:00Z",
+              "speed_kts": 0.37,
+              "type": "max_flood"
+            },
+            {
+              "time": "2026-07-25T08:33:43.244450213Z",
+              "speed_kts": 0,
+              "type": "slack"
+            },
+            {
+              "time": "2026-07-25T12:48:00Z",
+              "speed_kts": -0.85,
+              "type": "max_ebb"
+            },
+            {
+              "time": "2026-07-25T16:44:42.694754904Z",
+              "speed_kts": 0,
+              "type": "slack"
+            },
+            {
+              "time": "2026-07-25T19:48:00Z",
+              "speed_kts": 0.69,
+              "type": "max_flood"
+            }
+          ]
+        }
+      ]
     },
     {
       "leg": "Desolation Sound — Layover",
