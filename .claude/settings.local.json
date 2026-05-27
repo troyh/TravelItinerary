@@ -69,7 +69,10 @@
       "Bash(sed -i '' 's/repeatReturn ? ATP\\\\.accent : \"#fff\"/repeatReturn ? ATP.accent : \"var\\(--surface\\)\"/g' /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)",
       "Bash(grep -n '\"#[0-9a-fA-F]\\\\{3,6\\\\}\"' /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)",
       "Bash(sed -i '' 's/#e2e5ea/var\\(--border\\)/g' /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)",
-      "Bash(sed -i '' 's/#ffffff/var\\(--surface\\)/g' /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)"
+      "Bash(sed -i '' 's/#ffffff/var\\(--surface\\)/g' /Users/troy/dev/TravelItinerary/src/components/Itinerary.jsx)",
+      "WebFetch(domain:waypoint.troyhakala.com)",
+      "Bash(curl -s \"https://waypoint.troyhakala.com/tides?lat=47.6&lon=-122.3&date=2026-05-26\")",
+      "Bash(curl -s \"https://timeapi.io/api/timezone/coordinate?latitude=47.6&longitude=-122.3\")"
     ],
     "additionalDirectories": [
       "/tmp"

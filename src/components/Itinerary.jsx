@@ -9,6 +9,7 @@ import DayRentalCar from "./DayRentalCar.jsx";
 import ClaudePrompt from "./ClaudePrompt.jsx";
 import { ConciergeRail, ConciergeBar, PeekSheet, ConciergeToggleButton } from "./Concierge.jsx";
 import { chatClaude, buildConciergeSystem } from "../lib/claude.js";
+import { fetchTides, fetchCurrents, fetchTimezone } from "../lib/waypoint.js";
 import ItineraryMap from "./ItineraryMap.jsx";
 import Settings from "./Settings.jsx";
 import { loadFromGitHub, saveToGitHub, deleteFromGitHub, ITINERARIES_FOLDER, inferRepo } from "../lib/github.js";
@@ -16,6 +17,7 @@ import ItineraryPicker from "./ItineraryPicker.jsx";
 import HistoryPanel from "./HistoryPanel.jsx";
 import TravelRouteMap from "./TravelRouteMap.jsx";
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
+import L from "leaflet";
 import { loadMapKit, appleAutocomplete, appleFetchPlaceDetails, appleFetchDirections, getStoredProviderSettings } from "../lib/mapkit.js";
 
 // ── Location autocomplete singletons ──────────────────────────────────────────
@@ -61,7 +63,7 @@ const _db = (() => {
 
 // Handles both old format (top-level keyed dicts) and new format (per-day arrays embedded in each day).
 function extractPerDayState(data) {
-  if (!data) return { days: [], places: {}, directions: {}, routes: {}, flights: {}, rentalCars: {}, highlights: {}, notes: {} };
+  if (!data) return { days: [], places: {}, directions: {}, routes: {}, flights: {}, rentalCars: {}, tideChecks: {}, highlights: {}, notes: {} };
   const rawDays = data.days ?? [];
   if ("places" in data || "directions" in data) {
     // Old format: top-level keyed dicts
@@ -72,6 +74,7 @@ function extractPerDayState(data) {
       routes:     data.routes     ?? {},
       flights:    data.flights    ?? {},
       rentalCars: data.rentalCars ?? {},
+      tideChecks: data.tideChecks ?? {},
       highlights: data.highlights ?? {},
       notes:      data.notes      ?? {},
     };
@@ -79,7 +82,7 @@ function extractPerDayState(data) {
   // New format: per-day data embedded; `day` derived from array position if absent
   const daysArr = rawDays.map((d, i) => ({ day: i + 1, ...d }));
   return {
-    days: daysArr.map(({ places, directions, routes, flights, rentalCars, highlights: _h, note: _n, ...rest }) => ({
+    days: daysArr.map(({ places, directions, routes, flights, rentalCars, tideChecks, highlights: _h, note: _n, ...rest }) => ({
       ...rest, highlights: [], note: "", centerName: rest.centerName ?? "", centerLat: rest.centerLat ?? null, centerLng: rest.centerLng ?? null,
     })),
     places:     Object.fromEntries(daysArr.map(d => [String(d.day), d.places     ?? []])),
@@ -87,6 +90,7 @@ function extractPerDayState(data) {
     routes:     Object.fromEntries(daysArr.map(d => [String(d.day), d.routes     ?? []])),
     flights:    Object.fromEntries(daysArr.map(d => [String(d.day), d.flights    ?? []])),
     rentalCars: Object.fromEntries(daysArr.map(d => [String(d.day), d.rentalCars ?? []])),
+    tideChecks: Object.fromEntries(daysArr.map(d => [String(d.day), d.tideChecks ?? []])),
     highlights: Object.fromEntries(daysArr.map(d => [String(d.day), d.highlights ?? []])),
     notes:      Object.fromEntries(daysArr.map(d => [String(d.day), d.note       ?? ""])),
   };
@@ -1217,6 +1221,286 @@ function AddPlacePanel({
 }
 
 // ── End AddPlacePanel ─────────────────────────────────────────────────────────
+
+// ── TidesAddPanel ─────────────────────────────────────────────────────────────
+
+function TidesAddPanel({ day, kind, dayDate, locationBias, onAdd, onClose }) {
+  const [search,     setSearch]     = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [selected,   setSelected]   = useState(null);
+  const [status,     setStatus]     = useState("idle"); // idle | loading | error | done
+  const [errMsg,     setErrMsg]     = useState("");
+  const [result,     setResult]     = useState(null);
+  const [timeZoneId, setTimeZoneId] = useState(null);
+
+  const mapDivRef  = useRef(null);
+  const leafletRef = useRef(null); // { map, marker }
+  const debRef     = useRef(null);
+
+  // Init Leaflet map once on mount
+  useEffect(() => {
+    if (!mapDivRef.current) return;
+    const center = locationBias ? [locationBias.lat, locationBias.lng] : [20, 0];
+    const zoom   = locationBias ? 8 : 2;
+    const map = L.map(mapDivRef.current, {
+      center, zoom,
+      zoomControl: true,
+      attributionControl: false,
+    });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18 }).addTo(map);
+    L.control.attribution({ prefix: false, position: "bottomright" })
+      .addAttribution('<a href="https://www.openstreetmap.org/copyright" tabindex="-1">© OSM</a>')
+      .addTo(map);
+
+    map.on("click", async e => {
+      const { lat, lng } = e.latlng;
+      const coords = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+      setSelected({ name: coords, lat, lng });
+      setSearch(coords);
+      setSuggestions([]);
+      setResult(null);
+      setStatus("idle");
+      setErrMsg("");
+      const name = await reverseGeocode(lat, lng);
+      if (name) {
+        setSelected(prev => (prev?.lat === lat && prev?.lng === lng) ? { ...prev, name } : prev);
+        setSearch(prev => prev === coords ? name : prev);
+      }
+    });
+
+    setTimeout(() => map.invalidateSize(), 50);
+    leafletRef.current = { map, marker: null };
+    return () => { map.remove(); leafletRef.current = null; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Update marker when selected changes
+  useEffect(() => {
+    if (!leafletRef.current) return;
+    const { map, marker } = leafletRef.current;
+    if (marker) { marker.remove(); leafletRef.current.marker = null; }
+    if (selected?.lat && selected?.lng) {
+      const m = L.circleMarker([selected.lat, selected.lng], {
+        radius: 7, fillColor: "#0b3d6b", color: "#fff", weight: 2, fillOpacity: 1,
+      }).addTo(map);
+      leafletRef.current.marker = m;
+      map.setView([selected.lat, selected.lng], Math.max(map.getZoom(), 10), { animate: true });
+    }
+  }, [selected]);
+
+  function handleSearchInput(val) {
+    setSearch(val);
+    if (selected) { setSelected(null); setResult(null); setStatus("idle"); }
+    clearTimeout(debRef.current);
+    if (!val.trim()) { setSuggestions([]); return; }
+    debRef.current = setTimeout(async () => {
+      try {
+        const bias = locationBias ? `&viewbox=${locationBias.lng - 5},${locationBias.lat - 5},${locationBias.lng + 5},${locationBias.lat + 5}&bounded=0` : "";
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val)}&format=json&limit=8${bias}`,
+          { headers: { "Accept-Language": "en" } }
+        );
+        const data = await res.json();
+        setSuggestions(data.map(r => ({
+          name: r.display_name,
+          lat: parseFloat(r.lat),
+          lng: parseFloat(r.lon),
+        })));
+      } catch { setSuggestions([]); }
+    }, 350);
+  }
+
+  function pickSuggestion(s) {
+    setSelected(s);
+    setSearch(s.name);
+    setSuggestions([]);
+    setResult(null);
+    setStatus("idle");
+  }
+
+  async function doFetch() {
+    if (!selected?.lat || !selected?.lng) { setErrMsg("Select a location first."); return; }
+    if (!dayDate) { setErrMsg("Set a trip start date before fetching tidal data."); return; }
+    setStatus("loading"); setErrMsg("");
+    try {
+      const [data, tz] = await Promise.all([
+        kind === "tides"
+          ? fetchTides(selected.lat, selected.lng, dayDate)
+          : fetchCurrents(selected.lat, selected.lng, dayDate),
+        fetchTimezone(selected.lat, selected.lng),
+      ]);
+      setResult(data);
+      setTimeZoneId(tz);
+      setStatus("done");
+    } catch (e) {
+      setErrMsg(e.message); setStatus("error");
+    }
+  }
+
+  function doAdd() {
+    const items = kind === "tides" ? (result.extremes ?? []) : (result.events ?? []);
+    const times = items.map(e => e.time).sort();
+    const isoToHHMMtz = (iso, tz) => {
+      const parts = new Intl.DateTimeFormat("en-US", {
+        hour: "2-digit", minute: "2-digit", hour12: false,
+        timeZone: tz ?? undefined,
+      }).formatToParts(new Date(iso));
+      const h = parts.find(p => p.type === "hour")?.value ?? "00";
+      const m = parts.find(p => p.type === "minute")?.value ?? "00";
+      return `${h.padStart(2,"0")}:${m.padStart(2,"0")}`;
+    };
+    const firstLocal = times.length ? isoToHHMMtz(times[0], timeZoneId) : "00:00";
+    onAdd({
+      id: crypto.randomUUID(),
+      kind,
+      name: selected.name,
+      lat: selected.lat, lng: selected.lng,
+      time: firstLocal,
+      timeZoneId: timeZoneId ?? null,
+      station: result.station?.name ?? "",
+      stationDistNm: result.station?.distance_nm ?? null,
+      extremes: kind === "tides"    ? (result.extremes ?? []) : [],
+      events:   kind === "currents" ? (result.events   ?? []) : [],
+    });
+  }
+
+  const label = kind === "tides" ? "Tides" : "Currents";
+  const fmtT = iso => new Date(iso).toLocaleTimeString("en-US", {
+    hour: "numeric", minute: "2-digit", hour12: true,
+    ...(timeZoneId ? { timeZone: timeZoneId } : {}),
+  });
+
+  return (
+    <div style={{ padding: "16px 20px", display: "flex", flexDirection: "column", gap: 14 }}>
+      <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
+        {label} for Day {day}
+        {!dayDate && <span style={{ color: "#dc2626" }}> — set a trip start date first</span>}.
+      </div>
+
+      {/* Nominatim location search */}
+      <div style={{ position: "relative", zIndex: 1000 }}>
+        <label style={{ fontSize: 12, color: "var(--text-faint)", display: "block", marginBottom: 4 }}>Location</label>
+        <div style={{ position: "relative" }}>
+          <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "var(--text-faint)", pointerEvents: "none", display: "flex" }}>
+            {AddGlyph.search}
+          </span>
+          <input
+            type="text"
+            value={search}
+            onChange={e => handleSearchInput(e.target.value)}
+            placeholder="Search for a location…"
+            style={{ ...AP.input, paddingLeft: 34, paddingRight: selected ? 80 : 12 }}
+          />
+          {selected && (
+            <span style={{
+              position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)",
+              background: AP.accentSoft, color: AP.accent, fontSize: 10.5, fontWeight: 600,
+              borderRadius: 99, padding: "2px 8px", display: "inline-flex", alignItems: "center", gap: 4,
+              cursor: "pointer",
+            }} onClick={() => { setSelected(null); setSearch(""); setResult(null); setStatus("idle"); }}>
+              ✨ matched ×
+            </span>
+          )}
+        </div>
+        {suggestions.length > 0 && !selected && (
+          <div style={{
+            position: "absolute", top: "calc(100% + 2px)", left: 0, right: 0, zIndex: 9999,
+            background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8,
+            boxShadow: "0 4px 16px rgba(0,0,0,0.12)", overflow: "hidden",
+          }}>
+            {suggestions.map((s, i) => (
+              <div key={i}
+                onMouseDown={e => { e.preventDefault(); pickSuggestion(s); }}
+                style={{
+                  padding: "8px 12px", cursor: "pointer", fontSize: 13,
+                  borderBottom: i < suggestions.length - 1 ? "1px solid var(--border-soft)" : "none",
+                  background: "var(--surface)",
+                  lineHeight: 1.3,
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = "var(--surface2)"}
+                onMouseLeave={e => e.currentTarget.style.background = "var(--surface)"}
+              >
+                {s.name}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Map — zIndex:1 creates a stacking context that contains Leaflet's z-1000 controls */}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <div ref={mapDivRef} style={{
+          height: 200, borderRadius: 8, overflow: "hidden",
+          border: "1px solid var(--border)", cursor: "crosshair",
+        }} />
+        {!selected && (
+          <div style={{
+            position: "absolute", bottom: 8, left: 0, right: 0, textAlign: "center",
+            pointerEvents: "none",
+          }}>
+            <span style={{
+              fontSize: 11.5, color: "#fff", background: "rgba(0,0,0,0.45)",
+              padding: "3px 8px", borderRadius: 4,
+            }}>Tap map to set location</span>
+          </div>
+        )}
+      </div>
+
+      {errMsg && <div style={{ fontSize: 12, color: "#dc2626" }}>{errMsg}</div>}
+
+      {status === "done" && result && (
+        <div style={{
+          borderRadius: 8, border: "1px solid var(--border)", padding: "10px 12px",
+          background: "var(--surface2)", fontSize: 12, color: "var(--text-muted)",
+          display: "flex", flexDirection: "column", gap: 3,
+        }}>
+          <div style={{ marginBottom: 2, fontWeight: 500 }}>
+            {result.station?.name}{result.station?.distance_nm ? ` · ${result.station.distance_nm} nm away` : ""}
+          </div>
+          {kind === "tides" && (result.extremes ?? []).map((e, i) => (
+            <div key={i} style={{ color: "var(--text)" }}>
+              {e.type === "H" ? "↑ H" : "↓ L"} {fmtT(e.time)} {(e.height_m * 3.28084).toFixed(1)} ft
+            </div>
+          ))}
+          {kind === "currents" && (result.events ?? []).map((e, i) => (
+            <div key={i} style={{ color: "var(--text)" }}>
+              {e.type === "max_flood" ? "↑ Flood" : e.type === "slack" ? "— Slack" : "↓ Ebb"}{" "}
+              {fmtT(e.time)}{e.type !== "slack" ? ` ${Math.abs(e.speed_kts).toFixed(2)} kts` : ""}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div style={{ display: "flex", gap: 8 }}>
+        {status === "done" ? (
+          <button onClick={doAdd} style={{
+            flex: 1, padding: "9px 0", borderRadius: 8, border: "none", cursor: "pointer",
+            background: "var(--accent)", color: "#fff", fontSize: 13.5, fontWeight: 600, fontFamily: "inherit",
+          }}>
+            Add {label} to Day {day}
+          </button>
+        ) : (
+          <button onClick={doFetch} disabled={!selected || !dayDate || status === "loading"} style={{
+            flex: 1, padding: "9px 0", borderRadius: 8, border: "none", fontFamily: "inherit",
+            cursor: (!selected || !dayDate || status === "loading") ? "not-allowed" : "pointer",
+            background: (!selected || !dayDate || status === "loading") ? "var(--border)" : "var(--accent)",
+            color: "#fff", fontSize: 13.5, fontWeight: 600,
+          }}>
+            {status === "loading" ? "Fetching…" : `Fetch ${label}`}
+          </button>
+        )}
+        <button onClick={onClose} style={{
+          padding: "9px 16px", borderRadius: 8, border: "1px solid var(--border)",
+          cursor: "pointer", background: "none", color: "var(--text-muted)", fontSize: 13, fontFamily: "inherit",
+        }}>
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── End TidesAddPanel ─────────────────────────────────────────────────────────
 
 // ── AddTravelPanel ────────────────────────────────────────────────────────────
 
@@ -2601,6 +2885,7 @@ export default function Itinerary() {
   const [savedRoutes,      setSavedRoutes]      = useState(() => _extracted.routes);
   const [savedFlights,     setSavedFlights]     = useState(() => _extracted.flights);
   const [savedRentalCars,  setSavedRentalCars]  = useState(() => _extracted.rentalCars);
+  const [savedTideChecks,  setSavedTideChecks]  = useState(() => _extracted.tideChecks);
   const [days,             setDays]             = useState(() => _extracted.days);
   const [editingCoreDay,   setEditingCoreDay]   = useState(null);
   const [coreDraft,        setCoreDraft]        = useState({});
@@ -2683,6 +2968,7 @@ export default function Itinerary() {
   });
   const [addPanel,         setAddPanel]         = useState(null);
   const [mobileSheet,      setMobileSheet]      = useState(null);
+  const [moreMenuDay,      setMoreMenuDay]      = useState(null);
   const [geocodingDay,     setGeocodingDay]     = useState(null);
   const [locPreds,         setLocPreds]         = useState([]);
   const [locActiveDay,     setLocActiveDay]     = useState(null);
@@ -2799,6 +3085,7 @@ export default function Itinerary() {
           routes:     savedRoutes[String(d.day)]         ?? [],
           flights:    savedFlights[String(d.day)]        ?? [],
           rentalCars: savedRentalCars[String(d.day)]     ?? [],
+          tideChecks: savedTideChecks[String(d.day)]     ?? [],
         };
       }),
     };
@@ -2840,7 +3127,7 @@ export default function Itinerary() {
       setSyncStatus("unsaved");
     }
     if (!justLoadedRef.current) dirtyRef.current = true;
-  }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, savedFlights, savedRentalCars, customNotes, startDate, title, subtitle, itineraryNotes]);
+  }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, savedFlights, savedRentalCars, savedTideChecks, customNotes, startDate, title, subtitle, itineraryNotes]);
 
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
 
@@ -3053,6 +3340,18 @@ export default function Itinerary() {
     }));
   }
 
+  function addTideCheck(dayNum, check) {
+    dirtyRef.current = true;
+    setSavedTideChecks(prev => ({ ...prev, [dayNum]: [...(prev[dayNum] ?? []), check] }));
+  }
+  function deleteTideCheck(dayNum, id) {
+    dirtyRef.current = true;
+    setSavedTideChecks(prev => ({
+      ...prev,
+      [dayNum]: (prev[dayNum] ?? []).filter(t => t.id !== id),
+    }));
+  }
+
   function addDirection(dayNum, dir) {
     setSavedDirections(prev => ({ ...prev, [dayNum]: [...(prev[dayNum] ?? []), dir] }));
   }
@@ -3083,6 +3382,7 @@ export default function Itinerary() {
     setSavedRoutes(prev => remapKeys(prev, newNum, +1));
     setSavedFlights(prev => remapKeys(prev, newNum, +1));
     setSavedRentalCars(prev => remapKeys(prev, newNum, +1));
+    setSavedTideChecks(prev => remapKeys(prev, newNum, +1));
   }
 
   function addBlankDay(afterDayNum) {
@@ -3097,6 +3397,7 @@ export default function Itinerary() {
     setSavedRoutes(prev => remapKeys(prev, newNum, +1));
     setSavedFlights(prev => remapKeys(prev, newNum, +1));
     setSavedRentalCars(prev => remapKeys(prev, newNum, +1));
+    setSavedTideChecks(prev => remapKeys(prev, newNum, +1));
     setEditingCoreDay(newNum);
     setCoreDraft({ leg: "New Day", overnight: "", nm: 0, hrs: 0 });
   }
@@ -3110,6 +3411,7 @@ export default function Itinerary() {
     setSavedRoutes(prev => remapKeys(prev, dayNum, -1));
     setSavedFlights(prev => remapKeys(prev, dayNum, -1));
     setSavedRentalCars(prev => remapKeys(prev, dayNum, -1));
+    setSavedTideChecks(prev => remapKeys(prev, dayNum, -1));
     setConfirmDeleteDay(null);
     setEditingCoreDay(null);
   }
@@ -3131,6 +3433,7 @@ export default function Itinerary() {
     setSavedRoutes(     p => swapArr(p, []));
     setSavedFlights(    p => swapArr(p, []));
     setSavedRentalCars( p => swapArr(p, []));
+    setSavedTideChecks( p => swapArr(p, []));
     setCustomNotes(     p => swapArr(p, ""));
     setDays(prev => {
       const arr = [...prev];
@@ -3208,6 +3511,7 @@ export default function Itinerary() {
     setSavedRoutes(x.routes);
     setSavedFlights(x.flights);
     setSavedRentalCars(x.rentalCars);
+    setSavedTideChecks(x.tideChecks);
     setCustomNotes(x.notes);
     setStartDate(data?.startDate ?? "");
     setTitle(data?.title ?? "New Itinerary");
@@ -3233,7 +3537,7 @@ export default function Itinerary() {
   function handleCreate(name, dbId) {
     const path = `${ITINERARIES_FOLDER}/it-${crypto.randomUUID().slice(0, 8)}.json`;
     dirtyRef.current = false;
-    setDays([]); setSavedPlaces({}); setSavedDirections({}); setSavedRoutes({}); setSavedFlights({}); setSavedRentalCars({});
+    setDays([]); setSavedPlaces({}); setSavedDirections({}); setSavedRoutes({}); setSavedFlights({}); setSavedRentalCars({}); setSavedTideChecks({});
     setCustomNotes({});
     setStartDate(""); ;
     setTitle(name); setSubtitle(""); setItineraryNotes("");
@@ -3649,6 +3953,7 @@ export default function Itinerary() {
           routes:     savedRoutes[String(d.day)]         ?? [],
           flights:    savedFlights[String(d.day)]        ?? [],
           rentalCars: savedRentalCars[String(d.day)]     ?? [],
+          tideChecks: savedTideChecks[String(d.day)]     ?? [],
         };
       }),
     };
@@ -3978,6 +4283,17 @@ export default function Itinerary() {
     document.body.style.overflow = shouldLock ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [addPanel, mobileSheet]);
+
+  // Close the "..." more menu when clicking outside
+  useEffect(() => {
+    if (!moreMenuDay) return;
+    const close = (e) => {
+      if (e.target.closest("[data-more-menu]")) return;
+      setMoreMenuDay(null);
+    };
+    document.addEventListener("mousedown", close, true);
+    return () => document.removeEventListener("mousedown", close, true);
+  }, [moreMenuDay]);
 
   function dayBiasFor(dayNum) {
     const d = days.find(x => x.day === dayNum);
@@ -4939,8 +5255,41 @@ export default function Itinerary() {
                     const dirs     = (savedDirections[d.day]  ?? []).map(x => ({ _type:"direction", _sort: timeToSortKey(x.time),              _disp: fmtTime12(x.time),              ...x }));
                     const routes   = (savedRoutes[d.day]      ?? []).map(r => ({ _type:"route",     _sort: timeToSortKey(r.time),              _disp: fmtTime12(r.time),              ...r }));
                     const cars     = (savedRentalCars[d.day]  ?? []).map(c => ({ _type:"rentalcar", _sort: timeToSortKey(c.time),              _disp: fmtTime12(c.time),              ...c }));
+                    const tideChecks = (savedTideChecks[d.day] ?? []).flatMap(t => {
+                      const isoToHHMM = (iso, tz) => {
+                        const parts = new Intl.DateTimeFormat("en-US", {
+                          hour: "2-digit", minute: "2-digit", hour12: false,
+                          ...(tz ? { timeZone: tz } : {}),
+                        }).formatToParts(new Date(iso));
+                        const h = parts.find(p => p.type === "hour")?.value ?? "00";
+                        const m = parts.find(p => p.type === "minute")?.value ?? "00";
+                        return `${h.padStart(2,"0")}:${m.padStart(2,"0")}`;
+                      };
+                      const tz = t.timeZoneId ?? null;
+                      const evts = t.kind === "tides"
+                        ? (t.extremes ?? []).map((e, i) => ({
+                            id: `${t.id}_${i}`,
+                            _isHigh: e.type === "H",
+                            _label: e.type === "H" ? "High Tide" : "Low Tide",
+                            _value: `${(e.height_m * 3.28084).toFixed(1)} ft`,
+                            _hhmm: isoToHHMM(e.time, tz),
+                          }))
+                        : (t.events ?? []).map((e, i) => ({
+                            id: `${t.id}_${i}`,
+                            _isHigh: e.type === "max_flood",
+                            _isSlack: e.type === "slack",
+                            _label: e.type === "max_flood" ? "Max Flood" : e.type === "slack" ? "Slack" : "Max Ebb",
+                            _value: e.type !== "slack" ? `${Math.abs(e.speed_kts).toFixed(2)} kts` : "",
+                            _hhmm: isoToHHMM(e.time, tz),
+                          }));
+                      return evts.map(ev => ({
+                        _type: "tidecheck", _sort: timeToSortKey(ev._hhmm), _disp: fmtTime12(ev._hhmm),
+                        _parentId: t.id, kind: t.kind, name: t.name, station: t.station, stationDistNm: t.stationDistNm,
+                        ...ev,
+                      }));
+                    });
 
-                    const all = [...places, ...flights, ...dirs, ...routes, ...cars]
+                    const all = [...places, ...flights, ...dirs, ...routes, ...cars, ...tideChecks]
                       .sort((a, b) => {
                         if (!a._sort && !b._sort) return 0;
                         if (!a._sort) return 1;
@@ -5081,6 +5430,23 @@ export default function Itinerary() {
                             noteText = item.notes || "";
                             badge = item.confirmation || "";
                             onDel = !readOnly ? () => deleteRentalCar(d.day, item.id) : null;
+                          } else if (item._type === "tidecheck") {
+                            dotColor = item._isHigh ? "#0ea5e9" : item._isSlack ? "#94a3b8" : "#64748b";
+                            icon = item.kind === "tides"
+                              ? <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}>
+                                  {item._isHigh
+                                    ? <path d="M8 13 L8 3 M5 7 L8 3 L11 7" stroke={dotColor} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                                    : <path d="M8 3 L8 13 M5 9 L8 13 L11 9" stroke={dotColor} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                                  }
+                                </svg>
+                              : <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}>
+                                  <path d="M1 11c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0M1 7c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0"
+                                    stroke={dotColor} strokeWidth="1.4" strokeLinecap="round"/>
+                                </svg>;
+                            title = item._label;
+                            sub1 = [item._value, item.name].filter(Boolean).join(" · ");
+                            onDel = !readOnly ? () => deleteTideCheck(d.day, item._parentId) : null;
+                            item._isTidecheck = true;
                           }
 
                           return (
@@ -5098,8 +5464,8 @@ export default function Itinerary() {
                               {/* Content */}
                               <div style={{ flex:1, minWidth:0, paddingBottom: isLast ? 0 : 14 }}>
                                 <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:8 }}>
-                                  <div style={{ flex:1, minWidth:0, cursor:"pointer" }}
-                                    onClick={() => openEditPanel(d.day, item)}>
+                                  <div style={{ flex:1, minWidth:0, cursor: item._isTidecheck ? "default" : "pointer" }}
+                                    onClick={() => !item._isTidecheck && openEditPanel(d.day, item)}>
                                     <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:2, flexWrap:"wrap" }}>
                                       {icon}
                                       <span style={{ fontSize:14, fontWeight:600, letterSpacing:-0.1, color:"var(--text)" }}>{title}</span>
@@ -5228,18 +5594,60 @@ export default function Itinerary() {
                     const allItems = [
                       ...(savedPlaces[d.day] ?? []), ...(savedFlights[d.day] ?? []),
                       ...(savedDirections[d.day] ?? []), ...(savedRoutes[d.day] ?? []),
-                      ...(savedRentalCars[d.day] ?? []),
+                      ...(savedRentalCars[d.day] ?? []), ...(savedTideChecks[d.day] ?? []),
                     ];
                     if (!allItems.length) return null;
                     return (
                       <div className="day-add-bar" style={{ gap:8, marginTop:14, padding:"4px 0 0" }}>
                         <AddTypeBtn glyph={AddGlyph.flight} label="Add travel" sub="Flight, drive, walk…"  onClick={() => openAddPanel(d.day,"travel")} />
                         <AddTypeBtn glyph={AddGlyph.pin}    label="Add place"  sub="Stay, eat, see, do"    onClick={() => openAddPanel(d.day,"place")} />
-                        <button title="More: import GPX, paste link, duplicate from another day" style={{
-                          width:44, display:"flex", alignItems:"center", justifyContent:"center",
-                          borderRadius:8, background:"var(--surface)", border:"1px solid var(--border)",
-                          color:"var(--text-faint)", cursor:"pointer", fontFamily:"inherit", flexShrink:0,
-                        }}>{AddGlyph.more}</button>
+                        <div data-more-menu style={{ position:"relative", flexShrink:0 }}>
+                          <button
+                            onClick={() => setMoreMenuDay(prev => prev === d.day ? null : d.day)}
+                            title="More options"
+                            style={{
+                              width:44, height:"100%", display:"flex", alignItems:"center", justifyContent:"center",
+                              borderRadius:8, background:"var(--surface)", border:"1px solid var(--border)",
+                              color:"var(--text-faint)", cursor:"pointer", fontFamily:"inherit",
+                            }}
+                          >{AddGlyph.more}</button>
+                          {moreMenuDay === d.day && (
+                            <div
+                              style={{
+                              position:"absolute", top:"calc(100% + 4px)", right:0, zIndex:200,
+                              background:"var(--surface)", border:"1px solid var(--border)", borderRadius:8,
+                              boxShadow:"0 4px 16px rgba(0,0,0,0.12)", padding:4, minWidth:160,
+                            }}>
+                              {[
+                                {
+                                  label:"Add Tides", type:"tides",
+                                  icon: <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}>
+                                    <path d="M8 1 L8 7 M5 4 L8 1 L11 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M8 15 L8 9 M5 12 L8 15 L11 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>,
+                                },
+                                {
+                                  label:"Add Currents", type:"currents",
+                                  icon: <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}>
+                                    <path d="M1 11c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0M1 7c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0"
+                                      stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                                  </svg>,
+                                },
+                              ].map(opt => (
+                                <button key={opt.type}
+                                  onClick={() => { setMoreMenuDay(null); openAddPanel(d.day, opt.type); }}
+                                  style={{
+                                    display:"flex", alignItems:"center", gap:8, width:"100%", textAlign:"left", padding:"7px 12px",
+                                    background:"none", border:"none", cursor:"pointer", borderRadius:6,
+                                    fontSize:13, color:"var(--text)", fontFamily:"inherit",
+                                  }}
+                                  onMouseEnter={e => e.currentTarget.style.background = "var(--surface2)"}
+                                  onMouseLeave={e => e.currentTarget.style.background = "none"}
+                                >{opt.icon}{opt.label}</button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     );
                   })()}
@@ -5424,7 +5832,7 @@ export default function Itinerary() {
             </div>
 
             {/* Body */}
-            <div className="add-panel-body">
+            <div className="add-panel-body" style={(addPanel.type === "tides" || addPanel.type === "currents") ? { display:"none" } : undefined}>
 
               {/* Travel — unified AddTravelPanel */}
               {addPanel.type === "travel" && (() => {
@@ -5716,6 +6124,27 @@ export default function Itinerary() {
               })()}
 
             </div>
+
+            {(addPanel.type === "tides" || addPanel.type === "currents") && (() => {
+              const dayDate = (() => {
+                if (!startDate) return null;
+                const [y, m, d0] = startDate.split("-").map(Number);
+                const dt = new Date(y, m - 1, d0 + addPanel.day - 1);
+                return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
+              })();
+              return (
+                <div style={{ flex:1, minHeight:0 }}>
+                  <TidesAddPanel
+                    day={addPanel.day}
+                    kind={addPanel.type}
+                    dayDate={dayDate}
+                    locationBias={dayBiasFor(addPanel.day)}
+                    onAdd={check => { addTideCheck(addPanel.day, check); closeAddPanel(); }}
+                    onClose={closeAddPanel}
+                  />
+                </div>
+              );
+            })()}
           </div>
         </>
       )}
