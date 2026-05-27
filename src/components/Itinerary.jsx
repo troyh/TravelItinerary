@@ -3241,10 +3241,10 @@ export default function Itinerary() {
         localStorage.setItem("itineraryMetadata", JSON.stringify(meta));
       } catch {}
     }
+    if (!justLoadedRef.current) dirtyRef.current = true;
     if (dirtyRef.current && !justLoadedRef.current && ghSettings.githubToken && effectiveRepo && currentFile !== "__local__") {
       setSyncStatus("unsaved");
     }
-    if (!justLoadedRef.current) dirtyRef.current = true;
   }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, savedFlights, savedRentalCars, savedTideChecks, customNotes, startDate, title, subtitle, itineraryNotes]);
 
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
