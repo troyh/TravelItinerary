@@ -14,11 +14,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "Victoria, Canada",
       "centerLat": 48.4284756,
       "centerLng": -123.3670221,
+      "highlights": [],
+      "note": "",
       "places": [
         {
           "id": "b71381bf-a9de-4135-921e-18785fc1e10e",
@@ -49,7 +49,8 @@
       "directions": [],
       "routes": [],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "New Day",
@@ -61,11 +62,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "San Juan County, United States",
       "centerLat": 48.6106169,
       "centerLng": -123.1470482,
+      "highlights": [],
+      "note": "",
       "places": [
         {
           "id": "f92828f2-7a64-4916-a475-2450efa3b083",
@@ -96,7 +97,8 @@
       "directions": [],
       "routes": [],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "New Day",
@@ -108,11 +110,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "Salt Spring Island Electoral Area, Canada",
       "centerLat": 48.8089984,
       "centerLng": -123.478464,
+      "highlights": [],
+      "note": "",
       "places": [
         {
           "id": "45cc9eea-cafb-4070-9615-d56caec0a806",
@@ -143,7 +145,56 @@
       "directions": [],
       "routes": [],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "Salt Spring Island Electoral Area, Canada",
+      "centerLat": 48.9422289,
+      "centerLng": -123.5536601,
+      "places": [
+        {
+          "id": "1be8bf4a-13ab-4803-9d61-a84347610a90",
+          "name": "Princess Cove",
+          "address": "Princess Cove, Canada",
+          "lat": 48.9422289,
+          "lng": -123.5536601,
+          "category": "activity",
+          "placeKind": "see",
+          "time": "12:30",
+          "duration": "",
+          "notes": "",
+          "confirmation": "",
+          "partySize": "",
+          "bookedVia": "",
+          "dietary": "",
+          "room": "",
+          "guests": "",
+          "stayLength": "",
+          "operator": "",
+          "cost": "",
+          "entry": "",
+          "tickets": "",
+          "activity": "",
+          "addedAt": "2026-05-27T17:20:13.640Z"
+        }
+      ],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
     }
   ]
 }
