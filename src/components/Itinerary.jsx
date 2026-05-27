@@ -1333,13 +1333,40 @@ function TidesAddPanel({ day, dayDate, locationBias, onAdd, onClose }) {
     if (!dayDate) { setErrMsg("Set a trip start date before fetching tidal data."); return; }
     setStatus("loading"); setErrMsg("");
     try {
-      const [tidesData, currentsData, tz] = await Promise.all([
+      // A local calendar day can span two UTC days (e.g. UTC-7 means local midnight = UTC 07:00).
+      // Fetch D and D+1, combine, then filter to events that fall on dayDate in local time.
+      const [y, mo, d] = dayDate.split("-").map(Number);
+      const nextDt   = new Date(y, mo - 1, d + 1);
+      const nextDate = `${nextDt.getFullYear()}-${String(nextDt.getMonth()+1).padStart(2,"0")}-${String(nextDt.getDate()).padStart(2,"0")}`;
+
+      const [tidesD, tidesD1, currentsD, currentsD1, tz] = await Promise.all([
         fetchTides(selected.lat, selected.lng, dayDate),
+        fetchTides(selected.lat, selected.lng, nextDate),
         fetchCurrents(selected.lat, selected.lng, dayDate),
+        fetchCurrents(selected.lat, selected.lng, nextDate),
         fetchTimezone(selected.lat, selected.lng),
       ]);
-      setTidesResult(tidesData);
-      setCurrentsResult(currentsData);
+
+      // Keep only events whose local date matches dayDate
+      const isOnDay = iso => {
+        if (!tz) return true;
+        const p = new Intl.DateTimeFormat("en-US", {
+          timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit",
+        }).formatToParts(new Date(iso));
+        const lY = p.find(x => x.type === "year")?.value;
+        const lM = p.find(x => x.type === "month")?.value;
+        const lD = p.find(x => x.type === "day")?.value;
+        return `${lY}-${lM}-${lD}` === dayDate;
+      };
+
+      setTidesResult({
+        ...tidesD,
+        extremes: [...(tidesD.extremes ?? []), ...(tidesD1.extremes ?? [])].filter(e => isOnDay(e.time)),
+      });
+      setCurrentsResult({
+        ...currentsD,
+        events: [...(currentsD.events ?? []), ...(currentsD1.events ?? [])].filter(e => isOnDay(e.time)),
+      });
       setTimeZoneId(tz);
       setStatus("done");
     } catch (e) {
