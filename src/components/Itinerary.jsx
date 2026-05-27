@@ -3170,10 +3170,6 @@ export default function Itinerary() {
     if (currentFile !== "__local__") {
       try {
         const meta = JSON.parse(localStorage.getItem("itineraryMetadata") || "{}");
-        const overnights = days.map(d => d.overnight).filter(Boolean);
-        const legs       = days.map(d => d.leg).filter(Boolean);
-        const locations  = overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
-                         : overnights[0] ?? legs[0] ?? null;
         const todoLines = line => line.split("\n").filter(l => /^TODO:/i.test(l.trim())).map(l => l.trim().replace(/^TODO:\s*/i, ""));
         const todos = [
           ...todoLines(itineraryNotes || ""),
@@ -3196,7 +3192,37 @@ export default function Itinerary() {
           (savedRentalCars[d.day] ?? []).length === 0 &&
           !(customNotes[d.day] ?? d.note ?? "")
         ).length;
-        meta[`${currentDbId}:${currentFile}`] = { title, startDate, dayCount: days.length, unplannedDays: metaUnplanned || null, locations, todos, drivingKm: drivingKm > 0 ? Math.round(drivingKm) : null };
+        // Build chronological location chain from all events
+        const fn = s => {
+          if (!s) return null;
+          const parts = s.split(",").map(p => p.trim()).filter(Boolean);
+          return (parts.length > 1 && /^\d/.test(parts[0])) ? parts[1] : parts[0];
+        };
+        const rawLocs = [];
+        for (const day of [...days].sort((a, b) => a.day - b.day)) {
+          const dn = day.day;
+          const pts = [];
+          for (const dir of savedDirections[dn] ?? []) {
+            if (dir.origin?.name)      pts.push({ t: dir.time       || "", name: dir.origin.name });
+            if (dir.destination?.name) pts.push({ t: dir.arriveTime || dir.time || "", name: dir.destination.name });
+          }
+          for (const f of savedFlights[dn] ?? []) {
+            if (f.departureName) pts.push({ t: f.departureTime || "", name: f.departureName });
+            if (f.arrivalName)   pts.push({ t: f.arrivalTime   || "", name: f.arrivalName });
+          }
+          for (const r of savedRoutes[dn] ?? []) {
+            if (r.startName) pts.push({ t: r.time || "",  name: r.startName });
+            if (r.endName)   pts.push({ t: r.time || "~", name: r.endName });
+          }
+          pts.sort((a, b) => a.t.localeCompare(b.t));
+          rawLocs.push(...pts.map(p => fn(p.name)).filter(Boolean));
+        }
+        const locChain = [];
+        for (const loc of rawLocs) {
+          if (loc.toLowerCase() !== locChain[locChain.length - 1]?.toLowerCase()) locChain.push(loc);
+        }
+        const locations = locChain.length ? locChain.join(" · ") : null;
+        meta[`${currentDbId}:${currentFile}`] = { title, subtitle, startDate, dayCount: days.length, unplannedDays: metaUnplanned || null, locations, todos, drivingKm: drivingKm > 0 ? Math.round(drivingKm) : null };
         localStorage.setItem("itineraryMetadata", JSON.stringify(meta));
       } catch {}
     }
@@ -4327,6 +4353,27 @@ export default function Itinerary() {
     } finally {
       setConciergeSending(false);
     }
+  }
+
+  function handleConciergeAddPlace(dayNum, place) {
+    addPlace(dayNum, { ...place, id: place.id || crypto.randomUUID() });
+  }
+
+  function handleApplyDays(suggestedDays) {
+    setDays(prev => {
+      const updated = [...prev];
+      suggestedDays.forEach(s => {
+        const idx = updated.findIndex(d => d.day === s.day);
+        if (idx !== -1) {
+          updated[idx] = {
+            ...updated[idx],
+            ...(s.title ? { leg: s.title } : {}),
+            ...(s.overnight ? { overnight: s.overnight } : {}),
+          };
+        }
+      });
+      return updated;
+    });
   }
 
   // Esc closes the panel (and prevents browser fullscreen-exit on macOS)
@@ -6235,6 +6282,9 @@ export default function Itinerary() {
         onClearThread={() => setConciergeThread([])}
         tripContext={{ title, currentDay: days[days.length - 1] }}
         hasApiKey={!!settings.anthropicKey}
+        days={days}
+        onAddPlace={handleConciergeAddPlace}
+        onApplyDays={handleApplyDays}
       />
 
       {/* ── CONCIERGE BAR (⌘K) ── */}
@@ -6247,6 +6297,9 @@ export default function Itinerary() {
         onClearThread={() => setConciergeThread([])}
         tripContext={{ title, currentDay: days[days.length - 1] }}
         hasApiKey={!!settings.anthropicKey}
+        days={days}
+        onAddPlace={handleConciergeAddPlace}
+        onApplyDays={handleApplyDays}
       />
 
       {/* ── PEEK SHEET (mobile) ── */}
@@ -6260,6 +6313,9 @@ export default function Itinerary() {
           onClearThread={() => setConciergeThread([])}
           tripContext={{ title, currentDay: days[days.length - 1] }}
           hasApiKey={!!settings.anthropicKey}
+          days={days}
+          onAddPlace={handleConciergeAddPlace}
+          onApplyDays={handleApplyDays}
         />
       )}
 

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import NoteMarkdown from "./NoteMarkdown.jsx";
+import { parseAppData, stripAppData } from "../lib/claude.js";
 
 // ─── Spark icon (Claude brand glyph) ─────────────────────────────────────────
 function SparkIcon({ size = 14, color = "currentColor" }) {
@@ -82,8 +83,159 @@ function EmptyState({ tripContext, onChipClick }) {
   );
 }
 
+// ─── Place suggestions action card ───────────────────────────────────────────
+function PlaceSuggestions({ items, days, onAddPlace }) {
+  const [addedSet, setAddedSet] = useState(new Set());
+  const [selDays, setSelDays] = useState(() => {
+    const m = {};
+    items.forEach((item, i) => { m[i] = item.day || days[0]?.day || 1; });
+    return m;
+  });
+
+  function doAdd(item, idx) {
+    onAddPlace(selDays[idx], {
+      id: crypto.randomUUID(),
+      name: item.name,
+      address: item.address || "",
+      time: item.time || "",
+      kind: "do",
+      duration: 60,
+    });
+    setAddedSet(prev => new Set([...prev, idx]));
+  }
+
+  const allAdded = items.every((_, i) => addedSet.has(i));
+
+  return (
+    <div style={{ marginTop: 10, borderRadius: 10, border: "1px solid var(--border)", overflow: "hidden" }}>
+      <div style={{ padding: "7px 12px", background: "var(--surface2)", borderBottom: "1px solid var(--border)",
+        fontSize: 10.5, fontWeight: 600, color: "var(--text-muted)", letterSpacing: 0.6, textTransform: "uppercase" }}>
+        Suggested places
+      </div>
+      {items.map((item, i) => {
+        const added = addedSet.has(i);
+        return (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 12px",
+            borderBottom: i < items.length - 1 ? "1px solid var(--border-soft)" : "none",
+            background: "var(--surface)" }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 12.5, fontWeight: 500, color: "var(--text)" }}>{item.name}</div>
+              {item.address && <div style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 1 }}>{item.address}</div>}
+            </div>
+            {item.time && (
+              <span style={{ fontSize: 11, color: "var(--text-faint)", flexShrink: 0, fontVariantNumeric: "tabular-nums" }}>
+                {item.time}
+              </span>
+            )}
+            {days.length > 1 && !item.day && !added && (
+              <select value={selDays[i]}
+                onChange={e => setSelDays(prev => ({ ...prev, [i]: Number(e.target.value) }))}
+                style={{ fontSize: 11, padding: "2px 4px", borderRadius: 5, border: "1px solid var(--border)",
+                  background: "var(--surface2)", color: "var(--text)", cursor: "pointer", fontFamily: "inherit" }}>
+                {days.map(d => (
+                  <option key={d.day} value={d.day}>Day {d.day}{d.leg ? ` · ${d.leg}` : ""}</option>
+                ))}
+              </select>
+            )}
+            {item.day && !added && (
+              <span style={{ fontSize: 11, color: "var(--text-faint)", flexShrink: 0 }}>Day {item.day}</span>
+            )}
+            <button onClick={() => !added && doAdd(item, i)} disabled={added}
+              style={{ padding: "4px 10px", borderRadius: 6, border: "none", cursor: added ? "default" : "pointer",
+                background: added ? "var(--accent-soft)" : "var(--accent)",
+                color: added ? "var(--accent)" : "#fff",
+                fontSize: 11.5, fontWeight: 600, flexShrink: 0, fontFamily: "inherit", whiteSpace: "nowrap" }}>
+              {added ? "✓ Added" : "+ Add"}
+            </button>
+          </div>
+        );
+      })}
+      {items.length > 1 && (
+        <div style={{ padding: "7px 12px", background: "var(--surface2)", borderTop: "1px solid var(--border)",
+          display: "flex", justifyContent: "flex-end" }}>
+          <button onClick={() => items.forEach((item, i) => !addedSet.has(i) && doAdd(item, i))}
+            disabled={allAdded}
+            style={{ padding: "4px 12px", borderRadius: 6, border: "1px solid var(--border)", cursor: allAdded ? "default" : "pointer",
+              background: allAdded ? "transparent" : "var(--surface)", color: allAdded ? "var(--text-faint)" : "var(--text)",
+              fontSize: 12, fontWeight: 500, fontFamily: "inherit" }}>
+            {allAdded ? "All added" : "Add all"}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Itinerary draft action card ──────────────────────────────────────────────
+function ItinerarySuggestion({ items, onApplyDays }) {
+  const [confirming, setConfirming] = useState(false);
+  const [applied, setApplied] = useState(false);
+
+  function doApply() {
+    onApplyDays(items);
+    setApplied(true);
+    setConfirming(false);
+  }
+
+  return (
+    <div style={{ marginTop: 10, borderRadius: 10, border: "1px solid var(--border)", overflow: "hidden" }}>
+      <div style={{ padding: "7px 12px", background: "var(--surface2)", borderBottom: "1px solid var(--border)",
+        fontSize: 10.5, fontWeight: 600, color: "var(--text-muted)", letterSpacing: 0.6, textTransform: "uppercase" }}>
+        Draft itinerary · {items.length} day{items.length !== 1 ? "s" : ""}
+      </div>
+      {items.slice(0, 6).map((item, i) => (
+        <div key={i} style={{ display: "flex", gap: 10, padding: "6px 12px",
+          borderBottom: i < Math.min(items.length, 6) - 1 ? "1px solid var(--border-soft)" : "none",
+          background: "var(--surface)", alignItems: "baseline" }}>
+          <span style={{ fontSize: 10.5, color: "var(--text-faint)", flexShrink: 0, width: 32,
+            fontVariantNumeric: "tabular-nums" }}>
+            Day {item.day}
+          </span>
+          <span style={{ fontSize: 12.5, color: "var(--text)", flex: 1 }}>{item.title}</span>
+          {item.overnight && (
+            <span style={{ fontSize: 11, color: "var(--text-faint)", flexShrink: 0 }}>{item.overnight}</span>
+          )}
+        </div>
+      ))}
+      {items.length > 6 && (
+        <div style={{ padding: "5px 12px", fontSize: 11, color: "var(--text-faint)", background: "var(--surface)" }}>
+          +{items.length - 6} more days
+        </div>
+      )}
+      <div style={{ padding: "7px 12px", background: "var(--surface2)", borderTop: "1px solid var(--border)",
+        display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 8 }}>
+        {applied ? (
+          <span style={{ fontSize: 12, color: "var(--accent)", fontWeight: 500 }}>✓ Applied</span>
+        ) : confirming ? (
+          <>
+            <span style={{ fontSize: 11.5, color: "var(--text-muted)" }}>
+              Update {items.length} day{items.length !== 1 ? "s" : ""}?
+            </span>
+            <button onClick={() => setConfirming(false)}
+              style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid var(--border)", cursor: "pointer",
+                background: "transparent", color: "var(--text-muted)", fontSize: 11.5, fontFamily: "inherit" }}>
+              Cancel
+            </button>
+            <button onClick={doApply}
+              style={{ padding: "4px 10px", borderRadius: 6, border: "none", cursor: "pointer",
+                background: "var(--accent)", color: "#fff", fontSize: 11.5, fontWeight: 600, fontFamily: "inherit" }}>
+              Apply
+            </button>
+          </>
+        ) : (
+          <button onClick={() => setConfirming(true)}
+            style={{ padding: "5px 12px", borderRadius: 6, border: "none", cursor: "pointer",
+              background: "var(--accent)", color: "#fff", fontSize: 12, fontWeight: 600, fontFamily: "inherit" }}>
+            Apply to itinerary
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Thread message list ──────────────────────────────────────────────────────
-function ThreadBody({ thread, sending, tripContext, onChipClick, scrollRef }) {
+function ThreadBody({ thread, sending, tripContext, onChipClick, scrollRef, days, onAddPlace, onApplyDays }) {
   return (
     <div ref={scrollRef} style={{ flex: 1, overflowY: "auto", padding: "14px 16px" }}>
       {thread.length === 0 ? (
@@ -103,14 +255,23 @@ function ThreadBody({ thread, sending, tripContext, onChipClick, scrollRef }) {
                 </div>
               ) : (
                 <div>
-                  <div style={{
-                    display: "flex", alignItems: "center", gap: 8, marginBottom: 5,
-                  }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
                     <ClaudeBadge />
                   </div>
                   <div style={{ fontSize: 13, color: "var(--text)", lineHeight: 1.6 }}>
-                    <NoteMarkdown>{msg.content}</NoteMarkdown>
+                    <NoteMarkdown>{stripAppData(msg.content)}</NoteMarkdown>
                   </div>
+                  {(() => {
+                    const appData = parseAppData(msg.content);
+                    if (!appData || !days?.length) return null;
+                    if (appData.type === "places" && appData.items?.length) {
+                      return <PlaceSuggestions items={appData.items} days={days} onAddPlace={onAddPlace} />;
+                    }
+                    if (appData.type === "itinerary" && appData.items?.length) {
+                      return <ItinerarySuggestion items={appData.items} onApplyDays={onApplyDays} />;
+                    }
+                    return null;
+                  })()}
                 </div>
               )}
             </div>
@@ -284,7 +445,7 @@ function RefreshIcon() {
 // ═════════════════════════════════════════════════════════════════════════════
 // 1. Desktop right rail
 // ═════════════════════════════════════════════════════════════════════════════
-export function ConciergeRail({ open, onClose, thread, sending, onSend, onClearThread, tripContext, hasApiKey }) {
+export function ConciergeRail({ open, onClose, thread, sending, onSend, onClearThread, tripContext, hasApiKey, days, onAddPlace, onApplyDays }) {
   const scrollRef = useRef(null);
   const placeholder = thread.length > 0
     ? "Ask a follow-up…"
@@ -332,6 +493,7 @@ export function ConciergeRail({ open, onClose, thread, sending, onSend, onClearT
           <ThreadBody
             thread={thread} sending={sending} tripContext={tripContext}
             onChipClick={handleChipClick} scrollRef={scrollRef}
+            days={days} onAddPlace={onAddPlace} onApplyDays={onApplyDays}
           />
         ) : (
           <NoApiKeyPrompt />
@@ -351,7 +513,7 @@ export function ConciergeRail({ open, onClose, thread, sending, onSend, onClearT
 // ═════════════════════════════════════════════════════════════════════════════
 // 2. ⌘K command bar
 // ═════════════════════════════════════════════════════════════════════════════
-export function ConciergeBar({ open, onClose, thread, sending, onSend, onClearThread, tripContext, hasApiKey }) {
+export function ConciergeBar({ open, onClose, thread, sending, onSend, onClearThread, tripContext, hasApiKey, days, onAddPlace, onApplyDays }) {
   const scrollRef = useRef(null);
   const placeholder = thread.length > 0
     ? "Ask a follow-up…"
@@ -424,6 +586,7 @@ export function ConciergeBar({ open, onClose, thread, sending, onSend, onClearTh
           <ThreadBody
             thread={thread} sending={sending} tripContext={tripContext}
             onChipClick={text => onSend(text)} scrollRef={scrollRef}
+            days={days} onAddPlace={onAddPlace} onApplyDays={onApplyDays}
           />
         ) : (
           <NoApiKeyPrompt />
@@ -456,7 +619,7 @@ export function ConciergeBar({ open, onClose, thread, sending, onSend, onClearTh
 // ═════════════════════════════════════════════════════════════════════════════
 // 3. Mobile peek sheet
 // ═════════════════════════════════════════════════════════════════════════════
-export function PeekSheet({ peekState, onPeekStateChange, thread, sending, onSend, onClearThread, tripContext, hasApiKey }) {
+export function PeekSheet({ peekState, onPeekStateChange, thread, sending, onSend, onClearThread, tripContext, hasApiKey, days, onAddPlace, onApplyDays }) {
   const scrollRef = useRef(null);
   const grabberRef = useRef(null);
   const touchStartY = useRef(null);
@@ -614,6 +777,7 @@ export function PeekSheet({ peekState, onPeekStateChange, thread, sending, onSen
               <ThreadBody
                 thread={thread} sending={sending} tripContext={tripContext}
                 onChipClick={text => { onSend(text); }} scrollRef={scrollRef}
+                days={days} onAddPlace={onAddPlace} onApplyDays={onApplyDays}
               />
             ) : (
               <NoApiKeyPrompt />

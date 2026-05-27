@@ -54,7 +54,31 @@ Dates: ${dateStr} (${days.length} ${days.length === 1 ? "day" : "days"})
 
 ${dayLines}${vehicleStr}
 
-Help the user plan: suggest places, draft days, answer travel questions, create packing lists. Be direct and opinionated — give specific recommendations with reasons. You cannot book reservations or make payments. Do not start responses with "I" or filler phrases like "Of course!" or "Great question!". Format responses as plain prose; use short lists when listing places or items.`;
+Help the user plan: suggest places, draft days, answer travel questions, create packing lists. Be direct and opinionated — give specific recommendations with reasons. You cannot book reservations or make payments. Do not start responses with "I" or filler phrases like "Of course!" or "Great question!". Format responses as plain prose; use short lists when listing places or items.
+
+REQUIRED: When your response includes specific named places OR a day-by-day itinerary draft, you MUST append exactly one machine-readable block at the very end (after all prose). This is required, not optional.
+
+For place/activity suggestions:
+<app-data>
+{"type":"places","items":[{"name":"Place Name","address":"optional address","day":1,"time":"HH:MM"}]}
+</app-data>
+
+For itinerary day drafts:
+<app-data>
+{"type":"itinerary","items":[{"day":1,"title":"Day title","overnight":"City name"}]}
+</app-data>
+
+Rules: use "places" type when listing specific named places or activities; use "itinerary" type when drafting or revising the day schedule. Never include both types in one block. Never mention the block in your prose. Omit optional fields (address, time, overnight) when not applicable.`;
+}
+
+export function parseAppData(text) {
+  const match = text?.match(/<app-data>\s*([\s\S]*?)\s*<\/app-data>/);
+  if (!match) return null;
+  try { return JSON.parse(match[1]); } catch { return null; }
+}
+
+export function stripAppData(text) {
+  return (text || "").replace(/<app-data>[\s\S]*?<\/app-data>/g, "").trim();
 }
 
 export async function chatClaude({ messages, system, apiKey, model = "claude-sonnet-4-6" }) {
@@ -68,7 +92,7 @@ export async function chatClaude({ messages, system, apiKey, model = "claude-son
     },
     body: JSON.stringify({
       model,
-      max_tokens: 1500,
+      max_tokens: 4096,
       system,
       messages,
     }),

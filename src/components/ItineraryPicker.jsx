@@ -38,6 +38,78 @@ function daysBetween(from, to) {
   return Math.round((to - from) / 86400000);
 }
 
+// Shared metadata extractor — used by both the details fetch and the pull handler
+function buildMeta(data) {
+  const days = data.days ?? [];
+
+  const todoLines = str => (str || "").split("\n")
+    .filter(l => /^TODO:/i.test(l.trim()))
+    .map(l => l.trim().replace(/^TODO:\s*/i, ""));
+  const todos = [
+    ...todoLines(data.itineraryNotes),
+    ...days.flatMap(d => todoLines(data.notes?.[d.day] !== undefined ? data.notes[d.day] : d.note)),
+  ];
+
+  let drivingKm = 0;
+  Object.values(data.directions ?? {}).forEach(dirs => (dirs ?? []).forEach(d => {
+    const km = d.distance?.match(/^([\d.]+)\s*km/i);
+    const mi = d.distance?.match(/^([\d.]+)\s*mi/i);
+    const m  = d.distance?.match(/^(\d+)\s*m\b/i);
+    if (km) drivingKm += parseFloat(km[1]);
+    else if (mi) drivingKm += parseFloat(mi[1]) * 1.60934;
+    else if (m)  drivingKm += parseFloat(m[1]) / 1000;
+  }));
+
+  const unplannedDays = days.filter(d =>
+    !(data.places?.[d.day]?.length) && !(data.flights?.[d.day]?.length) &&
+    !(data.directions?.[d.day]?.length) && !(data.routes?.[d.day]?.length) &&
+    !(data.rentalCars?.[d.day]?.length) && !(data.notes?.[d.day]) && !(d.note)
+  ).length;
+
+  // Build chronological location chain across all days
+  const firstName = s => {
+    if (!s) return null;
+    const parts = s.split(",").map(p => p.trim()).filter(Boolean);
+    // Street addresses start with a digit — use the city segment instead
+    return (parts.length > 1 && /^\d/.test(parts[0])) ? parts[1] : parts[0];
+  };
+  const rawLocs = [];
+  for (const day of [...days].sort((a, b) => a.day - b.day)) {
+    const dn = day.day;
+    const pts = [];
+    for (const dir of data.directions?.[dn] ?? []) {
+      if (dir.origin?.name)      pts.push({ t: dir.time      || "", name: dir.origin.name });
+      if (dir.destination?.name) pts.push({ t: dir.arriveTime || dir.time || "", name: dir.destination.name });
+    }
+    for (const f of data.flights?.[dn] ?? []) {
+      if (f.departureName) pts.push({ t: f.departureTime || "", name: f.departureName });
+      if (f.arrivalName)   pts.push({ t: f.arrivalTime   || "", name: f.arrivalName });
+    }
+    for (const r of data.routes?.[dn] ?? []) {
+      if (r.startName) pts.push({ t: r.time || "", name: r.startName });
+      if (r.endName)   pts.push({ t: r.time || "~", name: r.endName });
+    }
+    pts.sort((a, b) => a.t.localeCompare(b.t));
+    rawLocs.push(...pts.map(p => firstName(p.name)).filter(Boolean));
+  }
+  // Remove consecutive duplicates (case-insensitive)
+  const locChain = [];
+  for (const loc of rawLocs) {
+    if (loc.toLowerCase() !== locChain[locChain.length - 1]?.toLowerCase()) locChain.push(loc);
+  }
+
+  return {
+    title:         data.title || null,
+    subtitle:      data.subtitle || null,
+    startDate:     data.startDate,
+    dayCount:      days.length,
+    unplannedDays: unplannedDays || null,
+    locations:     locChain.length ? locChain.join(" · ") : null,
+    drivingKm:     drivingKm > 0 ? Math.round(drivingKm) : null,
+    todos,
+  };
+}
+
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 const PinIcon = (
@@ -244,40 +316,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
         if (!r) continue;
         const [f, data] = r;
         const key = `${f.dbId}:${f.path}`;
-        const overnights = data.days?.map(d => d.overnight).filter(Boolean) ?? [];
-        const legs       = data.days?.map(d => d.leg).filter(Boolean) ?? [];
-        const todoLines  = str => (str || "").split("\n")
-          .filter(l => /^TODO:/i.test(l.trim()))
-          .map(l => l.trim().replace(/^TODO:\s*/i, ""));
-        const todos = [
-          ...todoLines(data.itineraryNotes),
-          ...(data.days ?? []).flatMap(d => todoLines(
-            data.notes?.[d.day] !== undefined ? data.notes[d.day] : d.note
-          )),
-        ];
-        let drivingKm = 0;
-        Object.values(data.directions ?? {}).forEach(dirs => (dirs ?? []).forEach(d => {
-          const km = d.distance?.match(/^([\d.]+)\s*km/i);
-          const mi = d.distance?.match(/^([\d.]+)\s*mi/i);
-          const m  = d.distance?.match(/^(\d+)\s*m\b/i);
-          if (km) drivingKm += parseFloat(km[1]);
-          else if (mi) drivingKm += parseFloat(mi[1]) * 1.60934;
-          else if (m)  drivingKm += parseFloat(m[1]) / 1000;
-        }));
-        const unplanned0 = (data.days ?? []).filter(d =>
-          !(d.places?.length) && !(d.flights?.length) && !(d.directions?.length) &&
-          !(d.routes?.length) && !(d.rentalCars?.length) && !(d.note)
-        ).length;
-        updates[key] = {
-          title:         data.title || null,
-          startDate:     data.startDate,
-          dayCount:      data.days?.length ?? 0,
-          unplannedDays: unplanned0 || null,
-          locations:     overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
-                       : overnights[0] ?? legs[0] ?? null,
-          drivingKm:     drivingKm > 0 ? Math.round(drivingKm) : null,
-          todos,
-        };
+        updates[key] = buildMeta(data);
       }
       if (Object.keys(updates).length) {
         setDetails(prev => ({ ...prev, ...updates }));
@@ -340,40 +379,9 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
         // Cache full JSON
         try { localStorage.setItem(`itinerary:${f.dbId}:${f.path}`, JSON.stringify(data)); } catch {}
 
-        // Extract metadata (same logic as the details useEffect)
+        // Extract metadata
         const key = `${f.dbId}:${f.path}`;
-        const overnights = data.days?.map(d => d.overnight).filter(Boolean) ?? [];
-        const legs       = data.days?.map(d => d.leg).filter(Boolean) ?? [];
-        const todoLines  = str => (str || "").split("\n")
-          .filter(l => /^TODO:/i.test(l.trim()))
-          .map(l => l.trim().replace(/^TODO:\s*/i, ""));
-        const todos = [
-          ...todoLines(data.itineraryNotes),
-          ...(data.days ?? []).flatMap(d => todoLines(
-            data.notes?.[d.day] !== undefined ? data.notes[d.day] : d.note
-          )),
-        ];
-        let drivingKm = 0;
-        (data.days ?? []).forEach(d => (d.directions ?? []).forEach(dir => {
-          const km = dir.distance?.match(/^([\d.]+)\s*km/i);
-          const mi = dir.distance?.match(/^([\d.]+)\s*mi/i);
-          if (km) drivingKm += parseFloat(km[1]);
-          else if (mi) drivingKm += parseFloat(mi[1]) * 1.60934;
-        }));
-        const unplanned1 = (data.days ?? []).filter(d =>
-          !(d.places?.length) && !(d.flights?.length) && !(d.directions?.length) &&
-          !(d.routes?.length) && !(d.rentalCars?.length) && !(d.note)
-        ).length;
-        metaUpdates[key] = {
-          title:         data.title || null,
-          startDate:     data.startDate,
-          dayCount:      data.days?.length ?? 0,
-          unplannedDays: unplanned1 || null,
-          locations:     overnights.length >= 2 ? `${overnights[0]} → ${overnights[overnights.length - 1]}`
-                       : overnights[0] ?? legs[0] ?? null,
-          drivingKm:     drivingKm > 0 ? Math.round(drivingKm) : null,
-          todos,
-        };
+        metaUpdates[key] = buildMeta(data);
       } catch {}
       done++;
       setPullProgress({ done, total: files.length });
@@ -517,7 +525,7 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
           <div style={{ flex: 1, minWidth: 0 }}>
             {/* Title row */}
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: d?.subtitle ? 2 : 4, flexWrap: "wrap" }}>
               <span style={{ fontSize: 15, fontWeight: 600, letterSpacing: -0.1, color: T.text }}>
                 {displayTitle}
               </span>
@@ -534,6 +542,13 @@ export default function ItineraryPicker({ settings, onSettingsChange, onLoad, on
                 <span style={{ fontSize: 11, color: T.textMuted }}>Loading…</span>
               )}
             </div>
+
+            {/* Subtitle */}
+            {d?.subtitle && (
+              <div style={{ fontSize: 12, color: T.textMuted, marginBottom: 4, lineHeight: 1.4 }}>
+                {d.subtitle}
+              </div>
+            )}
 
             {/* Date + day count */}
             {(dateRange || daysCount) && (
