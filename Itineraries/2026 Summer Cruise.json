@@ -822,6 +822,40 @@
               "type": "max_ebb"
             }
           ]
+        },
+        {
+          "id": "ce5417d7-e2bb-43e7-a142-6724332e74c0",
+          "kind": "tides",
+          "name": "Seattle, WA",
+          "lat": 47.6037757,
+          "lng": -122.3307651,
+          "time": "17:36",
+          "timeZoneId": "America/Los_Angeles",
+          "station": "SEATTLE (Madison St.), Elliott Bay",
+          "stationDistNm": 0.4,
+          "extremes": [
+            {
+              "time": "2026-07-23T00:36:00Z",
+              "height_m": 4.28,
+              "type": "L"
+            },
+            {
+              "time": "2026-07-23T06:54:00Z",
+              "height_m": 5.74,
+              "type": "H"
+            },
+            {
+              "time": "2026-07-23T14:24:00Z",
+              "height_m": 2.75,
+              "type": "L"
+            },
+            {
+              "time": "2026-07-23T22:30:00Z",
+              "height_m": 4.9,
+              "type": "H"
+            }
+          ],
+          "events": []
         }
       ]
     },
