@@ -86,9 +86,16 @@ DTSTART;VALUE=DATE:20260713
 DTEND;VALUE=DATE:20260714
 SUMMARY:Day 8: Desolation Sound → Campbell River (fuel) → Port Neville
 LOCATION:Port Neville anchorage or Thurston Bay Marine Park
-DESCRIPTION:77.2 NM · ~14.0 hrs\nOvernight: Port Neville anchorage or Thurston Bay Marine Park\n\nNote: This is a coordinated day: depart Desolation early\, fuel Campbell River at ~10:30am\, Seymour Narrows at slack midday\, anchor Port Neville by mid-afternoon. At 15 kts this is ~7.5 hrs total but the Narrows wait may be built in. Brief lunch at Campbell River fuel dock.
+DESCRIPTION:77.2 NM · ~6.4 hrs\nOvernight: Port Neville anchorage or Thurston Bay Marine Park\n\nNote: This is a coordinated day: depart Desolation early\, fuel Campbell River at ~10:30am\, Seymour Narrows at slack midday\, anchor Port Neville by mid-afternoon. At 15 kts this is ~7.5 hrs total but the Narrows wait may be built in. Brief lunch at Campbell River fuel dock.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=8
 UID:day-8-20260713@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260713T070000
+DTEND:20260713T090300
+SUMMARY:🚢 Desolation Sound → Campbell River BC
+DESCRIPTION:24.7 NM · ~2h 3m\nDesolation Sound → Campbell River BC
+UID:route-170e20aa-8bed-4e94-8ec6-4abc1e369811@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260714
