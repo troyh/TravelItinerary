@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import FuelPlan, { FuelPlanEntryCard, FuelPumpGlyphSmall } from "./FuelPlan.jsx";
+import { simulateFuelPlan, buildLegsForVehicle, defaultStartingFuel, subtractMinutes, CURRENCY_SYM as FUEL_CURRENCY_SYM } from "../lib/fuelPlan.js";
 import NoteMarkdown from "./NoteMarkdown.jsx";
 import { days as initialDays, tagConfig, fuelStops, fuelSummary, tideWarnings } from "../data/itinerary.js";
 import DayPlaces, { CATEGORIES as PLACE_CATEGORIES } from "./DayPlaces.jsx";
@@ -2978,6 +2980,8 @@ export default function Itinerary() {
   const [savedFlights,     setSavedFlights]     = useState(() => _extracted.flights);
   const [savedRentalCars,  setSavedRentalCars]  = useState(() => _extracted.rentalCars);
   const [savedTideChecks,  setSavedTideChecks]  = useState(() => _extracted.tideChecks);
+  const [fuelPlanState,    setFuelPlanState]    = useState(() => _db?.fuelPlanState ?? {});
+  const [showFuelPlan,     setShowFuelPlan]     = useState(false);
   const [days,             setDays]             = useState(() => _extracted.days);
   const [editingCoreDay,   setEditingCoreDay]   = useState(null);
   const [coreDraft,        setCoreDraft]        = useState({});
@@ -3166,7 +3170,7 @@ export default function Itinerary() {
   useEffect(() => {
     if (!currentFile) return;
     const data = {
-      startDate, title, subtitle, itineraryNotes,
+      startDate, title, subtitle, itineraryNotes, fuelPlanState,
       days: days.map(d => {
         const { day: _, ...rest } = d;
         return {
@@ -3245,7 +3249,7 @@ export default function Itinerary() {
     if (dirtyRef.current && !justLoadedRef.current && ghSettings.githubToken && effectiveRepo && currentFile !== "__local__") {
       setSyncStatus("unsaved");
     }
-  }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, savedFlights, savedRentalCars, savedTideChecks, customNotes, startDate, title, subtitle, itineraryNotes]);
+  }, [currentFile, days, savedPlaces, savedDirections, savedRoutes, savedFlights, savedRentalCars, savedTideChecks, fuelPlanState, customNotes, startDate, title, subtitle, itineraryNotes]);
 
   useEffect(() => { localStorage.setItem("travelSettings", JSON.stringify(settings)); }, [settings]);
 
@@ -3631,6 +3635,7 @@ export default function Itinerary() {
     setSavedRentalCars(x.rentalCars);
     setSavedTideChecks(x.tideChecks);
     setCustomNotes(x.notes);
+    if (data?.fuelPlanState) setFuelPlanState(data.fuelPlanState);
     setStartDate(data?.startDate ?? "");
     setTitle(data?.title ?? "New Itinerary");
     setSubtitle(data?.subtitle ?? "");
@@ -3655,6 +3660,7 @@ export default function Itinerary() {
   function handleCreate(name, dbId) {
     const path = `${ITINERARIES_FOLDER}/it-${crypto.randomUUID().slice(0, 8)}.json`;
     dirtyRef.current = false;
+    setFuelPlanState({});
     setDays([]); setSavedPlaces({}); setSavedDirections({}); setSavedRoutes({}); setSavedFlights({}); setSavedRentalCars({}); setSavedTideChecks({});
     setCustomNotes({});
     setStartDate(""); ;
@@ -4060,7 +4066,7 @@ export default function Itinerary() {
     const msg = message.trim() ||
       `Saved ${new Date().toLocaleString("en-US", { month:"short", day:"numeric", year:"numeric", hour:"numeric", minute:"2-digit" })}`;
     const data = {
-      startDate, title, subtitle, itineraryNotes,
+      startDate, title, subtitle, itineraryNotes, fuelPlanState,
       days: days.map(d => {
         const { day: _, ...rest } = d;
         return {
@@ -4221,6 +4227,59 @@ export default function Itinerary() {
     if (gallons === 0) return null;
     return { gallons: Math.round(gallons), cost: Math.round(cost * 100) / 100, unit: unit || "gal", currency };
   })();
+
+  const fuelStopsByDay = useMemo(() => {
+    const result = {};
+    const allVehicles = currentDbVehicles ?? Object.values(vehiclesByDb ?? {}).flat();
+    if (!allVehicles.length) return result;
+
+    const processSegments = (kind) => {
+      const seenIds = new Set();
+      Object.values(kind === "boat" ? savedRoutes : savedDirections).flat().forEach(item => {
+        if (!item.vehicleId) return;
+        if (kind === "car" && item.travelMode !== "DRIVING") return;
+        if (kind === "boat" && (!item.hrs || item.hrs <= 0)) return;
+        seenIds.add(item.vehicleId);
+      });
+      seenIds.forEach(vehicleId => {
+        const vehicle = allVehicles.find(v => v.id === vehicleId && v.kind === kind);
+        if (!vehicle?.fuel?.tankSize) return;
+        const legs = buildLegsForVehicle(vehicleId, kind, savedRoutes, savedDirections);
+        if (!legs.length) return;
+        const startFuel = (fuelPlanState?.startingFuel ?? {})[vehicleId] ?? defaultStartingFuel(vehicle);
+        const pins = (fuelPlanState?.pinnedRefuels ?? {})[vehicleId] ?? [];
+        const sim = simulateFuelPlan(vehicle, legs, startFuel, pins);
+        const unit = vehicle.fuel.unit;
+        const sym = FUEL_CURRENCY_SYM[vehicle.cost?.currency] || "$";
+        sim.rows.forEach(row => {
+          if (row.kind !== "refuel") return;
+          const leg = legs[row.beforeLegIdx];
+          if (!leg) return;
+          const dayNum = leg._dayNum;
+          const refuelTime = subtractMinutes(leg._time, 10);
+          const item = {
+            _type: "fuelstop",
+            _sort: refuelTime ? refuelTime.replace(":", "") : "0000",
+            _disp: refuelTime,
+            id: `fuel-${vehicleId}-${row.beforeLegIdx}`,
+            vehicleId, vehicleLabel: vehicle.name,
+            amount: row.amountAdded, unit,
+            beforePct: Math.round(row.levelBefore / vehicle.fuel.tankSize * 100),
+            newPct: row.topOffPct,
+            cost: vehicle.cost?.perUnit ? row.amountAdded * vehicle.cost.perUnit : 0,
+            currency: vehicle.cost?.currency || "USD",
+            pinned: row.pinned,
+          };
+          if (!result[dayNum]) result[dayNum] = [];
+          result[dayNum].push(item);
+        });
+      });
+    };
+
+    processSegments("car");
+    processSegments("boat");
+    return result;
+  }, [savedRoutes, savedDirections, vehiclesByDb, currentDbVehicles, fuelPlanState]);
 
   const totalDrivingMiles = Math.round(
     Object.values(savedDirections).flat().reduce((s, d) => {
@@ -4986,8 +5045,19 @@ export default function Itinerary() {
             ) : null}
           </div>
 
-          {/* Right: date grid only */}
+          {/* Right: fuel plan entry card + date grid */}
           <div style={{ width:300, flexShrink:0, display:"flex", flexDirection:"column", gap:10 }}>
+
+            {/* Fuel plan entry card */}
+            <FuelPlanEntryCard
+              savedRoutes={savedRoutes}
+              savedDirections={savedDirections}
+              vehiclesByDb={vehiclesByDb}
+              currentDbVehicles={currentDbVehicles}
+              fuelPlanState={fuelPlanState}
+              onOpen={() => setShowFuelPlan(true)}
+              readOnly={readOnly}
+            />
 
             {/* Date grid */}
             {(() => {
@@ -5430,7 +5500,8 @@ export default function Itinerary() {
                       }));
                     });
 
-                    const all = [...places, ...flights, ...dirs, ...routes, ...cars, ...tideChecks]
+                    const fuelStops = (fuelStopsByDay[d.day] ?? []).map(f => ({ ...f }));
+                    const all = [...places, ...flights, ...dirs, ...routes, ...cars, ...tideChecks, ...fuelStops]
                       .sort((a, b) => {
                         if (!a._sort && !b._sort) return 0;
                         if (!a._sort) return 1;
@@ -5591,6 +5662,17 @@ export default function Itinerary() {
                               : "";
                             onDel = !readOnly ? () => deleteTideCheck(d.day, item._parentId) : null;
                             item._isTidecheck = true;
+                          } else if (item._type === "fuelstop") {
+                            dotColor = "var(--accent)";
+                            icon = <span style={{ color:"var(--accent)", display:"flex", flexShrink:0 }}><FuelPumpGlyphSmall/></span>;
+                            title = `Refuel · ${item.vehicleLabel}`;
+                            sub1 = `Add ${item.amount} ${item.unit} · Tank ${item.beforePct}% → ${item.newPct}%`;
+                            if (item.cost > 0) {
+                              const fsym = FUEL_CURRENCY_SYM[item.currency] || "$";
+                              sub1 += ` · ${fsym}${item.cost.toFixed(2)}`;
+                            }
+                            onDel = null;
+                            item._isFuelstop = true;
                           }
 
                           return (
@@ -5602,14 +5684,16 @@ export default function Itinerary() {
                               </div>
                               {/* Dot + connector */}
                               <div style={{ width:18, flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", position:"relative" }}>
-                                <div style={{ width:10, height:10, borderRadius:5, background:"var(--surface)", border:`2px solid ${dotColor}`, marginTop:4, zIndex:1, flexShrink:0 }}/>
-                                {!isLast && <div style={{ position:"absolute", top:14, bottom:-14, width:1.5, background:"var(--border)" }}/>}
+                                {item._isFuelstop
+                                  ? <div style={{ width:18, height:18, borderRadius:9, background:"var(--accent)", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center", marginTop:2, zIndex:1, flexShrink:0 }}><FuelPumpGlyphSmall/></div>
+                                  : <div style={{ width:10, height:10, borderRadius:5, background:"var(--surface)", border:`2px solid ${dotColor}`, marginTop:4, zIndex:1, flexShrink:0 }}/>}
+                                {!isLast && <div style={{ position:"absolute", top:item._isFuelstop ? 20 : 14, bottom:-14, width:1.5, background:"var(--border)" }}/>}
                               </div>
                               {/* Content */}
                               <div style={{ flex:1, minWidth:0, paddingBottom: isLast ? 0 : 14 }}>
                                 <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:8 }}>
-                                  <div style={{ flex:1, minWidth:0, cursor: item._isTidecheck ? "default" : "pointer" }}
-                                    onClick={() => !item._isTidecheck && openEditPanel(d.day, item)}>
+                                  <div style={{ flex:1, minWidth:0, cursor: (item._isTidecheck || item._isFuelstop) ? "default" : "pointer" }}
+                                    onClick={() => !(item._isTidecheck || item._isFuelstop) && openEditPanel(d.day, item)}>
                                     <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:2, flexWrap:"wrap" }}>
                                       {icon}
                                       <span style={{ fontSize:14, fontWeight:600, letterSpacing:-0.1, color:"var(--text)" }}>{title}</span>
@@ -6289,6 +6373,21 @@ export default function Itinerary() {
             })()}
           </div>
         </>
+      )}
+
+      {/* ── FUEL PLAN MODAL ── */}
+      {showFuelPlan && (
+        <FuelPlan
+          days={days}
+          savedRoutes={savedRoutes}
+          savedDirections={savedDirections}
+          vehiclesByDb={vehiclesByDb}
+          currentDbVehicles={currentDbVehicles}
+          startDate={startDate}
+          fuelPlanState={fuelPlanState}
+          onFuelPlanChange={state => { setFuelPlanState(state); dirtyRef.current = true; }}
+          onClose={() => setShowFuelPlan(false)}
+        />
       )}
 
       {/* ── CONCIERGE RAIL (desktop) ── */}

@@ -83,7 +83,9 @@
       "Bash(curl -s \"https://waypoint.troyhakala.com/currents?lat=48.4135&lon=-122.6432&date=2026-07-25\")",
       "Bash(curl -s \"https://waypoint.troyhakala.com/tides?lat=48.4135&lon=-122.6432&date=2026-07-25\")",
       "Bash(curl -s \"https://waypoint.troyhakala.com/currents?lat=47.6&lon=-122.4&date=2026-07-25\")",
-      "Bash(curl -s \"https://waypoint.troyhakala.com/currents?lat=48.4135&lon=-122.6432&date=2026-07-26\")"
+      "Bash(curl -s \"https://waypoint.troyhakala.com/currents?lat=48.4135&lon=-122.6432&date=2026-07-26\")",
+      "Bash(ls /Users/troy/dev/TravelItinerary/*.zip 2>/dev/null || find /Users/troy -name \"Travel Itinerary.zip\" 2>/dev/null | head -5)",
+      "Read(//Users/troy/**)"
     ],
     "additionalDirectories": [
       "/tmp"
