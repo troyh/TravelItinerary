@@ -3,6 +3,25 @@
   "title": "Canada Cruise 2026🇨🇦",
   "subtitle": "Our Summer 2026 Cruise to the Broughton Islands and back",
   "itineraryNotes": "TODO: Get Canada DTOPS pass sticker\nTODO: Buy [SYC pass](https://www.seattleyachtclub.org/group/pages/annual-outstation-pass) for outstations. Or not, it’ll likely be waived for PBM moorage holders this year!\n",
+  "fuelPlanState": {
+    "startingFuel": {
+      "mpixxfx8p5q6i": 740
+    },
+    "pinnedRefuels": {
+      "mpixxfx8p5q6i": [
+        {
+          "beforeLegIdx": 5,
+          "amount": 740,
+          "source": "user-edited-amount"
+        },
+        {
+          "beforeLegIdx": 13,
+          "amount": 144,
+          "source": "user-edited-amount"
+        }
+      ]
+    }
+  },
   "days": [
     {
       "leg": "Seattle → Victoria, BC",
