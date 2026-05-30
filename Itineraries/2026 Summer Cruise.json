@@ -13,11 +13,6 @@
           "beforeLegIdx": 5,
           "amount": 538,
           "source": "user-edited-amount"
-        },
-        {
-          "beforeLegIdx": 13,
-          "amount": 144,
-          "source": "user-edited-amount"
         }
       ]
     }
