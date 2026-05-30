@@ -1,8 +1,22 @@
 {
-  "startDate": "",
+  "startDate": "2026-08-19",
   "title": "South Puget Sound Cruise",
   "subtitle": "3-day maritime adventure through Washington's scenic waterways",
   "itineraryNotes": "A cruise in the south end of Puget Sound. I've never been south of Gig Harbor and would like to go to Olympia.\n",
+  "fuelPlanState": {
+    "startingFuel": {
+      "mpixxfx8p5q6i": 740
+    },
+    "pinnedRefuels": {
+      "mpixxfx8p5q6i": [
+        {
+          "beforeLegIdx": 5,
+          "amount": 538,
+          "source": "user-edited-amount"
+        }
+      ]
+    }
+  },
   "days": [
     {
       "leg": "Tacoma",
@@ -107,7 +121,7 @@
           "vessel": "Figurati",
           "cruisingSpeed": "12",
           "vehicleId": "mpixxfx8p5q6i",
-          "vehicleDbId": "cfac83ef-b847-4c0d-82cb-39fe1c21e746",
+          "vehicleDbId": "3d1270fe-7626-4267-b9ea-cf91add27bb1",
           "agency": "",
           "pickupLocation": "Elliott Bay Marina",
           "dropoffLocation": "Tacoma, WA",
@@ -119,7 +133,8 @@
         }
       ],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Gig Harbor",
@@ -216,7 +231,7 @@
           "vessel": "Figurati",
           "cruisingSpeed": "12",
           "vehicleId": "mpixxfx8p5q6i",
-          "vehicleDbId": "cfac83ef-b847-4c0d-82cb-39fe1c21e746",
+          "vehicleDbId": "3d1270fe-7626-4267-b9ea-cf91add27bb1",
           "agency": "",
           "pickupLocation": "Tacoma, WA",
           "dropoffLocation": "Gig Harbor, WA",
@@ -228,7 +243,8 @@
         }
       ],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "McNeill Island",
@@ -376,13 +392,13 @@
           "arriveDate": "",
           "arriveTime": "",
           "vessel": "Figurati",
-          "cruisingSpeed": "12",
+          "cruisingSpeed": "15",
           "vehicleId": "mpixxfx8p5q6i",
           "vehicleDbId": "cfac83ef-b847-4c0d-82cb-39fe1c21e746",
           "agency": "",
           "pickupLocation": "Gig Harbor, WA",
           "dropoffLocation": "McNeil Island",
-          "duration": "42m",
+          "duration": "~42m",
           "fuelGph": 17,
           "fuelGallons": 11.899999999999999,
           "fuelUnit": "gal",
@@ -390,7 +406,8 @@
         }
       ],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Olympia",
@@ -644,7 +661,8 @@
         }
       ],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     },
     {
       "leg": "Olympia → Home",
@@ -858,7 +876,7 @@
           "vessel": "Figurati",
           "cruisingSpeed": "12",
           "vehicleId": "mpixxfx8p5q6i",
-          "vehicleDbId": "cfac83ef-b847-4c0d-82cb-39fe1c21e746",
+          "vehicleDbId": "3d1270fe-7626-4267-b9ea-cf91add27bb1",
           "agency": "",
           "pickupLocation": "Olympia, WA",
           "dropoffLocation": "Elliott Bay",
@@ -870,7 +888,8 @@
         }
       ],
       "flights": [],
-      "rentalCars": []
+      "rentalCars": [],
+      "tideChecks": []
     }
   ]
 }
