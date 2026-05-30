@@ -363,19 +363,23 @@ function FuelRefuelRow({ row, vehicle, onAmountChange, onRemove, onDragStart, on
           <div style={{ fontSize: 11, color: T.textMuted, marginTop: 3 }}>{caption}</div>
         </div>
 
-        {/* Amount slider */}
+        {/* Amount slider — value is target fill % (beforePct → 100) */}
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10,
             color: T.textMuted, fontWeight: 600, letterSpacing: 0.3 }}>
-            <span>Add</span>
+            <span>Fill to</span>
             <span style={{ fontVariantNumeric: "tabular-nums", color: "var(--accent)", fontWeight: 700 }}>
-              +{row.amountAdded} {unit}
+              {row.topOffPct}% (+{row.amountAdded} {unit})
             </span>
-            <span style={{ fontVariantNumeric: "tabular-nums" }}>→ {row.levelAfter.toFixed(0)}{unit} ({row.topOffPct}%)</span>
+            <span style={{ fontVariantNumeric: "tabular-nums" }}>→ {row.levelAfter.toFixed(0)}{unit}</span>
           </div>
-          <input type="range" min={1} max={tank} step={1}
-            value={row.amountAdded}
-            onInput={e => onAmountChange?.(row.beforeLegIdx, parseInt(e.target.value, 10))}
+          <input type="range" min={beforePct} max={100} step={1}
+            value={row.topOffPct}
+            onInput={e => {
+              const targetPct = parseInt(e.target.value, 10);
+              const amount = Math.max(0, Math.round(tank * targetPct / 100 - row.levelBefore));
+              onAmountChange?.(row.beforeLegIdx, amount);
+            }}
             style={{ width: "100%", accentColor: "var(--accent)" }}/>
         </div>
 
