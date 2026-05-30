@@ -1,0 +1,58 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//South Puget Sound Cruise//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:South Puget Sound Cruise
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260819
+DTEND;VALUE=DATE:20260820
+SUMMARY:Day 1: Tacoma
+DESCRIPTION:23.7 NM · ~1.6 hrs
+URL:https://troyh.github.io/TravelItinerary/?i=it-d90bf75c&day=1
+UID:day-1-20260819@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260820
+DTEND;VALUE=DATE:20260821
+SUMMARY:Day 2: Gig Harbor
+DESCRIPTION:7 NM · ~0.5 hrs
+URL:https://troyh.github.io/TravelItinerary/?i=it-d90bf75c&day=2
+UID:day-2-20260820@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260821
+DTEND;VALUE=DATE:20260822
+SUMMARY:Day 3: McNeill Island
+LOCATION:Gig Harbor\, WA
+DESCRIPTION:10.5 NM · ~0.7 hrs\nOvernight: Gig Harbor\, WA
+URL:https://troyh.github.io/TravelItinerary/?i=it-d90bf75c&day=3
+UID:day-3-20260821@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260822
+DTEND;VALUE=DATE:20260823
+SUMMARY:Day 4: Olympia
+LOCATION:Olympia\, WA
+DESCRIPTION:20.1 NM · ~1.3 hrs\nOvernight: Olympia\, WA
+URL:https://troyh.github.io/TravelItinerary/?i=it-d90bf75c&day=4
+UID:day-4-20260822@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260822T173000
+DTEND:20260822T183000
+SUMMARY:🍽 Budd Bay Cafe
+LOCATION:525 Columbia St NW\, Olympia\, WA  98501\, United States
+DESCRIPTION:Waterfront dining with views of the Capitol Lake and marina. Serves Pacific Northwest cuisine with fresh seafood options.
+UID:place-fe98bb22-4995-40be-966f-027be1e2fa72@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260823
+DTEND;VALUE=DATE:20260824
+SUMMARY:Day 5: Olympia → Home
+LOCATION:Olympia\, WA
+DESCRIPTION:28.2 NM · ~1.9 hrs\nOvernight: Olympia\, WA
+URL:https://troyh.github.io/TravelItinerary/?i=it-d90bf75c&day=5
+UID:day-5-20260823@travelitinerary
+END:VEVENT
+END:VCALENDAR
