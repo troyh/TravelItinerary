@@ -41,8 +41,8 @@ URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=4
 UID:day-4-20260709@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
-DTSTART:20260709T060000
-DTEND:20260709T110800
+DTSTART:20260709T070000
+DTEND:20260709T120800
 SUMMARY:🚢 Vancouver BC → Princess Louisa Inlet
 DESCRIPTION:87.3 NM · ~5h 8m\nVancouver BC → Princess Louisa Inlet
 UID:route-dbd45f11-9989-4b6f-ac88-9c92eae8af59@travelitinerary
