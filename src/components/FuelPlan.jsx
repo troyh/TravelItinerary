@@ -187,7 +187,7 @@ function StartingFuelControl({ vehicle, value, onChange }) {
 
 // ─── Leg Row ──────────────────────────────────────────────────────────────────
 
-function FuelLegRow({ row, vehicle, isLast }) {
+function FuelLegRow({ row, vehicle, isLast, isMobile }) {
   const leg = row.leg;
   const isBoat = vehicle.kind === "boat";
   const sym = CURRENCY_SYM[vehicle.cost?.currency] || "$";
@@ -195,24 +195,85 @@ function FuelLegRow({ row, vehicle, isLast }) {
   const unit = vehicle.fuel.unit;
   const reservePct = vehicle.fuel.reservePct ?? 15;
 
+  const statusEl = row.empty ? (
+    <span style={{ fontSize: 11, fontWeight: 600, color: T.amber }}>⚠ Empty mid-leg</span>
+  ) : row.belowReserve ? (
+    <span style={{ fontSize: 11, fontWeight: 600, color: T.amber }}>Below reserve</span>
+  ) : (
+    <span style={{ fontSize: 11, color: T.textMuted }}>{row.pctAfter}% left</span>
+  );
+
+  const fuelBar = (
+    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10,
+        color: T.textFaint, fontWeight: 600, fontVariantNumeric: "tabular-nums", letterSpacing: 0.3 }}>
+        <span>{row.levelBefore.toFixed(1)}{unit}</span>
+        <span style={{ color: T.textMuted, textTransform: "uppercase", letterSpacing: 1 }}>
+          −{row.consume.toFixed(isBoat ? 2 : 1)} {unit}
+        </span>
+        <span style={{ color: row.empty ? T.amber : row.belowReserve ? T.amber : T.text, fontWeight: 700 }}>
+          {Math.max(0, row.levelAfter).toFixed(1)}{unit}
+        </span>
+      </div>
+      <div style={{ position: "relative", height: 8, borderRadius: 999,
+        background: T.surface2, border: `1px solid ${T.borderSoft}`, overflow: "hidden" }}>
+        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0,
+          width: `${reservePct}%`,
+          background: `repeating-linear-gradient(45deg, ${T.borderSoft}, ${T.borderSoft} 3px, transparent 3px, transparent 6px)` }}/>
+        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0,
+          width: `${Math.max(0, row.levelAfter / vehicle.fuel.tankSize) * 100}%`,
+          background: row.empty ? T.amber : row.belowReserve ? T.amber : "var(--accent)",
+          transition: "width 240ms ease" }}/>
+      </div>
+    </div>
+  );
+
+  const spineCol = (
+    <div style={{ position: "relative", height: "100%", display: "flex", justifyContent: "center" }}>
+      <div style={{ position: "absolute", top: -20, bottom: -20, left: "50%", width: 1.5,
+        background: T.borderSoft, transform: "translateX(-50%)" }}/>
+      <div style={{ position: "relative", zIndex: 1, width: 22, height: 22, borderRadius: 11,
+        background: row.belowReserve ? T.amber : T.accentSoft,
+        color: row.belowReserve ? "#fff" : "var(--accent)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        border: `2px solid ${T.surface}`, fontSize: 10, fontWeight: 700,
+        fontFamily: "ui-monospace, monospace" }}>
+        {row.legIdx + 1}
+      </div>
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <div style={{ display: "grid", gridTemplateColumns: "28px 1fr", gap: 10,
+        alignItems: "start", padding: "14px 14px 14px 8px",
+        borderBottom: isLast ? "none" : `1px solid ${T.borderSoft}`, position: "relative" }}>
+        {spineCol}
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <div>
+            <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1, color: T.textFaint,
+              marginBottom: 3, textTransform: "uppercase" }}>{leg.day}</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: T.text, lineHeight: 1.25 }}>
+              {leg.from}<span style={{ color: T.textFaint, margin: "0 5px", fontWeight: 400 }}>→</span>{leg.to}
+            </div>
+            <div style={{ fontSize: 11, color: T.textMuted, marginTop: 3, fontVariantNumeric: "tabular-nums",
+              display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <span>{leg.distance} {leg.unit} · {leg.duration}</span>
+              {statusEl}
+              {perUnit > 0 && <span style={{ fontVariantNumeric: "tabular-nums" }}>{sym}{(row.consume * perUnit).toFixed(2)}</span>}
+            </div>
+          </div>
+          {fuelBar}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ display: "grid", gridTemplateColumns: "28px 1fr 2fr 120px 80px",
       gap: 14, alignItems: "center", padding: "16px 18px 16px 8px",
       borderBottom: isLast ? "none" : `1px solid ${T.borderSoft}`, position: "relative" }}>
-      {/* Spine + number */}
-      <div style={{ position: "relative", height: "100%", display: "flex", justifyContent: "center" }}>
-        <div style={{ position: "absolute", top: -20, bottom: -20, left: "50%", width: 1.5,
-          background: T.borderSoft, transform: "translateX(-50%)" }}/>
-        <div style={{ position: "relative", zIndex: 1, width: 22, height: 22, borderRadius: 11,
-          background: row.belowReserve ? T.amber : T.accentSoft,
-          color: row.belowReserve ? "#fff" : "var(--accent)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          border: `2px solid ${T.surface}`, fontSize: 10, fontWeight: 700,
-          fontFamily: "ui-monospace, monospace" }}>
-          {row.legIdx + 1}
-        </div>
-      </div>
-
+      {spineCol}
       {/* Route */}
       <div>
         <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1, color: T.textFaint,
@@ -226,43 +287,8 @@ function FuelLegRow({ row, vehicle, isLast }) {
           {leg.distance} {leg.unit} · {leg.duration}
         </div>
       </div>
-
-      {/* Fuel bar */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10,
-          color: T.textFaint, fontWeight: 600, fontVariantNumeric: "tabular-nums", letterSpacing: 0.3 }}>
-          <span>{row.levelBefore.toFixed(1)}{unit}</span>
-          <span style={{ color: T.textMuted, textTransform: "uppercase", letterSpacing: 1 }}>
-            −{row.consume.toFixed(isBoat ? 2 : 1)} {unit}
-          </span>
-          <span style={{ color: row.empty ? T.amber : row.belowReserve ? T.amber : T.text, fontWeight: 700 }}>
-            {Math.max(0, row.levelAfter).toFixed(1)}{unit}
-          </span>
-        </div>
-        <div style={{ position: "relative", height: 8, borderRadius: 999,
-          background: T.surface2, border: `1px solid ${T.borderSoft}`, overflow: "hidden" }}>
-          <div style={{ position: "absolute", left: 0, top: 0, bottom: 0,
-            width: `${reservePct}%`,
-            background: `repeating-linear-gradient(45deg, ${T.borderSoft}, ${T.borderSoft} 3px, transparent 3px, transparent 6px)` }}/>
-          <div style={{ position: "absolute", left: 0, top: 0, bottom: 0,
-            width: `${Math.max(0, row.levelAfter / vehicle.fuel.tankSize) * 100}%`,
-            background: row.empty ? T.amber : row.belowReserve ? T.amber : "var(--accent)",
-            transition: "width 240ms ease" }}/>
-        </div>
-      </div>
-
-      {/* Status */}
-      <div style={{ textAlign: "right" }}>
-        {row.empty ? (
-          <span style={{ fontSize: 11, fontWeight: 600, color: T.amber }}>⚠ Empty mid-leg</span>
-        ) : row.belowReserve ? (
-          <span style={{ fontSize: 11, fontWeight: 600, color: T.amber }}>Below reserve</span>
-        ) : (
-          <span style={{ fontSize: 11, color: T.textMuted }}>{row.pctAfter}% left</span>
-        )}
-      </div>
-
-      {/* Cost */}
+      {fuelBar}
+      <div style={{ textAlign: "right" }}>{statusEl}</div>
       <div style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
         {perUnit > 0 && (
           <>
@@ -331,7 +357,8 @@ function FuelRefuelRow({ row, vehicle, onAmountChange, onRemove, onDragStart, on
         </svg>
       </button>
 
-      <div style={{ display: "grid", gridTemplateColumns: "28px 1fr 2fr 80px", gap: 14, alignItems: "center" }}>
+      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "28px 1fr" : "28px 1fr 2fr 80px",
+        gap: isMobile ? 10 : 14, alignItems: "center" }}>
         {/* Pump icon */}
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ width: 28, height: 28, borderRadius: 14, background: "var(--accent)", color: "#fff",
@@ -341,7 +368,7 @@ function FuelRefuelRow({ row, vehicle, onAmountChange, onRemove, onDragStart, on
           </div>
         </div>
 
-        {/* Label + station + caption */}
+        {/* Label + station + caption (+ slider + cost inlined on mobile) */}
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
             <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, color: "var(--accent)",
@@ -361,39 +388,65 @@ function FuelRefuelRow({ row, vehicle, onAmountChange, onRemove, onDragStart, on
             {row.station || "Top up before next leg"}
           </div>
           <div style={{ fontSize: 11, color: T.textMuted, marginTop: 3 }}>{caption}</div>
-        </div>
-
-        {/* Amount slider — value is target fill % (beforePct → 100) */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10,
-            color: T.textMuted, fontWeight: 600, letterSpacing: 0.3 }}>
-            <span>Fill to</span>
-            <span style={{ fontVariantNumeric: "tabular-nums", color: "var(--accent)", fontWeight: 700 }}>
-              {row.topOffPct}% (+{row.amountAdded} {unit})
-            </span>
-            <span style={{ fontVariantNumeric: "tabular-nums" }}>→ {row.levelAfter.toFixed(0)}{unit}</span>
-          </div>
-          <input type="range" min={beforePct} max={100} step={1}
-            value={row.topOffPct}
-            onInput={e => {
-              const targetPct = parseInt(e.target.value, 10);
-              const amount = Math.max(0, Math.round(tank * targetPct / 100 - row.levelBefore));
-              onAmountChange?.(row.beforeLegIdx, amount);
-            }}
-            style={{ width: "100%", accentColor: "var(--accent)" }}/>
-        </div>
-
-        {/* Cost */}
-        <div style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
-          {perUnit > 0 && (
-            <>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "var(--accent)", letterSpacing: -0.2 }}>
-                {sym}{(row.amountAdded * perUnit).toFixed(2)}
+          {isMobile && (
+            <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 6 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10,
+                color: T.textMuted, fontWeight: 600, letterSpacing: 0.3 }}>
+                <span>Fill to</span>
+                <span style={{ fontVariantNumeric: "tabular-nums", color: "var(--accent)", fontWeight: 700 }}>
+                  {row.topOffPct}% (+{row.amountAdded} {unit})
+                </span>
+                {perUnit > 0 && (
+                  <span style={{ fontVariantNumeric: "tabular-nums", color: "var(--accent)" }}>
+                    {sym}{(row.amountAdded * perUnit).toFixed(2)}
+                  </span>
+                )}
               </div>
-              <div style={{ fontSize: 10, color: T.textFaint, marginTop: 2 }}>at pump</div>
-            </>
+              <input type="range" min={beforePct} max={100} step={1}
+                value={row.topOffPct}
+                onInput={e => {
+                  const targetPct = parseInt(e.target.value, 10);
+                  const amount = Math.max(0, Math.round(tank * targetPct / 100 - row.levelBefore));
+                  onAmountChange?.(row.beforeLegIdx, amount);
+                }}
+                style={{ width: "100%", accentColor: "var(--accent)" }}/>
+            </div>
           )}
         </div>
+
+        {!isMobile && (<>
+          {/* Amount slider */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10,
+              color: T.textMuted, fontWeight: 600, letterSpacing: 0.3 }}>
+              <span>Fill to</span>
+              <span style={{ fontVariantNumeric: "tabular-nums", color: "var(--accent)", fontWeight: 700 }}>
+                {row.topOffPct}% (+{row.amountAdded} {unit})
+              </span>
+              <span style={{ fontVariantNumeric: "tabular-nums" }}>→ {row.levelAfter.toFixed(0)}{unit}</span>
+            </div>
+            <input type="range" min={beforePct} max={100} step={1}
+              value={row.topOffPct}
+              onInput={e => {
+                const targetPct = parseInt(e.target.value, 10);
+                const amount = Math.max(0, Math.round(tank * targetPct / 100 - row.levelBefore));
+                onAmountChange?.(row.beforeLegIdx, amount);
+              }}
+              style={{ width: "100%", accentColor: "var(--accent)" }}/>
+          </div>
+
+          {/* Cost */}
+          <div style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
+            {perUnit > 0 && (
+              <>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--accent)", letterSpacing: -0.2 }}>
+                  {sym}{(row.amountAdded * perUnit).toFixed(2)}
+                </div>
+                <div style={{ fontSize: 10, color: T.textFaint, marginTop: 2 }}>at pump</div>
+              </>
+            )}
+          </div>
+        </>)}
       </div>
     </div>
   );
@@ -669,7 +722,7 @@ function VehicleFuelPlan({ vehicle, legs, startingFuel, pinnedRefuels, onStartin
           }
           const isLast = idx === items.length - 1 || (idx === items.length - 2 && items[items.length - 1]?.type === "inserter");
           return (
-            <FuelLegRow key={it.key} row={it.row} vehicle={vehicle} isLast={isLast}/>
+            <FuelLegRow key={it.key} row={it.row} vehicle={vehicle} isLast={isLast} isMobile={isMobile}/>
           );
         })}
       </div>
