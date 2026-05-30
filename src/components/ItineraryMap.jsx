@@ -426,7 +426,7 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
       />
 
       {/* Floating controls — top-right corner of the map */}
-      <div style={{ position: "absolute", top: 10, right: 10, zIndex: 1000,
+      <div style={{ position: "absolute", top: 10, right: 10, zIndex: 800,
         display: "flex", gap: 6, alignItems: "center" }}>
         {geocoding && (
           <span style={{ fontSize: 11, color: "#5c6470", background: "rgba(255,255,255,0.9)",

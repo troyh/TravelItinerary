@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import FuelPlan, { FuelPlanEntryCard, FuelPumpGlyphSmall } from "./FuelPlan.jsx";
 import { simulateFuelPlan, buildLegsForVehicle, defaultStartingFuel, subtractMinutes, CURRENCY_SYM as FUEL_CURRENCY_SYM } from "../lib/fuelPlan.js";
 import NoteMarkdown from "./NoteMarkdown.jsx";
-import { days as initialDays, tagConfig, fuelStops, fuelSummary, tideWarnings } from "../data/itinerary.js";
+import { days as initialDays, tagConfig, tideWarnings } from "../data/itinerary.js";
 import DayPlaces, { CATEGORIES as PLACE_CATEGORIES } from "./DayPlaces.jsx";
 import DayDirections from "./DayDirections.jsx";
 import DayRoute from "./DayRoute.jsx";
@@ -4230,7 +4230,7 @@ export default function Itinerary() {
 
   const fuelStopsByDay = useMemo(() => {
     const result = {};
-    const allVehicles = currentDbVehicles ?? Object.values(vehiclesByDb ?? {}).flat();
+    const allVehicles = Object.values(vehiclesByDb ?? {}).flat();
     if (!allVehicles.length) return result;
 
     const processSegments = (kind) => {
@@ -4996,7 +4996,6 @@ export default function Itinerary() {
                 totalDrivingMiles > 0 && { label: "Driving",     val: `${totalDrivingMiles.toLocaleString()} mi` },
                 travelDays > 0        && { label: "Travel days",   val: String(travelDays) },
                 unplannedDays > 0     && { label: "Unplanned",     val: String(unplannedDays) },
-                days.filter(d => d.fuelStop).length > 0 && { label: "Fuel stops", val: String(days.filter(d => d.fuelStop).length) },
               ].filter(Boolean);
               if (!stats.length) return null;
               return (
@@ -5187,7 +5186,7 @@ export default function Itinerary() {
       {/* ── TABS ── */}
       <div style={{ borderBottom:"1px solid var(--border)", background:"var(--surface)" }}>
         <div style={{ maxWidth:1100, margin:"0 auto", display:"flex" }}>
-          {[["itinerary","Day by Day"],["fuel","Fuel Plan"],["tides","Tide Warnings"]].map(([t,lbl])=>(
+          {[["itinerary","Day by Day"],["tides","Tide Warnings"]].map(([t,lbl])=>(
             <button key={t} onClick={()=>setActiveTab(t)} style={{
               background:"none", border:"none",
               borderBottom: activeTab===t ? "2px solid var(--accent)" : "2px solid transparent",
@@ -5907,35 +5906,6 @@ export default function Itinerary() {
           />
         )}
         </>)}
-
-        {/* ── FUEL TAB ── */}
-        {activeTab === "fuel" && (
-          <div>
-            <div style={{ marginBottom:"1.5rem", padding:"1.25rem", background:"var(--surface2)", border:"1px solid #1e3a52", borderRadius:6 }}>
-              <div style={{ fontSize:".7rem", color:"var(--accent)", letterSpacing:".15em", textTransform:"uppercase", marginBottom:"1rem", fontFamily:"inherit" }}>Fuel Plan Summary</div>
-              {fuelSummary.map(f => (
-                <div key={f.label} style={{ display:"flex", justifyContent:"space-between", padding:".6rem 0", borderBottom:"1px solid #1e3a5240", fontFamily:"inherit" }}>
-                  <span style={{ fontSize:".85rem", color:"var(--text-muted)" }}>{f.label}</span>
-                  <span style={{ fontSize:".85rem", color:"var(--text)" }}>{f.value}</span>
-                </div>
-              ))}
-            </div>
-            <div style={{ padding:"1.25rem", background:"var(--surface2)", border:"1px solid #e8553844", borderRadius:6, marginBottom:"1rem" }}>
-              <div style={{ fontSize:".7rem", color:"#d97706", letterSpacing:".15em", textTransform:"uppercase", marginBottom:".75rem", fontFamily:"inherit" }}>⛽ Fuel Stop Details</div>
-              {fuelStops.map(s => (
-                <div key={s.stop} style={{ marginBottom:"1.25rem", paddingBottom:"1.25rem", borderBottom:"1px solid #1e3a5230" }}>
-                  <div style={{ fontSize:".9rem", color:"var(--text)", fontFamily:"inherit", marginBottom:4 }}>{s.stop}</div>
-                  <div style={{ fontSize:".8rem", color:"var(--text-faint)", fontFamily:"inherit", marginBottom:3 }}>{s.marina}</div>
-                  <div style={{ fontSize:".75rem", color:"var(--text-muted)", fontFamily:"inherit", marginBottom:6 }}>VHF: {s.vhf}</div>
-                  <div style={{ fontSize:".8rem", color:"#7a9ab8", fontFamily:"inherit", fontStyle:"italic" }}>{s.notes}</div>
-                </div>
-              ))}
-            </div>
-            <div style={{ padding:".85rem 1rem", background:"var(--surface3)", border:"1px solid #c9a84c33", borderRadius:6, fontSize:".8rem", color:"var(--text-muted)", fontFamily:"inherit", lineHeight:1.6 }}>
-              <strong style={{ color:"var(--accent)" }}>Note:</strong> All calculations assume 15 kts / 33 gal·hr. Running at 20 kts increases consumption ~50–70%. Maintain a 15–20% reserve minimum. Fuel Stop #4 at Victoria on Day 17 is easy insurance — you're stopping there for lunch anyway.
-            </div>
-          </div>
-        )}
 
         {/* ── TIDES TAB ── */}
         {activeTab === "tides" && (

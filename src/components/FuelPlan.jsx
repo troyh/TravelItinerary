@@ -707,7 +707,7 @@ function VehicleFuelPlan({ vehicle, legs, startingFuel, pinnedRefuels, onStartin
 // ─── Entry Card (exported) ────────────────────────────────────────────────────
 
 export function FuelPlanEntryCard({ savedRoutes, savedDirections, vehiclesByDb, currentDbVehicles, fuelPlanState, onOpen, readOnly }) {
-  const allVehicles = currentDbVehicles ?? Object.values(vehiclesByDb ?? {}).flat();
+  const allVehicles = Object.values(vehiclesByDb ?? {}).flat();
 
   const carSegments = collectVehicleSegments("car", savedRoutes, savedDirections, allVehicles);
   const boatSegments = collectVehicleSegments("boat", savedRoutes, savedDirections, allVehicles);
@@ -819,7 +819,7 @@ export default function FuelPlan({ days, savedRoutes, savedDirections, vehiclesB
   const [activeMobileTab, setActiveMobileTab] = useState("car");
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 640;
 
-  const allVehicles = currentDbVehicles ?? Object.values(vehiclesByDb ?? {}).flat();
+  const allVehicles = Object.values(vehiclesByDb ?? {}).flat();
   const carSegments = collectVehicleSegments("car", savedRoutes, savedDirections, allVehicles);
   const boatSegments = collectVehicleSegments("boat", savedRoutes, savedDirections, allVehicles);
   const allSegments = [...carSegments, ...boatSegments];

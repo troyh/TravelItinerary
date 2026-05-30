@@ -85,7 +85,8 @@
       "Bash(curl -s \"https://waypoint.troyhakala.com/currents?lat=47.6&lon=-122.4&date=2026-07-25\")",
       "Bash(curl -s \"https://waypoint.troyhakala.com/currents?lat=48.4135&lon=-122.6432&date=2026-07-26\")",
       "Bash(ls /Users/troy/dev/TravelItinerary/*.zip 2>/dev/null || find /Users/troy -name \"Travel Itinerary.zip\" 2>/dev/null | head -5)",
-      "Read(//Users/troy/**)"
+      "Read(//Users/troy/**)",
+      "Bash(curl -s \"https://api.github.com/repos/troyh/TravelItinerary/contents/Itineraries/it-d90bf75c.json?ref=data\")"
     ],
     "additionalDirectories": [
       "/tmp"
