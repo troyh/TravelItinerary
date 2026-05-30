@@ -8,7 +8,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260819
 DTEND;VALUE=DATE:20260820
 SUMMARY:Day 1: Tacoma
-DESCRIPTION:23.7 NM · ~1.6 hrs
+DESCRIPTION:23.7 NM · ~1.2 hrs
 URL:https://troyh.github.io/TravelItinerary/?i=it-d90bf75c&day=1
 UID:day-1-20260819@travelitinerary
 END:VEVENT
