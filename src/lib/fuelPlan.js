@@ -16,10 +16,14 @@ export function interpolateGph(curve, speed) {
   return s[s.length - 1].gph;
 }
 
-export const boatGphAtTarget = v => interpolateGph(v.fuel?.curve, v.fuel?.targetSpeed ?? 5.5);
+export const boatGphAtTarget = (v, speed) =>
+  interpolateGph(v.fuel?.curve, speed ?? v.fuel?.targetSpeed ?? 5.5);
 
 export function legConsumption(vehicle, leg) {
-  if (vehicle.kind === "boat") return leg.durationH * boatGphAtTarget(vehicle);
+  if (vehicle.kind === "boat") {
+    const spd = parseFloat(leg.cruisingSpeed) || vehicle.fuel?.targetSpeed || 5.5;
+    return leg.durationH * boatGphAtTarget(vehicle, spd);
+  }
   const miles = leg.unit === "km" ? leg.distance / KM_PER_MILE : leg.distance;
   const gallons = miles / vehicle.fuel.mpgCombined;
   return vehicle.fuel.unit === "L" ? gallons * LITER_PER_GAL : gallons;
@@ -118,6 +122,7 @@ export function buildLegsForVehicle(vehicleId, kind, savedRoutes, savedDirection
           distance: r.nm ?? 0, unit: "nm",
           duration: h ? `${h}h ${m}m` : `${m}m`,
           durationH: r.hrs,
+          cruisingSpeed: r.cruisingSpeed || null,
           _dayNum: dayNum, _time: r.time || "", _itemId: r.id,
         });
       });
