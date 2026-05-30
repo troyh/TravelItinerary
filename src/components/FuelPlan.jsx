@@ -1086,6 +1086,8 @@ export default function FuelPlan({ days, savedRoutes, savedDirections, vehiclesB
           Refuel stops are auto-suggested when the trajectory would dip below the vehicle's reserve.
           Move or edit a refuel to pin it — the planner respects your placement.
           Downstream legs recompute live.
+          Refuel times on the day timeline are scheduled assuming a flow rate of 15 gal/min (minimum 5 minutes),
+          so fueling completes before the next leg departs.
         </div>
       </div>
     </div>

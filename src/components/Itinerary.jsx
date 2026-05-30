@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import FuelPlan, { FuelPlanEntryCard, FuelPumpGlyphSmall } from "./FuelPlan.jsx";
-import { simulateFuelPlan, buildLegsForVehicle, defaultStartingFuel, subtractMinutes, CURRENCY_SYM as FUEL_CURRENCY_SYM } from "../lib/fuelPlan.js";
+import { simulateFuelPlan, buildLegsForVehicle, defaultStartingFuel, subtractMinutes, LITER_PER_GAL, CURRENCY_SYM as FUEL_CURRENCY_SYM } from "../lib/fuelPlan.js";
 import NoteMarkdown from "./NoteMarkdown.jsx";
 import { days as initialDays, tagConfig, tideWarnings } from "../data/itinerary.js";
 import DayPlaces, { CATEGORIES as PLACE_CATEGORIES } from "./DayPlaces.jsx";
@@ -4256,11 +4256,13 @@ export default function Itinerary() {
           const leg = legs[row.beforeLegIdx];
           if (!leg) return;
           const dayNum = leg._dayNum;
-          const refuelTime = subtractMinutes(leg._time, 10);
+          const gallonsToAdd = unit === "L" ? row.amountAdded / LITER_PER_GAL : row.amountAdded;
+          const refuelMins = Math.max(5, Math.ceil(gallonsToAdd / 15));
+          const refuelTime = subtractMinutes(leg._time, refuelMins);
           const item = {
             _type: "fuelstop",
             _sort: refuelTime ? refuelTime.replace(":", "") : "0000",
-            _disp: refuelTime,
+            _disp: fmtTime12(refuelTime),
             id: `fuel-${vehicleId}-${row.beforeLegIdx}`,
             vehicleId, vehicleLabel: vehicle.name,
             amount: row.amountAdded, unit,
