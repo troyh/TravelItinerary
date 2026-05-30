@@ -5,7 +5,7 @@
   "itineraryNotes": "A cruise in the south end of Puget Sound. I've never been south of Gig Harbor and would like to go to Olympia.\n",
   "fuelPlanState": {
     "startingFuel": {
-      "mpixxfx8p5q6i": 740
+      "mpixxfx8p5q6i": 185
     },
     "pinnedRefuels": {
       "mpixxfx8p5q6i": [
@@ -41,7 +41,7 @@
           "name": "Elliott Bay Marina → Tacoma, WA",
           "nm": 23.7,
           "speedKts": 15,
-          "hrs": 1.6,
+          "hrs": 1.1833333333333333,
           "time": "",
           "startName": "Elliott Bay Marina",
           "startLat": 47.6302997,
@@ -115,19 +115,19 @@
           "destinationLat": 47.2557499,
           "destinationLng": -122.4421437,
           "travelMode": "DRIVING",
-          "departDate": "",
-          "arriveDate": "",
+          "departDate": "2026-08-19",
+          "arriveDate": "2026-08-19",
           "arriveTime": "",
           "vessel": "Figurati",
-          "cruisingSpeed": "12",
+          "cruisingSpeed": "20",
           "vehicleId": "mpixxfx8p5q6i",
           "vehicleDbId": "3d1270fe-7626-4267-b9ea-cf91add27bb1",
           "agency": "",
           "pickupLocation": "Elliott Bay Marina",
           "dropoffLocation": "Tacoma, WA",
-          "duration": "1h 36m",
-          "fuelGph": 17,
-          "fuelGallons": 27.200000000000003,
+          "duration": "~1h 11m",
+          "fuelGph": 61,
+          "fuelGallons": 72.18333333333334,
           "fuelUnit": "gal",
           "fuelCurrency": "USD"
         }
