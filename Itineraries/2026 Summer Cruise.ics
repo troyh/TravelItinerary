@@ -9,7 +9,7 @@ DTSTART;VALUE=DATE:20260706
 DTEND;VALUE=DATE:20260707
 SUMMARY:Day 1: Seattle → Victoria\, BC
 LOCATION:Oak Bay anchorage or Victoria Harbour
-DESCRIPTION:70.4 NM · ~4.7 hrs\nOvernight: Oak Bay anchorage or Victoria Harbour\n\nNote: Depart early — US/Canada customs by water can involve a wait. Passports for everyone aboard.
+DESCRIPTION:70.4 NM · ~3.5 hrs\nOvernight: Oak Bay anchorage or Victoria Harbour\n\nNote: Depart early — US/Canada customs by water can involve a wait. Passports for everyone aboard.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=1
 UID:day-1-20260706@travelitinerary
 END:VEVENT
@@ -36,15 +36,15 @@ DTSTART;VALUE=DATE:20260709
 DTEND;VALUE=DATE:20260710
 SUMMARY:Day 4: Vancouver → Princess Louisa Inlet
 LOCATION:Princess Louisa Marine Provincial Park (anchor / stern-tie)
-DESCRIPTION:87.3 NM · ~8.7 hrs\nOvernight: Princess Louisa Marine Provincial Park (anchor / stern-tie)\n\nNote: Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window.\n\nTODO: Figure out if I’m okay for stern-tying\nTODO: Is the dock there still under construction?
+DESCRIPTION:87.3 NM · ~5.1 hrs\nOvernight: Princess Louisa Marine Provincial Park (anchor / stern-tie)\n\nNote: Malibu Rapids is the most critical passage of the trip. No safe transit exists except within ±30 min of slack. Build the entire day around this window.\n\nTODO: Figure out if I’m okay for stern-tying\nTODO: Is the dock there still under construction?
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=4
 UID:day-4-20260709@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART:20260709T060000
-DTEND:20260709T144400
+DTEND:20260709T110800
 SUMMARY:🚢 Vancouver BC → Princess Louisa Inlet
-DESCRIPTION:87.3 NM · ~8h 44m\nVancouver BC → Princess Louisa Inlet
+DESCRIPTION:87.3 NM · ~5h 8m\nVancouver BC → Princess Louisa Inlet
 UID:route-dbd45f11-9989-4b6f-ac88-9c92eae8af59@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
@@ -96,6 +96,13 @@ DTEND:20260713T090300
 SUMMARY:🚢 Desolation Sound → Campbell River BC
 DESCRIPTION:24.7 NM · ~2h 3m\nDesolation Sound → Campbell River BC
 UID:route-170e20aa-8bed-4e94-8ec6-4abc1e369811@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260713T100000
+DTEND:20260713T142300
+SUMMARY:🚢 Campbell River BC → Port Neville
+DESCRIPTION:52.5 NM · ~4h 23m\nCampbell River BC → Port Neville
+UID:route-c03997e5-b42d-4a44-965d-2edd468800d4@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260714
