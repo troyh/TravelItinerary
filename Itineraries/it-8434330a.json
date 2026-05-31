@@ -71,7 +71,119 @@
         }
       ],
       "directions": [],
-      "routes": [],
+      "routes": [
+        {
+          "id": "d21f70a1-70eb-4f8f-8171-e7f5f7244f17",
+          "name": "Elliott Bay Marina → Victoria BC",
+          "startName": "Elliott Bay Marina",
+          "endName": "Victoria BC",
+          "startLat": 47.6302997,
+          "startLng": -122.3914826,
+          "endLat": 48.4284756,
+          "endLng": -123.3670221,
+          "time": "08:00",
+          "nm": 68.7,
+          "hrs": 4.033333333333333,
+          "cruisingSpeed": "17",
+          "vessel": "Figurati",
+          "vehicleId": "mpixxfx8p5q6i",
+          "routePath": [
+            [
+              47.628,
+              -122.392
+            ],
+            [
+              47.636,
+              -122.412
+            ],
+            [
+              47.656,
+              -122.432
+            ],
+            [
+              47.784,
+              -122.468
+            ],
+            [
+              47.816,
+              -122.48
+            ],
+            [
+              47.852,
+              -122.5
+            ],
+            [
+              47.86,
+              -122.5
+            ],
+            [
+              47.904,
+              -122.524
+            ],
+            [
+              47.912,
+              -122.524
+            ],
+            [
+              48.044,
+              -122.656
+            ],
+            [
+              48.1,
+              -122.688
+            ],
+            [
+              48.244,
+              -122.832
+            ],
+            [
+              48.296,
+              -122.996
+            ],
+            [
+              48.356,
+              -123.06
+            ],
+            [
+              48.404,
+              -123.172
+            ],
+            [
+              48.404,
+              -123.364
+            ],
+            [
+              48.408,
+              -123.368
+            ],
+            [
+              48.412,
+              -123.388
+            ],
+            [
+              48.416,
+              -123.392
+            ],
+            [
+              48.42,
+              -123.392
+            ],
+            [
+              48.424,
+              -123.388
+            ],
+            [
+              48.424,
+              -123.38
+            ]
+          ],
+          "notes": "",
+          "fuelGph": 44,
+          "fuelGallons": 177.46666666666667,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
+        }
+      ],
       "flights": [],
       "rentalCars": [],
       "tideChecks": []
@@ -113,33 +225,7 @@
       "centerLng": -123.37921142578126,
       "highlights": [],
       "note": "",
-      "places": [
-        {
-          "id": "f92828f2-7a64-4916-a475-2450efa3b083",
-          "name": "Roche Harbor",
-          "address": "Roche Harbor, WA, United States",
-          "lat": 48.6106169,
-          "lng": -123.1470482,
-          "category": "activity",
-          "placeKind": "see",
-          "time": "12:30",
-          "duration": "",
-          "notes": "",
-          "confirmation": "",
-          "partySize": "",
-          "bookedVia": "",
-          "dietary": "",
-          "room": "",
-          "guests": "",
-          "stayLength": "",
-          "operator": "",
-          "cost": "",
-          "entry": "",
-          "tickets": "",
-          "activity": "",
-          "addedAt": "2026-05-26T22:06:40.259Z"
-        }
-      ],
+      "places": [],
       "directions": [],
       "routes": [],
       "flights": [],
@@ -252,11 +338,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "Area G (Saltair / Gulf Islands), Canada",
       "centerLat": 49.109837790524416,
       "centerLng": -123.71154785156251,
+      "highlights": [],
+      "note": "",
       "places": [],
       "directions": [],
       "routes": [],
@@ -274,11 +360,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "Salt Spring Island Electoral Area, Canada",
       "centerLat": 48.943249256234296,
       "centerLng": -123.55705261230469,
+      "highlights": [],
+      "note": "",
       "places": [],
       "directions": [],
       "routes": [],
@@ -296,11 +382,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "Southern Gulf Islands Electoral Area, Canada",
       "centerLat": 48.79600890414036,
       "centerLng": -123.31604003906251,
+      "highlights": [],
+      "note": "",
       "places": [],
       "directions": [],
       "routes": [],
@@ -309,7 +395,7 @@
       "tideChecks": []
     },
     {
-      "leg": "New Day",
+      "leg": "Succia Island",
       "nm": 0,
       "hrs": 0,
       "overnight": "",
@@ -321,8 +407,91 @@
       "highlights": [],
       "note": "",
       "centerName": "San Juan County, United States",
+      "centerLat": 48.760262727297,
+      "centerLng": -122.89993286132812,
+      "places": [
+        {
+          "id": "b22c998b-13fb-4303-89d4-1cecf3961345",
+          "name": "San Juan County, United States",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "ll:48.760262727297,-122.89993286132812",
+          "category": "other",
+          "time": "",
+          "lat": 48.760262727297,
+          "lng": -122.89993286132812
+        }
+      ],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "Roche Harbor Day 1",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "centerName": "San Juan County, United States",
       "centerLat": 48.600225060468915,
       "centerLng": -123.14849853515626,
+      "highlights": [],
+      "note": "",
+      "places": [
+        {
+          "id": "f92828f2-7a64-4916-a475-2450efa3b083",
+          "name": "Roche Harbor",
+          "address": "Roche Harbor, WA, United States",
+          "lat": 48.6106169,
+          "lng": -123.1470482,
+          "category": "activity",
+          "placeKind": "see",
+          "time": "12:30",
+          "duration": "",
+          "notes": "",
+          "confirmation": "",
+          "partySize": "",
+          "bookedVia": "",
+          "dietary": "",
+          "room": "",
+          "guests": "",
+          "stayLength": "",
+          "operator": "",
+          "cost": "",
+          "entry": "",
+          "tickets": "",
+          "activity": "",
+          "addedAt": "2026-05-26T22:06:40.259Z"
+        }
+      ],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "Roche Harbor Day 2",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
       "places": [],
       "directions": [],
       "routes": [],
@@ -342,10 +511,184 @@
       "tideWarning": false,
       "highlights": [],
       "note": "",
-      "centerName": "Jefferson County, United States",
-      "centerLat": 48.10559716402152,
-      "centerLng": -122.74749755859376,
+      "centerName": "Friday Harbor, United States",
+      "centerLat": 48.5350851,
+      "centerLng": -123.0127037,
       "places": [],
+      "directions": [],
+      "routes": [
+        {
+          "id": "be41c684-f10f-42e2-b0c9-54e814baa730",
+          "name": "Roche Harbor → Friday Harbor",
+          "startName": "Roche Harbor",
+          "endName": "Friday Harbor",
+          "startLat": 48.6106169,
+          "startLng": -123.1470482,
+          "endLat": 48.5350851,
+          "endLng": -123.0127037,
+          "time": "",
+          "nm": 9.2,
+          "hrs": 0.7666666666666667,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
+          "vehicleId": "mpixxfx8p5q6i",
+          "routePath": [
+            [
+              48.62,
+              -123.152
+            ],
+            [
+              48.624,
+              -123.152
+            ],
+            [
+              48.628,
+              -123.148
+            ],
+            [
+              48.624,
+              -123.108
+            ],
+            [
+              48.568,
+              -123.02
+            ],
+            [
+              48.552,
+              -123.004
+            ],
+            [
+              48.548,
+              -123.004
+            ],
+            [
+              48.54,
+              -123.012
+            ],
+            [
+              48.536,
+              -123.012
+            ]
+          ],
+          "notes": "",
+          "fuelGph": 17,
+          "fuelGallons": 13.033333333333335,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
+        }
+      ],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "Lopez",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "Lopez Village, United States",
+      "centerLat": 48.51819624994537,
+      "centerLng": -122.91469573974611,
+      "places": [
+        {
+          "id": "38fe6ba8-67dc-4412-af87-c732100c01a6",
+          "name": "Lopez Village, United States",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "ll:48.51819624994537,-122.91469573974611",
+          "category": "other",
+          "time": "",
+          "lat": 48.51819624994537,
+          "lng": -122.91469573974611
+        }
+      ],
+      "directions": [],
+      "routes": [
+        {
+          "id": "1852e7ef-9f90-48b7-9087-99708390f0ec",
+          "name": "Friday Harbor, United States → Lopez Village Market",
+          "startName": "Friday Harbor, United States",
+          "endName": "Lopez Village Market",
+          "startLat": 48.5350851,
+          "startLng": -123.0127037,
+          "endLat": 48.525796,
+          "endLng": -122.9126771,
+          "time": "",
+          "nm": 4.2,
+          "hrs": 0.35,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
+          "vehicleId": "mpixxfx8p5q6i",
+          "routePath": [
+            [
+              48.536,
+              -123.012
+            ],
+            [
+              48.536,
+              -123.004
+            ],
+            [
+              48.54,
+              -123
+            ],
+            [
+              48.54,
+              -122.96
+            ],
+            [
+              48.524,
+              -122.916
+            ]
+          ],
+          "notes": "",
+          "fuelGph": 17,
+          "fuelGallons": 5.949999999999999,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
+        }
+      ],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "Port Townsend",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "centerName": "Jefferson County, United States",
+      "centerLat": 48.109035906197036,
+      "centerLng": -122.75367736816408,
+      "highlights": [],
+      "note": "",
+      "places": [
+        {
+          "id": "ff1b3c6f-ba17-41ec-b735-7f6185b9a6d1",
+          "name": "Jefferson County, United States",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "ll:48.109035906197036,-122.75367736816408",
+          "category": "other",
+          "time": "",
+          "lat": 48.109035906197036,
+          "lng": -122.75367736816408
+        }
+      ],
       "directions": [],
       "routes": [],
       "flights": [],
