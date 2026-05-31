@@ -1,9 +1,20 @@
 {
   "startDate": "",
-  "title": "Canada Cruise v4",
+  "title": "Canada Cruise🇨🇦 v4",
   "subtitle": "Scenic tour through Sunshine Coast and back down to finally see Victoria and then to Roche Harbor and a few days in the San Juan Islands.",
   "itineraryNotes": "A few long cruising days with lots, anchoring everywhere (except Victoria and Port Townsend).\n\n**Pros**\n1. Scenic\n2. Long days of cruising, enjoying the views\n3. Finally get into Princess Louisa Inlet\n4. Kids like Desolation Sound, maybe can swim\n5. Roche Harbor\n\n**Cons**\n1. Misses Saltspring Island\n2. Few towns (Ladysmith, Victoria, Lopez, Port Townsend)\n",
-  "fuelPlanState": {},
+  "fuelPlanState": {
+    "pinnedRefuels": {
+      "mpixxfx8p5q6i": [
+        {
+          "beforeLegIdx": 1,
+          "amount": 520,
+          "source": "user-moved",
+          "movedFromIdx": 2
+        }
+      ]
+    }
+  },
   "days": [
     {
       "leg": "Up to Gibsons, BC",
@@ -1586,11 +1597,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "San Juan County, United States",
       "centerLat": 48.592959181191695,
       "centerLng": -123.15399169921875,
+      "highlights": [],
+      "note": "",
       "places": [],
       "directions": [],
       "routes": [],
@@ -1824,11 +1835,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "Jefferson County, United States",
       "centerLat": 48.09459164290992,
       "centerLng": -122.76123046875001,
+      "highlights": [],
+      "note": "",
       "places": [],
       "directions": [],
       "routes": [
