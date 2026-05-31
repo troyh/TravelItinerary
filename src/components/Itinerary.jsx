@@ -5461,10 +5461,17 @@ export default function Itinerary() {
                   {/* ── Unified timeline (all item types, sorted by time) ── */}
                   {(() => {
                     const distUnit = settings.distanceUnit ?? "km";
+                    const addMinsToHHMM = (hhmm, mins) => {
+                      if (!hhmm || !mins) return null;
+                      const [h, m] = hhmm.split(":").map(Number);
+                      if (isNaN(h) || isNaN(m)) return null;
+                      const total = h * 60 + m + Math.round(mins);
+                      return `${String(Math.floor(total / 60) % 24).padStart(2,"0")}:${String(total % 60).padStart(2,"0")}`;
+                    };
                     const places   = (savedPlaces[d.day]      ?? []).map(p => ({ _type:"place",     _sort: timeToSortKey(p.time),              _disp: fmtTime12(p.time),              ...p }));
-                    const flights  = (savedFlights[d.day]     ?? []).map(f => ({ _type:"flight",    _sort: timeToSortKey(f.departureTime),      _disp: fmtTime12(f.departureTime),     ...f }));
-                    const dirs     = (savedDirections[d.day]  ?? []).map(x => ({ _type:"direction", _sort: timeToSortKey(x.time),              _disp: fmtTime12(x.time),              ...x }));
-                    const routes   = (savedRoutes[d.day]      ?? []).map(r => ({ _type:"route",     _sort: timeToSortKey(r.time),              _disp: fmtTime12(r.time),              ...r }));
+                    const flights  = (savedFlights[d.day]     ?? []).map(f => ({ _type:"flight",    _sort: timeToSortKey(f.departureTime),      _disp: fmtTime12(f.departureTime),     _arriveSort: f.arrivalTime || null,                              _arriveDisp: f.arrivalTime ? fmtTime12(f.arrivalTime) : null,                              _spanColor: "var(--accent)",  ...f }));
+                    const dirs     = (savedDirections[d.day]  ?? []).map(x => ({ _type:"direction", _sort: timeToSortKey(x.time),              _disp: fmtTime12(x.time),              _arriveSort: x.arriveTime || null,                               _arriveDisp: x.arriveTime ? fmtTime12(x.arriveTime) : null,                               _spanColor: "#16a34a",        ...x }));
+                    const routes   = (savedRoutes[d.day]      ?? []).map(r => { const arrHHMM = r.time && r.hrs > 0 ? addMinsToHHMM(r.time, r.hrs * 60) : null; return { _type:"route", _sort: timeToSortKey(r.time), _disp: fmtTime12(r.time), _arriveSort: arrHHMM, _arriveDisp: arrHHMM ? fmtTime12(arrHHMM) : null, _spanColor: "var(--accent)", ...r }; });
                     const cars     = (savedRentalCars[d.day]  ?? []).map(c => ({ _type:"rentalcar", _sort: timeToSortKey(c.time),              _disp: fmtTime12(c.time),              ...c }));
                     const tideChecks = (savedTideChecks[d.day] ?? []).flatMap(t => {
                       const isoToHHMM = (iso, tz) => {
@@ -5502,13 +5509,41 @@ export default function Itinerary() {
                     });
 
                     const fuelStops = (fuelStopsByDay[d.day] ?? []).map(f => ({ ...f }));
-                    const all = [...places, ...flights, ...dirs, ...routes, ...cars, ...tideChecks, ...fuelStops]
+                    const baseItems = [...places, ...flights, ...dirs, ...routes, ...cars, ...tideChecks, ...fuelStops]
                       .sort((a, b) => {
                         if (!a._sort && !b._sort) return 0;
                         if (!a._sort) return 1;
                         if (!b._sort) return -1;
                         return a._sort.localeCompare(b._sort);
                       });
+                    // Insert arrive markers for duration items, then annotate in-span items
+                    const arriveMarkers = baseItems
+                      .filter(item => item._arriveSort)
+                      .map(item => ({ _type:"arrive", _sort: timeToSortKey(item._arriveSort),
+                        _disp: item._arriveDisp, _color: item._spanColor, _isArrive: true,
+                        id: "arrive-" + item.id }));
+                    const all = [...baseItems, ...arriveMarkers].sort((a, b) => {
+                      if (!a._sort && !b._sort) return 0;
+                      if (!a._sort) return 1;
+                      if (!b._sort) return -1;
+                      return a._sort.localeCompare(b._sort);
+                    });
+                    // Annotate items that fall within a duration span
+                    let activeSpan = null; // { endSort, color }
+                    all.forEach(item => {
+                      if (activeSpan) {
+                        if (!item._sort || item._sort < activeSpan.endSort) {
+                          if (!item._isArrive) item._inSpanColor = activeSpan.color;
+                        } else {
+                          activeSpan = null;
+                        }
+                      }
+                      if (item._arriveSort) {
+                        const endSort = timeToSortKey(item._arriveSort);
+                        if (!activeSpan || endSort > activeSpan.endSort)
+                          activeSpan = { endSort, color: item._spanColor };
+                      }
+                    });
 
                     if (!all.length) return null;
 
@@ -5676,6 +5711,30 @@ export default function Itinerary() {
                             item._isFuelstop = true;
                           }
 
+                          // Arrive marker — rendered as a compact end-cap row
+                          if (item._isArrive) {
+                            return (
+                              <React.Fragment key={item.id}>
+                              <li style={{ display:"flex", gap:14, position:"relative" }}>
+                                <div style={{ width:52, flexShrink:0, textAlign:"right", paddingTop:2, fontVariantNumeric:"tabular-nums" }}>
+                                  <div style={{ fontSize:11.5, color:"var(--text-muted)", fontWeight:500, letterSpacing:-0.1 }}>{item._disp}</div>
+                                </div>
+                                <div style={{ width:18, flexShrink:0, position:"relative", minHeight:12 }}>
+                                  {/* Colored line from previous item — top:-14 → dot center at top:4 */}
+                                  <div style={{ position:"absolute", top:-14, width:2, height:22, left:"calc(50% + 7px)", transform:"translateX(-50%)", background:item._color, opacity:0.5 }}/>
+                                  {/* Filled end dot, centered on colored line */}
+                                  <div style={{ position:"absolute", top:4, left:"calc(50% + 7px)", transform:"translateX(-50%)", width:6, height:6, borderRadius:3, background:item._color, zIndex:2, opacity:0.75 }}/>
+                                  {/* Gray connector below */}
+                                  {!isLast && <div style={{ position:"absolute", top:10, bottom:-14, width:1.5, left:"50%", transform:"translateX(-50%)", background:"var(--border)" }}/>}
+                                </div>
+                                <div style={{ flex:1, minWidth:0, paddingTop:1 }}>
+                                  <span style={{ fontSize:11.5, color:"var(--text-muted)", fontStyle:"italic" }}>Arrives</span>
+                                </div>
+                              </li>
+                              </React.Fragment>
+                            );
+                          }
+
                           return (
                             <React.Fragment key={item._type + item.id}>
                             <li style={{ display:"flex", gap:14, position:"relative" }}>
@@ -5688,7 +5747,15 @@ export default function Itinerary() {
                                 {item._isFuelstop
                                   ? <div style={{ width:18, height:18, borderRadius:9, background:"var(--accent)", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center", marginTop:2, zIndex:1, flexShrink:0 }}><FuelPumpGlyphSmall/></div>
                                   : <div style={{ width:10, height:10, borderRadius:5, background:"var(--surface)", border:`2px solid ${dotColor}`, marginTop:4, zIndex:1, flexShrink:0 }}/>}
-                                {!isLast && <div style={{ position:"absolute", top:item._isFuelstop ? 20 : 14, bottom:-14, width:1.5, background:"var(--border)" }}/>}
+                                {!isLast && (() => {
+                                  const spanCol = item._arriveDisp ? dotColor : item._inSpanColor ?? null;
+                                  const dotTop = item._isFuelstop ? 20 : 14;
+                                  return <>
+                                    <div style={{ position:"absolute", top:dotTop, bottom:-14, width:1.5, background:"var(--border)" }}/>
+                                    {spanCol && <div style={{ position:"absolute", top: item._arriveDisp ? dotTop : -14, bottom:-14, width:2, left:"calc(50% + 7px)", transform:"translateX(-50%)", background:spanCol, opacity:0.5 }}/>}
+                                    {item._arriveDisp && <div style={{ position:"absolute", top:dotTop - 3, left:"calc(50% + 7px)", transform:"translateX(-50%)", width:6, height:6, borderRadius:3, background:dotColor, zIndex:2, opacity:0.75 }}/>}
+                                  </>;
+                                })()}
                               </div>
                               {/* Content */}
                               <div style={{ flex:1, minWidth:0, paddingBottom: isLast ? 0 : 14 }}>
