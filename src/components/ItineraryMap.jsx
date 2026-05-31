@@ -109,13 +109,16 @@ function markerIcon(n) {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export default function ItineraryMap({ days, savedFlights, savedDirections, savedPlaces, savedRoutes, dark, onSetDayLocation }) {
-  const mapElRef   = useRef(null);
-  const leafletRef = useRef(null);
-  const dragRef    = useRef(null);  // { startY, startH }
-  const setLocRef  = useRef(onSetDayLocation);
-  const daysRef    = useRef(days);
+export default function ItineraryMap({ days, savedFlights, savedDirections, savedPlaces, savedRoutes, dark, onSetDayLocation, onAddDayAndSetLocation }) {
+  const mapElRef    = useRef(null);
+  const leafletRef  = useRef(null);
+  const dragRef     = useRef(null);  // { startY, startH }
+  const savedViewRef = useRef(null); // { center, zoom } — preserved across rebuilds
+  const setLocRef    = useRef(onSetDayLocation);
+  const addDayRef    = useRef(onAddDayAndSetLocation);
+  const daysRef      = useRef(days);
   useEffect(() => { setLocRef.current = onSetDayLocation; }, [onSetDayLocation]);
+  useEffect(() => { addDayRef.current = onAddDayAndSetLocation; }, [onAddDayAndSetLocation]);
   useEffect(() => { daysRef.current = days; }, [days]);
   const [open,      setOpen]      = useState(true);
   const [mapHeight, setMapHeight] = useState(() => {
@@ -403,7 +406,11 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
       bounds.extend([lat, lng]);
     });
 
-    if (bounds.isValid()) map.fitBounds(bounds.pad(0.2));
+    if (savedViewRef.current) {
+      map.setView(savedViewRef.current.center, savedViewRef.current.zoom, { animate: false });
+    } else if (bounds.isValid()) {
+      map.fitBounds(bounds.pad(0.2));
+    }
 
     // Tap on empty map → day picker popup
     map.on("click", e => {
@@ -412,10 +419,14 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
       const options = d.map(day =>
         `<option value="${day.day}">Day ${day.day}${day.leg ? ": " + day.leg : ""}</option>`
       ).join("");
+      const addDayOption = addDayRef.current
+        ? `<option disabled style="color:var(--border)">──────────</option>
+           <option value="__new__">+ Add new day at end</option>`
+        : "";
       const uid = "slp-" + Date.now();
       const content = `<div style="padding:4px 2px;min-width:180px;font-family:inherit;">
         <div style="font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--text-muted);margin-bottom:6px;">SET LOCATION FOR</div>
-        <select id="${uid}-sel" style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:13px;margin-bottom:10px;background:var(--surface);color:var(--text);">${options}</select>
+        <select id="${uid}-sel" style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:13px;margin-bottom:10px;background:var(--surface);color:var(--text);">${options}${addDayOption}</select>
         <button id="${uid}-btn" style="width:100%;padding:5px 10px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;">Set location</button>
       </div>`;
       const popup = L.popup({ closeButton: true, maxWidth: 220 })
@@ -426,7 +437,11 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
         const sel = document.getElementById(`${uid}-sel`);
         if (btn && sel) {
           L.DomEvent.on(btn, "click", () => {
-            setLocRef.current(parseInt(sel.value, 10), e.latlng.lat, e.latlng.lng);
+            if (sel.value === "__new__") {
+              addDayRef.current?.(e.latlng.lat, e.latlng.lng);
+            } else {
+              setLocRef.current(parseInt(sel.value, 10), e.latlng.lat, e.latlng.lng);
+            }
             map.closePopup();
           });
         }
@@ -435,15 +450,20 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
     });
 
     return () => {
-      if (leafletRef.current) { leafletRef.current.remove(); leafletRef.current = null; }
+      if (leafletRef.current) {
+        savedViewRef.current = { center: leafletRef.current.getCenter(), zoom: leafletRef.current.getZoom() };
+        leafletRef.current.remove();
+        leafletRef.current = null;
+      }
     };
   // Rebuild when open toggles or coords change
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, mapHeight, coords, JSON.stringify(savedFlights), JSON.stringify(savedDirections), JSON.stringify(savedPlaces), JSON.stringify(savedRoutes), JSON.stringify(days.map(d => [d.day, d.centerLat, d.centerLng]))]);
 
-  // Don't render if fewer than 2 locatable days (overnight text or GPS centroid)
+  // Don't render if fewer than 2 locatable days (overnight text, explicit center coords, or GPS centroid)
   const locatableDays = days.filter(d => {
     if (d.overnight?.trim()) return true;
+    if (d.centerLat && d.centerLng) return true;
     const hasCentroid = [
       ...(savedPlaces[d.day]     ?? []).filter(p => p.lat && p.lng),
       ...(savedFlights[d.day]    ?? []).filter(f => f.arrivalLat && f.arrivalLng),

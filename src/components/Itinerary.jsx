@@ -3414,9 +3414,11 @@ export default function Itinerary() {
     setDays(prev => prev.map(d => d.day === dayNum ? { ...d, ...updates } : d));
   }
 
-  async function handleSetDayLocation(dayNum, lat, lng) {
+  async function handleAddDayAndSetLocation(lat, lng) {
+    const newDayNum = days[days.length - 1].day + 1;
+    addBlankDay(days[days.length - 1].day);
     const placeId = crypto.randomUUID();
-    addPlace(dayNum, {
+    const newPlace = {
       id: placeId,
       name: `${lat.toFixed(4)}, ${lng.toFixed(4)}`,
       address: "", phone: "", website: "",
@@ -3424,7 +3426,38 @@ export default function Itinerary() {
       category: "other",
       time: "",
       lat, lng,
-    });
+      _mapPin: true,
+    };
+    setSavedPlaces(prev => ({
+      ...prev,
+      [newDayNum]: [...(prev[newDayNum] ?? []).filter(p => !p._mapPin), newPlace],
+    }));
+    updateDayFields(newDayNum, { centerLat: lat, centerLng: lng, centerName: "", overnight: "" });
+    dirtyRef.current = true;
+    const name = await reverseGeocode(lat, lng);
+    if (name) {
+      updateDayFields(newDayNum, { centerName: name });
+      updatePlace(newDayNum, placeId, { name });
+    }
+  }
+
+  async function handleSetDayLocation(dayNum, lat, lng) {
+    const placeId = crypto.randomUUID();
+    const newPlace = {
+      id: placeId,
+      name: `${lat.toFixed(4)}, ${lng.toFixed(4)}`,
+      address: "", phone: "", website: "",
+      placeId: `ll:${lat},${lng}`,
+      category: "other",
+      time: "",
+      lat, lng,
+      _mapPin: true,
+    };
+    // Replace any existing map-pinned place for this day and append the new one atomically
+    setSavedPlaces(prev => ({
+      ...prev,
+      [dayNum]: [...(prev[dayNum] ?? []).filter(p => !p._mapPin), newPlace],
+    }));
     updateDayFields(dayNum, { centerLat: lat, centerLng: lng, centerName: "", overnight: "" });
     dirtyRef.current = true;
     const name = await reverseGeocode(lat, lng);
@@ -3531,7 +3564,15 @@ export default function Itinerary() {
     const newNum = afterDayNum + 1;
     setDays(prev => {
       const idx = prev.findIndex(d => d.day === afterDayNum);
-      return [...prev.slice(0, idx + 1), { ...BLANK_DAY, day: newNum }, ...prev.slice(idx + 1).map(d => ({ ...d, day: d.day + 1 }))];
+      const prev_ = prev[idx];
+      const inherited = prev_ ? {
+        leg:        prev_.leg        ?? "",
+        centerLat:  prev_.centerLat  ?? null,
+        centerLng:  prev_.centerLng  ?? null,
+        centerName: prev_.centerName ?? "",
+        overnight:  prev_.overnight  ?? "",
+      } : {};
+      return [...prev.slice(0, idx + 1), { ...BLANK_DAY, day: newNum, ...inherited }, ...prev.slice(idx + 1).map(d => ({ ...d, day: d.day + 1 }))];
     });
     setCustomNotes(prev => remapKeys(prev, newNum, +1));
     setSavedPlaces(prev => remapKeys(prev, newNum, +1));
@@ -3541,7 +3582,8 @@ export default function Itinerary() {
     setSavedRentalCars(prev => remapKeys(prev, newNum, +1));
     setSavedTideChecks(prev => remapKeys(prev, newNum, +1));
     setEditingCoreDay(newNum);
-    setCoreDraft({ leg: "New Day", overnight: "", nm: 0, hrs: 0 });
+    const afterDay = days.find(d => d.day === afterDayNum);
+    setCoreDraft({ leg: afterDay?.leg ?? "New Day", overnight: afterDay?.overnight ?? "", nm: 0, hrs: 0 });
   }
 
   function removeDay(dayNum) {
@@ -4936,7 +4978,7 @@ export default function Itinerary() {
       {/* ── MAP ── */}
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "1.25rem 2rem 0" }}>
         <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid var(--border)" }}>
-          <ItineraryMap days={days} savedFlights={savedFlights} savedDirections={savedDirections} savedPlaces={savedPlaces} savedRoutes={savedRoutes} dark={isDark} onSetDayLocation={!readOnly ? handleSetDayLocation : undefined} />
+          <ItineraryMap days={days} savedFlights={savedFlights} savedDirections={savedDirections} savedPlaces={savedPlaces} savedRoutes={savedRoutes} dark={isDark} onSetDayLocation={!readOnly ? handleSetDayLocation : undefined} onAddDayAndSetLocation={!readOnly ? handleAddDayAndSetLocation : undefined} />
         </div>
       </div>
 
