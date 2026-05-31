@@ -10,16 +10,6 @@
     "pinnedRefuels": {
       "mpixxfx8p5q6i": [
         {
-          "beforeLegIdx": 5,
-          "amount": 538,
-          "source": "user-edited-amount"
-        },
-        {
-          "beforeLegIdx": 2,
-          "amount": 364,
-          "source": "user-added"
-        },
-        {
           "beforeLegIdx": 12,
           "amount": 406,
           "source": "user-edited-amount"
