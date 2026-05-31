@@ -868,7 +868,7 @@ export function FuelPlanEntryCard({ savedRoutes, savedDirections, vehiclesByDb, 
 
 // ─── Main FuelPlan Modal (default export) ────────────────────────────────────
 
-export default function FuelPlan({ days, savedRoutes, savedDirections, vehiclesByDb, currentDbVehicles, startDate, fuelPlanState, onFuelPlanChange, onClose }) {
+export default function FuelPlan({ days, savedRoutes, savedDirections, vehiclesByDb, currentDbVehicles, startDate, fuelPlanState, onFuelPlanChange }) {
   const [activeMobileTab, setActiveMobileTab] = useState("car");
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 640;
 
@@ -909,40 +909,13 @@ export default function FuelPlan({ days, savedRoutes, savedDirections, vehiclesB
     });
   }
 
-  // Esc closes
-  useEffect(() => {
-    function onKey(e) { if (e.key === "Escape") onClose(); }
-    document.addEventListener("keydown", onKey, true);
-    return () => document.removeEventListener("keydown", onKey, true);
-  }, [onClose]);
-
-  // Body scroll lock
-  useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = prev; };
-  }, []);
-
   const segmentsToShow = isMobile
     ? (activeMobileTab === "car" ? carSegments : boatSegments)
     : null;
 
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 960, background: T.bg,
-      overflowY: "auto", fontFamily: T.font }}>
-      <div style={{ maxWidth: 1240, margin: "0 auto", padding: isMobile ? "16px 16px 80px" : "48px 60px 80px" }}>
-
-        {/* Breadcrumb */}
-        <div style={{ fontSize: 12, color: T.textMuted, marginBottom: 14,
-          display: "flex", alignItems: "center", gap: 6 }}>
-          <button onClick={onClose}
-            style={{ background: "none", border: "none", color: T.textMuted, cursor: "pointer",
-              padding: 0, fontFamily: "inherit", fontSize: 12, display: "flex", alignItems: "center", gap: 4 }}>
-            ← Back
-          </button>
-          <span style={{ color: T.textFaint }}>/</span>
-          <span style={{ color: T.text, fontWeight: 600 }}>Fuel plan</span>
-        </div>
+    <div style={{ fontFamily: T.font }}>
+      <div style={{ maxWidth: 1240, margin: "0 auto", padding: isMobile ? "16px 16px 80px" : "32px 0 80px" }}>
 
         {/* Page header */}
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between",
@@ -956,9 +929,6 @@ export default function FuelPlan({ days, savedRoutes, savedDirections, vehiclesB
               Fuel plan
             </h1>
           </div>
-          <button onClick={onClose} style={{ ...btn.primary }}>
-            Save plan
-          </button>
         </div>
 
         <p style={{ fontSize: 13, color: T.textMuted, marginBottom: 24, maxWidth: 720, lineHeight: 1.6 }}>

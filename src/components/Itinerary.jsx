@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import FuelPlan, { FuelPlanEntryCard, FuelPumpGlyphSmall } from "./FuelPlan.jsx";
+import FuelPlan, { FuelPumpGlyphSmall } from "./FuelPlan.jsx";
 import { simulateFuelPlan, buildLegsForVehicle, defaultStartingFuel, subtractMinutes, LITER_PER_GAL, CURRENCY_SYM as FUEL_CURRENCY_SYM } from "../lib/fuelPlan.js";
 import NoteMarkdown from "./NoteMarkdown.jsx";
 import { days as initialDays, tagConfig, tideWarnings } from "../data/itinerary.js";
@@ -2981,7 +2981,6 @@ export default function Itinerary() {
   const [savedRentalCars,  setSavedRentalCars]  = useState(() => _extracted.rentalCars);
   const [savedTideChecks,  setSavedTideChecks]  = useState(() => _extracted.tideChecks);
   const [fuelPlanState,    setFuelPlanState]    = useState(() => _db?.fuelPlanState ?? {});
-  const [showFuelPlan,     setShowFuelPlan]     = useState(false);
   const [days,             setDays]             = useState(() => _extracted.days);
   const [editingCoreDay,   setEditingCoreDay]   = useState(null);
   const [coreDraft,        setCoreDraft]        = useState({});
@@ -5111,17 +5110,6 @@ export default function Itinerary() {
           {/* Right: fuel plan entry card + date grid */}
           <div style={{ width:300, flexShrink:0, display:"flex", flexDirection:"column", gap:10 }}>
 
-            {/* Fuel plan entry card */}
-            <FuelPlanEntryCard
-              savedRoutes={savedRoutes}
-              savedDirections={savedDirections}
-              vehiclesByDb={vehiclesByDb}
-              currentDbVehicles={currentDbVehicles}
-              fuelPlanState={fuelPlanState}
-              onOpen={() => setShowFuelPlan(true)}
-              readOnly={readOnly}
-            />
-
             {/* Date grid */}
             {(() => {
               const hasDate = !!startDate;
@@ -5250,7 +5238,7 @@ export default function Itinerary() {
       {/* ── TABS ── */}
       <div style={{ borderBottom:"1px solid var(--border)", background:"var(--surface)" }}>
         <div style={{ maxWidth:1100, margin:"0 auto", display:"flex" }}>
-          {[["itinerary","Day by Day"],["tides","Tide Warnings"]].map(([t,lbl])=>(
+          {[["itinerary","Day by Day"],["fuel","Fuel Plan"]].map(([t,lbl])=>(
             <button key={t} onClick={()=>setActiveTab(t)} style={{
               background:"none", border:"none",
               borderBottom: activeTab===t ? "2px solid var(--accent)" : "2px solid transparent",
@@ -6038,38 +6026,18 @@ export default function Itinerary() {
         )}
         </>)}
 
-        {/* ── TIDES TAB ── */}
-        {activeTab === "tides" && (
-          <div>
-            <div style={{ padding:".85rem 1rem", background:"#fef2f2", border:"1px solid #dc354566", borderRadius:6, marginBottom:"1.25rem", fontSize:".82rem", color:"#ef4444", fontFamily:"inherit", lineHeight:1.6 }}>
-              <strong style={{ color:"#dc2626" }}>Critical:</strong> This route has two non-negotiable tidal rapids (Malibu and Seymour) and one high-traffic channel (Active Pass). Plan exact passage times the night before using official CHS tables. Cross-check with at least two sources.
-            </div>
-            {tideWarnings.map(t => (
-              <div key={t.passage} style={{ marginBottom:".75rem", padding:"1.1rem 1.25rem", background:"var(--surface2)", border:"1px solid #dc354533", borderRadius:6 }}>
-                <div style={{ fontSize:".9rem", color:"var(--text)", fontFamily:"inherit", marginBottom:".4rem" }}>{t.passage}</div>
-                <div style={{ fontSize:".82rem", color:"var(--text-faint)", fontFamily:"inherit", lineHeight:1.55 }}>{t.detail}</div>
-              </div>
-            ))}
-            <div style={{ marginTop:"1.5rem", padding:"1.25rem", background:"var(--surface2)", border:"1px solid #1e3a52", borderRadius:6 }}>
-              <div style={{ fontSize:".7rem", color:"var(--accent)", letterSpacing:".15em", textTransform:"uppercase", marginBottom:".85rem", fontFamily:"inherit" }}>Apps & Resources</div>
-              {[
-                ["Navionics Boating App",      "Best all-in-one: charts, tides, ActiveCaptain community notes"],
-                ["XTide / Tides Near Me",       "Precise slack water timing for BC passages"],
-                ["tides.gc.ca (CHS)",           "Official Canadian Hydrographic Service tide predictions"],
-                ["PredictWind or SailFlow",     "Weather routing — critical for Johnstone Strait & Haro Strait"],
-                ["VHF Channel 16",              "Monitor at all times underway; 66A for BC marinas"],
-                ["CBP ROAM App (US Customs)",   "Required for US re-entry — register all passengers before departure"],
-              ].map(([tool,desc]) => (
-                <div key={tool} style={{ display:"flex", gap:".75rem", marginBottom:".7rem", fontFamily:"inherit" }}>
-                  <span style={{ color:"var(--accent)", flexShrink:0, marginTop:2 }}>◆</span>
-                  <div>
-                    <div style={{ fontSize:".85rem", color:"var(--text)" }}>{tool}</div>
-                    <div style={{ fontSize:".78rem", color:"var(--text-muted)", marginTop:1 }}>{desc}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* ── FUEL PLAN TAB ── */}
+        {activeTab === "fuel" && (
+          <FuelPlan
+            days={days}
+            savedRoutes={savedRoutes}
+            savedDirections={savedDirections}
+            vehiclesByDb={vehiclesByDb}
+            currentDbVehicles={currentDbVehicles}
+            startDate={startDate}
+            fuelPlanState={fuelPlanState}
+            onFuelPlanChange={state => { setFuelPlanState(state); dirtyRef.current = true; }}
+          />
         )}
 
         {/* Lock/unlock toggle — bottom of page content */}
@@ -6476,20 +6444,6 @@ export default function Itinerary() {
         </>
       )}
 
-      {/* ── FUEL PLAN MODAL ── */}
-      {showFuelPlan && (
-        <FuelPlan
-          days={days}
-          savedRoutes={savedRoutes}
-          savedDirections={savedDirections}
-          vehiclesByDb={vehiclesByDb}
-          currentDbVehicles={currentDbVehicles}
-          startDate={startDate}
-          fuelPlanState={fuelPlanState}
-          onFuelPlanChange={state => { setFuelPlanState(state); dirtyRef.current = true; }}
-          onClose={() => setShowFuelPlan(false)}
-        />
-      )}
 
       {/* ── CONCIERGE RAIL (desktop) ── */}
       <ConciergeRail
