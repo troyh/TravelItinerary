@@ -114,6 +114,13 @@ URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=9
 UID:day-9-20260714@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260714T100000
+DTEND:20260714T121500
+SUMMARY:🚢 Port Neville → Telegraph Cove
+DESCRIPTION:33.7 NM · ~2h 15m\nPort Neville → Telegraph Cove
+UID:route-253d7738-2451-4b5c-baf1-91fdb0757a88@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260715
 DTEND;VALUE=DATE:20260716
 SUMMARY:Day 10: Telegraph Cove → Broughtons / Lagoon Cove
@@ -121,6 +128,13 @@ LOCATION:Lagoon Cove Marina\, East Cracroft Island
 DESCRIPTION:22.8 NM · ~2.3 hrs\nOvernight: Lagoon Cove Marina\, East Cracroft Island\n\nNote: Arriving early gives you the afternoon to explore and get oriented. Tonight: Kelly & Dan's famous prawn potluck — they supply the prawns\, you bring an appetizer. Unmissable.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=10
 UID:day-10-20260715@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260715T110000
+DTEND:20260715T131700
+SUMMARY:🚢 Telegraph Cove → Lagoon Cove
+DESCRIPTION:22.8 NM · ~2h 17m\nTelegraph Cove → Lagoon Cove
+UID:route-e06758e3-335d-42f0-86bc-d7cb737e696e@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260716
@@ -173,6 +187,13 @@ URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=14
 UID:day-14-20260719@travelitinerary
 END:VEVENT
 BEGIN:VEVENT
+DTSTART:20260719T100000
+DTEND:20260719T163600
+SUMMARY:🚢 Squirrel Cove → Montague Harbour
+DESCRIPTION:98.9 NM · ~6h 36m\nSquirrel Cove → Montague Harbour
+UID:route-24ff0e3d-a968-4fc2-939e-1902b882f80f@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260720
 DTEND;VALUE=DATE:20260721
 SUMMARY:Day 15: Gulf Islands — Layover
@@ -198,5 +219,12 @@ LOCATION:Home Marina\, Seattle
 DESCRIPTION:90 NM · ~4.5 hrs\nOvernight: Home Marina\, Seattle\n\nNote: Slightly over the usual 100 NM preference\, but Victoria breaks it naturally into two segments. Register everyone on the CBP ROAM app before leaving Victoria. Shilshole or Lake Union via the locks for Seattle landfall.
 URL:https://troyh.github.io/TravelItinerary/?i=2026%20Summer%20Cruise&day=17
 UID:day-17-20260722@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20260722T100000
+DTEND:20260722T143000
+SUMMARY:🚢 Montague Harbour → Elliott Bay Marina
+DESCRIPTION:90 NM · ~4h 30m\nMontague Harbour → Elliott Bay Marina
+UID:route-ec0aff69-4fd1-44dc-a676-29a3858a61f5@travelitinerary
 END:VEVENT
 END:VCALENDAR
