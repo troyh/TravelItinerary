@@ -2,10 +2,34 @@
   "startDate": "2026-07-06",
   "title": "Canada Cruise 2026 🇨🇦 v3",
   "subtitle": "Gulf Islands and SJIs",
-  "itineraryNotes": "Instead of the Broughtons, stay in the Gulf Islands and the SJIs",
+  "itineraryNotes": "Instead of the Broughtons, stay in the Gulf Islands and the SJIs. Anchor a lot to test the lithium batteries. ",
+  "fuelPlanState": {
+    "startingFuel": {
+      "mpixxfx8p5q6i": 740
+    },
+    "pinnedRefuels": {
+      "mpixxfx8p5q6i": [
+        {
+          "beforeLegIdx": 5,
+          "amount": 538,
+          "source": "user-edited-amount"
+        },
+        {
+          "beforeLegIdx": 2,
+          "amount": 364,
+          "source": "user-added"
+        },
+        {
+          "beforeLegIdx": 12,
+          "amount": 406,
+          "source": "user-edited-amount"
+        }
+      ]
+    }
+  },
   "days": [
     {
-      "leg": "New Day",
+      "leg": "Go to Victoria",
       "nm": 0,
       "hrs": 0,
       "overnight": "",
@@ -46,6 +70,28 @@
           "addedAt": "2026-05-26T22:06:01.948Z"
         }
       ],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "Day in Victoria",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
+      "places": [],
       "directions": [],
       "routes": [],
       "flights": [],
