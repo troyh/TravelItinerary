@@ -6,7 +6,7 @@
   "fuelPlanState": {},
   "days": [
     {
-      "leg": "New Day",
+      "leg": "Up to Gibsons, BC",
       "nm": 0,
       "hrs": 0,
       "overnight": "",
@@ -15,11 +15,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "Gibsons, Canada",
       "centerLat": 49.401154,
       "centerLng": -123.5075,
+      "highlights": [],
+      "note": "",
       "places": [],
       "directions": [],
       "routes": [
@@ -199,6 +199,836 @@
           "fuelCurrency": "USD"
         }
       ],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "Provisioning",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "Princess Louisa Inlet",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "Area A (Egmont/Pender Harbour), Canada",
+      "centerLat": 50.15710567340038,
+      "centerLng": -123.85265350341798,
+      "places": [
+        {
+          "id": "3fe59bce-14a2-4162-a3fb-89e2c0901dc1",
+          "name": "Area A (Egmont/Pender Harbour), Canada",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "ll:50.15710567340038,-123.85265350341798",
+          "category": "other",
+          "time": "",
+          "lat": 50.15710567340038,
+          "lng": -123.85265350341798,
+          "_mapPin": true
+        }
+      ],
+      "directions": [],
+      "routes": [
+        {
+          "id": "57bb9e73-5843-4830-a823-0c8855a00450",
+          "name": "Gibsons, Canada → 50.14969°N 123.85567°W",
+          "startName": "Gibsons, Canada",
+          "endName": "50.14969°N 123.85567°W",
+          "startLat": 49.401154,
+          "startLng": -123.5075,
+          "endLat": 50.14968611111111,
+          "endLng": -123.85566944444444,
+          "time": "",
+          "nm": 69.8,
+          "hrs": 5.816666666666666,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
+          "vehicleId": "mpixxfx8p5q6i",
+          "routePath": [
+            [
+              49.4,
+              -123.504
+            ],
+            [
+              49.4,
+              -123.5
+            ],
+            [
+              49.396,
+              -123.496
+            ],
+            [
+              49.392,
+              -123.5
+            ],
+            [
+              49.384,
+              -123.516
+            ],
+            [
+              49.38,
+              -123.536
+            ],
+            [
+              49.388,
+              -123.556
+            ],
+            [
+              49.4,
+              -123.568
+            ],
+            [
+              49.4,
+              -123.588
+            ],
+            [
+              49.408,
+              -123.6
+            ],
+            [
+              49.408,
+              -123.612
+            ],
+            [
+              49.412,
+              -123.616
+            ],
+            [
+              49.412,
+              -123.624
+            ],
+            [
+              49.416,
+              -123.628
+            ],
+            [
+              49.416,
+              -123.648
+            ],
+            [
+              49.42,
+              -123.656
+            ],
+            [
+              49.428,
+              -123.664
+            ],
+            [
+              49.428,
+              -123.676
+            ],
+            [
+              49.432,
+              -123.68
+            ],
+            [
+              49.432,
+              -123.712
+            ],
+            [
+              49.436,
+              -123.724
+            ],
+            [
+              49.464,
+              -123.752
+            ],
+            [
+              49.464,
+              -123.816
+            ],
+            [
+              49.468,
+              -123.88
+            ],
+            [
+              49.476,
+              -123.9
+            ],
+            [
+              49.5,
+              -123.924
+            ],
+            [
+              49.5,
+              -123.948
+            ],
+            [
+              49.508,
+              -123.968
+            ],
+            [
+              49.512,
+              -123.972
+            ],
+            [
+              49.516,
+              -123.972
+            ],
+            [
+              49.608,
+              -124.064
+            ],
+            [
+              49.616,
+              -124.068
+            ],
+            [
+              49.636,
+              -124.068
+            ],
+            [
+              49.644,
+              -124.076
+            ],
+            [
+              49.692,
+              -124.076
+            ],
+            [
+              49.704,
+              -124.064
+            ],
+            [
+              49.708,
+              -124.064
+            ],
+            [
+              49.724,
+              -124.048
+            ],
+            [
+              49.728,
+              -124.048
+            ],
+            [
+              49.764,
+              -124.012
+            ],
+            [
+              49.764,
+              -123.996
+            ],
+            [
+              49.776,
+              -123.976
+            ],
+            [
+              49.828,
+              -123.92
+            ],
+            [
+              49.848,
+              -123.92
+            ],
+            [
+              49.856,
+              -123.912
+            ],
+            [
+              49.864,
+              -123.912
+            ],
+            [
+              49.876,
+              -123.9
+            ],
+            [
+              49.944,
+              -123.968
+            ],
+            [
+              49.964,
+              -123.98
+            ],
+            [
+              49.98,
+              -123.98
+            ],
+            [
+              50.016,
+              -123.944
+            ],
+            [
+              50.016,
+              -123.936
+            ],
+            [
+              50.02,
+              -123.928
+            ],
+            [
+              50.028,
+              -123.92
+            ],
+            [
+              50.028,
+              -123.908
+            ],
+            [
+              50.052,
+              -123.848
+            ],
+            [
+              50.092,
+              -123.8
+            ],
+            [
+              50.148,
+              -123.856
+            ]
+          ],
+          "notes": "",
+          "fuelGph": 17,
+          "fuelGallons": 98.88333333333333,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
+        }
+      ],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "Princess Louisa Inlet",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "Area A (Egmont/Pender Harbour), Canada",
+      "centerLat": 50.1853206,
+      "centerLng": -123.8019316,
+      "places": [
+        {
+          "id": "254dcccd-c352-4829-ac23-93996826140f",
+          "name": "Princess Louisa Inlet",
+          "address": "Princess Louisa Inlet, Canada",
+          "lat": 50.1853206,
+          "lng": -123.8019316,
+          "category": "activity",
+          "placeKind": "see",
+          "time": "12:30",
+          "duration": "",
+          "notes": "",
+          "confirmation": "",
+          "partySize": "",
+          "bookedVia": "",
+          "dietary": "",
+          "room": "",
+          "guests": "",
+          "stayLength": "",
+          "operator": "",
+          "cost": "",
+          "entry": "",
+          "tickets": "",
+          "activity": "",
+          "addedAt": "2026-05-31T20:00:56.395Z"
+        }
+      ],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "Prideaux Haven",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "Area A (Malaspina/Toba), Canada",
+      "centerLat": 50.1416119,
+      "centerLng": -124.6824265,
+      "places": [],
+      "directions": [],
+      "routes": [
+        {
+          "id": "a352dd9d-0f28-46e4-968e-3fac2925bd84",
+          "name": "50.14969°N 123.85567°W → Prideaux Haven",
+          "startName": "50.14969°N 123.85567°W",
+          "endName": "Prideaux Haven",
+          "startLat": 50.14968611111111,
+          "startLng": -123.85566944444444,
+          "endLat": 50.1416119,
+          "endLng": -124.6824265,
+          "time": "",
+          "nm": 81.7,
+          "hrs": 6.816666666666666,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
+          "vehicleId": "mpixxfx8p5q6i",
+          "routePath": [
+            [
+              50.148,
+              -123.856
+            ],
+            [
+              50.092,
+              -123.8
+            ],
+            [
+              50.052,
+              -123.848
+            ],
+            [
+              50.028,
+              -123.908
+            ],
+            [
+              50.028,
+              -123.92
+            ],
+            [
+              50.02,
+              -123.928
+            ],
+            [
+              50.016,
+              -123.936
+            ],
+            [
+              50.016,
+              -123.944
+            ],
+            [
+              49.98,
+              -123.98
+            ],
+            [
+              49.964,
+              -123.98
+            ],
+            [
+              49.944,
+              -123.968
+            ],
+            [
+              49.876,
+              -123.9
+            ],
+            [
+              49.864,
+              -123.912
+            ],
+            [
+              49.856,
+              -123.912
+            ],
+            [
+              49.848,
+              -123.92
+            ],
+            [
+              49.828,
+              -123.92
+            ],
+            [
+              49.824,
+              -123.924
+            ],
+            [
+              49.824,
+              -123.94
+            ],
+            [
+              49.804,
+              -123.96
+            ],
+            [
+              49.804,
+              -124.072
+            ],
+            [
+              49.796,
+              -124.08
+            ],
+            [
+              49.796,
+              -124.104
+            ],
+            [
+              49.784,
+              -124.12
+            ],
+            [
+              49.78,
+              -124.128
+            ],
+            [
+              49.776,
+              -124.144
+            ],
+            [
+              49.776,
+              -124.232
+            ],
+            [
+              49.74,
+              -124.268
+            ],
+            [
+              49.74,
+              -124.28
+            ],
+            [
+              49.756,
+              -124.296
+            ],
+            [
+              49.756,
+              -124.312
+            ],
+            [
+              49.764,
+              -124.32
+            ],
+            [
+              49.764,
+              -124.408
+            ],
+            [
+              49.772,
+              -124.444
+            ],
+            [
+              49.776,
+              -124.452
+            ],
+            [
+              49.792,
+              -124.468
+            ],
+            [
+              49.792,
+              -124.496
+            ],
+            [
+              49.8,
+              -124.524
+            ],
+            [
+              49.9,
+              -124.624
+            ],
+            [
+              49.9,
+              -124.628
+            ],
+            [
+              49.912,
+              -124.64
+            ],
+            [
+              49.916,
+              -124.656
+            ],
+            [
+              49.928,
+              -124.676
+            ],
+            [
+              49.928,
+              -124.684
+            ],
+            [
+              49.936,
+              -124.692
+            ],
+            [
+              49.936,
+              -124.704
+            ],
+            [
+              49.94,
+              -124.712
+            ],
+            [
+              49.948,
+              -124.724
+            ],
+            [
+              49.96,
+              -124.736
+            ],
+            [
+              49.96,
+              -124.752
+            ],
+            [
+              50.004,
+              -124.8
+            ],
+            [
+              50.028,
+              -124.824
+            ],
+            [
+              50.036,
+              -124.824
+            ],
+            [
+              50.052,
+              -124.84
+            ],
+            [
+              50.064,
+              -124.844
+            ],
+            [
+              50.128,
+              -124.772
+            ],
+            [
+              50.14,
+              -124.74
+            ],
+            [
+              50.14,
+              -124.712
+            ],
+            [
+              50.144,
+              -124.708
+            ],
+            [
+              50.144,
+              -124.7
+            ],
+            [
+              50.14,
+              -124.696
+            ],
+            [
+              50.14,
+              -124.688
+            ],
+            [
+              50.144,
+              -124.684
+            ]
+          ],
+          "notes": "",
+          "fuelGph": 17,
+          "fuelGallons": 115.88333333333333,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
+        }
+      ],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "Area G (Saltair / Gulf Islands), Canada",
+      "centerLat": 48.97661158387714,
+      "centerLng": -123.74176025390626,
+      "places": [
+        {
+          "id": "bdd9e768-2d8e-4aa1-8e21-ad0d528e1b67",
+          "name": "Area G (Saltair / Gulf Islands), Canada",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "ll:48.97661158387714,-123.74176025390626",
+          "category": "other",
+          "time": "",
+          "lat": 48.97661158387714,
+          "lng": -123.74176025390626,
+          "_mapPin": true
+        }
+      ],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "Victoria, BC",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "Juan de Fuca Electoral Area, Canada",
+      "centerLat": 48.401855990063694,
+      "centerLng": -123.41217041015626,
+      "places": [
+        {
+          "id": "4939895b-88d2-433c-9f1e-b16fc56a4ab3",
+          "name": "Juan de Fuca Electoral Area, Canada",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "ll:48.401855990063694,-123.41217041015626",
+          "category": "other",
+          "time": "",
+          "lat": 48.401855990063694,
+          "lng": -123.41217041015626,
+          "_mapPin": true
+        }
+      ],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "New Day",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "San Juan County, United States",
+      "centerLat": 48.592959181191695,
+      "centerLng": -123.15399169921875,
+      "places": [
+        {
+          "id": "117bc778-efd9-4a44-a988-9c41479093c3",
+          "name": "San Juan County, United States",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "ll:48.592959181191695,-123.15399169921875",
+          "category": "other",
+          "time": "",
+          "lat": 48.592959181191695,
+          "lng": -123.15399169921875,
+          "_mapPin": true
+        }
+      ],
+      "directions": [],
+      "routes": [],
       "flights": [],
       "rentalCars": [],
       "tideChecks": []
