@@ -463,7 +463,99 @@
         }
       ],
       "directions": [],
-      "routes": [],
+      "routes": [
+        {
+          "id": "930cf300-4d54-4dec-9be0-17965f917523",
+          "name": "Ganges → Ladysmith BC",
+          "startName": "Ganges",
+          "endName": "Ladysmith BC",
+          "startLat": 48.85436,
+          "startLng": -123.502621,
+          "endLat": 48.9936414,
+          "endLng": -123.8152934,
+          "time": "",
+          "nm": 22.1,
+          "hrs": 1.85,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
+          "vehicleId": "mpixxfx8p5q6i",
+          "routePath": [
+            [
+              48.856,
+              -123.5
+            ],
+            [
+              48.848,
+              -123.484
+            ],
+            [
+              48.844,
+              -123.448
+            ],
+            [
+              48.848,
+              -123.444
+            ],
+            [
+              48.856,
+              -123.444
+            ],
+            [
+              48.86,
+              -123.44
+            ],
+            [
+              48.928,
+              -123.508
+            ],
+            [
+              48.928,
+              -123.536
+            ],
+            [
+              48.936,
+              -123.544
+            ],
+            [
+              48.936,
+              -123.552
+            ],
+            [
+              48.944,
+              -123.56
+            ],
+            [
+              48.944,
+              -123.62
+            ],
+            [
+              48.932,
+              -123.632
+            ],
+            [
+              48.932,
+              -123.636
+            ],
+            [
+              48.944,
+              -123.652
+            ],
+            [
+              48.98,
+              -123.772
+            ],
+            [
+              48.996,
+              -123.812
+            ]
+          ],
+          "notes": "",
+          "fuelGph": 17,
+          "fuelGallons": 31.450000000000003,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
+        }
+      ],
       "flights": [],
       "rentalCars": [],
       "tideChecks": []
@@ -479,11 +571,36 @@
       "fuelStop": false,
       "tideWarning": false,
       "centerName": "Area G (Saltair / Gulf Islands), Canada",
-      "centerLat": 49.109837790524416,
-      "centerLng": -123.71154785156251,
+      "centerLat": 49.09961093661403,
+      "centerLng": -123.70296478271486,
       "highlights": [],
       "note": "",
-      "places": [],
+      "places": [
+        {
+          "id": "290eb567-5eaf-42e2-bf32-58ee3c4d887d",
+          "name": "Area G (Saltair / Gulf Islands), Canada",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "ll:49.06846786975949,-123.67034912109376",
+          "category": "other",
+          "time": "",
+          "lat": 49.06846786975949,
+          "lng": -123.67034912109376
+        },
+        {
+          "id": "2943d798-f5db-4460-8f39-91545f47fac8",
+          "name": "Area G (Saltair / Gulf Islands), Canada",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "ll:49.09961093661403,-123.70296478271486",
+          "category": "other",
+          "time": "",
+          "lat": 49.09961093661403,
+          "lng": -123.70296478271486
+        }
+      ],
       "directions": [],
       "routes": [],
       "flights": [],
@@ -894,7 +1011,91 @@
         }
       ],
       "directions": [],
-      "routes": [],
+      "routes": [
+        {
+          "id": "5df9af80-3f07-4bf1-a538-55dd7e67aebb",
+          "name": "Lopez Village, United States → Port Townsend, WA",
+          "startName": "Lopez Village, United States",
+          "endName": "Port Townsend, WA",
+          "startLat": 48.51819624994537,
+          "startLng": -122.91469573974611,
+          "endLat": 48.116107,
+          "endLng": -122.75384,
+          "time": "",
+          "nm": 26.9,
+          "hrs": 2.25,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
+          "vehicleId": "mpixxfx8p5q6i",
+          "routePath": [
+            [
+              48.52,
+              -122.916
+            ],
+            [
+              48.516,
+              -122.916
+            ],
+            [
+              48.508,
+              -122.924
+            ],
+            [
+              48.508,
+              -122.932
+            ],
+            [
+              48.496,
+              -122.944
+            ],
+            [
+              48.484,
+              -122.948
+            ],
+            [
+              48.468,
+              -122.948
+            ],
+            [
+              48.46,
+              -122.944
+            ],
+            [
+              48.444,
+              -122.928
+            ],
+            [
+              48.44,
+              -122.928
+            ],
+            [
+              48.36,
+              -122.848
+            ],
+            [
+              48.16,
+              -122.772
+            ],
+            [
+              48.14,
+              -122.756
+            ],
+            [
+              48.116,
+              -122.748
+            ],
+            [
+              48.112,
+              -122.752
+            ]
+          ],
+          "notes": "",
+          "fuelGph": 17,
+          "fuelGallons": 38.25,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
+        }
+      ],
       "flights": [],
       "rentalCars": [],
       "tideChecks": []
