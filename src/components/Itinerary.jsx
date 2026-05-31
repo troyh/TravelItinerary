@@ -3414,6 +3414,26 @@ export default function Itinerary() {
     setDays(prev => prev.map(d => d.day === dayNum ? { ...d, ...updates } : d));
   }
 
+  async function handleSetDayLocation(dayNum, lat, lng) {
+    const placeId = crypto.randomUUID();
+    addPlace(dayNum, {
+      id: placeId,
+      name: `${lat.toFixed(4)}, ${lng.toFixed(4)}`,
+      address: "", phone: "", website: "",
+      placeId: `ll:${lat},${lng}`,
+      category: "other",
+      time: "",
+      lat, lng,
+    });
+    updateDayFields(dayNum, { centerLat: lat, centerLng: lng, centerName: "", overnight: "" });
+    dirtyRef.current = true;
+    const name = await reverseGeocode(lat, lng);
+    if (name) {
+      updateDayFields(dayNum, { centerName: name });
+      updatePlace(dayNum, placeId, { name });
+    }
+  }
+
   function addFlight(dayNum, flight) {
     setSavedFlights(prev => ({ ...prev, [dayNum]: [...(prev[dayNum] ?? []), flight] }));
   }
@@ -4916,7 +4936,7 @@ export default function Itinerary() {
       {/* ── MAP ── */}
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "1.25rem 2rem 0" }}>
         <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid var(--border)" }}>
-          <ItineraryMap days={days} savedFlights={savedFlights} savedDirections={savedDirections} savedPlaces={savedPlaces} savedRoutes={savedRoutes} dark={isDark} />
+          <ItineraryMap days={days} savedFlights={savedFlights} savedDirections={savedDirections} savedPlaces={savedPlaces} savedRoutes={savedRoutes} dark={isDark} onSetDayLocation={!readOnly ? handleSetDayLocation : undefined} />
         </div>
       </div>
 

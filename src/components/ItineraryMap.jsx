@@ -109,10 +109,14 @@ function markerIcon(n) {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export default function ItineraryMap({ days, savedFlights, savedDirections, savedPlaces, savedRoutes, dark }) {
+export default function ItineraryMap({ days, savedFlights, savedDirections, savedPlaces, savedRoutes, dark, onSetDayLocation }) {
   const mapElRef   = useRef(null);
   const leafletRef = useRef(null);
   const dragRef    = useRef(null);  // { startY, startH }
+  const setLocRef  = useRef(onSetDayLocation);
+  const daysRef    = useRef(days);
+  useEffect(() => { setLocRef.current = onSetDayLocation; }, [onSetDayLocation]);
+  useEffect(() => { daysRef.current = days; }, [days]);
   const [open,      setOpen]      = useState(true);
   const [mapHeight, setMapHeight] = useState(() => {
     const h = parseInt(localStorage.getItem("mapHeight"));
@@ -368,13 +372,21 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
       });
     });
 
-    // Add markers
+    // Add markers (draggable when onSetDayLocation is provided)
     stops.forEach(s => {
       if (!s.lat || !s.lng) return;
-      L.marker([s.lat, s.lng], { icon: markerIcon(s.day) })
-        .bindTooltip(s.label, { direction: "top", offset: [0, -10],
-          className: "leaflet-tooltip-dark" })
-        .addTo(map);
+      const marker = L.marker([s.lat, s.lng], {
+        icon: markerIcon(s.day),
+        draggable: !!setLocRef.current,
+      });
+      marker.bindTooltip(s.label, { direction: "top", offset: [0, -10], className: "leaflet-tooltip-dark" });
+      if (setLocRef.current) {
+        marker.on("dragend", e => {
+          const { lat, lng } = e.target.getLatLng();
+          setLocRef.current(s.day, lat, lng);
+        });
+      }
+      marker.addTo(map);
       bounds.extend([s.lat, s.lng]);
     });
 
@@ -392,6 +404,35 @@ export default function ItineraryMap({ days, savedFlights, savedDirections, save
     });
 
     if (bounds.isValid()) map.fitBounds(bounds.pad(0.2));
+
+    // Tap on empty map → day picker popup
+    map.on("click", e => {
+      if (!setLocRef.current) return;
+      const d = daysRef.current;
+      const options = d.map(day =>
+        `<option value="${day.day}">Day ${day.day}${day.leg ? ": " + day.leg : ""}</option>`
+      ).join("");
+      const uid = "slp-" + Date.now();
+      const content = `<div style="padding:4px 2px;min-width:180px;font-family:inherit;">
+        <div style="font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--text-muted);margin-bottom:6px;">SET LOCATION FOR</div>
+        <select id="${uid}-sel" style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:13px;margin-bottom:10px;background:var(--surface);color:var(--text);">${options}</select>
+        <button id="${uid}-btn" style="width:100%;padding:5px 10px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;">Set location</button>
+      </div>`;
+      const popup = L.popup({ closeButton: true, maxWidth: 220 })
+        .setLatLng(e.latlng)
+        .setContent(content);
+      popup.on("add", () => {
+        const btn = document.getElementById(`${uid}-btn`);
+        const sel = document.getElementById(`${uid}-sel`);
+        if (btn && sel) {
+          L.DomEvent.on(btn, "click", () => {
+            setLocRef.current(parseInt(sel.value, 10), e.latlng.lat, e.latlng.lng);
+            map.closePopup();
+          });
+        }
+      });
+      popup.openOn(map);
+    });
 
     return () => {
       if (leafletRef.current) { leafletRef.current.remove(); leafletRef.current = null; }
