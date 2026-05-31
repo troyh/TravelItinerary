@@ -59,6 +59,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260710
 DTEND;VALUE=DATE:20260711
 SUMMARY:Day 5: New Day
+DESCRIPTION:22.1 NM · ~1.9 hrs
 URL:https://troyh.github.io/TravelItinerary/?i=it-8434330a&day=5
 UID:day-5-20260710@travelitinerary
 END:VEVENT
@@ -139,6 +140,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260719
 DTEND;VALUE=DATE:20260720
 SUMMARY:Day 14: Port Townsend
+DESCRIPTION:26.9 NM · ~2.3 hrs
 URL:https://troyh.github.io/TravelItinerary/?i=it-8434330a&day=14
 UID:day-14-20260719@travelitinerary
 END:VEVENT
