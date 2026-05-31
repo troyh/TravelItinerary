@@ -384,11 +384,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "",
       "centerLat": null,
       "centerLng": null,
+      "highlights": [],
+      "note": "",
       "places": [],
       "directions": [],
       "routes": [],
@@ -436,18 +436,6 @@
           "tickets": "",
           "activity": "",
           "addedAt": "2026-05-27T17:20:13.640Z"
-        },
-        {
-          "id": "381d39b7-4d21-4829-813c-ddc4f495c2e0",
-          "name": "Ladysmith, Canada",
-          "address": "",
-          "phone": "",
-          "website": "",
-          "placeId": "ll:48.988778768752134,-123.80218505859376",
-          "category": "other",
-          "time": "",
-          "lat": 48.988778768752134,
-          "lng": -123.80218505859376
         },
         {
           "id": "728ddf49-b2e9-4f35-84cb-6f3bc5c3f3d5",
@@ -561,7 +549,7 @@
       "tideChecks": []
     },
     {
-      "leg": "New Day",
+      "leg": "Pirate's Cove",
       "nm": 0,
       "hrs": 0,
       "overnight": "",
@@ -570,39 +558,100 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "centerName": "Area G (Saltair / Gulf Islands), Canada",
-      "centerLat": 49.09961093661403,
-      "centerLng": -123.70296478271486,
+      "centerName": "Area B (DeCourcy/Gabriola/Mudge), Canada",
+      "centerLat": 49.09477773390397,
+      "centerLng": -123.71798515319826,
       "highlights": [],
       "note": "",
       "places": [
         {
-          "id": "290eb567-5eaf-42e2-bf32-58ee3c4d887d",
-          "name": "Area G (Saltair / Gulf Islands), Canada",
+          "id": "a00309e6-ee54-40de-9b0e-49c3186afb15",
+          "name": "Area B (DeCourcy/Gabriola/Mudge), Canada",
           "address": "",
           "phone": "",
           "website": "",
-          "placeId": "ll:49.06846786975949,-123.67034912109376",
+          "placeId": "ll:49.09477773390397,-123.71798515319826",
           "category": "other",
           "time": "",
-          "lat": 49.06846786975949,
-          "lng": -123.67034912109376
-        },
-        {
-          "id": "2943d798-f5db-4460-8f39-91545f47fac8",
-          "name": "Area G (Saltair / Gulf Islands), Canada",
-          "address": "",
-          "phone": "",
-          "website": "",
-          "placeId": "ll:49.09961093661403,-123.70296478271486",
-          "category": "other",
-          "time": "",
-          "lat": 49.09961093661403,
-          "lng": -123.70296478271486
+          "lat": 49.09477773390397,
+          "lng": -123.71798515319826,
+          "_mapPin": true
         }
       ],
       "directions": [],
-      "routes": [],
+      "routes": [
+        {
+          "id": "01a9203c-0569-4653-90de-57c0c0c5b655",
+          "name": "Ladysmith, Canada → Pirates Cove",
+          "startName": "Ladysmith, Canada",
+          "endName": "Pirates Cove",
+          "startLat": 48.990693703192726,
+          "startLng": -123.8039016723633,
+          "endLat": 49.0992416,
+          "endLng": -123.7347399,
+          "time": "",
+          "nm": 9.6,
+          "hrs": 0.8,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
+          "vehicleId": "mpixxfx8p5q6i",
+          "routePath": [
+            [
+              48.992,
+              -123.804
+            ],
+            [
+              48.984,
+              -123.776
+            ],
+            [
+              48.988,
+              -123.772
+            ],
+            [
+              48.984,
+              -123.768
+            ],
+            [
+              48.984,
+              -123.76
+            ],
+            [
+              48.988,
+              -123.756
+            ],
+            [
+              49.028,
+              -123.756
+            ],
+            [
+              49.04,
+              -123.744
+            ],
+            [
+              49.08,
+              -123.744
+            ],
+            [
+              49.096,
+              -123.728
+            ],
+            [
+              49.1,
+              -123.732
+            ],
+            [
+              49.1,
+              -123.736
+            ]
+          ],
+          "notes": "",
+          "fuelGph": 17,
+          "fuelGallons": 13.600000000000001,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
+        }
+      ],
       "flights": [],
       "rentalCars": [],
       "tideChecks": []
@@ -624,7 +673,131 @@
       "note": "",
       "places": [],
       "directions": [],
-      "routes": [],
+      "routes": [
+        {
+          "id": "dbded457-45fb-4012-bed5-75d7cdfc2bdc",
+          "name": "Area B (DeCourcy/Gabriola/Mudge), Canada → Port Browning",
+          "startName": "Area B (DeCourcy/Gabriola/Mudge), Canada",
+          "endName": "Port Browning",
+          "startLat": 49.09477773390397,
+          "startLng": -123.71798515319826,
+          "endLat": 48.7722864,
+          "endLng": -123.2582768,
+          "time": "",
+          "nm": 29.4,
+          "hrs": 2.45,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
+          "vehicleId": "mpixxfx8p5q6i",
+          "routePath": [
+            [
+              49.096,
+              -123.716
+            ],
+            [
+              49.08,
+              -123.696
+            ],
+            [
+              48.996,
+              -123.612
+            ],
+            [
+              48.988,
+              -123.58
+            ],
+            [
+              48.964,
+              -123.556
+            ],
+            [
+              48.964,
+              -123.552
+            ],
+            [
+              48.952,
+              -123.54
+            ],
+            [
+              48.94,
+              -123.516
+            ],
+            [
+              48.92,
+              -123.456
+            ],
+            [
+              48.88,
+              -123.416
+            ],
+            [
+              48.876,
+              -123.408
+            ],
+            [
+              48.876,
+              -123.396
+            ],
+            [
+              48.864,
+              -123.384
+            ],
+            [
+              48.86,
+              -123.376
+            ],
+            [
+              48.856,
+              -123.352
+            ],
+            [
+              48.836,
+              -123.332
+            ],
+            [
+              48.828,
+              -123.32
+            ],
+            [
+              48.828,
+              -123.304
+            ],
+            [
+              48.82,
+              -123.292
+            ],
+            [
+              48.82,
+              -123.28
+            ],
+            [
+              48.78,
+              -123.24
+            ],
+            [
+              48.772,
+              -123.24
+            ],
+            [
+              48.768,
+              -123.244
+            ],
+            [
+              48.768,
+              -123.252
+            ],
+            [
+              48.772,
+              -123.26
+            ]
+          ],
+          "notes": "",
+          "fuelGph": 17,
+          "fuelGallons": 41.650000000000006,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
+        }
+      ],
       "flights": [],
       "rentalCars": [],
       "tideChecks": []
@@ -640,13 +813,139 @@
       "fuelStop": false,
       "tideWarning": false,
       "centerName": "Southern Gulf Islands Electoral Area, Canada",
-      "centerLat": 48.79600890414036,
-      "centerLng": -123.31604003906251,
+      "centerLat": 48.77316143513268,
+      "centerLng": -123.2655715942383,
       "highlights": [],
       "note": "",
-      "places": [],
+      "places": [
+        {
+          "id": "a53a9890-2f09-4ff8-9a38-355f106248fb",
+          "name": "Southern Gulf Islands Electoral Area, Canada",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "ll:48.77316143513268,-123.2655715942383",
+          "category": "other",
+          "time": "",
+          "lat": 48.77316143513268,
+          "lng": -123.2655715942383,
+          "_mapPin": true
+        }
+      ],
       "directions": [],
-      "routes": [],
+      "routes": [
+        {
+          "id": "95c9b976-3b11-4d03-80e6-b3dbe7bee320",
+          "name": "Salt Spring Island Electoral Area, Canada → Sucia Island",
+          "startName": "Salt Spring Island Electoral Area, Canada",
+          "endName": "Sucia Island",
+          "startLat": 48.943249256234296,
+          "startLng": -123.55705261230469,
+          "endLat": 48.757426,
+          "endLng": -122.9085873,
+          "time": "",
+          "nm": 32.2,
+          "hrs": 2.683333333333333,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
+          "vehicleId": "mpixxfx8p5q6i",
+          "routePath": [
+            [
+              48.94,
+              -123.556
+            ],
+            [
+              48.928,
+              -123.536
+            ],
+            [
+              48.924,
+              -123.464
+            ],
+            [
+              48.88,
+              -123.416
+            ],
+            [
+              48.876,
+              -123.408
+            ],
+            [
+              48.876,
+              -123.396
+            ],
+            [
+              48.864,
+              -123.384
+            ],
+            [
+              48.86,
+              -123.376
+            ],
+            [
+              48.856,
+              -123.352
+            ],
+            [
+              48.836,
+              -123.332
+            ],
+            [
+              48.828,
+              -123.32
+            ],
+            [
+              48.82,
+              -123.292
+            ],
+            [
+              48.812,
+              -123.236
+            ],
+            [
+              48.812,
+              -123.192
+            ],
+            [
+              48.816,
+              -123.188
+            ],
+            [
+              48.816,
+              -123.004
+            ],
+            [
+              48.78,
+              -122.968
+            ],
+            [
+              48.78,
+              -122.94
+            ],
+            [
+              48.748,
+              -122.908
+            ],
+            [
+              48.756,
+              -122.9
+            ],
+            [
+              48.76,
+              -122.904
+            ],
+            [
+              48.76,
+              -122.908
+            ]
+          ],
+          "notes": "",
+          "fuelGph": 17,
+          "fuelGallons": 45.61666666666666,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
+        }
+      ],
       "flights": [],
       "rentalCars": [],
       "tideChecks": []
@@ -661,11 +960,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "San Juan County, United States",
       "centerLat": 48.760262727297,
       "centerLng": -122.89993286132812,
+      "highlights": [],
+      "note": "",
       "places": [
         {
           "id": "b22c998b-13fb-4303-89d4-1cecf3961345",
@@ -808,11 +1107,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "",
       "centerLat": null,
       "centerLng": null,
+      "highlights": [],
+      "note": "",
       "places": [],
       "directions": [],
       "routes": [],
@@ -830,11 +1129,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "Friday Harbor, United States",
       "centerLat": 48.5350851,
       "centerLng": -123.0127037,
+      "highlights": [],
+      "note": "",
       "places": [],
       "directions": [],
       "routes": [
@@ -912,11 +1211,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "Lopez Village, United States",
       "centerLat": 48.51819624994537,
       "centerLng": -122.91469573974611,
+      "highlights": [],
+      "note": "",
       "places": [
         {
           "id": "38fe6ba8-67dc-4412-af87-c732100c01a6",
@@ -1110,11 +1409,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "Seattle, United States",
       "centerLat": 47.6302997,
       "centerLng": -122.3914826,
+      "highlights": [],
+      "note": "",
       "places": [],
       "directions": [],
       "routes": [
