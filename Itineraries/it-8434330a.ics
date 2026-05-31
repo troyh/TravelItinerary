@@ -73,7 +73,8 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260711
 DTEND;VALUE=DATE:20260712
-SUMMARY:Day 6: New Day
+SUMMARY:Day 6: Pirate's Cove
+DESCRIPTION:9.6 NM · ~0.8 hrs
 URL:https://troyh.github.io/TravelItinerary/?i=it-8434330a&day=6
 UID:day-6-20260711@travelitinerary
 END:VEVENT
@@ -81,6 +82,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260712
 DTEND;VALUE=DATE:20260713
 SUMMARY:Day 7: New Day
+DESCRIPTION:29.4 NM · ~2.5 hrs
 URL:https://troyh.github.io/TravelItinerary/?i=it-8434330a&day=7
 UID:day-7-20260712@travelitinerary
 END:VEVENT
@@ -88,6 +90,7 @@ BEGIN:VEVENT
 DTSTART;VALUE=DATE:20260713
 DTEND;VALUE=DATE:20260714
 SUMMARY:Day 8: New Day
+DESCRIPTION:32.2 NM · ~2.7 hrs
 URL:https://troyh.github.io/TravelItinerary/?i=it-8434330a&day=8
 UID:day-8-20260713@travelitinerary
 END:VEVENT
