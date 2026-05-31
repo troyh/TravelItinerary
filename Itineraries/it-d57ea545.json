@@ -1,8 +1,8 @@
 {
   "startDate": "",
   "title": "Canada Cruise v4",
-  "subtitle": "",
-  "itineraryNotes": "",
+  "subtitle": "Scenic tour through Sunshine Coast and back down to finally see Victoria and then to Roche Harbor and a few days in the San Juan Islands.",
+  "itineraryNotes": "A few long cruising days with lots, anchoring everywhere (except Victoria and Port Townsend).\n",
   "fuelPlanState": {},
   "days": [
     {
@@ -1462,7 +1462,7 @@
       "tideChecks": []
     },
     {
-      "leg": "Lopez Island",
+      "leg": "Roche Harbor",
       "nm": 0,
       "hrs": 0,
       "overnight": "",
@@ -1473,9 +1473,31 @@
       "tideWarning": false,
       "highlights": [],
       "note": "",
+      "centerName": "San Juan County, United States",
+      "centerLat": 48.592959181191695,
+      "centerLng": -123.15399169921875,
+      "places": [],
+      "directions": [],
+      "routes": [],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "Lopez Island",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
       "centerName": "Lopez Village, United States",
       "centerLat": 48.52206208716404,
       "centerLng": -122.91915893554689,
+      "highlights": [],
+      "note": "",
       "places": [
         {
           "id": "c37d315b-498c-4daf-93ac-cd06363a5e01",
@@ -1492,7 +1514,75 @@
         }
       ],
       "directions": [],
-      "routes": [],
+      "routes": [
+        {
+          "id": "a1d87bab-2a08-4f8e-a25a-a216b7fbc332",
+          "name": "San Juan County, United States → Lopez Village Market",
+          "startName": "San Juan County, United States",
+          "endName": "Lopez Village Market",
+          "startLat": 48.592959181191695,
+          "startLng": -123.15399169921875,
+          "endLat": 48.525796,
+          "endLng": -122.9126771,
+          "time": "",
+          "nm": 13.4,
+          "hrs": 1.1166666666666667,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
+          "vehicleId": "mpixxfx8p5q6i",
+          "routePath": [
+            [
+              48.608,
+              -123.156
+            ],
+            [
+              48.616,
+              -123.164
+            ],
+            [
+              48.628,
+              -123.152
+            ],
+            [
+              48.624,
+              -123.108
+            ],
+            [
+              48.596,
+              -123.08
+            ],
+            [
+              48.596,
+              -123.076
+            ],
+            [
+              48.588,
+              -123.064
+            ],
+            [
+              48.568,
+              -123.044
+            ],
+            [
+              48.564,
+              -123.016
+            ],
+            [
+              48.552,
+              -123.004
+            ],
+            [
+              48.524,
+              -122.916
+            ]
+          ],
+          "notes": "",
+          "fuelGph": 17,
+          "fuelGallons": 18.983333333333334,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
+        }
+      ],
       "flights": [],
       "rentalCars": [],
       "tideChecks": []
@@ -1507,11 +1597,11 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "highlights": [],
-      "note": "",
       "centerName": "Jefferson County, United States",
       "centerLat": 48.09459164290992,
       "centerLng": -122.76123046875001,
+      "highlights": [],
+      "note": "",
       "places": [
         {
           "id": "80c06b9b-d9b7-48af-ab1f-70246bf39d56",
@@ -1528,7 +1618,193 @@
         }
       ],
       "directions": [],
-      "routes": [],
+      "routes": [
+        {
+          "id": "c9a7de02-f186-446f-8b6e-067088fc2625",
+          "name": "Lopez Village, United States → Port Townsend, WA",
+          "startName": "Lopez Village, United States",
+          "endName": "Port Townsend, WA",
+          "startLat": 48.52206208716404,
+          "startLng": -122.91915893554689,
+          "endLat": 48.116107,
+          "endLng": -122.75384,
+          "time": "",
+          "nm": 27,
+          "hrs": 2.25,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
+          "vehicleId": "mpixxfx8p5q6i",
+          "routePath": [
+            [
+              48.524,
+              -122.92
+            ],
+            [
+              48.524,
+              -122.928
+            ],
+            [
+              48.516,
+              -122.936
+            ],
+            [
+              48.484,
+              -122.948
+            ],
+            [
+              48.468,
+              -122.948
+            ],
+            [
+              48.46,
+              -122.944
+            ],
+            [
+              48.444,
+              -122.928
+            ],
+            [
+              48.44,
+              -122.928
+            ],
+            [
+              48.36,
+              -122.848
+            ],
+            [
+              48.16,
+              -122.772
+            ],
+            [
+              48.14,
+              -122.756
+            ],
+            [
+              48.116,
+              -122.748
+            ],
+            [
+              48.112,
+              -122.752
+            ]
+          ],
+          "notes": "",
+          "fuelGph": 17,
+          "fuelGallons": 38.25,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
+        }
+      ],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "Port Townsend → Home",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "Jefferson County, United States",
+      "centerLat": 48.09459164290992,
+      "centerLng": -122.76123046875001,
+      "places": [],
+      "directions": [],
+      "routes": [
+        {
+          "id": "74d94b58-a1d9-4091-b9db-7e6689cde4d5",
+          "name": "Jefferson County, United States → Elliott Bay Marina",
+          "startName": "Jefferson County, United States",
+          "endName": "Elliott Bay Marina",
+          "startLat": 48.09459164290992,
+          "startLng": -122.76123046875001,
+          "endLat": 47.6302997,
+          "endLng": -122.3914826,
+          "time": "",
+          "nm": 33.9,
+          "hrs": 2.816666666666667,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
+          "vehicleId": "mpixxfx8p5q6i",
+          "routePath": [
+            [
+              48.096,
+              -122.76
+            ],
+            [
+              48.084,
+              -122.748
+            ],
+            [
+              48.048,
+              -122.744
+            ],
+            [
+              48.036,
+              -122.736
+            ],
+            [
+              48.024,
+              -122.724
+            ],
+            [
+              48.008,
+              -122.692
+            ],
+            [
+              48.008,
+              -122.676
+            ],
+            [
+              47.956,
+              -122.588
+            ],
+            [
+              47.916,
+              -122.528
+            ],
+            [
+              47.876,
+              -122.488
+            ],
+            [
+              47.712,
+              -122.424
+            ],
+            [
+              47.66,
+              -122.432
+            ],
+            [
+              47.648,
+              -122.42
+            ],
+            [
+              47.644,
+              -122.42
+            ],
+            [
+              47.632,
+              -122.408
+            ],
+            [
+              47.628,
+              -122.392
+            ]
+          ],
+          "notes": "",
+          "fuelGph": 17,
+          "fuelGallons": 47.88333333333334,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
+        }
+      ],
       "flights": [],
       "rentalCars": [],
       "tideChecks": []
