@@ -67,4 +67,39 @@ SUMMARY:Princess Cove
 LOCATION:Princess Cove\, Canada
 UID:place-1be8bf4a-13ab-4803-9d61-a84347610a90@travelitinerary
 END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260711
+DTEND;VALUE=DATE:20260712
+SUMMARY:Day 6: New Day
+URL:https://troyh.github.io/TravelItinerary/?i=it-8434330a&day=6
+UID:day-6-20260711@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260712
+DTEND;VALUE=DATE:20260713
+SUMMARY:Day 7: New Day
+URL:https://troyh.github.io/TravelItinerary/?i=it-8434330a&day=7
+UID:day-7-20260712@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260713
+DTEND;VALUE=DATE:20260714
+SUMMARY:Day 8: New Day
+URL:https://troyh.github.io/TravelItinerary/?i=it-8434330a&day=8
+UID:day-8-20260713@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260714
+DTEND;VALUE=DATE:20260715
+SUMMARY:Day 9: New Day
+URL:https://troyh.github.io/TravelItinerary/?i=it-8434330a&day=9
+UID:day-9-20260714@travelitinerary
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260715
+DTEND;VALUE=DATE:20260716
+SUMMARY:Day 10: New Day
+URL:https://troyh.github.io/TravelItinerary/?i=it-8434330a&day=10
+UID:day-10-20260715@travelitinerary
+END:VEVENT
 END:VCALENDAR
