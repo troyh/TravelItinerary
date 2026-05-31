@@ -211,29 +211,7 @@
       "tideChecks": []
     },
     {
-      "leg": "New Day",
-      "nm": 0,
-      "hrs": 0,
-      "overnight": "",
-      "tags": [
-        "layover"
-      ],
-      "fuelStop": false,
-      "tideWarning": false,
-      "centerName": "Southern Gulf Islands Electoral Area, Canada",
-      "centerLat": 48.62746280105111,
-      "centerLng": -123.37921142578126,
-      "highlights": [],
-      "note": "",
-      "places": [],
-      "directions": [],
-      "routes": [],
-      "flights": [],
-      "rentalCars": [],
-      "tideChecks": []
-    },
-    {
-      "leg": "New Day",
+      "leg": "Salt Spring Island Day 1",
       "nm": 0,
       "hrs": 0,
       "overnight": "",
@@ -275,6 +253,144 @@
         }
       ],
       "directions": [],
+      "routes": [
+        {
+          "id": "cff98737-e57f-4b14-91f6-8466cbf13178",
+          "name": "Victoria BC → Ganges",
+          "startName": "Victoria BC",
+          "endName": "Ganges",
+          "startLat": 48.4284756,
+          "startLng": -123.3670221,
+          "endLat": 48.85436,
+          "endLng": -123.502621,
+          "time": "",
+          "nm": 36.3,
+          "hrs": 3.0166666666666666,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
+          "vehicleId": "mpixxfx8p5q6i",
+          "routePath": [
+            [
+              48.424,
+              -123.38
+            ],
+            [
+              48.424,
+              -123.388
+            ],
+            [
+              48.42,
+              -123.392
+            ],
+            [
+              48.416,
+              -123.392
+            ],
+            [
+              48.412,
+              -123.388
+            ],
+            [
+              48.408,
+              -123.368
+            ],
+            [
+              48.404,
+              -123.364
+            ],
+            [
+              48.404,
+              -123.32
+            ],
+            [
+              48.408,
+              -123.296
+            ],
+            [
+              48.412,
+              -123.292
+            ],
+            [
+              48.424,
+              -123.292
+            ],
+            [
+              48.452,
+              -123.264
+            ],
+            [
+              48.464,
+              -123.272
+            ],
+            [
+              48.552,
+              -123.36
+            ],
+            [
+              48.588,
+              -123.368
+            ],
+            [
+              48.596,
+              -123.376
+            ],
+            [
+              48.672,
+              -123.376
+            ],
+            [
+              48.684,
+              -123.364
+            ],
+            [
+              48.724,
+              -123.36
+            ],
+            [
+              48.772,
+              -123.364
+            ],
+            [
+              48.832,
+              -123.424
+            ],
+            [
+              48.848,
+              -123.484
+            ],
+            [
+              48.856,
+              -123.5
+            ]
+          ],
+          "notes": "",
+          "fuelGph": 17,
+          "fuelGallons": 51.28333333333333,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
+        }
+      ],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "Salt Spring Island Day 2",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "",
+      "centerLat": null,
+      "centerLng": null,
+      "places": [],
+      "directions": [],
       "routes": [],
       "flights": [],
       "rentalCars": [],
@@ -290,9 +406,9 @@
       ],
       "fuelStop": false,
       "tideWarning": false,
-      "centerName": "Area G (Saltair / Gulf Islands), Canada",
-      "centerLat": 48.98742700601184,
-      "centerLng": -123.73901367187501,
+      "centerName": "Ladysmith, Canada",
+      "centerLat": 48.988778768752134,
+      "centerLng": -123.80218505859376,
       "highlights": [],
       "note": "",
       "places": [
@@ -320,6 +436,18 @@
           "tickets": "",
           "activity": "",
           "addedAt": "2026-05-27T17:20:13.640Z"
+        },
+        {
+          "id": "381d39b7-4d21-4829-813c-ddc4f495c2e0",
+          "name": "Ladysmith, Canada",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "ll:48.988778768752134,-123.80218505859376",
+          "category": "other",
+          "time": "",
+          "lat": 48.988778768752134,
+          "lng": -123.80218505859376
         }
       ],
       "directions": [],
@@ -424,7 +552,71 @@
         }
       ],
       "directions": [],
-      "routes": [],
+      "routes": [
+        {
+          "id": "a9d9752c-84e4-4755-8a67-a0162e2da1bc",
+          "name": "Sucia Island → Roche Harbor",
+          "startName": "Sucia Island",
+          "endName": "Roche Harbor",
+          "startLat": 48.757426,
+          "startLng": -122.9085873,
+          "endLat": 48.6106169,
+          "endLng": -123.1470482,
+          "time": "",
+          "nm": 14.3,
+          "hrs": 1.2,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
+          "vehicleId": "mpixxfx8p5q6i",
+          "routePath": [
+            [
+              48.76,
+              -122.908
+            ],
+            [
+              48.76,
+              -122.904
+            ],
+            [
+              48.756,
+              -122.9
+            ],
+            [
+              48.68,
+              -122.976
+            ],
+            [
+              48.644,
+              -123.076
+            ],
+            [
+              48.644,
+              -123.1
+            ],
+            [
+              48.632,
+              -123.112
+            ],
+            [
+              48.632,
+              -123.14
+            ],
+            [
+              48.624,
+              -123.152
+            ],
+            [
+              48.62,
+              -123.152
+            ]
+          ],
+          "notes": "",
+          "fuelGph": 17,
+          "fuelGallons": 20.4,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
+        }
+      ],
       "flights": [],
       "rentalCars": [],
       "tideChecks": []
@@ -691,6 +883,120 @@
       ],
       "directions": [],
       "routes": [],
+      "flights": [],
+      "rentalCars": [],
+      "tideChecks": []
+    },
+    {
+      "leg": "Home",
+      "nm": 0,
+      "hrs": 0,
+      "overnight": "",
+      "tags": [
+        "layover"
+      ],
+      "fuelStop": false,
+      "tideWarning": false,
+      "highlights": [],
+      "note": "",
+      "centerName": "Seattle, United States",
+      "centerLat": 47.6302997,
+      "centerLng": -122.3914826,
+      "places": [],
+      "directions": [],
+      "routes": [
+        {
+          "id": "387e787b-5b84-40cf-86dd-f9af356ef364",
+          "name": "Port Townsend, WA → Elliott Bay Marina",
+          "startName": "Port Townsend, WA",
+          "endName": "Elliott Bay Marina",
+          "startLat": 48.116107,
+          "startLng": -122.75384,
+          "endLat": 47.6302997,
+          "endLng": -122.3914826,
+          "time": "",
+          "nm": 34.9,
+          "hrs": 2.9,
+          "cruisingSpeed": "12",
+          "vessel": "Figurati",
+          "vehicleId": "mpixxfx8p5q6i",
+          "routePath": [
+            [
+              48.112,
+              -122.752
+            ],
+            [
+              48.104,
+              -122.744
+            ],
+            [
+              48.072,
+              -122.748
+            ],
+            [
+              48.048,
+              -122.744
+            ],
+            [
+              48.036,
+              -122.736
+            ],
+            [
+              48.024,
+              -122.724
+            ],
+            [
+              48.008,
+              -122.692
+            ],
+            [
+              48.008,
+              -122.676
+            ],
+            [
+              47.956,
+              -122.588
+            ],
+            [
+              47.916,
+              -122.528
+            ],
+            [
+              47.876,
+              -122.488
+            ],
+            [
+              47.712,
+              -122.424
+            ],
+            [
+              47.66,
+              -122.432
+            ],
+            [
+              47.648,
+              -122.42
+            ],
+            [
+              47.644,
+              -122.42
+            ],
+            [
+              47.632,
+              -122.408
+            ],
+            [
+              47.628,
+              -122.392
+            ]
+          ],
+          "notes": "",
+          "fuelGph": 17,
+          "fuelGallons": 49.3,
+          "fuelUnit": "gal",
+          "fuelCurrency": "USD"
+        }
+      ],
       "flights": [],
       "rentalCars": [],
       "tideChecks": []
