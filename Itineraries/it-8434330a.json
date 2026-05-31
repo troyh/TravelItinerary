@@ -407,8 +407,8 @@
       "fuelStop": false,
       "tideWarning": false,
       "centerName": "Ladysmith, Canada",
-      "centerLat": 48.988778768752134,
-      "centerLng": -123.80218505859376,
+      "centerLat": 48.990693703192726,
+      "centerLng": -123.8039016723633,
       "highlights": [],
       "note": "",
       "places": [
@@ -448,6 +448,18 @@
           "time": "",
           "lat": 48.988778768752134,
           "lng": -123.80218505859376
+        },
+        {
+          "id": "728ddf49-b2e9-4f35-84cb-6f3bc5c3f3d5",
+          "name": "Ladysmith, Canada",
+          "address": "",
+          "phone": "",
+          "website": "",
+          "placeId": "ll:48.990693703192726,-123.8039016723633",
+          "category": "other",
+          "time": "",
+          "lat": 48.990693703192726,
+          "lng": -123.8039016723633
         }
       ],
       "directions": [],
